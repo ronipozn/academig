@@ -1,0 +1,155 @@
+<!-- <div *ngIf="showEditBtn" class="alert alert-warning" role="alert">
+  The papers kit page is visible to everyone.
+</div> -->
+
+<ul class="d-flex justify-content-center nav nav-pills nav-pills-light-blue" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#linkBeginners" role="tablist">
+      <i class="fa fa-thermometer-empty" aria-hidden="true"></i> Beginners
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#linkIntermediate" role="tablist">
+      <i class="fa fa-thermometer-half" aria-hidden="true"></i> Intermediate
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#linkAdvanced" role="tablist">
+      <i class="fa fa-thermometer-full" aria-hidden="true"></i> Advanced
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content tab-space">
+
+  <div class="tab-pane active" id="linkBeginners">
+    <div class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <h4>
+            <i class="fa fa-thermometer-empty mr-2" aria-hidden="true"></i>
+            <b>Beginners</b>
+            <button *ngIf="showEditBtn && publicationsBeginners.length>0" (click)="publicationSlide(0, true)" mat-raised-button type="button" class="btn btn-link btn-sm btn-just-icon">
+              <i class="material-icons">add_circle</i>
+            </button>
+          </h4>
+        </div>
+        <hr class="mt-0">
+        <build-headline *ngIf="streamRetrieved[0] && publicationsBeginners.length==0"
+                        [headlineStyle]=1
+                        [headline]="showEditBtn ? 'Add beginners papers' : 'Beginners kit is still empty'">
+        </build-headline>
+        <button *ngIf="publicationsBeginners.length==0" mat-raised-button class="btn btn-light-blue btn-round mt-3" (click)="publicationSlide(0, true)">
+          <i class="material-icons">add_circle_outline</i> Add Paper
+        </button>
+        <publications-list-table [streamRetrieved]=streamRetrieved[0]
+                                 [publicationToggle]=publicationToggle[0]
+                                 [publications]=publicationsBeginners
+                                 [sourceType]=6
+                                 [userId]=userService.userId
+                                 [typesFlag]=typesFlag
+                                 [stream]=streamBeginnersPublications
+                                 [streamFolder]=streamBeginnersPublications
+                                 [streamDelete]=streamPublicationsDelete[0]
+                                 [showEditBtn]=showEditBtn
+                                 (btnDelete)="publicationDelete($event, 0)"
+                                 (btnPDF)="pdfSlide($event)"
+                                 (animationDoneEvent)="streamPublicationsFunc(0)">
+        </publications-list-table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="linkIntermediate">
+    <div class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <h4>
+            <i class="fa fa-thermometer-half mr-2" aria-hidden="true"></i>
+            <b>Intermediate</b>
+            <button *ngIf="showEditBtn && publicationsIntermediate.length>0" (click)="publicationSlide(1, true)" mat-raised-button type="button" class="btn btn-link btn-sm btn-just-icon">
+              <i class="material-icons">add_circle</i>
+            </button>
+          </h4>
+        </div>
+        <hr class="mt-0">
+        <build-headline *ngIf="streamRetrieved[1] && publicationsIntermediate.length==0"
+                        [headlineStyle]=1
+                        [headline]="showEditBtn ? 'Add intermediate papers' : 'Beginners kit is still empty'">
+        </build-headline>
+        <button *ngIf="publicationsIntermediate.length==0" mat-raised-button class="btn btn-light-blue btn-round mt-3" (click)="publicationSlide(1, true)">
+          <i class="material-icons">add_circle_outline</i> Add Paper
+        </button>
+        <publications-list-table [streamRetrieved]=streamRetrieved[1]
+                                 [publicationToggle]=publicationToggle[1]
+                                 [publications]=publicationsIntermediate
+                                 [sourceType]=6
+                                 [userId]=userService.userId
+                                 [typesFlag]=typesFlag
+                                 [stream]=streamIntermediatePublications
+                                 [streamFolder]=streamIntermediatePublications
+                                 [streamDelete]=streamPublicationsDelete[1]
+                                 [showEditBtn]=showEditBtn
+                                 (btnDelete)="publicationDelete($event, 1)"
+                                 (btnPDF)="pdfSlide($event)"
+                                 (animationDoneEvent)="streamPublicationsFunc(1)">
+        </publications-list-table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="linkAdvanced">
+    <div class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <h4>
+            <i class="fa fa-thermometer-full mr-2" aria-hidden="true"></i>
+            <b>Advanced</b>
+            <button *ngIf="showEditBtn && publicationsAdvanced.length>0" (click)="publicationSlide(2, true)" mat-raised-button type="button" class="btn btn-link btn-sm btn-just-icon">
+              <i class="material-icons">add_circle</i>
+            </button>
+          </h4>
+        </div>
+        <hr class="mt-0">
+        <build-headline *ngIf="streamRetrieved[2] && publicationsAdvanced.length==0"
+                        [headlineStyle]=1
+                        [headline]="showEditBtn ? 'Add advanced papers' : 'Beginners kit is still empty'">
+        </build-headline>
+        <button *ngIf="publicationsAdvanced.length==0" mat-raised-button class="btn btn-light-blue btn-round mt-3" (click)="publicationSlide(2, true)">
+          <i class="material-icons">add_circle_outline</i> Add Paper
+        </button>
+        <publications-list-table [streamRetrieved]=streamRetrieved[2]
+                                 [publicationToggle]=publicationToggle[2]
+                                 [publications]=publicationsAdvanced
+                                 [sourceType]=6
+                                 [userId]=userService.userId
+                                 [typesFlag]=typesFlag
+                                 [stream]=streamAdvancedPublications
+                                 [streamFolder]=streamAdvancedPublications
+                                 [streamDelete]=streamPublicationsDelete[2]
+                                 [showEditBtn]=showEditBtn
+                                 (btnDelete)="publicationDelete($event, 2)"
+                                 (btnPDF)="pdfSlide($event)"
+                                 (animationDoneEvent)="streamPublicationsFunc(2)">
+        </publications-list-table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-publications *ngIf=publicationBuildFlag
+                          (update)="publicationUpdate($event)"
+                          (cancel)="publicationSlide($event, false)"
+                          [newFlag]=true
+                          [userId]=userService.userId
+                          [publication]=publicationBuild
+                          [dois]=dois
+                          [sourceType]="2+mode"
+                          [userFolders]=null>
+</build-slide-publications>

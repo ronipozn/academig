@@ -1,0 +1,20 @@
+<ng-container *ngFor="let folder of folders; let i=index">
+  <p *ngIf="folder.folder=='read' && (folder.end || showEditBtn)" class="mb-1 p-1 border">
+    <ng-container *ngIf="folder.end">
+      <b>{{folder.date | date}}<span *ngIf="folder.end"> - {{folder.end | date}}</span>:</b>
+    </ng-container>
+    <ng-container *ngIf="showEditBtn && !folder.end">
+      <b>Update my read details</b>.<br>
+    </ng-container>
+    {{folder.summary}}
+    <ng-container *ngIf="showEditBtn && folder.privacy">
+      <!-- <span style="font-size: 15px" class="material-icons mr-1">lock</span> -->
+      <br><u>Private notes</u>: {{folder.privacy}}<br>
+    </ng-container>
+    <ng-container *ngIf="folder.rating">
+      <ngb-rating [(rate)]="folder.rating" [readonly]="true"></ngb-rating><br>
+    </ng-container>
+    <a *ngIf="showEditBtn" style="font-size: 16px; cursor: pointer;" class="material-icons ml-1 mt-2" (click)="readEditFunc(i)">edit</a>
+    <a *ngIf="showEditBtn" style="font-size: 16px; cursor: pointer;" class="material-icons ml-1 mt-2" (click)="readRemoveFunc(i)">clear</a>
+  </p>
+</ng-container>

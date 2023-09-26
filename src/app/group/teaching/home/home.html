@@ -1,0 +1,89 @@
+<ng-container *ngIf="missionService.showPage">
+
+  <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && missionService.showEditBtn" class="d-flex justify-content-center mb-4">
+    <button mat-raised-button class="btn btn-light-blue btn-round mr-2" (click)="teachingSlide(true, 0, true, 0)">
+      <i class="material-icons">add_circle_outline</i> Add Current Teaching
+    </button>
+    <button mat-raised-button class="btn btn-light-blue btn-round" (click)="fundingSlide(true, 0, 1, 1)">
+      <i class="material-icons">add_circle_outline</i> Add Past Teaching
+    </button>
+  </div>
+
+  <spinner *ngIf="!streamRetrieved[0] && !streamRetrieved[1]"></spinner>
+
+  <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && !missionService.showHeadline && currentTeachings[0]==null && pastTeachings[0]==null" class="card mt-0">
+    <div class="card-body" [@itemsAnimation]="('active')">
+      <build-headline [headline]="'Teaching'"></build-headline>
+      <build-modal-intro [headline]="'The teaching list is still empty.'"
+                         [bodypic]="'graduation-cap'">
+      </build-modal-intro>
+      <img src="./assets/img/items/teaching.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="350" alt="academig_teaching">
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && (currentTeachings[0]==null || pastTeachings[0]==null) && missionService.showEditBtn" class="card mt-0">
+    <div class="card-body" [@itemsAnimation]="('active')">
+      <build-modal-intro [headline]="'Add your lab\' teachings'"
+                         [bodypic]="'graduation-cap'"
+                         [bodytext]="'Start posting your lab\' current teachings online.'">
+      </build-modal-intro>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[0] && currentTeachings[0]" class="card mt-0" #scrollAdd>
+    <div class="card-body" [@itemsAnimation]="('active')">
+      <build-headline [headline]="'Current Teaching'"></build-headline>
+      <teachings-list [streamRetrieved]=streamRetrieved[0]
+                      [teachings]=currentTeachings
+                      [sourceType]=0
+                      [itemFocus]=itemFocus
+                      [stream]=streamCurrentTeachings
+                      [streamFollow]=streamCurrentTeachingsFollow
+                      [showEditBtn]=missionService.showEditBtn
+                      (animationDoneEvent)="streamFunc(0)"
+                      (buttonEditClick)="teachingSlide(true, $event, false, 0)"
+                      (buttonDeleteClick)="teachingDelete($event, 0)">
+      </teachings-list>
+      <!-- (buttonFollowClick)="teachingFollow($event, 0)" -->
+      <!-- (buttonMoveClick)="teachingMove($event, 0)" -->
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[1] && pastTeachings[0]" class="card mt-0">
+    <div class="card-body" [@itemsAnimation]="('active')">
+      <build-headline [headline]="'Past Teaching'"></build-headline>
+      <teachings-list [streamRetrieved]=streamRetrieved[1]
+                      [teachings]=pastTeachings
+                      [sourceType]=0
+                      [itemFocus]=itemFocus
+                      [stream]=streamPastTeachings
+                      [streamFollow]=streamPastTeachingsFollow
+                      [showEditBtn]=missionService.showEditBtn
+                      [planNumber]=missionService.planNumber
+                      (animationDoneEvent)="streamFunc(1)"
+                      (buttonEditClick)="teachingSlide(true, $event, false, 1)"
+                      (buttonDeleteClick)="teachingDelete($event, 1)">
+      </teachings-list>
+      <!-- (buttonFollowClick)="teachingFollow($event, 0)" -->
+      <!-- (buttonMoveClick)="teachingMove($event, 0)" -->
+    </div>
+  </div>
+
+</ng-container>
+
+<img src="./assets/img/items/teaching.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_funding">
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-teaching *ngIf=teachingBuildFlag
+                      (update)="teachingUpdate($event)"
+                      (cancel)="teachingSlide($event)"
+                      [modeNum]=modeNum
+                      [newFlag]=teachingNewFlag
+                      [groupId]=missionService.groupId
+                      [userId]=missionService.userId
+                      [teaching]=teachingBuild>
+</build-slide-teaching>

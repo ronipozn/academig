@@ -1,0 +1,38 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<build-modal-intro *ngIf="streamRetrieved && !suggestFlag && publications[0]==null && !showHeadline && sourceType<2"
+                   [headline]="'No publications yet.'">
+</build-modal-intro>
+
+<div *ngIf="streamRetrieved && suggestFlag && publications[0]==null" class="mx-auto" style="max-width: 35rem;">
+
+  <div class="d-flex mx-auto fa-stack fa-4x fa-lg">
+    <i class="fa fa-circle fa-stack-2x"></i>
+    <i class="fa fa-refresh fa-stack-1x fa-inverse" [ngClass]="{'fa-spin': streamSuggestions}"></i>
+  </div>
+
+  <p class="text-center mt-0 mb-3">
+    <button [disabled]="streamSuggestions" role="button" (click)="suggestionRefresh()"
+            class="btn btn-sm btn-light-blue mt-2">
+      Find New Suggestions
+    </button>
+  </p>
+</div>
+
+<ul *ngFor="let publication of publicationsOriginal; let i=index" class="list-unstyled">
+  <publication-item [publication]=publication
+                    [stream]=stream[i]
+                    [streamFolder]=streamFolder[i]
+                    [sourceType]=sourceType
+                    [suggestFlag]=suggestFlag
+                    [showEditBtn]=showEditBtn
+                    [userId]=userId
+                    (pdf)="pdfSlide(true, $event)"
+                    (animationDoneEvent)="animationDone()"
+                    (btnFolder)="btnFolderFunc(publication._id,i)"
+                    (btnAccept)="btnAccpetFunc(publication._id,i)"
+                    (btnReject)="btnRejectFunc(publication._id,i)">
+  </publication-item>
+  <hr>
+</ul>
+<!-- [itemAutofocus]="i==sortedLocation" -->

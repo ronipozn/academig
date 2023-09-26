@@ -1,0 +1,38 @@
+<div id="carouselIndicators" class="carousel slide mb-4" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li *ngFor="let app of highlights; let i=index; let f=first;"
+        data-target="#carouselIndicators"
+        data-slide-to=i
+        [ngClass]="{'active': f}">
+    </li>
+  </ol>
+  <div class="carousel-inner" role="listbox">
+    <div *ngFor="let app of highlights; let i=index; let f=first;" class="carousel-item pr-0" [ngClass]="{'active': f}" style="background-image: url('./assets/img/Benchling-Preview.png')">
+      <div class="corner-ribbon top-left white shadow red">Hot</div> <!-- sticky -->
+      <div class="carousel-caption text-dark">
+        <div class="row">
+          <div class="col-8 offset-1">
+          </div>
+          <div class="col-3 mt-4">
+            <h2 class="display-4">{{app.name}}</h2>
+            <p class="lead"><b>{{typeTitles[app.type]}}</b></p>
+            <p>{{app.description}}</p>
+            <p class="lead">
+              <span class="mr-2"><b>${{app.reduced_price}}</b></span>
+              <span class="text-muted"><b><s>${{app.full_price}}</s></b></span>
+            </p>
+            <button type="button" mat-raised-button class="btn btn-light-blue">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a> -->
+</div>

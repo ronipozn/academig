@@ -1,0 +1,15 @@
+.btn:focus,.btn:active {
+   box-shadow: none;
+   /*-webkit-box-shadow: none;
+   -moz-box-shadow: none;*/
+}
+
+.progress {
+ height:102px;
+ /* width:500px; */
+ border:2px solid #000;
+ text-align:center;
+ color:#fff;
+ font-size:20px;
+ background:linear-gradient(to right, red 20%, blue 20%, blue 50%,yellow 50%,yellow 60% ,green 0);
+}

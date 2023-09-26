@@ -1,0 +1,175 @@
+<div class="card mt-0">
+  <div class="card-body">
+
+    <div class="form-group">
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker" placeholder="Date" (click)="picker.open()" [(ngModel)]="queryDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <!-- <div class="form-group">
+      <label for="InputSubject"><b>Date:</b></label>
+      <input [(ngModel)]="queryDate" type="date" class="form-control" id="InputDate" aria-describedby="publicationsDate">
+    </div> -->
+
+    <button [disabled]="!streamRetrieved[0]" role="button" mat-raised-button class="mr-2 btn btn-sm btn-light-blue" (click)="updateList()">
+      Reload
+    </button>
+
+    <button [disabled]="!streamRetrieved[0]" role="button" mat-raised-button class="mr-2 btn btn-sm btn-light-blue" (click)="publicationSlide(0, true)">
+      Add
+    </button>
+
+    <button [disabled]="!streamRetrieved[2] || reInviteCount==0" role="button" mat-raised-button class="btn btn-sm btn-danger" (click)="publicaitionMarketingAll()">
+      Reinvite All
+    </button>
+
+    <p *ngIf="streamRetrieved[0]" class="mt-3">
+      <b>Authors invited:</b> {{inviteCount}} ({{publicationsMarketing.length}} publications)<br>
+      <b>Users:</b> {{usersCount}}<br>
+      <b>Reinvite opportunities:</b> {{reInviteCount}}
+    </p>
+    <!-- <div *ngIf="inviteCount<inviteGoal" class="alert alert-primary" role="alert">{{inviteCount}} / {{inviteGoal}} authors invited.</div> -->
+    <!-- <div *ngIf="inviteCount==inviteGoal" class="alert alert-success" role="alert">Daily goal is reached ({{inviteCount}} inivitation)</div> -->
+    <!-- <div *ngIf="inviteCount>inviteGoal" class="alert alert-danger" role="alert">Daily goal is exploding, please stop. ({{inviteCount}} inivitation)</div> -->
+
+    <p *ngIf="streamRetrieved[0] && adminsNames[0]">
+      <b>Users:</b>
+      <span *ngFor="let name of adminsNames, let i=index">
+        {{ name }}: {{adminsTotalCounts[i]}} ({{adminsTotalPublications[i]}})<br>
+      </span>
+    </p>
+
+    <p>
+      <b>Journals:</b>
+      <span *ngFor="let journal of journalsUnique, let f=first"><span *ngIf="!f">,</span> {{ journal }}</span>
+    </p>
+
+  </div>
+</div>
+
+<!-- <div class="alert alert-info" role="alert">
+  Authors placements:
+  <span *ngFor="let journal of journalsUnique, let f=first">
+    <span *ngIf="!f">,</span> TBD
+  </span>
+</div> -->
+
+<div *ngIf="!streamRetrieved[0]" class="py-4">
+  <spinner [text]="'Page'"></spinner>
+</div>
+
+<div *ngIf="streamRetrieved[0]" class="card mt-0">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+
+        <tbody>
+          <tr *ngFor="let publication of publicationsMarketing; let i=index">
+            <td>
+
+              <div class="row">
+                <div class="col-9">
+                  <b>{{i}}. ID: </b>
+                    <a *ngIf="publication._id" [routerLink]="['/publications',publication._id]">{{publication._id}}</a>
+                    <spinner-put [stream]=streamPublications[i] class="pt-1" (animationDoneEvent)="animationDone(i)"></spinner-put>
+                  <br>
+                  <b>Title:</b> {{publication.title}}<br>
+                  <!-- <b>DOI:</b> {{publication.doi}}<br> -->
+                  <!-- <b>Date:</b> {{ publication.date | date:'dd MMM y' }}<br> -->
+                  <!-- <b>Journal:</b> {{ publication.journal ? publication.journal.name : "Unavailable" }}<br> -->
+                  <b>Admin: </b>{{ publication.adminId }}<br>
+                  <b>Invitations dates: </b>
+                  <span *ngFor="let date of publication.dates; let i=index">{{i}}. {{ date | date:'hh:mm dd MMM y' }}, </span>
+                </div>
+
+                <div class="col-3">
+                  <!-- <p *ngIf="publication.abstractPic" class="my-2">
+                    <single-pic [pic]=publication.abstractPic [type]=1 [height]=150></single-pic>
+                  </p>
+                  <p> -->
+                    <button [disabled]="streamPublications[i]" role="button" class="btn btn-sm btn-info mt-2" (click)="publicationDelete(i)">
+                      Delete Publication
+                    </button>
+                  <!-- </p> -->
+                </div>
+
+              </div>
+
+              <div class="card-deck mt-2">
+                <div class="col-4 mb-2" *ngFor="let author of publication.authors; let j=index">
+                  <div class="card mt-0">
+                    <div class="card-body">
+                      <span class="d-flex justify-content-start align-items-center">
+                        <!-- <single-pic class="mr-2" [pic]=author.pic [type]=0 [width]=32 [height]=32 [widthE]=2 [stackPic]="'user-circle-o'"></single-pic> -->
+                        <a *ngIf="author._id" [routerLink]="['/people',author._id]">{{author.name}}</a>
+                        <span *ngIf="!author._id">{{author.name}}</span>
+                      </span>
+                      <span *ngIf="author.email" class="badge badge-info">Invited</span>
+                      <button *ngIf="!author.email && author._id==null" [disabled]="!streamRetrieved[3]" role="button" class="btn btn-sm btn-link p-0 mt-0" (click)="inviteOp(0, i, j, true, $event)">
+                        Invite
+                      </button>
+                      <div *ngIf="author.email" class="mt-2">
+                        <button role="button" class="btn btn-sm btn-outline-info" data-toggle="dropdown" id="dropdownDetailsButtons" [disabled]="!streamRetrieved[3]">
+                          <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownDetailsButtons">
+                          <a *ngIf="!author.dates || (author.dates && author.dates.length<4)" role="button" class="dropdown-item small" (click)="inviteOp(0, i, j, true, $event)">
+                            Reinvite
+                          </a>
+                          <a role="button" class="dropdown-item small">Uninvite</a>
+                          <div class="dropdown-divider"></div>
+                          <a role="button" class="dropdown-item small">Change email</a>
+                        </div>
+                      </div>
+                      <div class="small text-muted mt-0 pt-0">
+                        {{author.email}}
+                        <span *ngIf="author.dates && author.dates[0]">
+                          <p *ngFor="let data of author.dates, let i=index" class="mb-0">
+                            {{i}}: {{author.dates[i] | date:'dd.MM.yy HH:MM'}}
+                          </p>
+                          <span *ngIf="author.dates.length<3">You can invite {{3-author.dates.length}} more times</span>
+                          <span *ngIf="author.dates.length>=3"><i>Maximum attempts.</i></span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - -->
+
+<build-slide-publications *ngIf=publicationBuildFlag
+                          (update)="publicationUpdate($event)"
+                          (cancel)="publicationSlide($event, false)"
+                          [newFlag]=true
+                          [userId]=userId
+                          [groupId]=1000000
+                          [dois]=dois>
+</build-slide-publications>
+
+<build-slide-multi *ngIf=inviteFlag
+                   [title]="'Invite Author'"
+                   [publicationTitle]="publicationsMarketing[publicationIndex].title"
+                   [pre]="[publicationsMarketing[publicationIndex].authors[inviteIndex]]"
+                   [stackPic]="'user'"
+                   [inviteFlag]=true
+                   [academicFlag]=true
+                   [type]=2
+                   (update)="inviteOp(2, publicationIndex, inviteIndex, false, $event)"
+                   (cancel)="inviteOp(0, publicationIndex, inviteIndex, false, null)">
+</build-slide-multi>

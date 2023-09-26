@@ -1,0 +1,119 @@
+<div class="col-lg-10 offset-lg-1" class="pt-4">
+
+  <div class="mt-4 pb-0 mb-0 px-0">
+    <div class="d-flex justify-content-end">
+      <div class="mr-auto p-0"><h4>Find Your Friends</h4></div>
+      <div><button role="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#invitationsModal">Invitations History</button></div>
+    </div>
+  </div>
+
+  <div class="mb-2 pb-2 mt-4">
+    <div class="row">
+
+      <div class="col-4">
+        <div class="list-group">
+          <a [routerLinkActive]="['active']" [routerLink]="['./department']" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <p class="mb-1">Your Department</p>
+            </div>
+            <small>Find colleagues in your department.</small>
+          </a>
+          <a [routerLinkActive]="['active']" [routerLink]="['./google']" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <p class="mb-1">Google</p>
+              <small class="text-muted"></small>
+            </div>
+            <small>Find in your Google account.</small>
+          </a>
+          <a [routerLinkActive]="['active']" [routerLink]="['./facebook']" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <p class="mb-1">Facebook</p>
+            </div>
+            <small>Find in your Facebook account.</small>
+          </a>
+          <a [routerLinkActive]="['active']" [routerLink]="['./researchgate']" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <p class="mb-1">ResearchGate</p>
+            </div>
+            <small>Find in your ResearchGate account.</small>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-8 offset-lg-2">
+        <div class="card mt-0">
+          <div class="card-body">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Invitations history Modal -->
+<!-- <div class="modal fade" id="invitationsModal" tabindex="-1" role="dialog" aria-labelledby="Invitations Modal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">Your Invitations History</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <ul class="list-unstyled">
+                <li class="media">
+                  <div class="media-body small">
+                    <span class="mt-0 mb-1"><b>Uri Peskin</b></span>, uri@technion.ac.il,
+                    <span class="text-muted">10 hours ago</span>
+                    <p>
+                      <span class="text-muted">Your message:</span> I just discovered a new website you just can't ignore.
+                      <br>
+                      <span class="text-muted">Staus:</span> No action yet.
+                    </p>
+                    <a href="" role="button" class="btn btn-outline-info btn-sm"><i class="fa fa-envelope pr-2" aria-hidden="true"></i>Resend</a>
+                  </div>
+                </li>
+                <hr>
+                <li class="media">
+                  <div class="media-body small">
+                    <span class="mt-0 mb-1"><b>Kika Thyu</b></span>, kikat@mit.com,
+                    <span class="text-muted">25 days ago</span>
+                    <p>
+                      <span class="text-muted">Your message:</span> This will help you set up your new website for your lab that you always wanted.
+                      <br>
+                      <span class="text-muted">Staus:</span> Kika declined your invitation, "Hi, Roni. Thanks for the invitation but I have to ignore it for at least a few months." <span class="text-muted">12 hours ago</span>
+                    </p>
+                  </div>
+                </li>
+                <hr class="mt-0 pt-0">
+                <li class="media">
+                  <div class="media-body small">
+                    <span class="mt-0 mb-1"><b>Moshe Aharonov</b></span>, moshe@tau.ac.il,
+                    <span class="text-muted">38 days ago</span>
+                    <p>
+                      <span class="text-muted">Your message:</span> I just discovered a new website you just can't ignore.
+                      <br>
+                      <span class="text-muted">Staus:</span> Moshe accepted your invitation, "Hi, Roni. This looks exactly like what I was looking for. Thanks." <span class="text-muted">10 hours ago</span>
+                    </p>
+                  </div>
+                </li>
+                <hr class="mt-0 pt-0">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div> -->
+<!-- <a href="#" role="button" class="btn btn-secondary btn-sm"><i class="fa fa-envelope pr-2" aria-hidden="true"></i>Presuade</a> -->

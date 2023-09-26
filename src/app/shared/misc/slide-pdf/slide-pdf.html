@@ -1,0 +1,33 @@
+<div class="side-form" (keydown.escape)="cancelButton()">
+
+  <div class="card">
+
+    <div class="card-header">
+      <p class="lead">{{title}}</p>
+      <div class="pull-left form-group">
+        <a [href]="fileName" download target="_blank" role="button" class="btn btn-sm btn-light-blue">Download</a>
+        <button role="button" class="btn btn-sm btn-link" (click)="cancelButton()">Close</button>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <!-- <p *ngIf="progressPDF<100"> -->
+        <ngb-progressbar *ngIf="progressPDF<100"
+                         type="info"
+                         [value]=progressPDF
+                         [striped]="true">
+        </ngb-progressbar>
+      <!-- </p> -->
+      <!-- <pdf-viewer [src]="fileName"
+                  [autoresize]="true"
+                  [original-size]="true"
+                  [fit-to-page]="true"
+                  (on-progress)="onProgressPDF($event)"
+                  style="display: block;">
+      </pdf-viewer> -->
+      <!-- [render-text]="true" -->
+    </div>
+
+  </div>
+
+</div>

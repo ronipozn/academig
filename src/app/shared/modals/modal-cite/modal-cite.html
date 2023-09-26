@@ -1,0 +1,110 @@
+<div class="modal-content">
+
+  <div class="modal-header">
+    <h5 class="modal-title" id="CiteModalLabel">Cite</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body small">
+    <ul class="nav nav-tabs nav-fill" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#Formats">Formats</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#BibTeX">BibTeX</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#EndNote">EndNote</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#RefMan">RefMan</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#RefWorks">RefWorks</a>
+      </li> -->
+    </ul>
+  </div>
+  <div class="tab-content small">
+    <div class="tab-pane active" id="Formats" role="tabpanel">
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+            <tr>
+              <!-- <td class="text-right text-muted pr-0">MLA</td> -->
+              <!-- <td>Pozner Roni, Efrat Lifshitz, and Uri Peskin. "Negative Differential Resistance Probe for Interdot Interactions in a Double Quantum Dot Array." The journal of physical chemistry letters 6.9 (2015): 1521-1528.</td> -->
+            </tr>
+          </tbody>
+          <tbody>
+            <tr class="pb-3">
+              <!-- <td class="text-right text-muted pr-0">APA</td> -->
+              <!-- <td>Pozner, R., Lifshitz, E., & Peskin, U. (2015). Negative Differential Resistance Probe for Interdot Interactions in a Double Quantum Dot Array. The journal of physical chemistry letters, 6(9), 1521-1528.</td> -->
+            </tr>
+          </tbody>
+          <tbody>
+            <tr class="pb-3">
+              <!-- <td class="text-right text-muted pr-0">Chicago</td> -->
+              <!-- <td>Pozner Roni, Efrat Lifshitz, and Uri Peskin. "Negative Differential Resistance Probe for Interdot Interactions in a Double Quantum Dot Array." The journal of physical chemistry letters 6, no. 9 (2015): 1521-1528.</td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- <textarea class="form-control mb-3" id="CiteModalTextarea" rows="3">
+      </textarea> -->
+    </div>
+    <div class="mx-3 tab-pane" id="BibTeX" role="tabpanel">
+      <textarea class="form-control form-control-sm" id="CiteModalTextarea" rows="15">
+        <!-- @article{pozner2015negative,
+          title={Negative Differential Resistance Probe for Interdot Interactions in a Double Quantum Dot Array},
+          author={Pozner, Roni and Lifshitz, Efrat and Peskin, Uri},
+          journal={The journal of physical chemistry letters},
+          volume={6},
+          number={9},
+          pages={1521--1528},
+          year={2015},
+          publisher={ACS Publications}
+        } -->
+      </textarea>
+    </div>
+    <div class="mx-3 tab-pane" id="EndNote" role="tabpanel">
+      <textarea class="form-control form-control-sm" id="CiteModalTextarea" rows="15">
+        <!-- %0 Journal Article
+        %T Negative Differential Resistance Probe for Interdot Interactions in a Double Quantum Dot Array
+        %A Pozner, Roni
+        %A Lifshitz, Efrat
+        %A Peskin, Uri
+        %J The journal of physical chemistry letters
+        %V 6
+        %N 9
+        %P 1521-1528
+        %@ 1948-7185
+        %D 2015
+        %I ACS Publications -->
+      </textarea>
+    </div>
+    <div class="mx-3 tab-pane" id="RefMan" role="tabpanel">
+      <textarea class="form-control form-control-sm" id="CiteModalTextarea" rows="15">
+        <!-- TY  - JOUR
+        T1  - Negative Differential Resistance Probe for Interdot Interactions in a Double Quantum Dot Array
+        A1  - Pozner, Roni
+        A1  - Lifshitz, Efrat
+        A1  - Peskin, Uri
+        JO  - The journal of physical chemistry letters
+        VL  - 6
+        IS  - 9
+        SP  - 1521
+        EP  - 1528
+        SN  - 1948-7185
+        Y1  - 2015
+        PB  - ACS Publications
+        ER  - -->
+      </textarea>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button role="button" class="btn btn-sm btn-outline-info" data-dismiss="modal">Close</button>
+  </div>
+
+</div>

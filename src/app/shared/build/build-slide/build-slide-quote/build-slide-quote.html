@@ -1,0 +1,39 @@
+<div class="side-form">
+
+  <h3 class="title text-center">Quote</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemFirst]=true
+                              [fieldType]=2
+                              [itemTitle]="'Quote'"
+                              [labelRequired]=true
+                              [controlName]="'text'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [itemTitle]="'Who Said'"
+                              [labelRequired]=true
+                              [controlName]="'name'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div id="direct_upload">
+        <single-pic [centerFlag]=true [pic]="file ? file : pic" [thumbnailFlag]=true [type]=0 [width]=112 [height]=112 [widthE]=4></single-pic>
+        <div class="mt-2 d-flex justify-content-center">
+          <input type="hidden" id="file" name="file" data-images-only data-preview-step data-crop="128x128 upscale">
+        </div>
+      </div>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]="uploadFlag || disableFlag" class="btn btn-sm btn-fill btn-light-blue">{{text ? 'Update' : 'Add'}}</button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="card">
+  <div class="card-header py-2" role="tab" id="heading{{i}}">
+
+    <!-- <span [ngClass]="{'invisible': (!showEditBtn || !(showButton && stream==0))}" class="handle"></span> -->
+
+    <span class="ml-2 mb-0">
+      <a class="lead noUnderline card-title" [routerLink]="['../research',topic.name | urlize]">
+         {{i+1}}. {{topic.name}} <spinner-put [stream]=stream (animationDoneEvent)="animationDone($event)"></spinner-put>
+      </a>
+    </span>
+
+    <build-buttons [showButton]=true
+                   [editFlag]="topic.count>0"
+                   (buttonEditClick)="buttonEditFunc($event)"
+                   (buttonDeleteClick)="buttonDeleteFunc($event)">
+    </build-buttons>
+
+  </div>
+</div>

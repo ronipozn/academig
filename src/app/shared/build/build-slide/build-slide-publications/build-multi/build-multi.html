@@ -1,0 +1,118 @@
+<div *ngIf="itemTitle" class="mb-3" [ngClass]="{'mt-3': !itemFirst}">
+  <i class="fa fa-{{itemIcon}}" aria-hidden="true"></i><b>{{itemTitle}}:</b>
+  <a *ngIf="type==1" class="card-title ml-2" style="cursor: pointer;" (click)="addField(null)"><u>Add</u></a>
+</div>
+
+<p *ngIf="type==0 || type==2" class="form-control-label pl-0">
+  <span *ngIf="inviteFlag">
+    {{pre[0].name}} isn't on Academig yet. Enter the author's email address below to notify him or her about this publication and send an invite to allow him or her to confirm authorship.
+  </span>
+  <span *ngIf="coAuthorsEmailCount==1 && !inviteFlag">
+    Invite your co-authors to confirm authorship<br>
+    1 co-author isn't on Academig yet. Enter the author's email address below to notify him or her about this publication and send an invite to allow him or her to confirm authorship.
+  </span>
+  <span *ngIf="coAuthorsEmailCount>1 && !inviteFlag">
+    Invite your co-authors to confirm authorship<br>
+    {{coAuthorsEmailCount}} co-authors aren't on Academig yet. Enter their email addresses below to notify them about this publication and send an invite to allow them to confirm authorship.
+  </span>
+</p>
+
+<ng-template #popContent let-emailContent="emailContent">
+  <b>From:</b>
+  <br>{{userService.userName}} via Academig
+  <br><br><b>Subject:</b>
+  <br>{{userService.userName}} invites you to confirm authorship of your publications.
+  <br><br><b>Message:</b>
+  <br>{{userService.userName}} invites you to join Academig and confirm authorship of your publication:
+  <br><i>{{publicationTitle}}</i>
+</ng-template>
+<ng-template #popTitle let-emailTitle="emailTitle">
+  Preview Email
+</ng-template>
+<button *ngIf="type==0 || type==2" type="button" class="btn btn-sm btn-link mr-2 my-1 px-0" placement="bottom" [ngbPopover]="popContent" [popoverTitle]="popTitle" container="body" triggers="manual" #p1="ngbPopover" (click)="togglePreviewEmail(p1)">
+  Preview Email
+</button>
+
+<!-- Your co-author will receive this email notification and, in some cases, up to two reminders. -->
+
+<!--
+nameField + " don't have an Academig account.
+Enter the new member's email address and we'll send a validation link to invite him or her to your lab.
+nameField.name + " don't have an Academig account.
+We'll send a validation link to the new member's email address to verify their identity.
+You don't need to enter the email for exisiting Academig users.
+ -->
+
+<div [formGroup]="parentGroup">
+  <ul [formArrayName]=controlName class="list-unstyled mb-0">
+    <li *ngFor="let e of getControls(parentGroup); let i=index">
+      <div [formGroupName]="i">
+
+        <div [ngClass]="{'card mt-0': (type==0 || type==2) && inviteFlag}">
+          <div [ngClass]="{'card-body': (type==0 || type==2) && inviteFlag}">
+            <ng-container *ngIf="(type==0 || type==2) && !inviteFlag">
+              <hr>
+              <div class="d-flex align-items-center">
+                <u>Author {{i+1}}</u>
+                <button [hidden]="type==1 || inviteFlag || userId==e.value?._id" role="button" class="btn btn-link pl-2 pr-0" (click)="deleteField(i)">
+                   <i class="fa fa-trash-o pl-0 pr-2" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="d-flex align-items-center" [ngClass]="{'mt-2': userId==e.value?._id}">
+                <img *ngIf="e.value?.pic" [src]="e.value?.pic" [height]="30" [width]="30" class="rounded-circle ml-0 mr-2">
+                <b>{{e.value?.name}}</b>
+              </div>
+              <div *ngIf="e.value?._id==null" class="mt-2">
+                <label *ngIf="e.value?._id==null" for="email{{i}}" hidden></label>
+                <build-modal-text-field [fieldType]=11
+                                        [itemTitle]="'Email'"
+                                        [controlName]="'email'"
+                                        [parentGroup]=e
+                                        [submitStatus]=submitStatus>
+                </build-modal-text-field>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="(type==0 || type==2) && inviteFlag">
+              <!-- https://stackoverflow.com/questions/9268338/which-attributes-does-chrome-autofill-expect -->
+              <label for="email{{i}}" hidden></label>
+              <build-modal-text-field [fieldType]=11
+                                      [itemTitle]="'Email'"
+                                      [controlName]="'email'"
+                                      [parentGroup]=e
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+              <build-modal-text-field [itemTitle]="'Personal message'"
+                                      [fieldType]=2
+                                      [textAreaRows]=5
+                                      [controlName]="'message'"
+                                      [parentGroup]=e
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </ng-container>
+          </div>
+        </div>
+
+        <div *ngIf="type==1" class="d-flex align-items-center">
+          <div class="flex-grow-1">
+            <build-modal-name-field [userId]=userId
+                                    [mode]=10
+                                    [labelRequired]=true
+                                    [itemTitle]="'Funding ' + (i+1)"
+                                    [iconTitle]="'money'"
+                                    [controlName]="'name'"
+                                    [parentGroup]=e
+                                    [submitStatus]=submitStatus>
+            </build-modal-name-field>
+          </div>
+          <div class="mb-3">
+            <button role="button" class="btn btn-link pl-2 pr-0" (click)="deleteField(i)">
+               <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </li>
+  </ul>
+
+</div>

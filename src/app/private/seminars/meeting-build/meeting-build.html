@@ -1,0 +1,147 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center"><span *ngIf=!newFlag>Reschedule</span> Future Seminars</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemFirst]=true
+                              [labelRequired]=true
+                              [itemTitle]="'Location'"
+                              [controlName]="'location'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'time'"
+                              [itemTitle]="'Time'"
+                              [labelRequired]=true
+                              [controlName]="'time'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="row no-gutters">
+        <div class="col mr-1">
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'date'"
+                                  [itemTitle]="'Start Date'"
+                                  [itemError]="(formModel.get('start').errors && formModel.get('start').errors.start) ? 'Start date should be greater than today' : null"
+                                  [errorFlag]="!(formModel.get('start').errors && formModel.get('start').errors.range)"
+                                  [labelRequired]=true
+                                  [controlName]="'start'"
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col ml-1">
+          <build-modal-text-field [typeSelected]="'date'"
+                                  [labelRequired]=true
+                                  [fieldType]=1
+                                  [itemTitle]="'End Date'"
+                                  [errorFlag]="!(formModel.get('end').errors && formModel.get('end').errors.range)"
+                                  [controlName]="'end'"
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+          <!-- <build-modal-text-field [fieldType]=4
+                                  [itemTitle]="'Duration'"
+                                  [labelRequired]=true
+                                  [controlName]="'duration'"
+                                  [parentGroup]=formModel
+                                  [itemArray]=durationSelect
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field> -->
+        </div>
+
+        <span *ngIf="formModel.get('start').errors">
+          <span *ngIf="formModel.get('start').errors.range" class="mt-1 mb-0 small">
+            <span class="text-danger mb-0">End date should be greater than start date</span>
+          </span>
+        </span>
+
+      </div>
+
+      <div class="row no-gutters">
+        <div class="col mr-1">
+          <build-modal-text-field [fieldType]=4
+                                  [itemTitle]="'How often'"
+                                  [controlName]="'howOften'"
+                                  [labelRequired]=true
+                                  [parentGroup]=formModel
+                                  [itemArray]=howOftenSelect
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col ml-1">
+          <build-modal-text-field [fieldType]=4
+                                  [itemTitle]="'How to add'"
+                                  [labelRequired]=true
+                                  [controlName]="'howToAdd'"
+                                  [parentGroup]=formModel
+                                  [itemArray]=howAddSelect
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <div class="row no-gutters">
+        <div class="col mr-1">
+          <build-modal-text-field [fieldType]=4
+                                  [itemTitle]=firstDayTitle
+                                  [labelRequired]=firstDayFlag
+                                  [controlName]="'day'"
+                                  [parentGroup]=formModel
+                                  [itemArray]=daySelectFirst
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col ml-1">
+          <build-modal-text-field *ngIf="formModel.get('howOften').value<2"
+                                  [fieldType]=4
+                                  [itemTitle]=secondDayTitle
+                                  [labelRequired]=secondDayFlag
+                                  [controlName]="'secondDay'"
+                                  [parentGroup]=formModel
+                                  [itemArray]=daySelectSecond
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <!-- <build-modal-text-field [fieldType]=5
+                              [itemTitle]="'Adding order'"
+                              [labelRequired]=true
+                              [controlName]="'order'"
+                              [parentGroup]=formModel
+                              [itemArray]=orderRadio
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field> -->
+
+      <build-slide-select-members [selectAllFlag]=true
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Participants'"
+                                  [labelRequired]=true
+                                  [parentGroup]=formModel
+                                  [controlName]="'participants'"
+                                  [minSelected]=1
+                                  [type]=0
+                                  [submitStatus]=submitStatus
+                                  [preMembersInput]=preMembers
+                                  (membersOutput)=membersFunc($event)>
+      </build-slide-select-members>
+
+      <div class="form-group">
+        <button mat-raised-button type="submit" class="btn btn-sm btn-light-blue">{{newFlag ? 'Add' : 'Reschedule'}}</button>
+        <button mat-raised-button type="button" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+      <p class="mt-1 mb-0 small text-muted">
+        Pay attention that a maximum of 200 meetings can be created.
+      </p>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<div class="side-form">
+
+  <!-- (clickOutside)="onCancel()"
+  [delayClickOutsideInit]=true
+  (keydown.escape)="onCancel()"
+  [excludeBeforeClick]=true
+  [attachOutsideOnClick]=true
+  [emitOnBlur]=true
+  (clickOutside)="onCancel()" [exclude]="'btn,.btn-link'" -->
+
+  <h3 class="title text-center">{{title}}</h3>
+
+  <div class="form-container">
+
+    <div id="direct_upload">
+
+      <single-pic *ngIf="type<4"
+                  [centerFlag]=true
+                  [pic]="file ? file : pic"
+                  [thumbnailFlag]=true
+                  [type]="(type==0) ? 0 : 1"
+                  [width]="(type==3) ? 260 : 128"
+                  [height]="(type==3) ? 87 : 128"
+                  [widthE]=4>
+      </single-pic>
+
+      <div class="d-flex justify-content-center"  [ngClass]="{'mt-3': (file || pic) && type<4}">
+
+        <input *ngIf="type==0 || type==1" type="hidden" id="file"
+               name="file"
+               data-images-only
+               data-preview-step
+               data-crop="128x128 upscale">
+               <!-- data-multiple -->
+
+        <input *ngIf="type==3" type="hidden" id="file"
+               name="file"
+               data-images-only
+               data-preview-step
+               data-crop="900x300 upscale">
+
+        <input *ngIf="type==4" type="hidden" id="file"
+               name="file"
+               data-input-accept-types=".pdf"
+               data-tabs="file url gdrive dropbox skydrive">
+
+        <input *ngIf="type==6" type="hidden" id="file"
+               name="file"
+               data-input-accept-types=".csv"
+               data-tabs="file url gdrive dropbox skydrive">
+
+        <input *ngIf="type==7" type="hidden" id="file"
+               name="file"
+               data-multiple
+               data-input-accept-types=".csv"
+               data-tabs="file url gdrive dropbox skydrive">
+
+      </div>
+
+    </div>
+
+    <form class="form-group" (ngSubmit)="onSubmit()" novalidate>
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]="!file || disableFlag" class="btn btn-sm btn-light-blue">{{(file || pic) ? 'Update' : 'Add'}}</button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+    </form>
+    
+  </div>
+</div>

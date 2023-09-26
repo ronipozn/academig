@@ -1,0 +1,155 @@
+<div class="side-form">
+
+  <h5 class="title text-center">{{newFlag ? 'Add Outreach' : 'Update Outreach'}}</h5>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="adminFlag && newFlag && groupId" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemFirst]=true
+                              [itemTitle]="'Title'"
+                              [controlName]="'title'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Location'"
+                              [controlName]="'location'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <div class="row no-gutters">
+
+        <div class="col mr-1">
+          <build-month-field [itemTitle]="formModel.controls['active']?.value[0] ? 'Date' : 'Start Date'"
+                             [controlName]="'start'"
+                             [parentGroup]="formModel"
+                             [labelRequired]="!formModel.controls['active']?.value[0]"
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('start').errors && formModel.get('start').errors.range)">
+          </build-month-field>
+          <build-modal-text-field [labelHide]=true
+                                  [itemFirst]=true
+                                  [fieldType]=7
+                                  [controlName]="'active'"
+                                  (controlStatus)=controlStatusFunc($event,0)
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Active']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+
+        <div class="col ml-1">
+          <build-month-field [itemTitle]="'End Date'"
+                             [controlName]="'end'"
+                             [parentGroup]="formModel"
+                             [labelRequired]="!formModel.controls['active']?.value[0]"
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('end').errors && formModel.get('end').errors.range)">
+          </build-month-field>
+        </div>
+
+      </div>
+
+      <p *ngIf="formModel.get('start').errors?.range" class="mt-1 mb-0 small text-danger">
+        End date should be greater than start date
+      </p>
+
+      <p></p>
+
+      <build-modal-text-field [fieldType]=12
+                              [textAreaRows]=5
+                              [itemTitle]="'Description'"
+                              [controlName]="'description'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=13
+                              [typeSelected]="'url'"
+                              [itemTitle]="'Link'"
+                              [controlName]="'link'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div id="direct_upload">
+        <single-pic *ngIf="file"
+                    [centerFlag]=true
+                    [pic]="file"
+                    [thumbnailFlag]=true
+                    [stackPic]="'picture'"
+                    [type]=1
+                    [height]=112
+                    [widthE]=4>
+        </single-pic>
+        <!-- 2 -->
+
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': file}">
+          <input type="hidden" id="file" name="file"
+                 data-images-only
+                 data-preview-step
+                 data-effects="crop,rotate,mirror,flip,blur,enhance,sharp,grayscale,invert"
+                 data-crop="free, 16:9, 4:3, 5:4, 1:1">
+        </div>
+      </div>
+
+      <build-modal-text-field [fieldType]=1
+                              [itemFirst]=true
+                              [itemTitle]="'Image caption'"
+                              [controlName]="'caption'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemFirst]=true
+                              [itemTitle]="'Clip link'"
+                              [itemExplain]="'Use a Youtube or Vimeo link.'"
+                              [controlName]="'clip'"
+                              (controlStatus)=controlStatusFunc($event,1)
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <ng-container *ngIf="urlValid">
+        <div class="embed-responsive embed-responsive-16by9 my-3">
+          <iframe [src]="url" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </ng-container>
+
+      <!-- <build-slide-select-members *ngIf="newFlag && groupId"
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Staff'"
+                                  [parentGroup]=formModel
+                                  [controlName]="'members'"
+                                  [submitStatus]=submitStatus
+                                  [minSelected]=1
+                                  [preMembersInput]=[null]
+                                  (membersOutput)=membersFunc($event)>
+      </build-slide-select-members> -->
+
+      <div class="pull-left form-group">
+         <!-- || !urlValid -->
+        <button type="submit" mat-raised-button [disabled]="disableFlag || (!urlValid && linkConvert)" class="btn btn-sm btn-light-blue">
+          <span *ngIf="newFlag">Add</span>
+          <span *ngIf="!newFlag">Update</span>
+        </button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

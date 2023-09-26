@@ -1,0 +1,37 @@
+<div [formGroup]="parentGroup">
+
+  <div class="col-10 col-sm-8 col-md-4 mx-auto">
+
+    <h3 class="mb-3 text-center">Select your lab privacy</h3>
+
+    <div class="form-group mb-1 mt-4">
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="radio" formControlName=privacy value=0 checked> The lab profile is visible to everyone
+          <span class="circle">
+            <span class="check"></span>
+          </span>
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="radio" formControlName=privacy value=1> The lab profile is visible only to lab members
+          <span class="circle">
+            <span class="check"></span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

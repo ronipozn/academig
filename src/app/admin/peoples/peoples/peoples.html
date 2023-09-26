@@ -1,0 +1,232 @@
+<div class="card mt-0">
+  <div class="card-body">
+
+    <h5 *ngIf="streamRetrieved[0]" class="ml-1">{{count}} Users</h5>
+
+    <button [disabled]="!streamRetrieved[0]" mat-raised-button class="btn btn-sm btn-light-blue" (click)="updateList()">
+      Reload: <span *ngIf="streamRetrieved[0]" class="ml-1">Users</span>
+    </button>
+
+    <div class="custom-control custom-checkbox">
+      <input [(ngModel)]="verifiedFlag" type="checkbox" name="verifiedSwitch" class="form-check-input" id="verifiedSwitch">
+      <label class="form-check-label" for="verifiedCheck">Email Verified</label>
+    </div>
+
+    <div class="custom-control custom-checkbox">
+      <input [(ngModel)]="challengesFlag" type="checkbox" name="challengeSwitch" class="form-check-input" id="challengeSwitch">
+      <label class="form-check-label" for="challengeCheck">Challenges</label>
+    </div>
+
+    <div class="custom-control custom-checkbox">
+      <input [(ngModel)]="librariesFlag" type="checkbox" name="librarySwitch" class="form-check-input" id="librarySwitch">
+      <label class="form-check-label" for="libraryCheck">Libraries</label>
+    </div>
+
+    <div class="custom-control custom-checkbox">
+      <input [(ngModel)]="domainsFlag" type="checkbox" name="domainSwitch" class="form-check-input" id="domainSwitch">
+      <label class="form-check-label" for="domainCheck">Domain Request</label>
+    </div>
+
+    <div class="custom-control custom-checkbox">
+      <input [(ngModel)]="followingsFlag" type="checkbox" name="followingSwitch" class="form-check-input" id="followingSwitch">
+      <label class="form-check-label" for="followingCheck">Labs Following</label>
+    </div>
+
+    <div class="custom-control custom-checkbox">
+      <input [(ngModel)]="updatesFlag" type="checkbox" name="updatesSwitch" class="form-check-input" id="updatesSwitch">
+      <label class="form-check-label" for="updatesCheck">Updates</label>
+    </div>
+
+    <div class="custom-control custom-checkbox">
+      <input [(ngModel)]="suggestionsFlag" type="checkbox" name="suggestionsSwitch" class="form-check-input" id="suggestionsSwitch">
+      <label class="form-check-label" for="suggestionsCheck">Suggestions</label>
+    </div>
+
+  </div>
+</div>
+
+<!-- <p class="mt-3">The digest email, Academig Launchpad emails, Academig updates, News and special events</p> -->
+
+<spinner *ngIf="!streamRetrieved[0]" class="py-4"></spinner>
+
+<ng-container *ngIf="streamRetrieved[0] || streamMore">
+  <div *ngFor="let people of peoples; let i=index;" class="card mt-0 mb-3">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-xl-8">
+          <b>{{i+1}}.</b>
+          <single-pic [pic]=people.pic [width]=41 [height]=41 class="mx-2"></single-pic>
+          <a [routerLink]="['/people',people._id]">{{people.name}}</a>
+          ({{people.personalInfo.email}})
+          ({{stageText[people.stage]}})
+          ({{people.date | date:'dd MMM y, HH:mm' }})
+
+          <div *ngIf="people.logging" class="mt-2">
+            <b>Updates:</b> <pre>({{people.logging.updates | json}})</pre>
+          </div>
+
+          <div *ngIf="people.logging" class="mt-2">
+            <b>Suggestions:</b> <pre>({{people.logging.suggestions | json}})</pre>
+          </div>
+
+          <!-- ({{people.subscribe}}) -->
+
+          <!-- Missing coauthors -->
+
+          <!-- Score -->
+
+          <div *ngIf="people.positions.length>0" class="mt-2">
+            <b><u>Positions:</u></b>
+            <p *ngFor="let position of people.positions" class="mb-0">
+              <group-link *ngIf="position.group" [smallFlag]=false [groupIndex]=position.group class="mr-1"></group-link>
+              <b>Status:</b> {{position.status}}
+              <span *ngIf="position.email"><b>Email:</b> {{position.email.address}} (Status: {{position.email.stage}})</span>
+            </p>
+          </div>
+
+          <!-- Domain Request -->
+          <!-- <td class="text-nowrap">
+            <p>Open Modal: {{ request.dates[0] | date:'dd MMM y' }}</p>
+            <p>No: {{ request.dates[1] | date:'dd MMM y' }}</p>
+            <p>Yes: {{ request.dates[2] | date:'dd MMM y' }}</p>
+          </td> -->
+
+          <div *ngIf="people.library" class="mt-2">
+            <b>Library:</b> {{people.library | json}}
+          </div>
+
+          <div *ngIf="people.challenge" class="mt-2">
+            <b>Challenge:</b> {{people.challenge | json}}
+          </div>
+
+          <div *ngIf="people.groups?.length>0" class="mt-2">
+            <p *ngFor="let group of people.groups; let j=index" class="my-0">
+              {{j}}. {{group.group.name}}
+            </p>
+          </div>
+
+        </div>
+        <div class="col-xl-4">
+          <div *ngIf="adminFlag" class="btn-group" role="group" aria-label="Actions">
+            <button role="button" [disabled]="!streamRetrieved[4]" class="btn btn-sm btn-light-blue mr-2 text-nowrap" (click)="newsUpdates(people._id)">News Updates</button>
+            <button role="button" [disabled]="!streamRetrieved[3]" class="btn btn-sm btn-light-blue mr-2 text-nowrap" (click)="postProgressById(people._id)">Progress Email</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<div *ngIf="streamRetrieved[0] && moreFlag" class="d-flex justify-content-center my-4">
+  <button role="button" [disabled]="!streamMore" class="btn btn-sm btn-light-blue" (click)="showMoreFunc()">
+    <i class="fa fa-arrow-down" aria-hidden="true"></i> Show more
+    <i *ngIf="!streamMore" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+  </button>
+</div>
+
+<!-- <div id="accordion" role="tablist">
+  <div class="card-collapse m-0">
+    <div class="card-header" role="tab" id="headingOne">
+      <h5 class="mb-0">
+        <a data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+          OnBoarding<i class="material-icons">keyboard_arrow_down</i>
+        </a>
+      </h5>
+    </div>
+    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion" style="">
+      <div class="card-body">
+        <p class="mb-0"><b>1. Thank you:</b> 1, 0, 0</p>
+        <p class="mb-0"><b>2. Circling back:</b> 1, 1, 0</p>
+        <p class="mb-0"><b>3. Like you:</b> 0, 0, 0</p>
+        <p class="mb-0"><b>4. Trial about to end:</b> 0, 0, 0</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-collapse m-0">
+    <div class="card-header" role="tab" id="headingTwo">
+      <h5 class="mb-0">
+        <a class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Launchpad
+          <i class="material-icons">keyboard_arrow_down</i>
+        </a>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        <p class="mb-0"><b>1. Now what:</b> 1, 0, 0</p>
+        <p class="mb-0"><b>2. Compare functionality:</b> 1, 1, 1</p>
+        <p class="mb-0"><b>3. Build lab profile:</b> 1, 1, 0</p>
+        <p class="mb-0"><b>4. Increase reputation:</b> 0, 0, 0</p>
+        <p class="mb-0"><b>5. Share Academig:</b> 0, 0, 0</p>
+        <p class="mb-0"><b>6. Lift-off:</b> 0, 0, 0</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-collapse m-0">
+    <div class="card-header" role="tab" id="headingThree">
+      <h5 class="mb-0">
+        <a data-toggle="collapse" href="#collapseThree" aria-controls="headingThree" class="collapsed">
+          Progress<i class="material-icons">keyboard_arrow_down</i>
+        </a>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+        <p *ngFor="let task of tasks; let i=index" class="mb-0">
+          <b>{{task}}:</b>
+          {{people.progress[i] ? people.progress[i] : 0}},
+          {{people.progressNotify && people.progressNotify[i] ? people.progressNotify[i] : 0}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-collapse m-0">
+    <div class="card-header" role="tab" id="heading4">
+      <h5 class="mb-0">
+        <a data-toggle="collapse" href="#collapse4" aria-expanded="false" aria-controls="heading4" class="collapsed">
+          Digest<i class="material-icons">keyboard_arrow_down</i>
+        </a>
+      </h5>
+    </div>
+    <div id="collapse4" class="collapse" role="tabpanel" aria-labelledby="heading4" data-parent="#accordion">
+      <div class="card-body">
+        TBD
+      </div>
+    </div>
+  </div>
+
+  <div class="card-collapse m-0">
+    <div class="card-header" role="tab" id="heading5">
+      <h5 class="mb-0">
+        <a data-toggle="collapse" href="#collapse5" aria-expanded="false" aria-controls="heading5" class="collapsed">
+          Updates<i class="material-icons">keyboard_arrow_down</i>
+        </a>
+      </h5>
+    </div>
+    <div id="collapse5" class="collapse" role="tabpanel" aria-labelledby="heading5" data-parent="#accordion">
+      <div class="card-body">
+        TBD
+      </div>
+    </div>
+  </div>
+
+  <div class="card-collapse m-0">
+    <div class="card-header" role="tab" id="heading6">
+      <h5 class="mb-0">
+        <a data-toggle="collapse" href="#collapse6" aria-expanded="false" aria-controls="heading6" class="collapsed">
+          News and special events<i class="material-icons">keyboard_arrow_down</i>
+        </a>
+      </h5>
+    </div>
+    <div id="collapse6" class="collapse" role="tabpanel" aria-labelledby="heading6" data-parent="#accordion">
+      <div class="card-body">
+        TBD
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- <small>[Sent, Open, Click]</small> -->

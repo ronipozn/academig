@@ -1,0 +1,76 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <img src="./assets/img/build/boss.svg" style="max-height: 15rem;" class="mx-auto d-block img-fluid" alt="academig_build_pi_info"> -->
+
+  <h3 *ngIf="labType==0" class="mb-3 text-center"><b>Your Principal Investigator</b></h3>
+  <h3 *ngIf="labType==1" class="mb-3 text-center"><b>Contact Employee</b></h3>
+
+  <div class="col-10 col-sm-8 col-md-6 col-xl-4 mx-auto">
+
+    <!-- <div class="d-flex justify-content-center">
+      <a style="cursor:pointer;" (click)="picOp()">
+        <single-pic class="imgFlow" [pic]=userPic [width]=100 [height]=100></single-pic>
+      </a>
+    </div> -->
+
+    <mat-form-field *ngIf="labType==0" appearance="outline" [ngClass]="{'has-success': parentGroup.get('secondPosition').valid, 'has-danger': parentGroup.get('secondPosition').invalid && errorFlag[0] }">
+      <mat-label>Current position</mat-label>
+      <mat-select [placeholder]="'Current position'" formControlName=secondPosition ariaLabel="positionSelect[0]" [required]=true>
+        <mat-option *ngFor="let item of positionSelect" [value]="item.value">
+          {{ item.display }}
+        </mat-option>
+      </mat-select>
+      <span class="form-control-feedback">
+        <i *ngIf="parentGroup.get('secondPosition').valid" class="material-icons">done</i>
+        <i *ngIf="parentGroup.get('secondPosition').invalid && errorFlag[0]" class="material-icons">clear</i>
+      </span>
+    </mat-form-field>
+
+    <!-- <build-tag-fetch-field [labelRequired]=true
+                           [itemTitle]="'Authors'"
+                           [itemPlaceholder]="'+ Author'"
+                           [controlName]="'secondPosition'"
+                           [parentGroup]=parentGroup
+                           >
+    </build-tag-fetch-field> -->
+    <!-- [submitStatus]=submitStatus[1] -->
+
+    <build-modal-text-field *ngIf="labType==1" class="mb-3"
+                            [fieldType]=1
+                            [labelRequired]=true
+                            [itemTitle]="'Current position'"
+                            [controlName]="'secondPosition'"
+                            [parentGroup]=parentGroup>
+    </build-modal-text-field>
+
+    <build-modal-text-field [fieldType]=1
+                            [itemTitle]="'Name'"
+                            [labelRequired]=true
+                            [controlName]="'secondName'"
+                            [submitStatus]=errorFlag[1]
+                            [itemExplain]="'Keep name between 2-30 characters.'"
+                            [parentGroup]=parentGroup>
+    </build-modal-text-field>
+
+    <p></p>
+
+    <build-month-field [itemTitle]="'Start Date'"
+                       [controlName]="'secondStartDate'"
+                       [parentGroup]="parentGroup"
+                       [labelRequired]=true
+                       [itemExplain]="'If you don\'t know the exact date, you can choose an approximate one. Your principal investigator can always change the date later.'"
+                       [submitStatus]=errorFlag[2]>
+    </build-month-field>
+
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

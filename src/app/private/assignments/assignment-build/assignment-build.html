@@ -1,0 +1,96 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">Reports</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-slide-select-members [itemFirst]=true
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Who Will See'"
+                                  [labelRequired]=true
+                                  [minSelected]=1
+                                  [type]=0
+                                  [submitStatus]=submitStatus
+                                  [parentGroup]=formModel
+                                  [controlName]="'whoSee'"
+                                  [preMembersInput]=preWhoSee
+                                  (membersOutput)=whoFunc($event)>
+      </build-slide-select-members>
+      <span class="text-muted small">Select who will have access to the submission files.</span>
+
+      <build-slide-select-members [selectAllFlag]=true
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Participants'"
+                                  [labelRequired]=true
+                                  [minSelected]=1
+                                  [type]=0
+                                  [submitStatus]=submitStatus
+                                  [parentGroup]=formModel
+                                  [controlName]="'participants'"
+                                  [preMembersInput]=preParticipants
+                                  (membersOutput)=participantsFunc($event)>
+      </build-slide-select-members>
+      <span class="text-muted small">Select the lab members who will need to submit a report.</span>
+
+      <div class="row no-gutters mt-3">
+        <div class="col mr-1">
+          <build-modal-text-field [fieldType]=4
+                                  [itemTitle]="'How often'"
+                                  [labelRequired]=true
+                                  [controlName]="'howOften'"
+                                  [parentGroup]=formModel
+                                  [itemArray]=howOftenSelect
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col ml-1">
+          <build-modal-text-field [fieldType]=4
+                                  [itemTitle]="'Duration'"
+                                  [labelRequired]=true
+                                  [controlName]="'duration'"
+                                  [parentGroup]=formModel
+                                  [itemArray]=durationSelect
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <div class="row no-gutters">
+        <div class="col mr-1">
+          <build-modal-text-field [fieldType]=4
+                                  [itemTitle]="'Submission Day'"
+                                  [labelRequired]=true
+                                  [controlName]="'day'"
+                                  [parentGroup]=formModel
+                                  [itemArray]=daySelect
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col ml-1">
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'time'"
+                                  [itemTitle]="'Submission Time'"
+                                  [labelRequired]=true
+                                  [controlName]="'time'"
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <!-- Auto Check-ins make it easy for you and your team to stay up-to-date on your projects. 
+      Every Friday, we’ll automatically check in with Jamaica Jean to share an update about the progress made this week,
+      the plan for next week, and any problems that may arise.
+      Anyone who has access to the messages on this contract will be able to view check-in responses in the Contract Workroom. -->
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">{{newFlag ? 'Add' : 'Update'}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

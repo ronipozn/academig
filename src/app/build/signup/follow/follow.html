@@ -1,0 +1,77 @@
+<!-- <mat-progress-bar *ngIf="!streamRetrieved"
+                  style="margin: 0px 0px;"
+                  [color]="color"
+                  [mode]="mode">
+</mat-progress-bar> -->
+
+<div [formGroup]="parentGroup">
+
+  <h3 class="mb-3 pb-1 text-center"><b>Follow labs and stay on top of your field</b></h3>
+
+  <h5 class="mb-3 text-center"><b>Based on your research topics, we suggest you the following labs:</b></h5>
+
+  <!-- topic {{parentGroup.get('interests').value}} -->
+
+  <ais-instantsearch [config]="config_labs">
+    <ais-hits [transformItems]="transformGroups">
+
+      <div class="ais-InstantSearch">
+        <ng-template let-hits="hits" let-results="results">
+
+          <ais-configure [searchParameters]="{
+            similarQuery: query,
+            removeWordsIfNoResults: 'allOptional',
+            hitsPerPage: 10 }">
+          </ais-configure>
+
+          <div class="col-12 col-sm-11 col-md-9 mx-auto">
+
+            <spinner *ngIf="!streamRetrieved"></spinner>
+
+            <div class="card-columns" [formArrayName]="'groupsToggle'">
+
+              <div *ngFor="let group of hits; let i=index" class="card mt-0" [ngClass]="{'border-primary': arrayControl?.at(i).value}">
+                <div class="card-body">
+
+                  <div class="d-flex">
+                    <div class="mr-auto">
+                      <div class="media">
+                        <div class="media-body">
+                          <img *ngIf="group.groupIndex.university.pic" class="mb-2" [height]="30" [src]="group.groupIndex.university.pic">
+                          <h4 class="card-title">{{group.groupIndex.group.name}}</h4>
+                          <p class="card-text mb-0">{{group.groupIndex.department.name}} / {{group.groupIndex.university.name}}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="togglebutton">
+                        <label for="customSwitch{{i}}">
+                          <input [formControlName]="i" type="checkbox" id="customSwitch{{i}}">
+                          <span class="toggle"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </ng-template>
+      </div>
+
+    </ais-hits>
+  </ais-instantsearch>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex mt-4">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="px-0 btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

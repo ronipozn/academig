@@ -1,0 +1,22 @@
+<div id="accordion" role="tablist" aria-multiselectable="true">
+  <!-- <div *ngIf="showEditBtn; else items" [dragula]=bagName [(dragulaModel)]='faqs'>
+    <ng-container *ngTemplateOutlet="items"></ng-container>
+  </div>
+  <ng-template #items> -->
+  <ng-container>
+    <faq-item *ngFor="let faq of faqs; let i=index"
+              [itemAutofocus]="itemFocus==i"
+              [faq]=faq
+              [i]=i
+              [stream]=stream[i]
+              [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+              [showEditBtn]=showEditBtn
+              [sourceType]=sourceType
+              (animationDoneEvent)="animationDone()"
+              (buttonEditClick)="buttonEditFunc(i)"
+              (buttonDeleteClick)="buttonDeleteFunc(i)"
+              (buttonSuggestionClick)="buttonSuggestionFunc($event,i)">
+    </faq-item>
+  </ng-container>
+  <!-- </ng-template> -->
+</div>

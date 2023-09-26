@@ -1,0 +1,29 @@
+button.btnFollowingPublication:after {content:"In My Reading Library"}
+button.btnFollowingPublication:hover span {display:none}
+button.btnFollowingPublication:hover:after {content:"Remove from Reading Library"}
+
+button.btnFollowing:after {content:" Following"}
+button.btnWatched:after {content:" Watching"}
+button.btnClap:after {content:" Clap"}
+button.btnCompare:after {content:" Compare"}
+
+button.btnFollowing:hover span {display:none}
+
+button.btnFollowing:hover:after {content:"Unfollow";}
+button.btnWatched:hover:after {content:"Unwatch";}
+button.btnClap:hover:after {content:"Unclap";}
+button.btnCompare:hover:after {content:"Uncompare";}
+
+button.btnFollowing:hover {
+  background-color: #e67e22;
+  border-color: #d35400;
+}
+
+button.btnUnFollow {
+  background-color: #e67e22;
+  border-color: #d35400;
+}
+
+button {
+  white-space: nowrap;
+}

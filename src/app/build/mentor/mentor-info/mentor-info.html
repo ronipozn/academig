@@ -1,0 +1,121 @@
+<div class="card">
+  <div class="card-body">
+
+    <h3 class="mt-0 text-success"><b>Tell us about your self</b></h3>
+
+    <div *ngIf="invalid.length>0" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+      <p *ngFor="let item of invalid; let l=last" [ngClass]="{'mb-0': l}"><b>{{ item }}.</b></p>
+    </div>
+
+    <div [formGroup]="parentGroup">
+
+      <div class="row">
+        <div class="col-lg-6">
+          <build-modal-text-field [itemTitle]="'First name'"
+                                  [controlName]="'first_name'"
+                                  [parentGroup]=parentGroup
+                                  [labelRequired]=true
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col-lg-6">
+          <build-modal-text-field [itemTitle]="'Last name'"
+                                  [controlName]="'last_name'"
+                                  [parentGroup]=parentGroup
+                                  [labelRequired]=true
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-modal-text-field [itemTitle]="'What is your LinkedIn profile?'"
+                              [controlName]="'linkedin'"
+                              [parentGroup]=parentGroup
+                              [labelRequired]=true
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+      
+      <build-modal-text-field [labelRequired]=true
+                              [fieldType]=4
+                              [itemTitle]="'What do you do?'"
+                              [itemArray]="['I am a freelancer or consultant', 'I am a paid employee', 'I am a business owner', 'Other']"
+                              [controlName]="'position'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="mb-4">
+        <build-modal-text-field [fieldType]=5
+                                [itemTitle]="'Do you have at least 5 years of experience working in growth marketing, with startups, or in technology companies?'"
+                                [controlName]="'experience'"
+                                [parentGroup]=parentGroup
+                                [itemArray]="['Yes', 'No']"
+                                [labelRequired]=true
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+
+      <div class="mb-4">
+        <build-modal-text-field [fieldType]=5
+                                [itemTitle]="'Do you intend on charging for mentorship?'"
+                                [controlName]="'charging'"
+                                [parentGroup]=parentGroup
+                                [itemArray]="['Yes', 'No', 'Maybe later']"
+                                [labelRequired]=true
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+
+      <div class="mb-4">
+        <build-modal-text-field [labelRequired]=true
+                                [fieldType]=5
+                                [itemTitle]="'To what degree is the monetary reward of paid mentoring sessions a motivation for becoming a growth mentor?'"
+                                [itemArray]="['Don\'t care about the $', 'It\'s all about the $']"
+                                [controlName]="'charing_importance'"
+                                [parentGroup]=parentGroup
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+
+      <build-modal-text-field [itemTitle]="'In just one sentence please tell us why you want to become an academic mentor.'"
+                              [controlName]="'pitch'"
+                              [parentGroup]=parentGroup
+                              [labelRequired]=true
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [typeSelected]="'number'"
+                              [itemTitle]="'How much would you likely envision yourself charging for an hour of mentoring on Academig? ($USD)'"
+                              [controlName]="'price_hour'"
+                              [parentGroup]=parentGroup
+                              [labelRequired]=true
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="mb-4">
+        <build-modal-text-field [fieldType]=5
+                                [itemTitle]="'You wont be able to charge until you get your first three reviews. You also won\'t be able to charge above $99/hr until you reach ten reviews. Are you OK with this?'"
+                                [controlName]="'charging_terms'"
+                                [parentGroup]=parentGroup
+                                [itemArray]="['Yes', 'No', 'Not sure']"
+                                [labelRequired]=true
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+
+      <div class="mb-2">
+        <build-modal-text-field [fieldType]=5
+                                [itemTitle]="'Video tips and profile introductions are mandatory for new mentors. Are you OK with this?'"
+                                [controlName]="'background_terms'"
+                                [parentGroup]=parentGroup
+                                [itemArray]="['Yes', 'No']"
+                                [labelRequired]=true
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+        <!-- Here's an example of a video tip: https://www.youtube.com/watch?v=fOYsWfQVWuY& Here's an example of a profile introduction (see embedded video on Domen's profile): https://app.academig.com/domen-kert<br> -->
+      </div>
+
+    </div>
+
+  </div>
+</div>

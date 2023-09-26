@@ -1,0 +1,54 @@
+<div class="bg-white py-4">
+  <div class="col-md-10 offset-md-1">
+
+    <h2>Conduct ALL Your Academic Research in One Place</h2>
+
+    <p class="lead">Consolidate all your academic analysis to one platform with live labs data.</p>
+
+    Follow these steps to fuel your entire academic research or jump into some popular search templates.
+
+    <b>Step 1: Build a Search to Identify Labs or Services in a Specific Research Fields or Experty:</b>
+    Add filters to narrow down your company search based on targeted filters. To do this, click “Companies” on the left-hand navigation. Then, click. Ditch the generic Google search to identify the organizations that meet your ideal criteria.
+
+    <b>Step 2: Track Labs Happenings With Alerts:</b>
+    Once you’ve built a search of academic-specific labs and services, save it and personalize your alerts. To do this, click the floppy disk ￼on the upper right-hand corner of a search. Get alerts straight to your inbox when these companies raise money, get acquired, or make the news.
+
+    <b>Step 3: Create a List of Interesting Labs and Services to Track:</b>
+    Organize your Academig with custom lists. Save lists on potential prospects to reach out to or leads you’re working. You can build a list in two ways:
+    <ul>
+      <li>Add companies from a Search by clicking the checkbox next to a company. Then, select Add to List.</li>
+    	<li>Add companies from a Crunchbase profile by clicking ()￼ on the upper right-hand box.</li>
+    </ul>
+
+    Jump Into Some Examples.
+
+    Our academig' researchers have used these templates to monitor academic trends and upcoming companies – edit them and make them your own.
+
+    <b>Conduct Academic Publications Research:</b> Stem cells labs with a publication in Science or Nature from the previous 2 years<br>
+    <b>Find New Opportunities:</b> Cripser Cas 9 labs with open positions for Phds and between 5-10 lab members<br>
+    <b>Conduct Academic Funding Research:</b> Average Funding for Biology Labs in the last 12 months<br>
+    <b>Track Relevant Services:</b> Analytical services for biology labs<br>
+
+  </div>
+</div>
+
+<div class="jumbotron-2 py-4">
+  <div class="text-center">
+    <div class="btn-group-vertical">
+      <button role="button" class="btn btn-lg btn-success mt-4" [routerLink]="['/pricing']">
+        <i class="fa fa-star fa-1x mr-2" aria-hidden="true"></i> Academig Pricing
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="!isAuthenticated">
+  <hr>
+  <div class="mb-4 pb-4 mt-0 row justify-content-center">
+    <button style="display:inline-block;text-decoration:none;background-color:#5bc0de;color:white;cursor:pointer;font-family:Helvetica,Arial,sans-serif;font-size:20px;line-height:50px;text-align:center;margin:0;height:50px;padding:0px 33px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;" role="button" class="btn" (click)="login()">
+      <i class="fa fa-sign-in fa-1x mr-2" aria-hidden="true"></i> Get Started
+    </button>
+  </div>
+</ng-container>
+
+<info-footer></info-footer>

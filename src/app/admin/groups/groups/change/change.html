@@ -1,0 +1,36 @@
+<div class="side-form">
+
+  <h3 class="title text-center">Change</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-name-field [userId]=null
+                              [mode]=3
+                              [itemFirst]=true
+                              [itemTitle]="'University'"
+                              [controlName]="'university'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus
+                              (controlStatus)="keyUp(0)">
+      </build-modal-name-field>
+
+      <build-modal-name-field [iconTitle]="'building-o'"
+                              [userId]=null
+                              [universityId]=universityId
+                              [mode]=2
+                              [itemTitle]="'Department'"
+                              [controlName]="'department'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-name-field>
+
+      <hr class="mt-2">
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">Change</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

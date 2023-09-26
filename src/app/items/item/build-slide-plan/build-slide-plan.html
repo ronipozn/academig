@@ -1,0 +1,37 @@
+ <!-- (keydown.escape)="onCancel()" -->
+<div class="side-form">
+
+  <h3 class="title text-center">Plan Details ({{index+1}} Codes)</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <b>Features:</b>
+      <trumbowyg-ngx-editor id="editor"
+                            class="mt-0 pt-0"
+                            formControlName="features">
+      </trumbowyg-ngx-editor>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Reduced price'"
+                              [controlName]="'reducedPrice'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Full price'"
+                              [controlName]="'fullPrice'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-fill btn-light-blue">Update</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<div style="min-height: 86vh;">
+
+  <div *ngIf="!streamRetrieved" class="d-flex justify-content-center mt-4">
+    <div class="spinner-border text-secondary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div [hidden]="!streamRetrieved" class="ais-InstantSearch">
+    <ais-instantsearch [config]="config_morning">
+      <ais-hits [transformItems]="transformArchive">
+        <ng-template let-hits="hits" let-results="results">
+
+          <app-loading-indicator></app-loading-indicator>
+
+          <div class="container" style="margin-bottom: 40px;">
+
+            <div class="row justify-content-center my-4">
+              <div class="col-md-8">
+
+                <button *ngIf="adminFlag" mat-raised-button class="btn btn-light-blue my-2" [routerLink]="['/','morning','submit']">Create Morning Newsletter</button>
+                <!-- <button *ngIf="adminFlag" mat-raised-button class="btn btn-light-blue" [routerLink]="['/','morning','submit']">Submit Story</button> -->
+
+                <ais-search-box placeholder="Search Academig Morning Archive"></ais-search-box>
+                <ais-configure [searchParameters]="{ hitsPerPage: 20 }"></ais-configure>
+
+                <div class="mb-3 mt-1 d-flex">
+                  <div class="mr-auto"><ais-stats></ais-stats></div>
+                  <div><img [height]="20" [src]="'./assets/img/algolia.png'"></div>
+                </div>
+
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="name">
+                    <th style="width: 80%" mat-header-cell *matHeaderCellDef>
+                      <div class="text-dark h5 my-0 mr-0 pr-0">Name</div>
+                    </th>
+                    <td style="width: 80%" mat-cell *matCellDef="let element">
+                      <a [routerLink]="['/', 'morning', moment(element.date).format('YYYY'), moment(element.date).format('MM'), moment(element.date).format('DD')]" class="card-title">
+                        <b>{{element.topic}}</b> - {{element.sub_topic}}
+                      </a>
+                    </td>
+                  </ng-container>
+
+                  <!-- Date Column -->
+                  <ng-container matColumnDef="date">
+                    <th style="width: 20%" mat-header-cell *matHeaderCellDef>
+                      <div class="text-dark h5 my-0 mr-0 pr-0">Date</div>
+                    </th>
+                    <td style="width: 20%" mat-cell *matCellDef="let element">
+                      <b>{{moment(element.date).format("MMM DD, YYYY")}}</b>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
+            </div>
+
+            <app-pagination *ngIf="hits.length>0" class="mb-2"></app-pagination>
+
+          </div>
+
+        </ng-template>
+      </ais-hits>
+    </ais-instantsearch>
+  </div>
+
+</div>
+
+<info-footer></info-footer>
+
+<!-- <a href="/daily/stories/2020/09/04/half-young-adults-us-live-parent"><div class='card h-100 story-card'>
+<a href="/daily/stories/2020/09/04/half-young-adults-us-live-parent"><figure class='story-card-image'>
+<img onerror="this.error=null;this.src=&quot;https://morningbrew-oslo.s3.us-west-2.amazonaws.com/1569597117.jpg&quot;;" class="card-img-top rounded-top" max_width="500" sizes="(max-width: 770px) 100vw, (max-width: 995px) 300px, (max-width: 1201px) 280px, 350px" src="https://media.giphy.com/media/3og0IKinzBYyoia9eE/giphy.gif" />
+<div class='inset-box-shadow'></div>
+</figure>
+</a> -->

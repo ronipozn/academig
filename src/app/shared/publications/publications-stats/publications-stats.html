@@ -1,0 +1,32 @@
+<!-- h-index, i10-index -->
+
+<table class="table table-sm">
+  <tbody>
+    <tr>
+      <td></td>
+      <td class="text-right" style="width: 33%"><b>All</b></td>
+      <td class="text-right" style="width: 33%"><b>Since 2015</b></td>
+    </tr>
+    <tr *ngIf="mode==0">
+      <td>Publications</td>
+      <td class="text-right" style="width: 33%">{{totalSum}}</td>
+      <td class="text-right" style="width: 33%">{{fiveYearsSum}}</td>
+    </tr>
+    <!-- <tr *ngIf="mode==1">
+      <td>Citations</td>
+      <td class="text-right" style="width: 33%">{{}}</td>
+      <td class="text-right" style="width: 33%">{{}}</td>
+    </tr> -->
+    <!-- <tr *ngIf="mode==2">
+      <td>Impact factors</td>
+      <td *ngIf="statsData?.length">{{ statsData[2] }}</td>
+      <td *ngIf="!statsData?.length">-</td>
+    </tr> -->
+  </tbody>
+</table>
+
+<!-- *ngIf="mode==0"  -->
+<div class="ct-chart" id="websiteViewsChart"></div>
+<!-- <button role="button" (click)="updatePublicationsList()" class="btn btn-sm btn-link" aria-haspopup="true" aria-expanded="false">
+  View all
+</button> -->

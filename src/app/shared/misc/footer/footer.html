@@ -1,0 +1,167 @@
+<footer class="footer py-2 pl-4">
+  <div class="col-xl-10 offset-xl-1 my-2">
+    <div class="row justify-content-between">
+
+      <div style="width: 350px; line-height: 150%;">
+
+        <span class="d-flex justify-content-start align-items-center mb-2">
+          <!-- [ngClass]="{'rounded-circle': type==0}" -->
+          <img *ngIf="pic" style="background-color: white;" class="mr-2" [height]=30 [src]=pic>
+          <span *ngIf="!pic && acronym" [style.font-size]="1.2 + 'rem'" class="p-0 my-0 mr-2 fa-stack fa-1x">
+            <i class="fa fa-circle fa-stack-2x py-0 my-0" [style.color]="'#cdcdc1'"></i>
+            <span class="fa fa-stack-1x fa-name fa-inverse py-0 my-0">{{acronym}}</span>
+          </span>
+          <span class="lead d-flex justify-content-start" style='white-space:pre-wrap; text-align:left;'>{{setName}}</span>
+        </span>
+
+        <p *ngIf="university && university!='company'" class="d-flex justify-content-start mb-1" style='white-space:pre-wrap; text-align:left;'>{{university}}</p>
+
+        <p *ngIf="department" class="d-flex justify-content-start mb-1" style='white-space:pre-wrap; text-align:left;'>{{department}}</p>
+
+        <p *ngIf="public && public.address" class="d-flex justify-content-start small" style='white-space:pre-wrap; text-align:left;' [innerHTML]="public.address | safeHtml"></p>
+
+        <ng-container *ngIf="public">
+          <span *ngIf="public.email" class="d-flex align-items-center mb-2">
+            <i class="fa fa-fw fa-envelope fa-1x mr-2" aria-hidden="true"></i> Email: <a target="_empty" class="ml-1" href="mailto:{{public.email}}">{{public.email}}</a><br>
+          </span>
+          <span *ngIf="public.phone" class="d-flex align-items-center mb-2">
+            <i class="fa fa-fw fa-phone fa-1x mr-2" aria-hidden="true"></i> Phone: {{public.phone}}<br>
+          </span>
+          <span *ngIf="public.fax" class="d-flex align-items-center mb-2">
+            <i class="fa fa-fw fa-fax fa-1x mr-2" aria-hidden="true"></i> Fax: {{public.fax}}
+          </span>
+          <span *ngIf="public.website" class="d-flex align-items-center">
+            <i class="fa fa-fw fa-globe fa-1x mr-2" aria-hidden="true"></i> Website: <a [href]="public.website" target="_empty"><i class="fa fa-link ml-1" aria-hidden="true"></i></a>
+          </span>
+        </ng-container>
+
+        <div *ngIf="btnEditFlag" class="d-flex align-items-center mt-2 mb-3">
+          <button role="button" [disabled]="streamPublic>0" (click)="onPublic()" mat-raised-button class="btn btn-sm btn-round">
+            <i class="fa fa-id-card fa-1x"></i> Update Info <spinner-put [stream]=streamPublic (animationDoneEvent)="animationDone(0)"></spinner-put>
+          </button>
+        </div>
+
+        <!-- <span *ngIf="linkFlag" class="mt-4 d-none d-lg-block" style="word-break:break-all; word-wrap: break-word;">
+          Link:
+          <a *ngIf="type==2" href="https://www.academig.com/#{{link}}" target="_empty">academig.com/#/{{link}}</a>
+          <a *ngIf="type==1" href="https://www.academig.com/#/{{universityLink}}/{{departmentLink}}" target="_empty">academig.com/#/{{universityLink}}/{{departmentLink}}</a>
+          <a *ngIf="group && type==0" href="https://www.academig.com/#/{{universityLink}}/{{departmentLink}}/{{groupLink}}" target="_empty">academig.com/#/{{universityLink}}/{{departmentLink}}/{{groupLink}}</a>
+          <a *ngIf="!group && type==0" href="https://www.academig.com/#/people/{{link}}" target="_empty">academig.com/#/people/{{link}}</a>
+        </span> -->
+
+        <div class="mt-3"></div>
+
+        <div *ngIf="social" class="d-flex align-items-center mb-2">
+
+          <a *ngIf="social.linkedin" href="https://www.linkedin.com/{{type==0 ? 'in' : 'school'}}/{{social.linkedin}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="fa fa-linkedin"></i>
+          </a>
+
+          <a *ngIf="social.twitter" href="https://www.twitter.com/{{social.twitter}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="fa fa-twitter"></i>
+          </a>
+
+          <a *ngIf="social.scholar && type==0" href="https://scholar.google.com/citations?user={{social.scholar}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="ai ai-google-scholar-square"></i>
+          </a>
+
+          <a *ngIf="social.orcid && type==0" href="https://orcid.org/{{social.orcid}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="ai ai-orcid"></i>
+          </a>
+
+          <a *ngIf="social.github && type==0" href="https://github.com/{{social.github}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="fa fa-github"></i>
+          </a>
+
+          <a *ngIf="social.researchgate && type==0" href="https://www.researchgate.net/profile/{{social.researchgate}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="ai ai-researchgate"></i>
+          </a>
+
+          <a *ngIf="social.facebook" href="https://www.facebook.com/{{social.facebook}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="fa fa-facebook"></i>
+          </a>
+
+          <!-- <a *ngIf="social.youtube" href="https://www.youtube.com/user/{{social.youtube}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"> -->
+          <a *ngIf="social.youtube" href="https://www.youtube.com/{{social.youtube}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="fa fa-youtube"></i>
+          </a>
+
+          <a *ngIf="social.pinterest" href="https://www.pinterest.com/{{social.pinterest}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="fa fa-pinterest"></i>
+          </a>
+
+          <a *ngIf="social.instagram" href="https://www.instagram.com/{{social.instagram}}" target="_empty" mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter">
+            <i class="fa fa-instagram"></i>
+          </a>
+
+        </div>
+
+        <div *ngIf="btnEditFlag" class="d-flex align-items-center">
+          <button role="button" [disabled]="streamSocial>0" (click)="onSocial()" mat-raised-button class="btn btn-sm btn-round">
+            <i class="fa fa-thumbs-up fa-1x"></i> Update Social <spinner-put [stream]=streamSocial (animationDoneEvent)="animationDone(1)"></spinner-put>
+          </button>
+        </div>
+
+        <p class="d-flex align-items-center mt-4">
+          Created easily with <a href="https://www.academig.com/" class="text-success ml-2" target="_empty"><b>Academig.com</b></a>
+        </p>
+
+      </div>
+
+      <div *ngIf="type==0 && setProgress" style="width: 450px;" class="d-none d-lg-block">
+        <div class="table-responsive">
+          <table class="table table-borderless table-sm">
+            <tbody>
+              <tr *ngFor="let row of rows; let i=index">
+                <td *ngFor="let col of list[i]">
+                  <a role="button" [routerLink]="[pageLinks[col]]">{{pageNames[col]}}</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="type==1 || type==2" style="width: 450px;" class="d-none d-lg-block">
+        <div class="table-responsive">
+          <table class="table table-borderless table-sm">
+            <tbody>
+              <tr>
+                <td *ngIf="type==1"><a role="button" [routerLink]="['./groups']">Groups</a></td>
+                <td *ngIf="type==2"><a role="button" [routerLink]="['./departments']">Departments</a></td>
+                <td><a role="button" [routerLink]="['./people']">People</a></td>
+                <td><a role="button" [routerLink]="['./publications']">Publications</a></td>
+              </tr>
+              <tr>
+                <td><a role="button" [routerLink]="['./services']">Services</a></td>
+                <td><a role="button" [routerLink]="['./projects']">Projects</a></td>
+                <td><a role="button" [routerLink]="['./teaching']">Teaching</a></td>
+              </tr>
+              <tr>
+                <td><a role="button" [routerLink]="['./jobs']">Open Positions</a></td>
+                <td><a role="button" [routerLink]="['./media']">Media</a></td>
+                <td><a role="button" [routerLink]="['./gallery']">Gallery</a></td>
+              </tr>
+              <!-- <td><a role="button" [routerLink]="['./meetings']">Meetings</a></td> -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="type==3" style="width: 450px;" class="d-none d-lg-block">
+        <div class="table-responsive">
+          <table class="table table-borderless table-sm">
+            <tbody>
+              <tr>
+                <td><a role="button" [routerLink]="['./']">Summary</a></td>
+                <td><a role="button" [routerLink]="['./news']">News</a></td>
+                <td><a role="button" [routerLink]="['./contact']">Contact</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</footer>

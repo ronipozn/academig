@@ -1,0 +1,45 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <button [disabled]="!streamRetrieved" role="button" class="btn btn-sm btn-info" (click)="updateList()">
+      Reload
+    </button>
+  </div>
+</div>
+
+<div *ngIf="!streamRetrieved" class="py-4">
+  <spinner></spinner>
+</div>
+
+<div *ngIf="streamRetrieved" class="card mt-0">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th class="text-nowrap">User ID</th>
+            <th class="text-nowrap">Item ID</th>
+            <th class="text-nowrap">Date</th>
+            <th class="text-nowrap">Type</th>
+            <th class="text-nowrap">Message</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <ng-container *ngFor="let logging of loggings; let i=index">
+            <tr>
+              <th scope="row">{{i}}</th>
+              <td>{{logging.userId}}</td>
+              <td>{{logging.itemId}}</td>
+              <td>{{logging.type}}</td>
+              <td>{{logging.date}}</td>
+              <td>{{logging.message}}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,251 @@
+<div *ngIf="missionService.showPage">
+  <spinner *ngIf="!streamRetrieved[0]"></spinner>
+  <ng-container *ngIf="streamRetrieved[0]">
+
+    <div *ngIf="items.location && items.location[0]" class="card mt-0" [@itemsAnimation]="('active')">
+      <agm-map [zoom]=16 [latitude]="items.location[0]" [longitude]="items.location[1]">
+        <agm-marker [latitude]="items.location[0]" [longitude]="items.location[1]"></agm-marker>
+      </agm-map>
+    </div>
+
+    <!-- <p *ngIf="missionService.departmentCountry" class="small text-muted my-1">{{missionService.departmentCity}}, <span *ngIf="missionService.departmentState">{{missionService.departmentState}},</span> {{missionService.departmentCountry | country}}</p> -->
+
+     <!-- && (missionService.publicInfo || missionService.socialInfo || contacts[0] || missionService.showHeadline) -->
+    <div *ngIf="streamRetrieved[1]" [@itemsAnimation]="('active')">
+      <div class="row">
+
+        <div class="col-lg-4">
+
+          <div class="card mt-0">
+            <div class="card-body">
+
+              <h3 class="mt-0">{{missionService.groupIndex.group.name}}</h3>
+
+              <p *ngIf="missionService.publicInfo && missionService.publicInfo.address" class="mt-2">
+                <span style='white-space:pre-wrap;' [innerHTML]="missionService.publicInfo.address | safeHtml"></span>
+              </p>
+
+              <div *ngIf="missionService.publicInfo" class="d-flex align-items-start flex-column mt-4">
+                <span *ngIf="missionService.publicInfo.email" class="d-flex align-items-center mb-4">
+                  <span class="fa-stack mr-2">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x" style="color: #8f9599"></i>
+                  </span>
+                  Email: <a target="_empty" class="card-title" href="mailto:{{missionService.publicInfo.email}}">{{missionService.publicInfo.email}}</a>
+                </span>
+                <span *ngIf="missionService.publicInfo.phone" class="d-flex align-items-center mb-4">
+                  <span class="fa-stack mr-2">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-phone fa-stack-1x" style="color: #8f9599"></i>
+                  </span>
+                  Phone: {{missionService.publicInfo.phone}}
+                </span>
+                <span *ngIf="missionService.publicInfo.fax" class="d-flex align-items-center mb-4">
+                  <span class="fa-stack mr-2">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-fax fa-stack-1x" style="color: #8f9599"></i>
+                  </span>
+                  Fax: {{missionService.publicInfo.fax}}
+                </span>
+                <span *ngIf="missionService.publicInfo.website" class="d-flex align-items-center mb-4">
+                  <span class="fa-stack mr-2">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-globe fa-stack-1x" style="color: #8f9599"></i>
+                  </span>
+                  Official website: <a target="_empty" class="card-title" href="{{missionService.publicInfo.website}}" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link ml-1" aria-hidden="true"></i></a>
+                </span>
+              </div>
+
+              <div *ngIf="missionService.socialInfo" class="d-flex align-items-start flex-column">
+                <a *ngIf="missionService.socialInfo.linkedin" target="_empty" href="http://www.linkedin.com/in/{{missionService.socialInfo.linkedin}}" class="card-title" target="_empty">
+                  <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-linkedin"></i></button> Linkedin
+                </a>
+                <a *ngIf="missionService.socialInfo.twitter" target="_empty" href="http://www.twitter.com/{{missionService.socialInfo.twitter}}" class="card-title" target="_empty">
+                  <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-twitter"></i></button> Twitter
+                </a>
+                <a *ngIf="missionService.socialInfo.pintrest" target="_empty" href="http://www.twitter.com/{{missionService.socialInfo.pintrest}}" class="card-title" target="_empty">
+                  <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-pintrest"></i></button> Pinterest
+                </a>
+                <a *ngIf="missionService.socialInfo.instagram" target="_empty" href="http://www.twitter.com/{{missionService.socialInfo.instagram}}" class="card-title" target="_empty">
+                  <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-instagram"><i class="fa fa-instagram"></i></button> Instagram
+                </a>
+                <a *ngIf="missionService.socialInfo.scholar" target="_empty" href="https://scholar.google.com/citations?user={{missionService.socialInfo.scholar}}" class="card-title" target="_empty">
+                  <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="ai ai-google-scholar-square"></i></button> Google Scholar
+                </a>
+                <a *ngIf="missionService.socialInfo.orcid" target="_empty" href="https://orcid.org/{{missionService.socialInfo.orcid}}" class="card-title" target="_empty">
+                  <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="ai ai-orcid"></i></button> ORCID
+                </a>
+                <a *ngIf="missionService.socialInfo.github" target="_empty" href="https://www.github.com/{{missionService.socialInfo.github}}" class="card-title" target="_empty">
+                  <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-github"></i></button> GitHub
+                </a>
+                <a *ngIf="missionService.socialInfo.researchgate" target="_empty" href="https://www.researchgate.net/profile/{{missionService.socialInfo.researchgate}}" class="card-title" target="_empty">
+                  <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="ai ai-researchgate"></i></button> ResearchGate
+                </a>
+                <a *ngIf="missionService.socialInfo.facebook" target="_empty" href="https://www.facebook.com/{{missionService.socialInfo.facebook}}" class="card-title" target="_empty">
+                  <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-facebook"></i></button> Facebook
+                </a>
+              </div>
+
+              <hr class="py-0 my-0">
+              <p *ngIf="missionService.country" class="small text-muted mb-1">{{missionService.city}}, {{missionService.state}} {{missionService.country | country}}</p>
+              <a *ngIf="missionService.showEditBtn && missionService.groupType==0" role="button" (click)="locationOp(0, true, null)" style="cursor:pointer;" class="card-title mt-2">
+                <small>Manage Location</small>
+              </a>
+
+            </div>
+          </div>
+
+          <div *ngIf="streamRetrieved[1] && (missionService.showHeadline || contacts?.length>0)" class="card mt-0" #scrollAdd>
+            <div class="card-body">
+
+              <build-headline class="mb-2" [showEditBtn]="missionService.showHeadline" [headline]="'Contacts'" [headlineStyle]=0 [addButtonFlag]=true (buttonAddClick)="contactSlide(true, null, true)"></build-headline>
+
+              <contact-list [streamRetrieved]=streamRetrieved[1]
+                            [bagName]="'contacts-bag'"
+                            [contacts]=contacts
+                            [userId]=missionService.userId
+                            [itemFocus]=itemFocus
+                            [stream]=stream
+                            [showEditBtn]=missionService.showEditBtn
+                            (animationDoneEvent)="streamFunc()"
+                            (buttonEditClick)="contactSlide(true, $event, false)"
+                            (buttonDeleteClick)="contactDelete($event)"
+                            (btnMessageClick)="peopleMessage($event)">
+              </contact-list>
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-lg-8">
+          <div class="card mt-0">
+            <div class="card-body">
+
+              <build-headline [showEditBtn]=missionService.showHeadline [addButtonFlag]=false [headline]="'Send an email message'"></build-headline>
+
+              <div class="form-group">
+                <label for="InputSubject"><b>Subject</b></label>
+                <input [(ngModel)]="subject" type="text" class="form-control" id="InputSubject" aria-describedby="textSubject">
+              </div>
+
+              <div class="form-group">
+                <label for="messageleTextarea"><b>Message</b></label>
+                <textarea [(ngModel)]="message" class="form-control" id="MessageTextarea" rows="5"></textarea>
+              </div>
+
+              <ng-template #popContent let-emailContent="emailContent">
+                <b>From:</b>
+                <br>{{userService.userName}} via Academig
+                <br><br><b>Subject:</b>
+                <br>{{subject}}
+                <br><br><b>Message:</b>
+                <br>{{message}}
+              </ng-template>
+              <ng-template #popTitle let-emailTitle="emailTitle">
+                Preview Email
+              </ng-template>
+              <button type="button" class="btn btn-sm btn-link mt-0 pl-0" placement="top" [ngbPopover]="popContent" [popoverTitle]="popTitle" container="body" triggers="manual" #p1="ngbPopover" (click)="togglePreviewEmail(p1)">
+                Preview Email
+              </button>
+
+              <div class="d-flex flex-row-reverse">
+                <button [disabled]="submitFlag==1 || message==null || subject==null" role="button" mat-raised-button class="btn btn-light-blue" (click)="contactSend()">
+                  <div class="d-flex justify-content-start">
+                    Send
+                    <div *ngIf="submitFlag>0" class="ml-2">
+                      <i *ngIf="submitFlag==1" class="fa fa-1x fa-spinner fa-spin"></i>
+                      <i *ngIf="submitFlag==2" class="fa fa-1x fa-check"></i>
+                      <i *ngIf="submitFlag==3" class="fa fa-1x fa-times"></i>
+                    </div>
+                  </div>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <div *ngIf="missionService.showHeadline || items.findUs" class="card mt-0" [@itemsAnimation]="('active')" #scrollFindus>
+            <div class="card-body">
+              <build-headline *ngIf="streamRetrieved[1]"
+                              [addButtonFlag]="items.findUs==null"
+                              [showEditBtn]=missionService.showEditBtn
+                              [headline]="'Find Us'"
+                              (buttonAddClick)="findUsOp(0, true, $event)">
+              </build-headline>
+              <build-modal-intro *ngIf="streamRetrieved[1] && items.findUs==null && missionService.showHeadline"
+                                 [headline]="'How to find us'"
+                                 [bodypic]="'map-marker'"
+                                 [bodytext]="'Add information about how to reach your institution and your lab. Useful information can include parking locations and public transportation details.'">
+              </build-modal-intro>
+              <div *ngIf="streamRetrieved[1] && items.findUs" build-text-pic
+                   [text]=items.findUs
+                   [pic]=items.findUsPic
+                   [caption]=items.findUsCaption
+                   [stream]=streamFindUs
+                   [showEditBtn]=missionService.showEditBtn
+                   [titleText]="'Building Image'"
+                   [bodyText]="'This is the place for a building diagram.'"
+                   [imgCenter]=true
+                   (animationDoneEvent)="findUsOp(3)"
+                   (buttonEditClick)="findUsOp(0, true, $event)"
+                   (buttonDeleteClick)="findUsOp(1, false, $event)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </ng-container>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-contact *ngIf=contactBuildFlag
+                     [groupId]=missionService.groupId
+                     [userId]=missionService.userId
+                     [contact]=contacts[contactIndex]
+                     [newFlag]=contactNewFlag
+                     (update)="contactUpdate($event)"
+                     (cancel)="contactSlide(false, null, null)">
+</build-slide-contact>
+
+<build-slide-text-pic *ngIf=findUsBuildFlag
+                      [title]="'Find Us Information'"
+                      [text]=items.findUs
+                      [pic]=items.findUsPic
+                      [caption]=items.findUsCaption
+                      [itemId]=missionService.groupId
+                      [captionFlag]=true
+                      (update)="findUsOp(2, false, $event)"
+                      (cancel)="findUsOp(0, false, $event)">
+</build-slide-text-pic>
+
+<build-slide-location *ngIf=locationBuildFlag
+                      (update)="locationOp(2, false, $event)"
+                      (cancel)="locationOp(0, false, null)"
+                      [country_id]=missionService.country
+                      [state]=missionService.state
+                      [city]=missionService.city
+                      [name]=missionService.groupName
+                      [lat]=missionService.location[0]
+                      [lng]=missionService.location[1]>
+</build-slide-location>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]="'message'" [itemText]="'lab'"></modal-signup>
+    </div>
+  </div>
+</div>

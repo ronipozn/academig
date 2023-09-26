@@ -1,0 +1,7 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <button type="button" [disabled]="!streamRetrieved[2]" (click)="updateAlgolia(2)" class="btn btn-light-blue mr-2">Labs</button>
+    <button type="button" [disabled]="!streamRetrieved[3]" (click)="updateAlgolia(3)" class="btn btn-danger mr-2">Researchers</button>
+    <button type="button" [disabled]="!streamRetrieved[5]" (click)="updateAlgolia(5)" class="btn btn-info mr-2">Services</button>
+  </div>
+</div>

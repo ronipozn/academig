@@ -1,0 +1,130 @@
+<ng-container *ngIf="missionService.showPage">
+
+  <ul class="d-flex justify-content-center nav nav-pills nav-pills-light-blue" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link" style="cursor: pointer;" [ngClass]="{'active': activeTab===0}" data-toggle="tab" data-target="#talks" role="tablist" (click)="mediaFunc(0)">
+        <i class="material-icons">keyboard_voice</i> Talks
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" style="cursor: pointer;" [ngClass]="{'active': activeTab===1}" data-toggle="tab" data-target="#posters" role="tablist" (click)="mediaFunc(1)">
+        <i class="material-icons">picture_in_picture</i> Posters
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" style="cursor: pointer;" [ngClass]="{'active': activeTab===2}" data-toggle="tab" data-target="#presses" role="tablist" (click)="mediaFunc(2)">
+        <i class="material-icons">format_align_left</i> Press Release
+      </a>
+    </li>
+  </ul>
+
+  <div *ngIf="missionService.showEditBtn" class="d-flex justify-content-center mt-4">
+    <button mat-raised-button class="btn btn-light-blue btn-round" (click)="mediaSlide(true, 0, true)">
+      <i class="material-icons">add_circle_outline</i> Add {{typeNames[activeTab]}}
+    </button>
+  </div>
+
+  <div class="card" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <div class="tab-content">
+
+        <div class="tab-pane" [ngClass]="{'active': activeTab===0}" id="talks" role="tabpanel" #scrollTalk>
+          <media-talk-list [streamRetrieved]=streamRetrieved[0]
+                           [bagName]="'talks-bag'"
+                           [talks]=talks
+                           [sourceType]=0
+                           [itemFocus]=itemFocus
+                           [stream]=streamTalk
+                           [showEditBtn]=missionService.showEditBtn
+                           (animationDoneEvent)="activeStreamFunc(0)"
+                           (buttonEditClick)="mediaSlide(true, $event, false)"
+                           (buttonDeleteClick)="mediaDelete($event)">
+          </media-talk-list>
+          <build-modal-intro *ngIf="streamRetrieved[0] && talks[0]==null && missionService.showHeadline"
+                             [headline]="'Lab Talks'"
+                             [bodypic]="'microphone'"
+                             [bodytext]="'Start posting your lab\' talks.'">
+          </build-modal-intro>
+          <build-modal-intro *ngIf="streamRetrieved[0] && talks[0]==null && !missionService.showHeadline"
+                             [headline]="'There are no talks yet.'"
+                             [bodypic]="'microphone'">
+          </build-modal-intro>
+        </div>
+
+        <div class="tab-pane" [ngClass]="{'active': activeTab===1}" id="posters" role="tabpanel" #scrollPoster>
+          <media-poster-list [streamRetrieved]=streamRetrieved[1]
+                             [bagName]="'posters-bag'"
+                             [posters]=posters
+                             [sourceType]=0
+                             [itemFocus]=itemFocus
+                             [stream]=streamPoster
+                             (btnPDF)="pdfSlide(true,$event)"
+                             [showEditBtn]=missionService.showEditBtn
+                             (animationDoneEvent)="activeStreamFunc(1)"
+                             (buttonEditClick)="mediaSlide(true, $event, false)"
+                             (buttonDeleteClick)="mediaDelete($event)">
+          </media-poster-list>
+          <build-modal-intro *ngIf="streamRetrieved[1] && posters[0]==null && missionService.showHeadline"
+                             [headline]="'Lab posters'"
+                             [bodypic]="'object-group'"
+                             [bodytext]="'Start posting your lab\' posters.'">
+          </build-modal-intro>
+          <build-modal-intro *ngIf="streamRetrieved[1] && posters[0]==null && !missionService.showHeadline"
+                             [headline]="'There are no posters yet.'"
+                             [bodypic]="'object-group'">
+          </build-modal-intro>
+        </div>
+
+        <div class="tab-pane" [ngClass]="{'active': activeTab===2}" id="presses" role="tabpanel" #scrollPress>
+          <media-press-list [streamRetrieved]=streamRetrieved[2]
+                            [bagName]="'presses-bag'"
+                            [presses]=presses
+                            [sourceType]=0
+                            [itemFocus]=itemFocus
+                            [stream]=streamPress
+                            [showEditBtn]=missionService.showEditBtn
+                            (animationDoneEvent)="activeStreamFunc(2)"
+                            (buttonEditClick)="mediaSlide(true, $event, false)"
+                            (buttonDeleteClick)="mediaDelete($event)">
+          </media-press-list>
+          <build-modal-intro *ngIf="streamRetrieved[2] && presses[0]==null && missionService.showHeadline"
+                             [headline]="'Lab press releases.'"
+                             [bodypic]="'newspaper-o'"
+                             [bodytext]="'Start posting your lab\' press releases.'">
+          </build-modal-intro>
+          <build-modal-intro *ngIf="streamRetrieved[2] && presses[0]==null && !missionService.showHeadline"
+                             [headline]="'There are no press releases yet.'"
+                             [bodypic]="'newspaper-o'">
+          </build-modal-intro>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ng-container>
+
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+
+<build-slide-media *ngIf=mediaBuildFlag
+                   (update)="mediaUpdate($event)"
+                   (cancel)="mediaSlide($event)"
+                   [activeTab]=activeTab
+                   [groupId]=missionService.groupId
+                   [itemId]=missionService.groupId
+                   [userId]=missionService.userId
+                   [newFlag]=mediaNewFlag
+                   [talk]=talks[mediaIndex]
+                   [poster]=posters[mediaIndex]
+                   [press]=presses[mediaIndex]>
+</build-slide-media>
+
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide($event)"
+           [title]=fileTitle
+           [fileName]=fileName
+           [type]=1>
+</slide-pdf>

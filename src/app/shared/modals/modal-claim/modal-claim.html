@@ -1,0 +1,50 @@
+<div class="modal-header">
+  <h4 *ngIf="mode==0" class="modal-title" id="ClaimLabel">Are you the owner of this lab?</h4>
+  <h4 *ngIf="mode==2" class="modal-title" id="ClaimLabel">Are you one of the authors in this publication?</h4>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div *ngIf="mode==0" class="modal-body text-center">
+
+  <h5>
+    To claim this lab profile, <b>{{item.name}}</b>, and to find out<br>much more,
+    just <a style="cursor: pointer;" (click)="login()">sign up</a> with your academic email and follow the guidelines.
+  </h5>
+
+  <button class="btn btn-success mt-3" role="button" (click)="login()">
+    <i class="material-icons">assignment_turned_in</i> Sign Up
+  </button>
+
+</div>
+
+<ng-container *ngIf="mode==2">
+
+  <div class="modal-body">
+    <ng-container *ngIf="userId">
+      <p class="mb-2"><b>{{item.name}}</b></p>
+      <p class="mb-1">Enter the name as appeared on this publication</p>
+      <textarea class="form-control" id="Textarea" rows="1" [(ngModel)]="name"></textarea>
+      <p class="mt-3 mb-1">Add any information that you think could help us verify your request:</p>
+      <textarea class="form-control" id="Textarea" rows="4" [(ngModel)]="message"></textarea>
+    </ng-container>
+    <ng-container *ngIf="!userId">
+      <h5>
+        Have you got an invite to claim, <b>{{item.name}}</b>,
+        <a style="cursor: pointer;" (click)="login()">sign up</a> with the invite email and follow the guidelines.
+      </h5>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+    <button [disabled]=btnsDisabled role="button" mat-raised-button class="btn btn-sm btn-link" data-dismiss="modal">Close</button>
+    <button *ngIf="userId" [disabled]=btnsDisabled role="button" mat-raised-button class="btn btn-sm btn-success d-flex justify-content-start" (click)="sendClaim()">
+      <div class="d-flex justify-content-start">Claim <span *ngIf="!streamRetrieved" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></span></div>
+    </button>
+    <button *ngIf="!userId" mat-raised-button class="btn btn-success" role="button" (click)="login()">
+      <i class="material-icons">assignment_turned_in</i> Sign Up
+    </button>
+  </div>
+
+</ng-container>

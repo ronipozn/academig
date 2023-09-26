@@ -1,0 +1,1056 @@
+<mat-accordion multi>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <!-- [expanded]="!isMobile" -->
+  <mat-expansion-panel *ngIf="sourceType==0" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">public</i> <b>Location</b>
+        </span>
+      </mat-panel-title>
+      <!-- <mat-panel-description>Type your name and age</mat-panel-description> -->
+    </mat-expansion-panel-header>
+    <ng-container *ngIf="!missionService.countryId">
+      <p class="mt-0 mb-1"><b>Country</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.countries" [plan]="planNumber" [att]="'country'" [index]=100 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'country'" [index]=100></app-refinement-clear>
+    </ng-container>
+
+    <ng-container *ngIf="(!missionService.stateId && !missionService.cityId)">
+      <p class="mt-3 mb-1"><b>State</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.states" [plan]="planNumber" [att]="'state'" [index]=101 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'state'" [index]=101></app-refinement-clear>
+    </ng-container>
+
+    <ng-container *ngIf="!missionService.cityId">
+      <p class="mt-3 mb-1"><b>City</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.cities" [plan]="planNumber" [att]="'city'" [index]=102 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'city'" [index]=102></app-refinement-clear>
+    </ng-container>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==0" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">list_alt</i> <b>University overview</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <b>Founded year</b>
+    <hr class="mt-0 mb-3">
+    <app-range-slider [att]="'establish'"></app-range-slider>
+
+    <b>Facilities</b>
+    <hr class="mt-0 mb-1">
+    <app-refinement-list [refinesSelect]="missionService.refinements.facilities" [plan]="planNumber" [att]="'facility'" [index]=110 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'facilities'" [index]=110></app-refinement-clear>
+    <p class="mt-3 mb-1"><b>Control type</b></p>
+    <hr class="mt-0 mb-1">
+    <app-refinement-list [refinesSelect]="missionService.refinements.controls" [plan]="planNumber" [att]="'settings.control'" [index]=111 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'settings.control'" [index]=111></app-refinement-clear>
+    <p class="mt-3 mb-1"><b>Entity type</b></p>
+    <hr class="mt-0 mb-1">
+    <app-refinement-list [refinesSelect]="missionService.refinements.entities" [plan]="planNumber" [att]="'settings.entity'" [index]=112 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'settings.entity'" [index]=112></app-refinement-clear>
+    <p class="mt-3 mb-1"><b>Campus settings</b></p>
+    <hr class="mt-0 mb-1">
+    <app-refinement-list [refinesSelect]="missionService.refinements.campuses" [plan]="planNumber" [att]="'settings.campus'" [index]=113 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'settings.campus'" [index]=113></app-refinement-clear>
+
+    <p class="mt-3 mb-0"><b>Ranking</b></p>
+    <hr class="mt-0 mb-1">
+    Times Higher Education
+    <app-range-slider [att]="'rank.times'"></app-range-slider>
+    Shanghai Jiao Tong University
+    <app-range-slider [att]="'rank.shanghai'"></app-range-slider>
+    TopUniversities
+    <app-range-slider [att]="'rank.top'"></app-range-slider>
+    U.S. News & World Report
+    <app-range-slider [att]="'rank.usnews'"></app-range-slider>
+
+    <p class="mt-1 mb-0"><b>Social impact</b></p>
+    <hr class="mt-0 mb-1">
+    Facebook fans
+    <app-range-slider [att]="'social.facebook.followers'"></app-range-slider>
+    Twitter followers
+    <app-range-slider [att]="'social.twitter.followers'"></app-range-slider>
+    Linkedin fans
+    <app-range-slider [att]="'social.linkedin.followers'"></app-range-slider>
+    Instagram fans
+    <app-range-slider [att]="'social.instagram.followers'"></app-range-slider>
+    YouTube fans
+    <app-range-slider [att]="'social.youtube.followers'"></app-range-slider>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==0" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}"><i class="material-icons mr-2">face</i> <b>University People</b></span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <p class="mt-0 mb-1"><b>Students number</b></p>
+    <hr class="mt-0 mb-1">
+    <app-range-slider [att]="'people.students'"></app-range-slider>
+    <p class="mt-0 mb-1"><b>Doctoral number</b></p>
+    <hr class="mt-0 mb-1">
+    <app-range-slider [att]="'people.doctoral'"></app-range-slider>
+    <p class="mt-0 mb-1"><b>Staff number</b></p>
+    <hr class="mt-0 mb-1">
+    <app-range-slider [att]="'people.staff'"></app-range-slider>
+  </mat-expansion-panel>
+
+  <!-- Add much more -->
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==1" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">style</i> <b>Jobs</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <ng-container *ngIf="adminFlag">
+      <b>Post Date</b>
+      <hr class="mt-0">
+      Last 24 hours<br>
+      Today<br>
+      Last 3 days<br>
+      Last 7 days<br>
+      Last 14 days<br>
+      Last 30 days<br><br>
+    </ng-container>
+
+    <b>Position</b>
+    <hr class="mt-0">
+    <app-refinement-list [refinesSelect]="missionService.refinements.positions" [plan]="planNumber" [att]="'positions.positionName'" [index]=200 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'positions.positionName'" [index]=200></app-refinement-clear>
+
+    <ng-container *ngIf="adminFlag">
+      <br><b>Type</b>
+      <hr class="mt-0">
+      <!-- <app-refinement-list [refinesSelect]="missionService.refinements.positions" [plan]="planNumber" [att]="'positions.positionType'" [index]=201 (upgrage)="upgrageFilters()"></app-refinement-list> -->
+      <!-- <app-refinement-clear [att]="'positions.positionType'" [index]=201></app-refinement-clear> -->
+      Full Time<br>
+      Part Time<br>
+      Contract<br>
+      Internship<br>
+      Volunteer<br><br>
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <b>Contract length</b>
+      <hr class="mt-0">
+      <!-- <app-numeric-menu [att]="'positions.contractLength'"></app-numeric-menu> -->
+      <!-- * contractLengthType -->
+      Less then 1 year<br>
+      1-2 years<br>
+      2-4 years<br>
+      4-6 years<br><br>
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <b>Start Date</b>
+      <!-- Submission Deadline<br> -->
+      <!-- Final Descision Date<br> -->
+      <app-range-slider [att]="'positions.stepsDates[8]'"></app-range-slider>
+    </ng-container>
+
+    <!-- <b>Keywords</b>
+    <hr class="mt-0">
+    <app-refinement-list [refinesSelect]="missionService.refinements.interests" [plan]="planNumber" [att]="'positions.tags'" [index]=202 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'positions.tags'" [index]=202></app-refinement-clear> -->
+
+    <ng-container *ngIf="adminFlag">
+      <b>Grades required</b>
+      <hr class="mt-0">
+      GRE<br>
+      TOFEL<br><br>
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <b>Number of Referees</b>
+      <hr class="mt-0">
+      1<br>
+      2<br>
+      3<br><Br>
+    </ng-container>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==1" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">public</i> <b>Location</b>
+        </span>
+      </mat-panel-title>
+      <!-- <mat-panel-description>Type your name and age</mat-panel-description> -->
+    </mat-expansion-panel-header>
+    <ng-container *ngIf="!missionService.countryId">
+      <b>Country</b>
+      <hr class="mt-0">
+      <app-refinement-list [refinesSelect]="missionService.refinements.countries" [plan]="planNumber" [att]="'country'" [index]=203 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'country'" [index]=203></app-refinement-clear>
+    </ng-container>
+
+    <ng-container *ngIf="(!missionService.stateId && !missionService.cityId)">
+      <b>State</b>
+      <hr class="mt-0">
+      <app-refinement-list [refinesSelect]="missionService.refinements.states" [plan]="planNumber" [att]="'state'" [index]=204 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'state'" [index]=204></app-refinement-clear>
+    </ng-container>
+
+    <ng-container *ngIf="!missionService.cityId">
+      <b>City</b>
+      <hr class="mt-0">
+      <app-refinement-list [refinesSelect]="missionService.refinements.cities" [plan]="planNumber" [att]="'city'" [index]=205 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'city'" [index]=205></app-refinement-clear>
+    </ng-container>
+
+  </mat-expansion-panel> <!-- (opened)="panelOpenState = true" (closed)="panelOpenState = false" -->
+
+  <mat-expansion-panel *ngIf="sourceType==1" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">account_balance</i> <b>University</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <b>University</b>
+    <hr class="mt-0">
+    <app-refinement-list [refinesSelect]="missionService.refinements.universities" [plan]="planNumber" [att]="'groupIndex.university.name'" [index]=206 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'groupIndex.university.name'" [index]=206></app-refinement-clear>
+
+    <ng-container *ngIf="adminFlag">
+      <br><b>Ranking</b>
+      <hr class="mt-0">
+      Times Higher Education<br>
+      <app-range-slider [att]="'rank.times'"></app-range-slider>
+      Shanghai Jiao Tong University<br>
+      <app-range-slider [att]="'rank.shanghai'"></app-range-slider>
+      TopUniversities<br>
+      <app-range-slider [att]="'rank.top'"></app-range-slider>
+      U.S. News & World Report<br>
+      <app-range-slider [att]="'rank.usnews'"></app-range-slider>
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <br><b>Status</b>
+      <hr class="mt-0">
+      Private<br>
+      Public<br>
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <br><b>Size</b>
+      <hr class="mt-0">
+      Doctoral numbers<br>
+      Staff number<br>
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <br><b>Type</b>
+      <hr class="mt-0">
+      For Profit<br>
+      Non Profit<br>
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <br><b>Settings</b>
+      <hr class="mt-0">
+      Urban<br>
+      Sub Urban<br>
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <br><b>Facilities</b>
+      <hr class="mt-0">
+      library_facilities<br>
+      housing_facilities<br>
+      sport_facilities<br>
+      distance_learning<br>
+    </ng-container>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==1" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">science</i> <b>Field</b>
+          <!-- <i class="material-icons mr-2">dns</i> <b>Discipline</b> -->
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.disciplines" [plan]="planNumber" [att]="'groupIndex.department.name'" [index]=207 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'groupIndex.department.name'" [index]=207></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==1" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">list_alt</i> <b>Lab overview</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <!-- <b>Research interests</b> -->
+    <!-- <hr class="mt-0"> -->
+    <!-- <ais-refinement-list attribute="interests" [limit]="3" [showMoreLimit]="20" [autoHideContainer]="true" [searchable]="true"></ais-refinement-list> -->
+    <app-refinement-list [hidden]=true [refinesSelect]="missionService.refinements.interests" [plan]="planNumber" [att]="'interests'" [index]=208 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <!-- <app-refinement-clear [att]="'interests'" [index]=208></app-refinement-clear> -->
+
+    <b>Lab head</b>
+    <hr class="mt-0">
+    <app-refinement-list [refinesSelect]="missionService.refinements.head" [plan]="planNumber" [att]="'peoples.title'" [index]=209 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'peoples.title'" [index]=209></app-refinement-clear>
+
+    <b>Lab size</b>
+    <hr class="mt-0">
+    <app-refinement-list [refinesSelect]="missionService.refinements.size" [plan]="planNumber" [att]="'size'" [index]=210 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'size'" [index]=210></app-refinement-clear>
+
+    <br><b>Lab year of establishment</b>
+    <hr class="mt-0 mb-3">
+    <app-range-slider [att]="'establish'"></app-range-slider>
+
+    <ng-container *ngIf="adminFlag">
+      <b>Lab social impact</b>
+      <hr class="mt-0">
+      Facebook fans
+      <app-range-slider [att]="'social.facebook.followers'"></app-range-slider>
+      <br>Twitter followers
+      <app-range-slider [att]="'social.twitter.followers'"></app-range-slider>
+      <br>Linkedin fans
+      <app-range-slider [att]="'social.linkedin.followers'"></app-range-slider>
+      <br>Instagram fans
+      <app-range-slider [att]="'social.instagram.followers'"></app-range-slider>
+      <br>YouTube fans
+      <app-range-slider [att]="'social.youtube.followers'"></app-range-slider>
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <br><br><b>Participated in Event</b>
+      <hr class="mt-0">
+      Events names
+    </ng-container>
+
+    <ng-container *ngIf="adminFlag">
+      <br><br><b>Spinoffs</b>
+      <hr class="mt-0">
+      toggle
+    </ng-container>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="adminFlag && sourceType==1" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}"><i class="material-icons mr-2">money</i> <b>Lab funding</b></span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <b>Grants source</b>
+    <hr class="mt-0">
+    German-Israeli Foundation<br>
+    Israel Science Foundation<br>
+    Nationale Versorgungskonferenz Hautkrebs<br>
+
+    <!-- <b>Amounts range ($)</b> -->
+    <!-- total/average/last_year -->
+    <!-- https://www.jove.com/blog/scientist-blog/scientific-research-funding-10-grant-application-sources-worth-your-time/ -->
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="adminFlag && sourceType==1" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}"><i class="material-icons mr-2">face</i> <b>Lab people</b></span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <b>Active</b><br>
+    Choose positions: Msc, Phd, Postdoc<br><br>
+    Time to graduate<br>
+    Percentage<br>
+    Average age<br>
+    Last hire: 30 days, 60 days, 90 days, 180 days, 365 days<br><br>
+
+    <b>Alumni</b><br>
+    Percentage: Professors + Ranking<br>
+    Percentage: Industry<br><br>
+
+    <b>Foreigners</b><br>
+    Percentage<br>
+    Countries of origin
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="adminFlag && sourceType==1" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}"><i class="material-icons mr-2">bookmark</i> <b>Lab publications</b></span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <b>Publications years range</b>
+    <hr class="mt-0">
+    <app-range-slider [att]="'establish'"></app-range-slider>
+    <!-- <app-range-slider [att]="'publicationsYearly'"></app-range-slider> -->
+
+    <b>Number of publications</b>
+    <hr class="mt-0">
+    100+<br>
+    50-100<br>
+    20-50<br>
+    <20<br>
+
+    <br><b>Number of citations</b>
+    <hr class="mt-0">
+    100+<br>
+    50-100<br>
+    20-50<br>
+    <20<br>
+
+    <br><b>Journals</b>
+    <hr class="mt-0">
+    Nature<br>
+    Science<br>
+    Cell<br>
+    Nano letters
+    <!-- <build-modal-name-field [userId]=userService.userId
+                            [mode]=8
+                            [itemTitle]="'Journal'"
+                            [iconTitle]="'newspaper-o'"
+                            [controlName]="'journal'"
+                            [parentGroup]=formModel>
+    </build-modal-name-field> -->
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="adminFlag && sourceType==1" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}"><i class="material-icons mr-2">style</i> <b>Livelihood</b></span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <b>Cost Of Living</b>
+    <hr class="mt-0">
+    <p class="mb-2">Average monthly expenses ($)</p>
+    <app-range-slider [att]="'establish'"></app-range-slider>
+    Average renting costs ($)
+    <app-range-slider [att]="'establish'"></app-range-slider>
+
+    <b>Weather (&#8451;)</b>
+    <hr class="mt-0">
+    <i class="fa fa-snowflake-o" aria-hidden="true"></i> Average winter temperatures
+    <app-range-slider [att]="'establish'"></app-range-slider>
+    <i class="fa fa-sun-o" aria-hidden="true"></i> Average summer temperatures
+    <app-range-slider [att]="'establish'"></app-range-slider>
+
+    <b>Scholarships</b>
+
+  </mat-expansion-panel>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==2" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">public</i> <b>Location</b>
+      </mat-panel-title>
+      <!-- <mat-panel-description>Type your name and age</mat-panel-description> -->
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.countries" [plan]="planNumber" [att]="'country'" [index]=300 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'country'" [index]=300></app-refinement-clear>
+  </mat-expansion-panel>
+  <!-- (opened)="panelOpenState = true" (closed)="panelOpenState = false" -->
+
+  <mat-expansion-panel *ngIf="sourceType==2" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">science</i> <b>Field</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.disciplines" [plan]="planNumber" [att]="'groupIndex.department.name'" [index]=301 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'groupIndex.department.name'" [index]=301></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==2" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">build</i> <b>Expertise</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.interests" [plan]="planNumber" [att]="'interests'" [index]=302 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'interests'" [index]=302></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==3 || sourceType==11" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">public</i> <b>Location</b>
+        </mat-panel-title>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-container *ngIf="!missionService.countryId">
+      <p class="mt-0 mb-1"><b>Country</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.countries" [plan]="planNumber" [att]="'country'" [index]=400 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'country'" [index]=400></app-refinement-clear>
+    </ng-container>
+    <ng-container *ngIf="(!missionService.stateId && !missionService.cityId)">
+      <p class="mt-3 mb-1"><b>State</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.states" [plan]="planNumber" [att]="'state'" [index]=401 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'state'" [index]=401></app-refinement-clear>
+    </ng-container>
+    <ng-container *ngIf="!missionService.cityId">
+      <p class="mt-3 mb-1"><b>City</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.cities" [plan]="planNumber" [att]="'city'" [index]=402 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'city'" [index]=402></app-refinement-clear>
+    </ng-container>
+  </mat-expansion-panel>
+  <!-- (opened)="panelOpenState = true" (closed)="panelOpenState = false" -->
+
+  <mat-expansion-panel *ngIf="sourceType==3 || sourceType==11" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">account_balance</i> <b>University</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.universities" [plan]="planNumber" [att]="'positions.group.university.name'" [index]=403 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <!-- <app-refinement-list [missionFlag]=false [att]="'positions.group.university.name'"></app-refinement-list> -->
+    <app-refinement-clear [att]="'positions.group.university.name'" [index]=403></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==3 || sourceType==11" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">science</i> <b>Field</b>
+        <!-- <i class="material-icons mr-2">dns</i> <b>Discipline</b> -->
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.disciplines" [plan]="planNumber" [att]="'positions.group.department.name'" [index]=404 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <!-- <app-refinement-list [missionFlag]=false [att]="'positions.group.department.name'"></app-refinement-list> -->
+    <app-refinement-clear [att]="'positions.group.department.name'" [index]=404></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==3" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">school</i> <b>Position</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.titles" [plan]="planNumber" [att]="'positions.titles'" [index]=405 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <!-- <app-refinement-list [missionFlag]=false [att]="'positions.titles'"></app-refinement-list> -->
+    <app-refinement-clear [att]="'positions.titles'" [index]=405></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <!-- <mat-expansion-panel *ngIf="sourceType==3" [[expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Research Interests</mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refineSelect]=refineSelect [att]="'researchInterests'" [index]=404></app-refinement-list>
+    <app-refinement-clear [att]="'researchInterests'" [index]=404></app-refinement-clear>
+  </mat-expansion-panel> -->
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="(sourceType>=5 && sourceType<=7) || sourceType==10" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">public</i> <b>Location</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-container *ngIf="!missionService.countryId">
+      <p class="mt-0 mb-1"><b>Country</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.countries" [plan]="planNumber" [att]="'country'" [index]=502 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'country'" [index]=502></app-refinement-clear>
+    </ng-container>
+    <ng-container *ngIf="(!missionService.stateId && !missionService.cityId)">
+      <p class="mt-3 mb-1"><b>State</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.states" [plan]="planNumber" [att]="'state'" [index]=503 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'state'" [index]=503></app-refinement-clear>
+    </ng-container>
+    <ng-container *ngIf="!missionService.cityId">
+      <p class="mt-3 mb-1"><b>City</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.cities" [plan]="planNumber" [att]="'city'" [index]=504 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'city'" [index]=504></app-refinement-clear>
+    </ng-container>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType>=4 && sourceType<=7" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">category</i> <b>Category</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <!-- <mat-checkbox>Analytics</mat-checkbox> -->
+    <app-refinement-list [refinesSelect]="missionService.refinements.categories" [plan]="planNumber" [att]="'category'" [index]=500 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'category'" [index]=500></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==10" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">science</i> <b>Field</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <!-- <mat-checkbox>Analytics</mat-checkbox> -->
+    <app-refinement-list [refinesSelect]="missionService.refinements.categories" [plan]="planNumber" [att]="'categoryName'" [index]=500 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'categoryName'" [index]=500></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType>=5 && sourceType<=8" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">science</i> <b>Field</b>
+        <!-- <i class="material-icons mr-2">dns</i> <b>Discipline</b> -->
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.disciplines" [plan]="planNumber" [att]="'discipline'" [index]=501 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'disciplines'" [index]=501></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==5 || sourceType==6" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">language</i> <b>Language</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.languages" [plan]="planNumber" [att]="'language'" [index]=505 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'language'" [index]=505></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==4" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">topic</i> <b>Topics</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.subs" [plan]="planNumber" [att]="'sub'" [index]=600 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'sub'" [index]=600></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==4" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">dns</i> <b>Type</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.types" [plan]="planNumber" [att]="'type'" [index]=601 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'type'" [index]=601></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==10" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">build</i> <b>Expertise</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.tags" [plan]="planNumber" [att]="'tags'" [index]=302 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'tags'" [index]=302></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==10" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">list_alt</i> <b>Service overview</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <!-- ["Labs", "Companies"] -->
+    <b>Provider</b>
+    <hr class="mt-0">
+    <!-- <ais-refinement-list attribute="interests" [limit]="3" [showMoreLimit]="20" [autoHideContainer]="true" [searchable]="true"></ais-refinement-list> -->
+    <app-refinement-list [refinesSelect]="missionService.refinements.types" [plan]="planNumber" [att]="'provider'" [index]=1100 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'provider'" [index]=1100></app-refinement-clear>
+
+    <b>Price type</b>
+    <hr class="mt-0 mb-3">
+    <app-refinement-list [refinesSelect]="missionService.refinements.types" [plan]="planNumber" [att]="'price.type'" [index]=1101 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'price.type'" [index]=1101></app-refinement-clear>
+
+    <b>Price range</b>
+    <hr class="mt-0 mb-3">
+    <app-range-slider [att]="'price.price[0]'"></app-range-slider>
+    <app-range-slider [att]="'price.price[1]'"></app-range-slider>
+
+  </mat-expansion-panel>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==11" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">build</i> <b>Expertise</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.tags" [plan]="planNumber" [att]="'tags'" [index]=302 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'tags'" [index]=302></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <!-- Tools -->
+  <!-- <mat-expansion-panel *ngIf="sourceType==11" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">build</i> <b>Can help with</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.tags" [plan]="planNumber" [att]="'tags'" [index]=302 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'tags'" [index]=302></app-refinement-clear>
+  </mat-expansion-panel> -->
+
+  <mat-expansion-panel *ngIf="sourceType==11" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">language</i> <b>Language</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.tags" [plan]="planNumber" [att]="'tags'" [index]=302 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'tags'" [index]=302></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==11" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">list_alt</i> <b>Mentor availability</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    Toggle: Monthly coaching<br><br>
+
+    <b>Times available</b>
+    <hr class="mt-0">
+    <!-- <ais-refinement-list attribute="interests" [limit]="3" [showMoreLimit]="20" [autoHideContainer]="true" [searchable]="true"></ais-refinement-list> -->
+    <app-refinement-list [refinesSelect]="missionService.refinements.tags" [plan]="planNumber" [att]="'tags'" [index]=302 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'tags'" [index]=302></app-refinement-clear>
+
+    <b>Days available</b>
+    <hr class="mt-0 mb-3">
+    <app-refinement-list [refinesSelect]="missionService.refinements.tags" [plan]="planNumber" [att]="'tags'" [index]=302 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'tags'" [index]=302></app-refinement-clear>
+
+    <b>Sessions</b>
+    <hr class="mt-0 mb-3">
+    <app-refinement-list [refinesSelect]="missionService.refinements.tags" [plan]="planNumber" [att]="'tags'" [index]=302 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'tags'" [index]=302></app-refinement-clear>
+
+    <b>Price/Hour</b>
+    <hr class="mt-0 mb-3">
+    <app-refinement-list [refinesSelect]="missionService.refinements.tags" [plan]="planNumber" [att]="'tags'" [index]=302 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'tags'" [index]=302></app-refinement-clear>
+    <!-- <app-range-slider [att]="'price.price[0]'"></app-range-slider>
+    <app-range-slider [att]="'price.price[1]'"></app-range-slider> -->
+  </mat-expansion-panel>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==5" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">list_alt</i> <b>Podcast overview</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <b>Release year</b>
+    <hr class="mt-0 mb-3">
+    <app-range-slider [att]="'establish'"></app-range-slider>
+
+    <b>Type</b>
+    <hr class="mt-0 mb-3">
+    <app-refinement-list [refinesSelect]="missionService.refinements.types" [plan]="planNumber" [att]="'type'" [index]=700 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'type'" [index]=700></app-refinement-clear>
+
+    <b>Num of Episodes</b>
+    <hr class="mt-0 mb-3">
+    <app-range-slider [att]="'establish'"></app-range-slider>
+
+    <b>Social impact</b>
+    <hr class="mt-0 mb-3">
+    Facebook fans
+    <app-range-slider [att]="'social.facebook.followers'"></app-range-slider>
+    Twitter followers
+    <app-range-slider [att]="'social.twitter.followers'"></app-range-slider>
+    Linkedin fans
+    <app-range-slider [att]="'social.linkedin.followers'"></app-range-slider>
+    Instagram fans
+    <app-range-slider [att]="'social.instagram.followers'"></app-range-slider>
+    YouTube fans
+    <app-range-slider [att]="'social.youtube.followers'"></app-range-slider>
+
+  </mat-expansion-panel>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==6" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">list_alt</i> <b>Event overview</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <b>Start date</b>
+    <hr class="mt-0 mb-3">
+    <!-- Past 30 days -->
+    <!-- Past 60 days -->
+    <!-- Past 90 days -->
+    <!-- Past year -->
+    <!-- Custom date range -->
+    <app-range-slider [att]="'start'"></app-range-slider>
+
+    <b>End date</b>
+    <hr class="mt-0 mb-3">
+    <!-- Past 30 days -->
+    <!-- Past 60 days -->
+    <!-- Past 90 days -->
+    <!-- Past year -->
+    <!-- Custom date range -->
+    <app-range-slider [att]="'end'"></app-range-slider>
+
+    <b>Type</b>
+    <hr class="mt-0 mb-3">
+    <app-refinement-list [refinesSelect]="missionService.refinements.types" [plan]="planNumber" [att]="'type'" [index]=800 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'type'" [index]=800></app-refinement-clear>
+
+    <!-- <b>Price</b>
+    <hr class="mt-0 mb-3">
+    <app-range-slider [att]="'establish'"></app-range-slider> -->
+
+    <!-- Search bar: -->
+    <!-- organizers -->
+    <!-- speakers -->
+    <!-- sponsors -->
+    <!-- exhibitors -->
+
+    <b>Social impact</b>
+    <hr class="mt-0 mb-3">
+    Facebook fans
+    <app-range-slider [att]="'social.facebook.followers'"></app-range-slider>
+    Twitter followers
+    <app-range-slider [att]="'social.twitter.followers'"></app-range-slider>
+    Linkedin fans
+    <app-range-slider [att]="'social.linkedin.followers'"></app-range-slider>
+    Instagram fans
+    <app-range-slider [att]="'social.instagram.followers'"></app-range-slider>
+    YouTube fans
+    <app-range-slider [att]="'social.youtube.followers'"></app-range-slider>
+
+  </mat-expansion-panel>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==7" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">redeem</i> <b>App deals</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    Show only deals<br><br>
+
+    <b>Deal status</b>
+    <hr class="mt-0 mb-3">
+    <app-refinement-list [refinesSelect]="missionService.refinements.deal_statuses" [plan]=1 [att]="'deal.status'" [index]=950></app-refinement-list>
+    <app-refinement-clear [att]="'deal.status'" [index]=950></app-refinement-clear>
+
+    <span class="mt-2"><b>Deal type</b></span>
+    <hr class="mt-0 mb-3">
+    <app-refinement-list [refinesSelect]="missionService.refinements.deal_types" [plan]=1 [att]="'deal.type'" [index]=951></app-refinement-list>
+    <app-refinement-clear [att]="'deal.type'" [index]=951></app-refinement-clear>
+
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="sourceType==7" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">list_alt</i> <b>App overview</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <b>Release year</b>
+    <hr class="mt-0 mb-3">
+    <app-range-slider [att]="'establish'"></app-range-slider>
+
+    <b>Type</b>
+    <hr class="mt-0 mb-3">
+    <app-refinement-list [refinesSelect]="missionService.refinements.types" [plan]="planNumber" [att]="'type'" [index]=900 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'type'" [index]=900></app-refinement-clear>
+
+    <b>Social impact</b>
+    <hr class="mt-0 mb-3">
+    Facebook fans
+    <app-range-slider [att]="'social.facebook.followers'"></app-range-slider>
+    Twitter followers
+    <app-range-slider [att]="'social.twitter.followers'"></app-range-slider>
+    Linkedin fans
+    <app-range-slider [att]="'social.linkedin.followers'"></app-range-slider>
+    Instagram fans
+    <app-range-slider [att]="'social.instagram.followers'"></app-range-slider>
+    YouTube fans
+    <app-range-slider [att]="'social.youtube.followers'"></app-range-slider>
+
+  </mat-expansion-panel>
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <mat-expansion-panel *ngIf="sourceType==8" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+        <i class="material-icons mr-2">face</i> <b>Authors</b>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [refinesSelect]="missionService.refinements.authors" [plan]="planNumber" [att]="'author.name'" [index]=1000 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'author.name'" [index]=1000></app-refinement-clear>
+  </mat-expansion-panel>
+
+  <!-- <mat-expansion-panel *ngIf="sourceType==8" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Years</mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [att]="'year'"></app-refinement-list>
+  </mat-expansion-panel> -->
+
+  <!-- <mat-expansion-panel *ngIf="sourceType==8" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Styles</mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-refinement-list [att]="'style'"></app-refinement-list>
+  </mat-expansion-panel> -->
+
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+  <!-- --------------------------------- -->
+
+  <!-- <mat-expansion-panel *ngIf="0 && sourceType>=5 && sourceType<=7" [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}">
+          <i class="material-icons mr-2">poll</i> <b>Campaign</b>
+        </span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <p class="mt-0 mb-1"><b>Deal type</b></p>
+    <hr class="mt-0 mb-1">
+    <app-refinement-list [refinesSelect]="missionService.refinements.deal_types" [plan]="planNumber" [att]="'deal_type'" [index]=1100 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'deal_type'" [index]=1100></app-refinement-clear>
+
+    <p class="mt-3 mb-1"><b>Deal status</b></p>
+    <hr class="mt-0 mb-1">
+    <app-refinement-list [refinesSelect]="missionService.refinements.deal_status" [plan]="planNumber" [att]="'deal_status'" [index]=1101 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'deal_status'" [index]=1101></app-refinement-clear>
+
+    <p class="mt-3 mb-1"><b>Start date</b></p>
+    <hr class="mt-0 mb-1">
+    <app-refinement-list [refinesSelect]="missionService.refinements.deal_start_date" [plan]="planNumber" [att]="'deal_start_date'" [index]=1102 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'deal_start_date'" [index]=1102></app-refinement-clear>
+
+    <p class="mt-3 mb-1"><b>End date</b></p>
+    <hr class="mt-0 mb-1">
+    <app-refinement-list [refinesSelect]="missionService.refinements.deal_end_date" [plan]="planNumber" [att]="'deal_end_date'" [index]=1103 (upgrage)="upgrageFilters()"></app-refinement-list>
+    <app-refinement-clear [att]="'deal_end_date'" [index]=1103></app-refinement-clear>
+
+    <ng-container *ngIf="sourceType>=6 && sourceType<=7">
+      <p class="mt-3 mb-1"><b>Reduced price</b></p>
+      <hr class="mt-0 mb-1">
+      <app-refinement-list [refinesSelect]="missionService.refinements.deal_reduced_price" [plan]="planNumber" [att]="'deal_reduced_price'" [index]=1104 (upgrage)="upgrageFilters()"></app-refinement-list>
+      <app-refinement-clear [att]="'deal_reduced_price'" [index]=1104></app-refinement-clear>
+    </ng-container>
+
+  </mat-expansion-panel> -->
+
+  <!-- <ais-rating-menu attribute="rating"></ais-rating-menu> -->
+  <!-- Customer Rating -->
+
+  <mat-expansion-panel [expanded]="expandFlag">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="d-flex align-content-center" [ngClass]="{'lead': !isMobile}"><i class="material-icons mr-2">assistant</i> <b>Suggest search filter</b></span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="form-group mt-0 pt-0">
+      <label for="messageleTextarea"><b>What search filter are you missing?</b></label>
+      <textarea [(ngModel)]="message" [disabled]="submitFlag>0" class="form-control" id="MessageTextarea" rows="3"></textarea>
+    </div>
+    <div class="d-flex flex-row-reverse">
+      <button [disabled]="submitFlag>0" role="button" class="d-flex btn btn-success" aria-haspopup="true" aria-expanded="false" (click)="suggestUpdate()">
+        Send
+        <div *ngIf="submitFlag>0" class="ml-2">
+          <i *ngIf="submitFlag==1" class="fa fa-1x fa-spinner fa-spin"></i>
+          <i *ngIf="submitFlag==2" class="fa fa-1x fa-check"></i>
+        </div>
+      </button>
+    </div>
+    <div *ngIf="submitFlag==2" class="d-flex flex-row-reverse">
+      <small class="form-text text-warning">Suggestion sent. Thank you</small>
+    </div>
+    <!-- Current suggestions from other users -->
+  </mat-expansion-panel>
+
+</mat-accordion>

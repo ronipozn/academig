@@ -1,0 +1,207 @@
+<div class="card mt-0"
+     *ngIf="showEditBtn || (tableMode==0 && manuals.length!=0) || (tableMode==1 && codes.length!=0) || (tableMode==2 && cads.length!=0) || (tableMode==3 && inventories.length!=0) || (tableMode==4 && equipments.length!=0)">
+
+  <div class="card-body">
+
+    <build-headline [showEditBtn]=showEditBtn
+                    [addButtonFlag]=showEditBtn
+                    [headline]=headlineText
+                    (buttonAddClick)="tableSlide(true)">
+    </build-headline>
+
+    <div class="table-responsive"> <!-- table-borderless -->
+      <!-- [ngClass]="{'table-hover': showEditBtn}" -->
+    <table class="table" *ngIf="(tableMode==0 && manuals.length!=0) || (tableMode==1 && codes.length!=0) || (tableMode==2 && cads.length!=0) || (tableMode==3 && inventories.length!=0) || (tableMode==4 && equipments.length!=0)">
+
+      <thead *ngIf="tableMode==0">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Version</th>
+          <th>Manufacturer</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="tableMode==0">
+        <tr *ngFor="let manual of manuals; let i=index; let l=last;" on-mouseover='buttonOver(true,i)' on-mouseleave='buttonOver(false,i)'>
+          <th scope="row">
+            {{ manual.name }}
+            <spinner-put [stream]=stream[i] (animationDoneEvent)="animationDone($event,i)"></spinner-put>
+            <build-buttons [showButton]="showButton[i] && stream[i]==0" (buttonEditClick)="buttonEditFunc(i)" (buttonDeleteClick)="buttonDeleteFunc(i)"></build-buttons>
+          </th>
+          <td>{{ manual.description }}</td>
+          <td>{{ manual.version }}</td>
+          <td>{{ manual.manufacturer }}</td>
+          <td>{{ manual.date | date }}</td>
+          <td>
+            <ng-container *ngIf="manual.files">
+              <span class="text-muted mr-1">Attachments:</span>
+              <span *ngFor="let file of createRange(manual.files); let i=index">
+                <button *ngIf="createFile(manual.files,i) && isPDF(createFile(manual.files,i))" role="button" class="btn btn-link p-0 m-0" (click)="pdfSlide(true,equipment.name,createFile(manual.files,i))">
+                  <i class="fa fa-file-pdf-o mr-1" aria-hidden="true"></i>
+                </button>
+                <a *ngIf="createFile(manual.files,i) && !isPDF(createFile(manual.files,i))" [href]="createFile(manual.files,i)" download target="_empty">
+                  <i class="fa fa-{{createFile(manual.files,i) | extension}} mr-1" aria-hidden="true"></i>
+                </a>
+              </span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+
+      <thead *ngIf="tableMode==1">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Version</th>
+          <th>Date</th>
+          <th>GIT</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="tableMode==1">
+        <tr *ngFor="let code of codes; let i=index; let l=last;" on-mouseover='buttonOver(true,i)' on-mouseleave='buttonOver(false,i)'>
+          <th scope="row">
+            {{ code.name }}
+            <spinner-put [stream]=stream[i] (animationDoneEvent)="animationDone($event,i)"></spinner-put>
+            <build-buttons [showButton]="showButton[i] && stream[i]==0" (buttonEditClick)="buttonEditFunc(i)" (buttonDeleteClick)="buttonDeleteFunc(i)"></build-buttons>
+          </th>
+          <td>{{ code.description }}</td>
+          <td>{{ code.version }}</td>
+          <td>{{ code.date | date }}</td>
+          <td><a [href]=code.git target="_empty"><i class="fa fa-link" aria-hidden="true"></i></a></td>
+          <td>
+            <ng-container *ngIf="code.files">
+              <span class="text-muted mr-1">Attachments:</span>
+              <span *ngFor="let file of createRange(code.files); let i=index;">
+                <button *ngIf="createFile(code.files,i) && isPDF(createFile(code.files,i))" role="button" class="btn btn-link p-0 m-0" (click)="pdfSlide(true,equipment.name,createFile(code.files,i))">
+                  <i class="fa fa-file-pdf-o mr-1" aria-hidden="true"></i>
+                </button>
+                <a *ngIf="createFile(code.files,i) && !isPDF(createFile(code.files,i))" [href]="createFile(code.files,i)" download target="_empty">
+                  <i class="fa fa-{{createFile(code.files,i) | extension}} mr-1" aria-hidden="true"></i>
+                </a>
+              </span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+
+      <thead *ngIf="tableMode==2">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Version</th>
+          <th>Date</th>
+          <th>GIT</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="tableMode==2">
+        <tr *ngFor="let cad of cads; let i=index; let l=last;" on-mouseover='buttonOver(true,i)' on-mouseleave='buttonOver(false,i)'>
+          <th scope="row">
+            {{ cad.name }}
+            <spinner-put [stream]=stream[i] (animationDoneEvent)="animationDone($event,i)"></spinner-put>
+            <build-buttons [showButton]="showButton[i] && stream[i]==0" (buttonEditClick)="buttonEditFunc(i)" (buttonDeleteClick)="buttonDeleteFunc(i)"></build-buttons>
+          </th>
+          <td>{{ cad.description }}</td>
+          <td>{{ cad.version }}</td>
+          <td>{{ cad.date | date }}</td>
+          <td>
+            <ng-container *ngIf="cad.files">
+              <span class="text-muted mr-1">Attachments:</span>
+              <span *ngFor="let file of createRange(cad.files); let i=index">
+                <button *ngIf="createFile(cad.files,i) && isPDF(createFile(cad.files,i))" role="button" class="btn btn-link p-0 m-0" (click)="pdfSlide(true,equipment.name,createFile(cad.files,i))">
+                  <i class="fa fa-file-pdf-o mr-1" aria-hidden="true"></i>
+                </button>
+                <a *ngIf="createFile(cad.files,i) && !isPDF(createFile(cad.files,i))" [href]="createFile(cad.files,i)" download target="_empty">
+                  <i class="fa fa-{{createFile(cad.files,i) | extension}} mr-1" aria-hidden="true"></i>
+                </a>
+              </span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+
+      <thead *ngIf="tableMode==3">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Vendor</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="tableMode==3">
+        <tr *ngFor="let inventory of inventories; let i=index; let l=last;" on-mouseover='buttonOver(true,i)' on-mouseleave='buttonOver(false,i)'>
+          <th scope="row">
+            <img *ngIf="inventory.pic" width=80 [src]=inventory.pic>
+            {{ inventory.name }}
+            <spinner-put [stream]=stream[i] (animationDoneEvent)="animationDone($event,i)"></spinner-put>
+            <build-buttons [showButton]="showButton[i] && stream[i]==0" (buttonEditClick)="buttonEditFunc(i)" (buttonDeleteClick)="buttonDeleteFunc(i)"></build-buttons>
+          </th>
+          <td>{{ inventory.description }}</td>
+          <td>{{ inventory.vendor }}</td>
+          <td>{{ inventory.price }}</td>
+          <td>{{ inventory.quantity }}</td>
+          <td><a [href]=inventory.link download target="_empty"><i class="fa fa-link" aria-hidden="true"></i></a></td>
+          <td>
+            <ng-container *ngIf="inventory.files">
+              <span class="text-muted mr-1">Attachments:</span>
+              <span *ngFor="let file of createRange(inventory.files); let i=index">
+                <button *ngIf="createFile(inventory.files,i) && isPDF(createFile(inventory.files,i))" role="button" class="btn btn-link p-0 m-0" (click)="pdfSlide(true,equipment.name,createFile(inventory.files,i))">
+                  <i class="fa fa-file-pdf-o mr-1" aria-hidden="true"></i>
+                </button>
+                <a *ngIf="createFile(inventory.files,i) && !isPDF(createFile(inventory.files,i))" [href]="createFile(inventory.files,i)" download target="_empty">
+                  <i class="fa fa-{{createFile(inventory.files,i) | extension}} mr-1" aria-hidden="true"></i>
+                </a>
+              </span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+
+      <thead *ngIf="tableMode==4">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Manufacturer</th>
+          <th>Model</th>
+          <th>Price</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="tableMode==4">
+        <tr *ngFor="let equipment of equipments; let i=index; let l=last;" on-mouseover='buttonOver(true,i)' on-mouseleave='buttonOver(false,i)'>
+          <td>
+            <img *ngIf="equipment.pic" width=80 [src]=equipment.pic>
+          </td>
+          <th scope="row">
+            {{ equipment.name }}
+            <spinner-put [stream]=stream[i] (animationDoneEvent)="animationDone($event,i)"></spinner-put>
+            <build-buttons [showButton]="showButton[i] && stream[i]==0" (buttonEditClick)="buttonEditFunc(i)" (buttonDeleteClick)="buttonDeleteFunc(i)"></build-buttons>
+          </th>
+          <td>{{ equipment.description }}</td>
+          <td>{{ equipment.manufacturer }}</td>
+          <td>{{ equipment.model }}</td>
+          <td>{{ equipment.price }}</td>
+          <td><a [href]=equipment.link download target="_empty"><i class="fa fa-link" aria-hidden="true"></i></a></td>
+          <td>
+            <ng-container *ngIf="equipment.files">
+              <span class="text-muted mr-1">Attachments:</span>
+              <span *ngFor="let file of createRange(equipment.files); let i=index">
+                <button *ngIf="createFile(equipment.files,i) && isPDF(createFile(equipment.files,i))" role="button" class="btn btn-link p-0 m-0" (click)="pdfSlide(true,equipment.name,createFile(equipment.files,i))">
+                  <i class="fa fa-file-pdf-o mr-1" aria-hidden="true"></i>
+                </button>
+                <a *ngIf="createFile(equipment.files,i) && !isPDF(createFile(equipment.files,i))" [href]="createFile(equipment.files,i)" download target="_empty">
+                  <i class="fa fa-{{createFile(equipment.files,i) | extension}} mr-1" aria-hidden="true"></i>
+                </a>
+              </span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+    </div>
+
+  </div>
+</div>

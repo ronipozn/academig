@@ -1,0 +1,181 @@
+<div *ngIf="showEditBtn || position.description" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <build-headline [showEditBtn]=showEditBtn
+                    [addButtonFlag]="!position.description"
+                    [headline]="'About the position'"
+                    (buttonAddClick)="textEdit(0)">
+    </build-headline>
+
+    <div build-text
+         [stream]=streamText[0]
+         [text]="position.description"
+         [showEditBtn]=showEditBtn
+         (animationDoneEvent)="animationTextDoneFunc(0)"
+         (buttonEditClick)="textEdit(0)"
+         (buttonDeleteClick)="textDelete(0)">
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="showEditBtn || (position.stepsDates && position.stepsDates[0])" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <div class="d-flex align-items-center">
+      <h4 class="card-title"><b>Application Steps</b></h4>
+      <button *ngIf="showEditBtn" role="button" class="btn btn-primary btn-link btn-sm btn-just-icon" (click)="deadlinesEdit()">
+        <i *ngIf="!position.stepsDates" class="material-icons">add</i>
+        <i *ngIf="position.stepsDates" class="material-icons">edit</i>
+      </button>
+    </div>
+    <hr class="mt-0">
+
+    <position-steps [stepsDates]=position.stepsDates [activeStep]=position.activeStep [showEditBtn]=showEditBtn></position-steps>
+
+  </div>
+</div>
+
+<div *ngIf="showEditBtn || position.gradesRequired?.length>0 || position.lettersRequired?.length>0 || position.lettersGuidelines || position.numReferees" class="mb-4 card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <div class="d-flex align-items-center">
+      <h4 class="card-title"><b>Requirements</b></h4>
+      <spinner-put class="ml-2 my-2" [stream]=streamLetters (animationDoneEvent)="animationDoneFunc(3)"></spinner-put>
+      <build-buttons *ngIf="streamLetters==0" [editFlag]=true [showButton]=showEditBtn (buttonEditClick)="lettersEdit()"></build-buttons>
+    </div>
+    <hr class="mt-0">
+
+    <table class="table table-responsive table-sm">
+      <tbody>
+
+        <tr *ngIf="showEditBtn || position.gradesRequired?.length>0" class="d-flex align-items-top">
+          <td class="text-nowrap text-dark pr-2"><b>Required grades</b></td>
+          <td><p *ngFor="let value of position.gradesRequired; let i=index" class="mb-0">{{ gradesTitles[value] }}</p></td>
+        </tr>
+
+        <tr *ngIf="showEditBtn || position.lettersRequired?.length>0" class="d-flex align-items-top">
+          <td class="text-nowrap text-dark pr-2"><b>Required letters</b></td>
+          <td><p *ngFor="let value of position.lettersRequired; let i=index" class="mb-0">{{ lettersTitles[value] }}</p></td>
+        </tr>
+
+        <tr *ngIf="showEditBtn || position.lettersGuidelines" class="d-flex align-items-top">
+          <td class="text-nowrap text-dark pr-2"><b>Letters guidelines</b></td>
+          <td>{{ position.lettersGuidelines }}</td>
+        </tr>
+
+        <tr *ngIf="showEditBtn || (position.numReferees && position.numReferees>0)" class="d-flex align-items-top">
+          <td class="text-nowrap text-dark pr-2"><b>Number of referees</b></td>
+          <td>{{ position.numReferees>0 ? position.numReferees : '' }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<div *ngIf="showEditBtn || position.requiredExperience" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <build-headline [showEditBtn]=showEditBtn
+                    [addButtonFlag]="!position.requiredExperience"
+                    [headline]="'Skills and Experience'"
+                    (buttonAddClick)="textEdit(5)">
+    </build-headline>
+
+    <div build-text
+         [stream]=streamText[5]
+         [text]="position.requiredExperience"
+         [showEditBtn]=showEditBtn
+         (animationDoneEvent)="animationTextDoneFunc(5)"
+         (buttonEditClick)="textEdit(5)"
+         (buttonDeleteClick)="textDelete(5)">
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="showEditBtn || position.scholarship" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <build-headline [showEditBtn]=showEditBtn
+                    [addButtonFlag]="!position.scholarship"
+                    [headline]="'Employer and Scholarship'"
+                    (buttonAddClick)="textEdit(2)">
+    </build-headline>
+
+    <div build-text
+         [stream]=streamText[2]
+         [text]="position.scholarship"
+         [showEditBtn]=showEditBtn
+         (animationDoneEvent)="animationTextDoneFunc(2)"
+         (buttonEditClick)="textEdit(2)"
+         (buttonDeleteClick)="textDelete(2)">
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="showEditBtn || position.duties" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <build-headline [showEditBtn]=showEditBtn
+                    [addButtonFlag]="!position.duties"
+                    [headline]="'Duties and Tasks'"
+                    (buttonAddClick)="textEdit(1)">
+    </build-headline>
+
+    <div build-text
+         [stream]=streamText[1]
+         [text]="position.duties"
+         [showEditBtn]=showEditBtn
+         (animationDoneEvent)="animationTextDoneFunc(1)"
+         (buttonEditClick)="textEdit(1)"
+         (buttonDeleteClick)="textDelete(1)">
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="showEditBtn || position.expectations" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <build-headline [showEditBtn]=showEditBtn
+                    [addButtonFlag]="!position.expectations"
+                    [headline]="'Expectations'"
+                    (buttonAddClick)="textEdit(3)">
+    </build-headline>
+
+    <div build-text
+         [stream]=streamText[3]
+         [text]="position.expectations"
+         [showEditBtn]=showEditBtn
+         (animationDoneEvent)="animationTextDoneFunc(3)"
+         (buttonEditClick)="textEdit(3)"
+         (buttonDeleteClick)="textDelete(3)">
+    </div>
+
+  </div>
+</div>
+
+<!-- <div *ngIf="showEditBtn || position.requiredEducation" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <build-headline [showEditBtn]=showEditBtn
+                    [addButtonFlag]="!position.requiredEducation"
+                    [headline]="'Education'"
+                    (buttonAddClick)="textEdit(4)">
+    </build-headline>
+
+    <div build-text
+         [stream]=streamText[4]
+         [text]="position.requiredEducation"
+         [showEditBtn]=showEditBtn
+         (animationDoneEvent)="animationTextDoneFunc(4)"
+         (buttonEditClick)="textEdit(4)"
+         (buttonDeleteClick)="textDelete(4)">
+    </div>
+
+  </div>
+</div> -->

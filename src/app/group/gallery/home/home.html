@@ -1,0 +1,61 @@
+<div *ngIf="streamRetrieved && missionService.showEditBtn" class="d-flex justify-content-center mb-4">
+  <button mat-raised-button class="btn btn-light-blue btn-round" (click)="gallerySlide(true, 0, true)">
+    <i class="material-icons">add_circle_outline</i> Add Gallery
+  </button>
+</div>
+
+<div *ngIf="missionService.showPage" class="card mt-0" [@itemsAnimation]="('active')" #scrollAdd>
+  <div class="card-body">
+    <spinner *ngIf="!streamRetrieved"></spinner>
+    <build-modal-intro *ngIf="streamRetrieved && galleries[0]==null && !missionService.showHeadline"
+                       [headline]="'The gallery list is still empty.'">
+    </build-modal-intro>
+    <build-modal-intro *ngIf="streamRetrieved && galleries[0]==null && missionService.showEditBtn"
+                       [headline]="'Lab Gallery'"
+                       [bodypic]="'image'"
+                       [bodytext]="'Start posting your lab\' gallery online.'">
+    </build-modal-intro>
+    <div *ngIf="streamRetrieved">
+      <div *ngIf="!missionService.showEditBtn && galleryImages[0]" class="card-columns">
+        <div *ngFor="let gallery of galleryImages;" class="card mt-0">
+          <div class="card-body">
+            <ngx-gallery [options]="galleryOptions" [images]="gallery"></ngx-gallery>
+            <p class="card-title mb-0">{{ title }}</p>
+            <span class="small">{{ description }}</span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="missionService.showEditBtn && galleries[0]" class="card-columns">
+        <div *ngFor="let gallery of galleries; let i=index">
+          <gallery-item [_id]=gallery._id
+                        [pic]=gallery.pics[0].pic
+                        [title]=gallery.title
+                        [date]=gallery.date
+                        [description]=gallery.description
+                        [showEditBtn]=missionService.showEditBtn
+                        [stream]=streamGalleries[i]
+                        [mode]=0
+                        (animationDoneEvent)="streamFunc()"
+                        (buttonEditClick)="gallerySlide($event, i, false)"
+                        (buttonDeleteClick)="galleryDelete(i)">
+          </gallery-item>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<img *ngIf="streamRetrieved && missionService.showPage" src="./assets/img/items/gallery.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_gallery">
+
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+
+<build-slide-gallery *ngIf=galleryBuildFlag
+                     (update)="galleryUpdate($event)"
+                     (cancel)="gallerySlide($event)"
+                     [gallery]=galleries[galleryIndex]
+                     [newFlag]=galleryNewFlag
+                     [groupId]=missionService.groupId>
+</build-slide-gallery>

@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card mt-0">
+      <div class="card-body mt-0">
+        <b>Make your reading library private or public</b>
+        <hr class="mt-0 mb-3">
+        <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+          <build-modal-text-field [fieldType]=5
+                                  [controlName]="'privacy'"
+                                  [parentGroup]=formModel
+                                  [itemArray]=libraryPrivacy>
+          </build-modal-text-field>
+          <button type="submit" mat-raised-button [disabled]="streamPrivacy>0" class="btn btn-light-blue">Update</button>
+          <spinner-put class="ml-1" [stream]=streamPrivacy (animationDoneEvent)="animationDone()"></spinner-put>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card mt-0">
+      <div class="card-body mt-0">
+        <b>2020 PapersMaster</b>
+        <hr class="mt-0 mb-3">
+        <library-challenge [userRead]=userRead></library-challenge>
+      </div>
+    </div>
+  </div>
+</div>

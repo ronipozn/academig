@@ -1,0 +1,123 @@
+<!-- Build on Behalf timer -->
+<div *ngIf="groupStage==-1 && _hoursString!=null && userStatus>=6" class="card my-0 text-white bg-secondary" style="border-radius: 0px;">
+  <div class="card-body">
+    <div class="d-flex align-items-center row justify-content-between">
+      <div class="col-md-9">
+        <div class="d-flex flex-row">
+          <div>
+            <h3 class="my-0">We are building your lab profile.</h3>
+            <h4 class="my-0">In the meantime, sit back and relax. You will be able to add content or make changes as soon as we finish.</h4>
+            <h4 *ngIf="onBehalf!=8 && onBehalf!=9" class="mt-0">Expect your lab profile to be ready in {{_hoursString}} {{_minutesString}}, often much sooner.</h4>
+            <h4 *ngIf="onBehalf==8 || onBehalf==9" class="mt-0">Expect your lab profile and job posting to be ready in {{_hoursString}} {{_minutesString}}, often much sooner.</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 text-center">
+        <!-- <button role="button" class="btn btn-warning mr-2" [disabled]="!controlStream" (click)="controlModalFunc()">
+          Take Control <div *ngIf="!controlStream"> <i class="ml-2 fa fa-1x fa-spinner fa-spin"></i></div>
+        </button> -->
+        <!-- <button *ngIf="groupStage==1" [disabled]="!streamRetrieved" (click)="changeStageFunc(0)" role="button" class="d-flex ml-2 btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">
+          Withdraw <div *ngIf="!streamRetrieved" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></div>
+        </button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Personal Email Confirmation -->
+<div *ngIf="groupStage==0 && !emailVerified[0]" class="card bg-secondary border my-0" style="border-radius: 0px;" data-notify="container">
+  <span data-notify="message" class="text-center lead py-4">
+    <h4 class="text-center mb-0"><b>Please confirm your personal email.</b> Your new lab profile can go public only after your confirmation.</h4>
+  </span>
+</div>
+
+<!-- Institute Email Confirmation -->
+<div *ngIf="labFlag && showEditBtn && (groupStage==0 || groupStage==1) && !emailVerified[1]" class="card bg-secondary border my-0" style="border-radius: 0px;" data-notify="container">
+  <span data-notify="message" class="text-center lead py-4">
+    <h4 class="text-center"><b>Please confirm your institute email.</b> Your new lab profile can go public only after your confirmation.</h4>
+    <h4 class="text-center mb-0">
+      <a [routerLink]="['/settings/institute']" class="card-title"><b>Click here</b></a> to change your institute email or to request a new verification email.
+    </h4>
+  </span>
+</div>
+
+<!-- Before Going live messsage -->
+<div *ngIf="(groupStage==0 || groupStage==1) && emailVerified[0] && emailVerified[1] && (onBehalf!=6 && onBehalf!=7)" class="card bg-secondary border my-0" data-notify="container">
+  <span data-notify="message" class="text-center lead py-4">
+    Your lab profile is under review. We review each lab profile before it goes live in order to keep Academig clean.<br>
+    Only <a [routerLink]="['./people']" class="card-title"><u>lab members</u></a> have access to the lab profile. We usually approve new lab profiles in less than a day.
+  </span>
+</div>
+
+<!-- On Behalf User -->
+<!-- <div *ngIf="groupStage==0 && emailVerified[0] && emailVerified[1] && (onBehalf==1 || onBehalf==3) && userStatus==7" class="alert alert-warning border-warning alert-dismissible fade show" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button> -->
+  <!-- <p class="text-center mb-0">The lab profile is currently visible only to the <a [routerLink]="['./people']">lab members</a>. Click the Publish button to make it public.</p> -->
+  <!-- <p *ngIf="onBehalf==1" class="text-center mb-0">Before it can go live, your Principal Investigator's email needs to be verified.</p> -->
+  <!-- <p *ngIf="onBehalf==3" class="text-center mb-0">Before it can go live, your Principal Investigator needs to approve your invitation.</p> -->
+<!-- </div> -->
+
+<!-- Lab Profile On Hold -->
+<div *ngIf="groupStage==3" class="card bg-danger border my-0" style="border-radius: 0px;" data-notify="container">
+  <span data-notify="message" class="text-center lead py-4">
+    <b>Your lab profile is on hold.</b> No one except you and the other admins have access to the lab profile.
+    <button (click)="changeStageFunc(2)" role="button" class="ml-2 btn btn-sm btn-danger" style="border-radius: 12px;" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-unlock" aria-hidden="true"></i> Unlock
+    </button>
+  </span>
+</div>
+
+<!-- Lab Profile Deleted Recovery Period -->
+<div *ngIf="groupStage==9" class="card bg-danger border my-0" style="border-radius: 0px;" data-notify="container">
+  <span data-notify="message" class="text-center lead py-4">
+    <b>Academig has put your lab profile on Hold.</b>
+  </span>
+</div>
+
+<!-- Lab Profile Deleted Recovery Period -->
+<!-- <div *ngIf="groupStage==4" class="danger alert-dismissible fade show" role="alert">
+  <p class="text-center mb-0"><b>You deleted your lab profile XX days ago.</b>
+  You have YY more days to recover it. Just click the Restore button.</p>
+  <button *ngIf="userStatus>=6" (click)="changeStageFunc(2)" role="button" class="ml-2 btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">
+    <i class="fa fa-cog" aria-hidden="true"></i> Restore
+  </button>
+</div> -->
+
+<!-- PI Approve / Decline -->
+<!-- <div *ngIf="groupStage==0 && onBehalf==3 && userStatus==6" class="mb-0 alert alert-warning border-warning alert-dismissible fade show" role="alert">
+  <p class="text-center">The lab profile is currently visible only to you and the other <a [routerLink]="['./people']">lab members</a>.</p>
+  <p class="text-center">As the Principal Investigator of this group, we ask you to approve or reject your new lab profile.</p>
+  <div class="d-flex justify-content-center">
+    <button role="button"
+            class="d-flex btn btn-success my-2 mr-2"
+            [disabled]="!approveStream || !rejectStream"
+            (click)="approveFunc()">
+      Approve
+      <div *ngIf="!approveStream">
+        <i class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+      </div>
+    </button>
+    <button role="button"
+            class="d-flex btn btn-warning my-2"
+            [disabled]="!approveStream || !rejectStream"
+            (click)="rejectFunc()">
+      Reject
+      <div *ngIf="!rejectStream">
+        <i class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+      </div>
+    </button>
+  </div>
+</div> -->
+
+<!-- Lab Profile Under Review -->
+<!-- <div *ngIf="groupStage==1 && _hoursString!=null" class="warning border-warning alert-dismissible fade show" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <p class="text-center mb-0">
+    <b>Your lab profile is under review. Please wait for approval before you can continue building your lab profile.</b>
+    <br>Expect a response in {{_hoursString}} {{_minutesString}} or less.
+  </p>
+</div> -->

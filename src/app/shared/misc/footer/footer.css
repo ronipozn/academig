@@ -1,0 +1,15 @@
+footer {
+  /* background: #F8F9FA !important; */
+  background: #333333;
+  color: white;
+  box-shadow:1px 1px 1px rgba(0, 0, 0, 0.1), 1px 1px 1px rgba(0, 0, 0, 0.1) inset;
+}
+
+.fa-name {
+  font-size: 15px;
+}
+
+a {
+  color: white;
+  text-decoration:none;
+}

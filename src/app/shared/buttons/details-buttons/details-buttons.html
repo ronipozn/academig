@@ -1,0 +1,121 @@
+<div class="d-block d-md-none mb-3 d-flex justify-content-center">
+  <ng-container *ngIf="followFlag">
+    <follow-btn *ngIf="mode!=2"
+                [disabledFlag]=meFlag
+                [followStatus]=followStatus
+                [streamFollow]=streamFollow
+                [stream]=0
+                [type]="(mode==5) ? 2 : 0"
+                (buttonFollowClick)="buttonFollowFunc()">
+    </follow-btn>
+    <folders-btn *ngIf="mode==2"
+                 [folders]=null
+                 [streamFolder]=streamFollow
+                 [stream]=0
+                 (buttonFolderClick)="buttonFollowFunc($event)">
+    </folders-btn>
+  </ng-container>
+</div>
+
+<div *ngIf="mode==5" class="d-block d-md-none mb-3 d-flex justify-content-center">
+  <button type="button" [disabled]=meFlag mat-raised-button class="btn btn-danger" (click)="buttonApplyFunc()">
+    Apply &#9658;
+  </button>
+</div>
+
+<div class="d-flex align-items-center justify-content-center">
+  <div class="d-none d-sm-block mr-auto">
+    <div class="d-flex flex-row">
+      <ng-container *ngIf="followFlag">
+        <follow-btn *ngIf="mode!=2"
+                    class="mr-2"
+                    [disabledFlag]=meFlag
+                    [followStatus]=followStatus
+                    [streamFollow]=streamFollow
+                    [stream]=0
+                    [type]="(mode==5) ? 2 : 0"
+                    (buttonFollowClick)="buttonFollowFunc()">
+        </follow-btn>
+        <folders-btn *ngIf="mode==2"
+                     [folders]=null
+                     [streamFolder]=streamFollow
+                     [stream]=0
+                     [smFlag]=false
+                     (buttonFolderClick)="buttonFollowFunc($event)">
+        </folders-btn>
+      </ng-container>
+      <button *ngIf="mode==5" [disabled]="meFlag || (deadlineDays!=null && deadlineDays<0)" type="button" mat-raised-button class="btn btn-danger" (click)="buttonApplyFunc()">
+        Apply for this job &#9658;
+      </button>
+    </div>
+  </div>
+  <div *ngIf="sourceType!=1">
+    <div class="text-center">
+      Share this {{modeText[mode]}}:<br>
+      <share-buttons [show]="4" [theme]="material-light" [include]="['facebook','twitter','linkedin', 'email']"></share-buttons>
+      <!-- <li class="list-inline-item"><a style="cursor:pointer" (click)="openShareModalFunc()"><i class="fa fa-share-alt mr-2" aria-hidden="true"></i>Share</a></li> -->
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!meFlag && sourceType!=1" class="card bg-light">
+  <div class="card-body text-dark">
+    <h4><b>Help us maintain the quality of academic {{modeText[mode]}}.</b></h4>
+    <h5 *ngIf="mode==5"><b>Is this job not academic or not relevant?</b></h5>
+    <h4 *ngIf="mode!=5"><b>Report this {{modeText[mode]}}.</b></h4>
+    <button type="button" mat-raised-button class="btn btn-dark" (click)="openReportModalFunc()">
+      <!-- <li *ngIf="!meFlag" class="list-inline-item"><a (click)="openReportModalFunc()" style="cursor:pointer"><i class="fa fa-flag mr-2" aria-hidden="true"></i>Report</a></li> -->
+      <i class="fa fa-flag mr-2" aria-hidden="true"></i> Let us know!
+    </button>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Share Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" data-target="#shareModalDetails"></button>
+
+<div class="modal fade" id="shareModalDetails" data-target="#shareModalDetails" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=mode
+                   [flag]=shareFlag
+                   (closeModal)="closeShareModalFunc()">
+      </modal-share>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Report Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleReportModal" #toggleReportModal [hidden]="true" data-toggle="modal" data-target="#reportModalDetails"></button>
+
+<div class="modal fade" id="reportModalDetails" data-target="#reportModalDetails" tabindex="-1" role="dialog" aria-labelledby="ReportModal" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-report [mode]=mode
+                    [item]=item
+                    [groupIndex]=groupIndex
+                    [userId]=userId
+                    (closeModal)="closeReportModalFunc()">
+      </modal-report>
+    </div>
+  </div>
+</div>
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action
+                    [itemText]=modeText[mode]>
+      </modal-signup>
+    </div>
+  </div>
+</div>

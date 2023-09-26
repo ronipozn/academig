@@ -1,0 +1,196 @@
+<th *ngIf="showEditBtn" style="vertical-align:top" class="d-none d-sm-block">
+  <div class="form-check mt-1">
+    <label class="form-check-label">
+      <input class="form-check-input" #specificCheckbox type="checkbox" [checked]=_generalToggle (click)=checkboxTouchFunc()>
+      <span class="form-check-sign">
+        <span class="check"></span>
+      </span>
+    </label>
+  </div>
+</th>
+
+<td>
+
+  <!-- <h5 class="card-title">
+    {{index+1}}.
+    <a *ngIf="publication._id && sourceType<2" [routerLink]="[publication._id]">{{ publication.title }}</a>
+    <a *ngIf="publication._id && sourceType==2" [routerLink]="['publications',publication._id]">{{ publication.title }}</a>
+    <a *ngIf="publication._id && sourceType>=3" [routerLink]="['publications',publication._id]">{{ publication.title }}</a>
+    <span *ngIf="!publication._id">{{ publication.title }}</span>
+  </h5> -->
+  <span class="card-title text-dark">
+    {{index+1}}.
+    <a *ngIf="publication._id && (sourceType<2 || sourceType==5 || sourceType==6)" class="card-title text-dark" [routerLink]="[publication._id]">{{ publication.title }}</a>
+    <a *ngIf="publication._id && sourceType==2 && sourceType<5" class="card-title text-dark" [routerLink]="['publications',publication._id]">{{ publication.title }}</a>
+    <span *ngIf="!publication._id" class="card-title text-dark">{{ publication.title }}</span>
+  </span>
+
+  <!-- <span class="small text-muted nowrap"><i class="fa fa-eye" aria-hidden="true"></i> {{ publication.views[4] }}</span> -->
+  <spinner-put [stream]="publication._id ? 0 : 3" (animationDoneEvent)="animationDone($event)"></spinner-put>
+  <!-- <build-buttons *ngIf="showEditBtn" [showButton]=showButton (buttonEditClick)="buttonEditFunc($event)" (buttonDeleteClick)="buttonDeleteFunc($event)"></build-buttons> -->
+
+  <!-- <p *ngIf="publication.folders"  class="my-0 py-0">
+    <span class="badge badge-deafult badge-info">1 new citation</span>
+    <span class="badge badge-deafult badge-info">2 new comments</span>
+  </p> -->
+
+  <p *ngIf="generalName || generalNumbers || typeName" class="my-2 text-muted small">
+    <span *ngIf="typeName"><i class="fa fa-paperclip" aria-hidden="true"></i> {{ typeName }}, </span>
+    <span *ngIf="generalName"><b>{{ generalName }}, </b></span>
+    <span *ngIf="generalNumbers"><b>{{ generalNumbers }}, </b></span>
+    <span class="d-sm-none"><b>{{ publication.date | date: 'y' }}</b></span>
+  </p>
+
+  <p *ngIf="publication.abstractPic" class="mt-2">
+    <single-pic [pic]=publication.abstractPic [type]=1 [height]=120></single-pic>
+  </p>
+
+  <p *ngIf="publication.authors && publication.authors[0]" class="small py-1 mb-0">
+    <publication-authors [authors]=publication.authors [userId]=userId></publication-authors>
+  </p>
+
+  <folders-btn *ngIf="sourceType!=5 || !showEditBtn"
+               class="mr-1"
+               [folders]=publication.userFolders
+               [title]=publication.title
+               [journal]=publication.journal
+               [date]=publication.date
+               [streamFolder]=streamFolder
+               [stream]="publication._id ? 0 : 3"
+               [userFolders]=userService.userFolders
+               (buttonFolderClick)="btnFolderFunc($event)"
+               (buttonReadAddClick)="btnReadAddFunc()">
+  </folders-btn>
+
+  <!-- <ng-container *ngIf="sourceType==5">
+    <p *ngFor="let folder of publication.folders" class="mb-1">
+      <ng-container *ngIf="folder.folder=='read'">
+        <b>
+          {{folder.date | date}}
+          <span *ngIf="folder.end">- {{folder.end | date}}</span>
+          : <a>{{folder.summary}}</a>
+        </b>
+      </ng-container>
+    </p>
+    <hr>
+  </ng-container> -->
+
+  <button *ngIf="publication.abstract" data-toggle="modal" attr.data-target="#AbstractModal{{publication._id}}" role="button" style="background-color: #DDE1F3" class="btn btn-sm btn-round btn-outline-light-blue py-1 px-2 mr-2">
+    <i class="fa fa-align-justify mr-1" style="font-size: 12px;" aria-hidden="true"></i> Abstract
+  </button>
+
+  <a *ngIf="publication._id && publication.pdf" role="button" [href]=publication.pdf target="_empty" style="background-color: #DDE1F3" class="btn btn-sm btn-round btn-outline-light-blue py-1 px-2 mr-2" aria-haspopup="true" aria-expanded="false">
+    <i class="fa fa-download mr-1" style="font-size: 12px;" aria-hidden="true"></i> Download
+  </a>
+
+  <button [disabled]="publication._id==null" (click)="openShareModalFunc()" role="button" style="background-color: #DDE1F3" class="btn btn-sm btn-round btn-outline-light-blue py-1 px-2">
+    <i class="fa fa-share-alt mr-1" style="font-size: 12px;" aria-hidden="true"></i> Share
+  </button>
+
+  <!-- <button data-toggle="modal" attr.data-target="#CiteModal{{publication._id}}" role="button" class="btn btn-link text-dark">
+    <i class="fa fa-quote-left mr-1" aria-hidden="true"></i>Cite
+  </button> -->
+
+</td>
+
+<td *ngIf="0" style="vertical-align:top" class="text-right">
+  {{ publication.citationsCount }}
+</td>
+
+<td style="vertical-align:top" class="d-none d-sm-block text-right">
+  {{ publication.date | date: 'y' }}
+</td>
+
+<td *ngIf="sourceType==5" style="vertical-align:top" class="text-left">
+  <ng-container *ngFor="let folder of folders">
+    <p *ngIf="folder!=null" class="mb-1"><a>{{folder}}</a></p>
+  </ng-container>
+  <folders-btn *ngIf="showEditBtn"
+               [folders]=publication.folders
+               [title]=publication.title
+               [journal]=publication.journal
+               [date]=publication.date
+               [sourceType]=sourceType
+               [streamFolder]=streamFolder
+               [stream]="publication._id ? 0 : 3"
+               [userFolders]=userService.userFolders
+               (buttonFolderClick)="btnFolderFunc($event)"
+               (buttonReadAddClick)="btnReadAddFunc($event)">
+  </folders-btn>
+</td>
+
+<td *ngIf="sourceType==5" style="vertical-align:top" class="text-right">
+  <p *ngFor="let date of readDates">{{ date | date: 'dd MMM y' }}</p>
+</td>
+
+<td *ngIf="sourceType==5" style="vertical-align:top" class="text-right">
+  <p *ngIf="createdDate[0]">{{ createdDate[0] | date: 'dd MMM y' }}</p>
+  <ng-container *ngIf="!createdDate[0]">
+    <ng-container *ngIf="wantDates?.length>0">
+      <p *ngFor="let date of wantDates">{{ date | date: 'dd MMM y' }}</p>
+    </ng-container>
+    <ng-container *ngIf="wantDates?.length==0">
+      <p *ngFor="let date of currentDates">{{ date | date: 'dd MMM y' }}</p>
+    </ng-container>
+  </ng-container>
+</td>
+
+
+<!------------------------------>
+<!------------------------------>
+<!--          MODALS          -->
+<!------------------------------>
+<!------------------------------>
+
+<!-- Share Modal -->
+<button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" attr.data-target="#ShareModal{{publication._id}}"></button>
+
+<div class="modal fade" id="ShareModal{{publication._id}}" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=2
+                   [itemId]=publication._id
+                   [flag]=shareFlag
+                   (closeModal)="closeShareModalFunc()">
+      </modal-share>
+    </div>
+  </div>
+</div>
+
+<!-- Signup Modal -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="'user'"></modal-signup>
+    </div>
+  </div>
+</div>
+
+<!-- Cite Modal -->
+<div class="modal fade" id="CiteModal{{publication._id}}" tabindex="-1" role="dialog" aria-labelledby="CiteModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <modal-cite></modal-cite>
+  </div>
+</div>
+
+<!-- Abstract Modal -->
+<div class="modal fade" id="AbstractModal{{publication._id}}" tabindex="-1" role="dialog" aria-labelledby="AbstractModal" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="AbstractModalLabel">Abstract</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body small">
+        <span [innerHTML]="publication.abstract"></span>
+      </div>
+      <div class="modal-footer">
+        <button role="button" mat-raised-button class="btn btn-link" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

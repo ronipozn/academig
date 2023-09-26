@@ -1,0 +1,469 @@
+<!-- increase your lab impact -->
+
+<!-- New funding<br> -->
+<!-- New collaborations<br> -->
+<!-- Academig cake club<br> -->
+
+<div class="card mt-0">
+  <div class="card-body py-0">
+    <div class="d-flex align-items-center mb-0 pb-0">
+      <div class="mr-auto">
+        <h3><b>Weekly lab report for week ending</b></h3>
+      </div>
+      <div>
+        <div class="btn btn-light-blue btn-block">Uplift your lab score</div>
+      </div>
+    </div>
+    <mat-form-field appearance="standard">
+      <mat-select [(value)]="weekSelected" style="font-weight: bold;">
+        <mat-option *ngFor="let week of weeksArray" [value]=week>
+          <h4>{{ week }}</h4>
+        </mat-option>
+      </mat-select>
+      <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title"><b>Lab Score</b></h4>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <!-- Add Pie Charts -->
+      <div class="col-md-4">
+        Your lab score is higher than 60% of all Academig labs' scores.
+        <h3 class="my-0">Global</h3>
+        <h2>60%</h2>
+        <div class="progress" style="height: 20px;">
+          <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 60%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        Your lab score is higher than 80% of all Academig Neuroscience labs' scores.
+        <h3 class="my-0">Neuroscience</h3>
+        <h2>80%</h2>
+        <div class="progress" style="height: 20px;">
+          <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 80%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        Your lab score is higher than 65% of all Academig Stem Cells labs' scores.
+        <h3 class="my-0">Stem Cells</h3>
+        <h2>65%</h2>
+        <div class="progress" style="height: 20px;">
+          <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 65%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card card-chart">
+      <!-- data-header-animation="true" -->
+      <div class="card-header card-header-rose">
+        <div class="ct-chart" id="websiteViewsChart"></div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">Visits</h4>
+        <p class="card-category">+532</p>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">local_offer</i> Total: 15873
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-chart">
+      <div class="card-header card-header-success">
+        <div class="ct-chart" id="dailySalesChart"></div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">Recommndations</h4>
+        <p class="card-category">+184 <span class="ml-2 text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase.</p>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> Total: 873
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-chart">
+      <div class="card-header card-header-info">
+        <div class="ct-chart" id="completedTasksChart"></div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">Followers</h4>
+        <p class="card-category">+34</p>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> Total: 153
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-0">
+  <div class="card-header">
+    <h4 class="card-title"><b>Visits by Locations</b></h4>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <app-md-table
+          [data]="tableData">
+        </app-md-table>
+      </div>
+      <div class="col-md-6 ml-auto mr-auto">
+        <div id="worldMap" class="map"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title"><b>People who visit the lab's profile</b></h4>
+  </div>
+  <div class="card-body">
+    People list + What Visit + Insititute + Send Message
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title"><b>Lab People</b></h4>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table">
+        <thead class="text-primary">
+          <tr>
+            <th *ngFor="let cell of tableMembersData.headerRow">{{ cell }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of tableMembersData.dataRows">
+            <td>{{row[0]}}</td>
+            <td>{{row[1]}}</td>
+            <td>{{row[2]}}</td>
+            <td>{{row[3]}}</td>
+            <td>{{row[4]}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title"><b>Lab Seminars</b></h4>
+  </div>
+  <div class="card-body">
+    <table class="table">
+      <thead class="text-primary">
+        <tr>
+          <th *ngFor="let cell of tableSeminarsData.headerRow">{{ cell }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of tableSeminarsData.dataRows">
+          <td>{{row[0]}}</td>
+          <td>{{row[1]}}</td>
+          <td>{{row[2]}}</td>
+          <td>{{row[3]}}</td>
+          <td>{{row[4]}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title"><b>Lab Assignments</b></h4>
+  </div>
+  <div class="card-body">
+    Next assignment submission: 18 May, 2020<br>
+    Last assignment submission: 11 May, 2020
+  </div>
+</div>
+
+<!-- Projects / Publlications / Services / Media / FAQ / Gallery / Teaching / Outreach -->
+<h3>New Content</h3>
+<div class="row">
+  <div class="col-md-4">
+    <div class="card card-product">
+      <div class="card-header card-header-image" data-header-animation="true">
+        <a href="#pablo">
+          <img class="img" src="https://ucarecdn.com/c48d4c9b-f3a9-4246-a68b-95a70645dfd7/">
+        </a>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">
+          <u>Project</u>
+        </h4>
+        <h4 class="card-title">
+          <a href="#pablo">Algal biotechnologies</a>
+        </h4>
+        <div class="card-description">
+          The Sales Lab, in collaboration with Professor Mira Olson, are investigating the use of algae to remove nitrogen from landfill leachate.
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="price">
+          <h4>May 8, 2020</h4>
+        </div>
+        <div class="stats">
+          <p class="card-category"><i class="material-icons">user</i> Martin</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-product">
+      <div class="card-header card-header-image" data-header-animation="true">
+        <a href="#pablo">
+          <img class="img" src="https://ucarecdn.com/263c3c9e-15c2-4858-b546-c11ecd194217/">
+        </a>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">
+          <u>Service</u>
+        </h4>
+        <h4 class="card-title">
+          <a href="#pablo">Flowback Water</a>
+        </h4>
+        <div class="card-description">
+          The meteoric rise of hydraulic fracturing as a technique for oil and natural gas extraction has evoked numerous concerns about its potential environmental impacts.
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="price">
+          <h4>May 6, 2020</h4>
+        </div>
+        <div class="stats">
+          <p class="card-category"><i class="material-icons">user</i> Tatyana Pozner</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-product">
+      <div class="card-header card-header-image" data-header-animation="true">
+        <a href="#pablo">
+          <img class="img" src="https://ars.els-cdn.com/content/image/1-s2.0-S1386142519304962-ga1.jpg">
+        </a>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">
+          <u>Poster</u>
+        </h4>
+        <h4 class="card-title">
+          <a href="#pablo">2,4,6-trinitrotoluene (TNT)</a>
+        </h4>
+        <div class="card-description">
+          Nitroaromatic compounds represent a major class of environmental contaminants, and include explosives such as 2,4,6-trinitrotoluene (TNT).
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="price">
+          <h4>May 3, 2020</h4>
+        </div>
+        <div class="stats">
+          <p class="card-category"><i class="material-icons">user</i> Beate</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Publications</h3>
+<div class="card mt-0">
+  <div class="card-header">
+    <h4 class="card-title"><b>New publications</b></h4>
+  </div>
+  <div class="card-body">
+    Table
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card card-chart">
+      <!-- data-header-animation="true" -->
+      <div class="card-header card-header-rose">
+        <div class="ct-chart" id="publicationsReadsChart"></div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">Reads</h4>
+        <p class="card-category">+231</p>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> Total: 5433
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-chart">
+      <div class="card-header card-header-success">
+        <div class="ct-chart" id="publicationsFullChart"></div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">Full-text reads</h4>
+        <p class="card-category">
+          +435 <span class="ml-2 text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase.</p>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> Total: 3721
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-chart">
+      <div class="card-header card-header-info">
+        <div class="ct-chart" id="citationsViewsChart"></div>
+      </div>
+      <div class="card-body">
+        <h4 class="card-title">Citations</h4>
+        <p class="card-category">+21</p>
+      </div>
+      <div class="card-footer">
+        <div class="stats">
+          <i class="material-icons">access_time</i> Total: 55
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-0">
+  <div class="card-header">
+    <h4 class="card-title"><b>People who read the lab's publications</b></h4>
+  </div>
+  <div class="card-body">
+    People list + What Read + Insititute + Send Message
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h4 class="card-title"><b>Lab's most read publications</b></h4>
+  </div>
+  <div class="card-body">
+    Publications list
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card mt-0">
+      <div class="card-header">
+        <h4 class="card-title"><b>Reads by institution</b></h4>
+      </div>
+      <div class="card-body">
+        <app-md-table
+          [data]="tableData">
+        </app-md-table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card mt-0">
+      <div class="card-header">
+        <h4 class="card-title"><b>Reads by country</b></h4>
+      </div>
+      <div class="card-body">
+        <app-md-table
+          [data]="tableData">
+        </app-md-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-0">
+  <div class="card-header">
+    <h4 class="card-title"><b>Lab's publications achievements</b></h4>
+  </div>
+  <div class="card-body">
+    Achievements list
+  </div>
+</div>
+
+<!-- <div [ngClass]="{'card': sourceType==1}">
+  <div [ngClass]="{'card-body': sourceType==1}">
+    <ul class="nav nav-tabs justify-content-center">
+      <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#overall" role="tab" (click)="overallAnalyticsFunc(0)">Overall</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#publications" role="tab" (click)="analyticsFunc(1)">Publications</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#services" role="tab" (click)="analyticsFunc(2)">Services</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#projects" role="tab" (click)="analyticsFunc(3)">Projects</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#positions" role="tab" (click)="analyticsFunc(4)">Positions</a></li>
+    </ul>
+  </div>
+</div> -->
+
+<!-- <div class="tab-content">
+
+  <div class="tab-pane active" id="overall" role="tabpanel">
+    <private-analytics-item [streamRetrieved]=streamRetrieved[0]
+                            [analytics]=overallAnalytics
+                            [sourceType]=sourceType>
+    </private-analytics-item>
+  </div>
+
+  <div class="tab-pane" id="publications" role="tabpanel">
+    <private-analytics-table [streamRetrieved]=streamRetrieved[1]
+                             [type]=0
+                             [downloadsFlag]=true
+                             [title]="'Publications'"
+                             [items]=publicationsAnalytics
+                             [sourceType]=sourceType>
+    </private-analytics-table>
+  </div>
+
+  <div class="tab-pane" id="services" role="tabpanel">
+    <private-analytics-table [streamRetrieved]=streamRetrieved[2]
+                             [type]=1
+                             [downloadsFlag]=true
+                             [title]="'Services'"
+                             [items]=resourcesAnalytics
+                             [sourceType]=sourceType>
+    </private-analytics-table>
+  </div>
+
+  <div class="tab-pane" id="projects" role="tabpanel">
+    <private-analytics-table [streamRetrieved]=streamRetrieved[3]
+                             [type]=2
+                             [title]="'Projects'"
+                             [items]=projectsAnalytics
+                             [sourceType]=sourceType>
+    </private-analytics-table>
+  </div>
+
+  <div class="tab-pane" id="positions" role="tabpanel">
+    <private-analytics-table [streamRetrieved]=streamRetrieved[4]
+                             [type]=3
+                             [appliedFlag]=true
+                             [title]="'Positions'"
+                             [items]=positionsAnalytics
+                             [sourceType]=sourceType>
+    </private-analytics-table>
+  </div>
+
+</div> -->

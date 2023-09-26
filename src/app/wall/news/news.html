@@ -1,0 +1,45 @@
+<div *ngIf="userService.userId && !streamRetrieved && offset==0" class="mt-4 row justify-content-center">
+  <spinner></spinner>
+</div>
+
+<div *ngIf="userService.userId && streamRetrieved && newses.length==0" class="card mt-0">
+  <div class="card-body mt-2">
+    <b>News feed is empty</b><br>
+    <p>You are not following any research labs.</p>
+    <img class="d-flex mx-auto" [height]="200" [src]="'./assets/img/empty2.svg'">
+  </div>
+</div>
+
+<div *ngIf="userService.userId && newses.length>0 && (streamRetrieved || offset!=0)">
+  <!-- <div *ngIf="type==3" class="card mt-0">
+    <button class="p-3 btn btn-link text-muted" (click)="newsSlide(true, null, true)">
+      <div class="d-flex align-items-center">
+        <div><i class="fa fa-2x fa-pencil-square-o mr-2" aria-hidden="true"></i></div>
+        <div><b>Share your academic news</b></div>
+      </div>
+    </button>
+    <div class="card mt-0"> gray...
+      <a [routerLink]="['./people',userService.userId,'news']" class="btn btn-link">Manage your news</a>
+    </div>
+  </div> -->
+  <!-- <h3>Lab News</h3> -->
+  <news-list [newses]=newses
+             [followings]=followings
+             [userId]=userService.userId
+             [sourceType]=0
+             [streamRetrieved]=streamRetrieved
+             (buttonMoreNewsClick)="loadMore()">
+  </news-list>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text-pic *ngIf=newsBuildFlag
+                      [title]="'Add News'"
+                      [itemId]=userService.userId
+                      (update)="newsCreate($event)"
+                      (cancel)="newsSlide(false, 0, false)">
+</build-slide-text-pic>

@@ -1,0 +1,37 @@
+<div class="card card-stats">
+
+  <div class="card-header card-header-icon">
+    <div *ngIf="affiliation.pic" class="bg-light card-icon p-0">
+      <img height=60 class="border border-dark p-1" [src]=affiliation.pic>
+    </div>
+    <div *ngIf="!affiliation.pic" class="card-icon"><i class="material-icons">content_copy</i></div>
+    <p class="card-category">
+      <!-- <spinner-put [stream]=stream (animationDoneEvent)="animationDone()"></spinner-put> -->
+      <span *ngIf="stream==3" class="spinner-border spinner-border-sm" role="status">
+        <span class="sr-only">Loading...</span>
+      </span>
+      <ng-container *ngIf="showEditBtn && (index==null || index>1) && stream==0">
+        <button mat-raised-button type="button" (click)="buttonUpdateFunc()" matTooltip="Edit Text" [matTooltipPosition]="'above'" class="btn btn-primary btn-link btn-sm btn-just-icon">
+          <i class="material-icons">edit</i>
+        </button>
+        <button *ngIf="!updateFlag" mat-raised-button type="button" (click)="buttonDeleteFunc()" matTooltip="Delete" [matTooltipPosition]="'above'" class="btn btn-danger btn-link btn-sm btn-just-icon">
+          <i class="material-icons">close</i>
+        </button>
+      </ng-container>
+      <span *ngIf="index==0">UNIVERSITY</span>
+      <span *ngIf="index==1">DEPARTMENT</span>
+    </p>
+  </div>
+
+  <div class="card-header pb-0">
+    <a *ngIf="index<=1" class="card-title pl-0" [routerLink]="(index==-1) ? ['.'] : ((index==0) ? ['../../../../'] : ['../../../'])"><h4>{{ affiliation.title }}</h4></a>
+    <h4 *ngIf="index>1">{{ affiliation.title }}</h4>
+    {{ affiliation.description }}
+    <a *ngIf="affiliation.source" [href]=affiliation.source target="_empty"><sup>[source]</sup></a>
+  </div>
+
+  <div class="card-footer">
+    <a *ngIf="affiliation.externalLink" [href]=affiliation.externalLink target="_empty" role="button" class="pl-0 btn btn-sm btn-link" aria-label="ExternalWebsite">Official site</a>
+  </div>
+
+</div>

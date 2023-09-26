@@ -1,0 +1,75 @@
+<app-loading *ngIf="userService.isAuthenticated===null"></app-loading>
+
+<div class="wrapper">
+
+  <div *ngIf="isMobile" class="sidebar" data-color="danger" data-background-color="white">
+    <app-sidebar [unseen]=userService.userUnseen
+                 [unread]=userService.userUnread
+                 [adminFlag]=adminFlag
+                 [isAuthenticated]=userService.isAuthenticated
+                 [planNumber]=userService.planNumber>
+    </app-sidebar>
+    <div class="sidebar-background"></div>
+  </div>
+  <!-- data-image="./assets/img/sidebar-1.jpg" -->
+  <!-- style="background-image: url(./assets/img/sidebar-4.jpg)" -->
+
+  <div class="main-panel">
+    <div class="d-flex flex-column-reverse">
+
+      <landing *ngIf="userService.isAuthenticated===false && userService.urlType>-1 && router.url=='/'"></landing>
+
+      <router-outlet *ngIf="userService.isAuthenticated!=null && userService.searchFocus==false"></router-outlet>
+
+      <div *ngIf="userService.searchFocus" class="card mt-0">
+        <div class="card-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-10 col-offest-1">
+                <h3 class="mb-1"><b>Search For</b></h3>
+                <hr class="mt-0">
+                <button *ngFor="let searchLink of searchLinks" (click)="buttonSearchFunc(searchLink.link)" mat-raised-button class="btn btn-sm btn-round mr-2 btn-outline-light-blue">
+                  <i class="material-icons">{{searchLink.icon}}</i> {{searchLink.label}}
+                  <div class="ripple-container"></div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <progress-box *ngIf="userService.isAuthenticated===true && router.url=='/' && (userService.urlType>-1 || userService.errFlag)" [source]=0></progress-box> -->
+
+      <navbar-app-unlogged *ngIf="userService.isAuthenticated===false && userService.urlType>-1"></navbar-app-unlogged>
+
+      <div *ngIf="userService.isAuthenticated===true && userService.urlType>-1" style="padding-top: 70px"></div>
+
+      <navbar-app-logged *ngIf="userService.isAuthenticated===true && (userService.urlType>-1 || userService.errFlag)"
+                         [adminFlag]=adminFlag
+                         [planNumber]=userService.planNumber
+                         [userPic]=userService.userPic
+                         [userName]=userService.userName
+                         [unseen]=userService.userUnseen
+                         [unread]=userService.userUnread>
+      </navbar-app-logged>
+
+    </div>
+  </div>
+
+</div>
+
+<read-box *ngIf="userService.isAuthenticated===true &&
+                 userService.urlType!=-1 &&
+                 userService.urlType!=2 &&
+                 userService.userChallenge==null &&
+                 challengeFlag"
+          [isAuthenticated]=userService.isAuthenticated>
+</read-box>
+
+<compare-box (btnCompareClick)="buttonCompareFunc()"
+             [isAuthenticated]=userService.isAuthenticated
+             [setMinimize]=minimizeCompareFlag>
+</compare-box>
+
+<!-- <p><a [routerLink]="['profile']" *ngIf="userService.isAuthenticated">Profile</a></p> -->
+<!-- <p><a [routerLink]="['external-api']" *ngIf="userService.isAuthenticated">External API</a></p> -->

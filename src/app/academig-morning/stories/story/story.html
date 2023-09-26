@@ -1,0 +1,143 @@
+<div style="background-color: white; min-height: 86vh;">
+
+  <div *ngIf="!streamRetrieved" class="d-flex justify-content-center mt-4">
+    <div class="spinner-border text-secondary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <!-- container-fluid -->
+  <div *ngIf="streamRetrieved && story" class="container">
+    <div class='row justify-content-center'>
+      <div class='col-12 col-lg-9'>
+
+        <div class='d-flex align-items-center justify-content-between mt-3'>
+          <!-- <a class="text-secondary gilroy-bold" href="/stories?tag=social-media">SOCIAL MEDIA</a> -->
+          <span class="text-success"><b>{{story.category | uppercase}}</b></span>
+        </div>
+
+        <h1 class='display-4 mt-0'><b>{{story.topic}}</b></h1>
+
+        <p class='m-0 p-0'>
+          <time><b>{{moment(story.date).format("MMMM DD, YYYY")}}</b></time>
+          <!-- <time datetime="2020-09-13T17:13:06Z" data-local="time" data-format="%B %-d, %Y"><b>{{moment(story.date).format("MMMM DD, YYYY")}}</b></time> -->
+        </p>
+
+        <div class='row align-items-center no-gutters mt-4'>
+          <div class='col-auto my-2'>
+             <!-- img-fluid -->
+            <img [alt]="story.author.name" [height]="66" class='rounded-circle' [src]="story.author.pic">
+          </div>
+          <div class='col-auto my-2'>
+            <div class='mx-3 gilroy'>
+              <a href="/stories?author={{story.author.name}}"><span class='m-0 text-dark'><b>{{story.author.name}}</b></span></a>
+              <p class='m-0 text-success'><b>Writer</b></p>
+            </div>
+          </div>
+          <div class='col-auto my-2'>
+            <div class='d-flex justify-content-between align-items-center'>
+              <a target="_blank" class="btn btn-twitter btn-light-blue text-white" href="https://www.twitter.com/its_ahickey"><i class='fa fa-twitter mx-2 mr-sm-2 ml-sm-0'></i>
+                <span class='d-none d-sm-inline'>Follow</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-0">
+        <img [alt]="story.alt" class="rounded img-fluid mt-4 mb-1 w-100" sizes="(max-width: 770px) 100vw, (max-width: 1201px) 690px, 825px" [src]="story.pic"/>
+        <small class='text-muted'><em>{{story.alt}}</em></small>
+        <hr class="my-0">
+
+        <div class='d-flex align-items-center my-3'>
+          <a target="_blank" class="mr-2" href="https://www.facebook.com/sharer/sharer.php?u=https://www.academig.com/people/tatipk86">
+            <i class='fa fa-2x fa-facebook-square text-muted social-media'></i>
+          </a>
+          <a target="_blank" class="mr-2" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.academig.com/people/tatipk86&amp;title=China+Reportedly+Will+Block+TikTok+Sale&amp;source=https://www.academig.com&amp;summary=A+deal+to+sell+U.S.+TikTok+operations+to+an+American+buyer+is+running+out+of+time">
+            <i class='fa fa-2x fa-linkedin-square text-muted social-media'></i>
+          </a>
+          <a target="_blank" class="mr-2" href="https://twitter.com/intent/tweet?text=A+deal+to+sell+U.S.+TikTok+operations+to+an+American+buyer+is+running+out+of+time&amp;url=https://www.academig.com/people/tatipk86&amp;via=Academig">
+            <i class='fa fa-2x fa-twitter-square text-muted social-media'></i>
+          </a>
+          <button mat-raised-button class="btn btn-sm btn-dark" (click)="copyMessage(url)">
+            {{urlCopyFlag ? 'URL Copied' : 'Copy URL'}}
+          </button>
+        </div>
+
+        <div class='mt-4 mb-4 text-large'>
+          <!-- style='white-space:pre-wrap;' -->
+          <div [innerHTML]="story.text | safeHtml"></div>
+        </div>
+
+        <hr>
+
+        <p class='text-muted mt-3'>
+          <i class='fa fa-share mr-2'></i>
+          <em>Share this story with your network</em>
+        </p>
+
+        <div class='d-flex align-items-center my-3'>
+          <a target="_blank" class="mr-2" href="https://www.facebook.com/sharer/sharer.php?u=https://www.academig.com/people/tatipk86">
+            <i class='fa fa-2x fa-facebook-square text-muted social-media'></i>
+          </a>
+          <a target="_blank" class="mr-2" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.academig.com/people/tatipk86&amp;title=China+Reportedly+Will+Block+TikTok+Sale&amp;source=https://www.academig.com&amp;summary=A+deal+to+sell+U.S.+TikTok+operations+to+an+American+buyer+is+running+out+of+time">
+            <i class='fa fa-2x fa-linkedin-square text-muted social-media'></i>
+          </a>
+          <a target="_blank" class="mr-2" href="https://twitter.com/intent/tweet?text=A+deal+to+sell+U.S.+TikTok+operations+to+an+American+buyer+is+running+out+of+time&amp;url=https://www.academig.com/people/tatipk86&amp;via=Academig">
+            <i class='fa fa-2x fa-twitter-square text-muted social-media'></i>
+          </a>
+          <button mat-raised-button class="btn btn-sm btn-dark" (click)="copyMessage(url)">
+            {{urlCopyFlag ? 'URL Copied' : 'Copy URL'}}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div aria-hidden='true' class='modal fade' id='subscription-popup' role='dialog' tabindex='-1'>
+  <div class='modal-dialog modal-dialog-centered' role='document'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h5 class='modal-title'>
+          <span class='gilroy'>Treat your inbox to</span>
+          <span class='gilroy-bold'>Morning Brew.</span>
+          <button aria-label='Close' class='close' data-dismiss='modal' type='button'></button>
+          <span aria-hidden='true'></span>
+        </h5>
+      </div>
+      <div class='modal-body'>
+        <p>Get the daily email that makes reading the news actually enjoyable. Stay informed and entertained, for free.</p>
+        <form class="new_signup" id="subscription-popup-form" action="/daily/signups" accept-charset="UTF-8" method="post">
+          <input name="utf8" type="hidden" value="&#x2713;" />
+          <input type="hidden" name="authenticity_token" value="sfgcpEptFsleOhp2wXvFiuiwbRqiqby46wwE3KVkEZ1CYwAD3fvuSjE/9felyb9Y/L2qwKOi39eLFbl1bUDuAA==" />
+          <input placeholder="Enter Email" class="form-control" required="required" type="email" name="signup[email]" id="signup_email" />
+          <input value="2180" type="hidden" name="signup[source_id]" id="signup_source_id" />
+          <input type="hidden" name="signup[utm_source]" id="signup_utm_source" />
+          <input type="hidden" name="signup[utm_medium]" id="signup_utm_medium" />
+          <input type="hidden" name="signup[utm_campaign]" id="signup_utm_campaign" />
+          <input type="hidden" name="signup[kid]" id="signup_kid" />
+          <input type="hidden" name="signup[code]" id="signup_code" />
+          <input type="hidden" name="signup[cjevent]" id="signup_cjevent" />
+          <input type="hidden" name="signup[gclid]" id="signup_gclid" />
+          <input value="1" type="hidden" name="signup[newsletter_id]" id="signup_newsletter_id" />
+          <input name="signup[validate]" type="hidden" value="0" />
+          <input style="display: none;" type="checkbox" value="1" name="signup[validate]" id="signup_validate" />
+        </form>
+      </div>
+      <div class='modal-footer border-0 bg-light'>
+        <button class='btn btn-light' data-dismiss='modal' type='button'>Close</button>
+        <button class='btn btn-light-blue' id='subscription-popup-submit' type='button'>Subscribe</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<info-footer [hidden]="!streamRetrieved"></info-footer>
+
+<!-- <a href="/daily/stories/2020/09/04/half-young-adults-us-live-parent"><div class='card h-100 story-card'>
+<a href="/daily/stories/2020/09/04/half-young-adults-us-live-parent"><figure class='story-card-image'>
+<img onerror="this.error=null;this.src=&quot;https://morningbrew-oslo.s3.us-west-2.amazonaws.com/1569597117.jpg&quot;;" class="card-img-top rounded-top" max_width="500" sizes="(max-width: 770px) 100vw, (max-width: 995px) 300px, (max-width: 1201px) 280px, 350px" src="https://media.giphy.com/media/3og0IKinzBYyoia9eE/giphy.gif" />
+<div class='inset-box-shadow'></div>
+</figure>
+</a> -->

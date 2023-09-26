@@ -1,0 +1,412 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <h5>Initalize dev env:</h5>
+    <button role="button" class="btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">algolia</button>
+    <button role="button" class="btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">stream</button>
+    <button role="button" class="btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">mongo</button>
+    <button role="button" class="btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">auth0</button>
+    <button role="button" class="btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">uploadcare</button>
+  </div>
+</div>
+
+<div class="card mt-0">
+  <div class="card-body">
+    <button role="button" (click)="updatePublicationsList()" class="btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">
+      Publications
+    </button>
+    <button role="button" (click)="updateUsersList()" class="btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">
+      Researchers
+    </button>
+    <button role="button" (click)="updateLabsList()" class="btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">
+      Labs
+    </button>
+    <button [disabled]="!streamUsers || !streamPublications" role="button" class="btn btn-sm btn-info" (click)="calcRatio()" aria-haspopup="true" aria-expanded="false">
+      Calc Ratio
+    </button>
+  </div>
+</div>
+
+<div *ngIf="streamInvites" class="card mt-0">
+  <div class="card-body">
+    <p class="lead"><b>Daily</b></p>
+    <div style="display: block;">
+      <canvas baseChart width="400" height="200"
+              [datasets]="lineDailyData"
+              [labels]="linePublicationsLabels"
+              [options]="lineChartOptions"
+              [colors]="lineChartColors"
+              [legend]="lineChartLegend"
+              [chartType]="lineChartType"
+              (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)">
+      </canvas>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="streamLabs!=null" class="card mt-0">
+  <div class="card-body">
+    <p class="lead"><b>Labs</b></p>
+    <spinner *ngIf="!streamLabs" [text]="'Users'"></spinner>
+    <ng-container *ngIf="streamLabs">
+      <b>Total labs:</b> {{groups.length}}<br>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Total</th>
+            <th scope="col">Build For Me</th>
+            <th scope="col">Under Review</th>
+            <th scope="col">Published</th>
+            <th scope="col">Interview</th>
+            <th scope="col">PRO 1</th>
+            <th scope="col">PRO 2</th>
+            <th scope="col">Kits</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let type of groupTypes; let i=index">
+            <th scope="row">{{type}}</th>
+            <td *ngFor="let stat of groupStats[i]">{{stat}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+</div>
+
+<div *ngIf="streamUsers!=null" class="card mt-0">
+  <div class="card-body">
+    <p class="lead"><b>Users</b></p>
+    <spinner *ngIf="!streamUsers" [text]="'Users'"></spinner>
+    <!-- <div id="colouredRoundedLineChart" class="ct-chart"></div> -->
+    <div *ngIf="streamUsers">
+      <div style="display: block;">
+        <canvas baseChart width="400" height="200"
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)">
+        </canvas>
+      </div>
+      <div style="display: block;">
+        <canvas baseChart width="400" height="200"
+                [datasets]="lineUsersDailyData"
+                [labels]="lineUsersDailyLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="streamPublications!=null" class="card mt-0">
+  <div class="card-body">
+    <p class="lead"><b>Publications</b></p>
+    <spinner *ngIf="!streamPublications" [text]="'Publications'"></spinner>
+    <div *ngIf="streamPublications">
+      <div style="display: block;">
+        <canvas baseChart width="400" height="200"
+                [datasets]="linePublicationsData"
+                [labels]="linePublicationsLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-0">
+  <div class="card-body">
+    <h5>Publications Statistics</h5>
+    <p>Per time interval</p>
+    <p>Num of publications invites, reinvties, last reminder</p>
+    <p>Emails: num of open, clicks</p>
+    <p>Num of signups (+ Num of signups with different email)</p>
+  </div>
+</div>
+
+<!-- <div class="col-12" style="margin-bottom: 10px">
+  <table class="table table-responsive table-condensed">
+    <tr>
+      <th *ngFor="let label of lineChartLabels">{{label}}</th>
+    </tr>
+    <tr *ngFor="let d of lineChartData">
+      <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
+    </tr>
+  </table>
+</div> -->
+
+<!-- <p class="lead mt-4"><b>Weekly cohort report</b></p>
+To Be Done
+
+<p class="lead mt-4"><b>Drill into sub-funnels</b></p>
+To Be Done
+
+<p class="lead mt-4"><b>Go behind the numbers</b></p>
+To Be Done
+
+<p class="lead mt-4"><b>Detailed retention view</b></p>
+To Be Done -->
+
+<!-- <div class="d-flex justify-content-end">
+  <div class="mr-auto">
+    <span class="lead pull-left inline"><strong>Weekly cohort report</strong> - June 2017</span>
+  </div>
+  <div>
+    <button role="button" class="btn btn-sm btn-secondary mr-2" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-chevron-left" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div>
+    <button role="button" class="btn btn-sm btn-secondary" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
+<hr class="mt-0">
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-2">
+      <p><b>Titles</b></p>
+      <div *ngFor="let title of mainFunnel" class="progress mb-2">
+        <div class="progress-bar text-left"
+             role="progressbar"
+             style="width: 0%; height: 30px;"
+             aria-valuenow="0"
+             aria-valuemin="0"
+             aria-valuemax="100">
+          <p class="ml-2 pt-2" style="color: black">{{title}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col" *ngFor="let row of mainDataPercent; let i=index">
+      <p><b>{{i}}</b> <small>Weekly Cohort</small></p>
+      <div *ngFor="let cell of row; let j=index" class="progress mb-2">
+        <div class="progress-bar text-left"
+             [ngClass]="{'bg-info': j==1, 'bg-danger': j==2, 'bg-success': j==3, 'bg-warning': j==4}"
+             role="progressbar"
+             [style.width]="cell+'%'"
+             style="height: 30px;"
+             aria-valuenow=cell
+             aria-valuemin="0"
+             aria-valuemax="100">
+          <p class="ml-2 progress-bar-title">{{mainData[i][j]}} ({{cell}}%)</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p class="lead mt-4 mb-0">Drill into sub-funnels</p>
+<hr class="mt-0">
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-2">
+      <p><b>Steps</b></p>
+      <div *ngFor="let step of subFunnel" class="progress mb-2">
+        <div class="progress-bar text-left"
+             role="progressbar"
+             style="width: 0%; height: 30px;"
+             aria-valuenow="0"
+             aria-valuemin="0"
+             aria-valuemax="100">
+          <p class="ml-2 progress-bar-title">{{step}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col" *ngFor="let row of subDataPercent; let i=index">
+      <p><b>{{i}}</b> <small>Weekly Cohort</small></p>
+      <div *ngFor="let cell of row; let j=index" class="progress mb-2">
+        <div class="progress-bar text-left"
+             [ngClass]="{'bg-primary': j<subSteps[0],
+                         'bg-info': j>subSteps[0] && j<=subSteps[1],
+                         'bg-danger': j>subSteps[1] && j<=subSteps[2],
+                         'bg-success': j>subSteps[2] && j<=subSteps[3],
+                         'bg-warning': j>subSteps[3] && j<=subSteps[4]}"
+             role="progressbar"
+             [style.width]="cell+'%'"
+             style="height: 30px;"
+             aria-valuenow=cell
+             aria-valuemin="0"
+             aria-valuemax="100">
+          <p class="ml-2 progress-bar-title">{{subData[i][j]}} ({{cell}}%)</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p class="lead mt-4 mb-0">Go behind the numbers</p>
+<hr class="mt-0">
+
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <p><u><b>Failed Downloads List</b></u></p>
+
+      <table class="table table-sm table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Lab Path</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Pozner Lab</td>
+            <td>mark@aol.com</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Otto</td>
+            <td>Tanya Lab</td>
+            <td>otto@example.com</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Jacob</td>
+            <td>Momo Lab</td>
+            <td>jacob@abc.com</td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>Larry the Bird</td>
+            <td>Yossi Labo</td>
+            <td>larry@acme.com</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
+
+<div class="d-flex mt-4 justify-content-end">
+  <div class="mr-auto">
+    <span class="lead pull-left inline"><strong>Detailed retention view</strong> - June 2017</span>
+  </div>
+  <div>
+    <button role="button" class="btn btn-sm btn-secondary mr-2" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-chevron-left" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div>
+    <button role="button" class="btn btn-sm btn-secondary" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div>
+    <button role="button" class="btn btn-sm btn-secondary mr-2" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-chevron-down" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div>
+    <button role="button" class="btn btn-sm btn-secondary" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-chevron-up" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
+<hr class="mt-0">
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+
+      <table class="table table-sm table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>WEEK JOINED</th>
+            <th>07.2017</th>
+            <th>08.2017</th>
+            <th>09.2017</th>
+            <th>10.2017</th>
+            <th>11.2017</th>
+            <th>12.2017</th>
+            <th>01.2018</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">JUN 1</th>
+            <td>26%</td>
+            <td>24%</td>
+            <td>22%</td>
+            <td>20%</td>
+            <td>20%</td>
+            <td>20%</td>
+            <td>20%</td>
+          </tr>
+          <tr>
+          <tr>
+            <th scope="row">JUN 8</th>
+            <td>26%</td>
+            <td>26%</td>
+            <td>25%</td>
+            <td>24%</td>
+            <td>22%</td>
+            <td>22%</td>
+            <td>?</td>
+          </tr>
+          <tr>
+            <th scope="row">JUN 15</th>
+            <td>27%</td>
+            <td>24%</td>
+            <td>23%</td>
+            <td>23%</td>
+            <td>22%</td>
+            <td>?</td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">JUN 22</th>
+            <td>29%</td>
+            <td>27%</td>
+            <td>27%</td>
+            <td>23%</td>
+            <td>?</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">JUN 29</th>
+            <td>32%</td>
+            <td>30%</td>
+            <td>30%</td>
+            <td>?</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div> -->

@@ -1,0 +1,95 @@
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card mt-0">
+      <div class="card-body mt-0">
+
+        <p>Reporting users prevent them from messaging you.</p>
+
+        <spinner *ngIf="!streamRetrieved[0]"></spinner>
+
+        <p *ngIf="streamRetrieved[0] && reports.length==0"><b>Your reporting list is empty.</b></p>
+
+        <!-- <button *ngIf="streamRetrieved[0] && reports.length!=0" role="button" class="btn btn-sm btn-light-blue mb-4">Export list</button> -->
+
+        <ul *ngIf="streamRetrieved[0]" class="list-unstyled">
+          <li *ngFor="let report of reports; let i=index" class="media">
+
+            <single-pic class="d-flex mr-2"
+                        [pic]="report.mode==0 ? report.group.group.pic : (report.item.pic ? report.item.pic : null)"
+                        [type]=1
+                        [width]=16
+                        [height]=16
+                        [widthE]=1
+                        [stack]=true
+                        [stackPic]="'cubes'">
+            </single-pic>
+
+            <div class="media-body">
+              <div class="h6">
+                {{reportMode[report.mode]}}:
+                <group-link *ngIf="report.mode==0" [smallFlag]=false [groupIndex]=report.group></group-link>
+                <a *ngIf="report.mode==1" [routerLink]="['/people',report.item._id]">{{ report.item.name }}</a>
+                <a *ngIf="report.mode==2" [routerLink]="['/publications',report.item._id]">{{ report.item.name }}</a>
+                <a *ngIf="report.mode==3" [routerLink]="['/services',report.item._id]">{{ report.item.name }}</a>
+                <a *ngIf="report.mode==4" [routerLink]="['/projects',report.item._id]">{{ report.item.name }}</a>
+                <a *ngIf="report.mode==5" [routerLink]="['/positions',report.item._id]">{{ report.item.name }}</a>
+              </div>
+              <p class="small text-muted">
+                <i class="fa fa-clock-o" aria-hidden="true"></i> Reported on: {{ report.date | date: 'mediumDate' }}
+              </p>
+              <p><u>Your claim</u>: {{ report.message }}</p>
+              <p>
+                <u>Academig respone</u>:
+                <span *ngIf="report.status==0" class="badge badge-pill badge-warning"><i class="fa fa-clock-o" aria-hidden="true"></i> Pending</span>
+                <span *ngIf="report.status==1"><b>Approved</b>, {{ report.reply }}</span>
+                <span *ngIf="report.status==2"><b>Declined</b>, {{report.reply }}</span>
+              </p>
+              <button role="button" mat-raised-button class="btn btn-sm btn-light-blue" (click)="reportFunc(i)">
+                <span *ngIf="report.status==0">{{type[report.type]}}</span>
+                <span *ngIf="report.status!=0">Delete</span>
+              </button>
+              <hr>
+            </div>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card mt-0">
+      <div class="card-body mt-0">
+
+        <p>Blocking users prevent them from messaging you or follow you. Additionally, you will not see their activity.</p>
+
+        <spinner *ngIf="!streamRetrieved[1]"></spinner>
+
+        <div *ngIf="streamRetrieved[1] && blocks.length==0">
+          <p><b>Your blocking list is empty.</b></p>
+          <!-- <p>You can block users through their profile by clicking "Block" from the drop-down menu near their profile picture.</p> -->
+        </div>
+
+        <!-- <button *ngIf="streamRetrieved[1] && blocks.length!=0"
+                role="button"
+                class="btn btn-sm btn-outline-info mb-4">
+          Export list
+        </button> -->
+
+        <!-- <small class="form-text text-muted">Enter the name you want to block.</small> -->
+        <!-- <input class="form-control" id="BlockInput" aria-describedby="blockHelp" placeholder=""> -->
+
+        <ul *ngIf="streamRetrieved[1]" class="list-unstyled">
+          <li *ngFor="let block of blocks; let i=index" class="media mb-3">
+            <single-pic class="d-flex mr-2" [pic]=block.pic [type]=0 [width]=16 [height]=16> </single-pic>
+            <div class="media-body">
+              <div class="h6"><a [routerLink]="['/people',block._id]">{{ block.name }}</a></div>
+              <button role="button" class="btn btn-sm btn-light-blue" (click)="blockFunc(i)">Unblock</button>
+            </div>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</div>

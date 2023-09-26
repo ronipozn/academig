@@ -1,0 +1,75 @@
+<div class="side-form">
+
+  <h3 class="title text-center">{{title}} {{groupName}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <ng-container *ngIf="!university._id && (action==1 || action==0)">
+        <build-modal-text-field [itemFirst]=true
+                                [labelRequired]=true
+                                [itemTitle]="'University'"
+                                [controlName]="'university'"
+                                [parentGroup]="formModel"
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+        <build-modal-text-field [labelRequired]=true
+                                [itemTitle]="'University abbreviation'"
+                                [controlName]="'universityAbbr'"
+                                [parentGroup]="formModel"
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+        <button type="button" class="btn btn-sm btn-primary mt-0 mb-4" (click)="abbrGenerate(0)">
+          Generate abbreviation
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="!department._id && (action==1 || action==0)">
+        <build-modal-text-field [labelRequired]=true
+                                [itemTitle]="'Department'"
+                                [controlName]="'department'"
+                                [parentGroup]="formModel"
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+        <build-modal-text-field [labelRequired]=true
+                                [itemTitle]="'Department abbreviation'"
+                                [controlName]="'departmentAbbr'"
+                                [parentGroup]="formModel"
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+        <button type="button" class="btn btn-sm btn-primary mt-0 mb-4" (click)="abbrGenerate(1)">
+          Generate abbreviation
+        </button>
+      </ng-container>
+
+      <p *ngIf="university._id" class="border p-2">
+        <b>ID:</b> {{university._id}}<br>
+        <b>Name:</b> {{university.name}}<br>
+        <single-pic [centerFlag]=true [pic]="university.pic" [type]=2 [width]=60 [height]=60></single-pic>
+      </p>
+
+      <p *ngIf="department._id" class="border p-2">
+        <b>ID:</b> {{department._id}}<br>
+        <b>Name:</b> {{department.name}}<br>
+        <single-pic [centerFlag]=true [pic]="department.pic" [type]=2 [width]=60 [height]=60></single-pic>
+      </p>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemFirst]=true
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [itemTitle]="'Notification text'"
+                              [controlName]="'text'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <hr class="mt-2">
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">{{title}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

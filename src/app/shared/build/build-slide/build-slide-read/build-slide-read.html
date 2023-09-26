@@ -1,0 +1,154 @@
+<div class="side-form">
+
+  <h4 *ngIf="mode==2" class="title text-center mb-4"><b>Remove Paper Summary</b></h4>
+  <h4 *ngIf="mode<2" class="title text-center mb-0"><b>My Paper Summary</b></h4>
+  <p *ngIf="mode<2" mat-dialog-content class="text-center mb-4"><b>Track your research papers readings.</b></p>
+
+  <p *ngIf="mode<2" class="text-center mt-0 mb-4">
+    <b>{{title}} | {{journal?.name}} | {{date | date: 'MMM y'}}</b>
+  </p>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [labelRequired]=false
+                              [fieldType]=2
+                              [textAreaRows]=4
+                              [itemTitle]="'My summary'"
+                              [controlName]="'summary'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'date'"
+                              [itemTitle]="'Start reading date'"
+                              [controlName]="'date'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus
+                              [errorFlag]="!(formModel.get('date').errors && formModel.get('date').errors.range)">
+      </build-modal-text-field>
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'date'"
+                              [itemTitle]="'End reading date'"
+                              [controlName]="'end'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus
+                              [itemExplain]="'Make sure to fill in the year finished to have it added to your Reading Challenge.'"
+                              [errorFlag]="!(formModel.get('end').errors && formModel.get('end').errors.range)">
+      </build-modal-text-field>
+
+      <span *ngIf="formModel.get('date').errors?.range" class="mt-1 mb-0 small text-danger">
+        End date should be greater or equal the start date
+      </span>
+
+      <p class="mb-2">
+        <button type="button" mat-raised-button (click)="setToday()" class="btn btn-sm btn-light-blue mb-4">
+          Set to today
+        </button>
+      </p>
+
+      <p class="mb-2"><b>My rating</b></p>
+      <ngb-rating formControlName="rating">
+        <ng-template let-fill="fill" let-index="index">
+           <!-- [class.bad]="index < 3" -->
+          <span class="star" [class.filled]="fill===100">&#9733;</span>
+        </ng-template>
+      </ngb-rating>
+      <!-- <pre>Rate: <b>{{currentRate}}</b></pre> -->
+      <p class="mb-2">
+        <button type="button" mat-raised-button (click)="formModel.controls['rating'].setValue(null)" class="btn btn-sm btn-light-blue mb-4">
+          Clear
+        </button>
+      </p>
+
+      <!-- TBD: pre-populated fields -->
+      <build-modal-text-field class="mb-3"
+                              [labelRequired]=false
+                              [fieldType]=2
+                              [textAreaRows]=3
+                              [itemTitle]="'Private notes'"
+                              [controlName]="'privacy'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus
+                              [itemExplain]="'Private notes are shown only to you.'">
+      </build-modal-text-field>
+
+      <!-- TBD: nonaddItems: not working -->
+      <!-- TBD: Send emails, Update: disable fields, Invite non-users -->
+      <!-- parentGroup.controls[this.controlName].value -->
+
+      <!-- <div class="card">
+        <div class="card-body">
+          <build-tag-fetch-field [nonremovableItems]="(mode==1) ? 10000 : 0"
+                                 [nonaddItems]="mode==1"
+                                 [type]=1
+                                 [itemTitle]="'Recommend to'"
+                                 [itemPlaceholder]="'+ Researcher'"
+                                 [itemExplain]="'Start typing for auto-complete or add your colleagues names.'"
+                                 [controlName]="'recommend'"
+                                 [parentGroup]=formModel
+                                 [submitStatus]=submitStatus
+                                 (action)=recommendUpdate($event)>
+          </build-tag-fetch-field>
+          <ul [formArrayName]="'recommend'" class="list-unstyled mt-3 mb-0">
+            <li *ngFor="let e of getRecommendControls(formModel, 'recommendInvites'); let i=index">
+              <label for="email{{i}}" hidden></label>
+              <build-modal-text-field [fieldType]=11
+                                      [itemTitle]="e.get('name').value + ' email'"
+                                      [controlName]="'email'"
+                                      [parentGroup]=e>
+              </build-modal-text-field>
+            </li>
+          </ul>
+        </div>
+      </div> -->
+
+      <!-- <div class="card">
+        <div class="card-body">
+          <build-tag-fetch-field [nonremovableItems]="(mode==1) ? 10000 : 0"
+                                 [nonaddItems]="mode==1"
+                                 [maxItems]=1
+                                 [type]=1
+                                 [itemTitle]="'Who recommended it to me'"
+                                 [itemPlaceholder]="'+ Researcher'"
+                                 [itemExplain]="'Start typing for auto-complete or add your colleague name.'"
+                                 [controlName]="'recommended'"
+                                 [parentGroup]=formModel
+                                 [submitStatus]=submitStatus
+                                 (action)=recommendedUpdate($event)>
+          </build-tag-fetch-field>
+          <ul [formArrayName]="'recommended'" class="list-unstyled mb-0">
+            <li *ngFor="let e of getRecommendControls(formModel, 'recommendedInvites'); let i=index">
+              <label for="email{{i}}" hidden></label>
+              <build-modal-text-field [fieldType]=11
+                                      [itemTitle]="e.get('name').value + ' email'"
+                                      [controlName]="'email'"
+                                      [parentGroup]=e>
+              </build-modal-text-field>
+            </li>
+          </ul>
+        </div>
+      </div> -->
+      <!-- [submitStatus]=submitStatus -->
+      <!-- (controlStatus)="controlStatusEmail(i)" -->
+
+      <p class="my-4"></p>
+      <build-modal-text-field [labelHide]=true
+                              [fieldType]=7
+                              [controlName]="'feed'"
+                              [parentGroup]=formModel
+                              [itemArray]="['Add to my news feed']"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div mat-dialog-actions class="mt-3">
+        <button type="submit" [disabled]="disableFlag" mat-raised-button style="background-color: #6D69FB" class="btn btn-block">
+          <i class="material-icons mr-2">emoji_events</i> {{(mode==0) ? 'Post' : 'Update'}} <i *ngIf="disableFlag" class="fa fa-1x fa-spinner fa-spin fa-fw"></i>
+        </button>
+        <button type="button" [disabled]="disableFlag" (click)="onCancel()" class="card-title btn btn-link d-flex mx-auto">Close</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

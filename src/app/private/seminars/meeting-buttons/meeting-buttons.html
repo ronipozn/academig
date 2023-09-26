@@ -1,0 +1,35 @@
+<div class="dropdown">
+  <button [disabled]=disabledFlag role="button" id="dropdownExtraButton" mat-raised-button class="btn btn-sm btn-outline-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+  </button>
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownExtraButton">
+
+    <!-- All Current -->
+    <a *ngIf="type==0" role="button" style="cursor: pointer;" class="dropdown-item small pl-2" (click)="buttonFunc(0)">
+      <i class="fa fa-fw fa-times mr-2" aria-hidden="true"></i> Delete all
+    </a>
+    <a *ngIf="type==0" role="button" style="cursor: pointer;" class="dropdown-item small pl-2" (click)="buttonFunc(2)">
+      <i class="fa fa-fw fa-calendar mr-2" aria-hidden="true"></i> Reschedule all
+    </a>
+
+    <!-- Current -->
+    <a *ngIf="type==1" role="button" style="cursor: pointer;" class="dropdown-item small pl-2" (click)="buttonFunc(12)">
+      <i class="fa fa-fw fa-trash-o mr-2" aria-hidden="true"></i> Delete seminar
+    </a>
+    <a *ngIf="type==1 && activeFlag" role="button" style="cursor: pointer;" class="dropdown-item small pl-2" (click)="buttonFunc(1)">
+      <i class="fa fa-fw fa-times mr-2" aria-hidden="true"></i> Cancel seminar
+    </a>
+    <a *ngIf="type==1 && !activeFlag" role="button" style="cursor: pointer;" class="dropdown-item small pl-2" (click)="buttonFunc(11)">
+      <i class="fa fa-fw fa-repeat mr-2" aria-hidden="true"></i> Resume seminar
+    </a>
+    <a *ngIf="type==1 && editFlag && activeFlag" role="button" style="cursor: pointer;" class="dropdown-item small pl-2" (click)="buttonFunc(3)">
+      <i class="fa fa-fw fa-pencil mr-2" aria-hidden="true"></i> Edit details
+    </a>
+
+    <!-- Past -->
+    <a *ngIf="type==2 && editFlag" role="button" style="cursor: pointer;" class="dropdown-item small pl-2" (click)="buttonFunc(4)">
+      <i class="fa fa-fw fa-trash-o mr-2" aria-hidden="true"></i> Delete seminar
+    </a>
+
+  </div>
+</div>

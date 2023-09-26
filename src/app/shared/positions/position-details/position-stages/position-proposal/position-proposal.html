@@ -1,0 +1,86 @@
+<div class="card mt-0 mb-3">
+  <div class="card-body pl-2 pt-2">
+
+    <a class="ml-2 h4 card-title" [routerLink]="['/people/',proposal.profile._id]">{{proposal.profile.name}}</a>
+
+    <p *ngIf="proposal.date" class="my-2 ml-2"><b>Application date:</b> {{proposal.date[0] | date}}</p>
+
+    <p *ngIf="proposal.status>99 && proposal.status<200" class="ml-2 mb-4 badge badge-warning">Candidate withdraw</p>
+    <p *ngIf="proposal.status>199 && proposal.status<300" class="ml-2 mb-4 badge badge-warning">Candidate rejected</p>
+
+    <div class="media mt-2">
+
+      <single-pic *ngIf="proposal.profile.pic" class="mx-2 pr-2" [width]=" 48" [height]="48" [pic]="proposal.profile.pic" [maxSizeFlag]=false></single-pic>
+      <span *ngIf="!proposal.profile.pic" [style.font-size]="2 + 'rem'" class="mx-2 pr-2 fa-stack fa-1x">
+        <i class="fa fa-circle fa-stack-2x py-0 my-0" style="color: #cdcdc1;"></i>
+        <span class="fa fa-stack-1x fa-name fa-inverse">{{proposal.profile.name | acronym}}</span>
+      </span>
+
+      <div class="media-body">
+
+        <!--
+        <p class="my-0"><b>MS.C student</b></p>
+        <p class="my-0"><b>Tel Aviv University</b></p>
+        <p class="mt-0 mb-2"><b>Flag, Tel Aviv, Israel</b></p>
+        <group-link [groupIndex]=project.group [flag]="sourceType==6 ? 1 : 0"></group-link>
+        -->
+
+        <a class="card-title" [routerLink]="['/people/',proposal.profile._id]" fragment="positions">Positions and Education &#187;</a><br>
+        <a class="card-title" [routerLink]="['/people/',proposal.profile._id, 'publications']">Publications &#187;</a><br>
+        <a class="card-title" [routerLink]="['/people/',proposal.profile._id, 'projects']">Projects &#187;</a>
+        <span *ngIf="proposal.note" class="mt-2"><br><b>Note:</b> {{proposal.note}}</span>
+        <br>
+
+        <div class="row mt-2">
+          <div *ngIf="lettersRequired" class="col">
+            <b>Letters</b><br>
+            <ng-container *ngFor="let letter of proposal.letters; let i=index">
+              <span *ngIf="letter"><a class="card-title" [href]=letter target="_empty">{{lettersTitles[i]}} <i class="fa fa-external-link" aria-hidden="true"></i></a><br></span>
+            </ng-container>
+            <span *ngIf="proposal.letters==null || proposal.letters?.length==0"><i>Empty</i></span>
+          </div>
+          <div *ngIf="gradesRequired" class="col">
+            <b>Grades</b><br>
+            <ng-container *ngFor="let grade of proposal.grades; let i=index">
+              <span *ngIf="grade">{{gradesTitles[i]}}: {{grade}}<br></span>
+            </ng-container>
+            <span *ngIf="proposal.grades[0]==0 && proposal.grades[1]==0 && proposal.grades[2]==0"><i>Empty</i></span>
+          </div>
+          <div *ngIf="refereesRequired" class="col">
+            <b>Referees</b><br>
+            <p *ngFor="let referee of proposal.referees; let i=index">
+              {{referee.member}}<br>{{referee.email}}<br>{{referee.description}}
+            </p>
+            <span *ngIf="proposal.referees==null || proposal.referees?.length==0"><i>Empty</i></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <ng-container *ngIf="proposal.status>10 && proposal.status<14">
+      <hr>
+      <p class="my-2 ml-2"><b>Filter rank:</b> {{statsusTitles[proposal.status-11]}}</p>
+      <p *ngIf="proposal.filter" class="my-2 ml-2"><i class="fa fa-filter" aria-hidden="true"></i> {{proposal.filter}}</p>
+    </ng-container>
+
+    <hr>
+    <button *ngIf="tabNum!=1" [disabled]="proposal.status>99 && proposal.status<200" mat-raised-button role="button" class="btn btn-sm btn-success ml-2" (click)="stageOp(1)">
+      <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Shortlist
+    </button>
+    <a *ngIf="tabNum==1" mat-raised-button role="button" class="btn btn-sm btn-light-blue ml-2" [routerLink]="['/people/',proposal.profile._id, 'contact']">
+      <i class="material-icons">message</i> Message
+    </a>
+    <button *ngIf="tabNum!=4" mat-raised-button role="button" class="btn btn-sm btn-light-blue ml-2" (click)="noteOp()">
+      <i class="material-icons">note_add</i> Note
+    </button>
+    <button *ngIf="tabNum!=3" [disabled]="proposal.status>99 && proposal.status<200" mat-raised-button role="button" class="btn btn-sm btn-light-blue ml-2" (click)="stageOp(3)">
+      <i class="material-icons">watch_later</i> Waitlist
+    </button>
+    <button *ngIf="tabNum!=4" [disabled]="proposal.status>99 && proposal.status<200" mat-raised-button role="button" class="btn btn-sm btn-danger ml-2" (click)="stageOp(4)">
+      <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Archive
+    </button>
+    <!-- <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i> -->
+
+  </div>
+</div>

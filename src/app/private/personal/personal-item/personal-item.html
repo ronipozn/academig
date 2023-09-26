@@ -1,0 +1,74 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved" class="card mt-0">
+  <div class="card-header">
+
+    <build-headline [addButtonFlag]=false [headline]=profileName></build-headline>
+
+    <div class="table-responsive">
+      <table class="table table-sm">
+        <tbody>
+          <!-- <tr>
+            <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-clock-o fa-fw"></i> Status</td>
+            <td *ngIf="personalInfo.statusText">{{ personalInfo.statusText }} </td>
+            <td *ngIf="!personalInfo.statusText" class="text-muted">-</td>
+          </tr> -->
+          <!-- <p>Status: I’m in the lab, home, seminar, meeting with PI, writing my thesis</p> -->
+          <!-- <tr *ngIf="personalInfo.statusText">
+            <td></td>
+            <td class="small text-muted">{{ personalInfo.statusDate | date:'dd MMM y' }}, {{ personalInfo.statusDate | date:'shortTime' }}</td>
+          </tr> -->
+          <tr>
+            <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-envelope fa-fw"></i> Personal Email</td>
+            <td *ngIf="personalInfo.email">{{ personalInfo.email }}</td>
+            <td *ngIf="!personalInfo.email" class="text-muted">-</td>
+          </tr>
+          <tr>
+            <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-phone fa-fw"></i> Private phone</td>
+            <td *ngIf="personalInfo.phone">{{ personalInfo.phone }}</td>
+            <td *ngIf="!personalInfo.phone" class="text-muted">-</td>
+          </tr>
+          <tr>
+            <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-map-marker fa-fw"></i> Address</td>
+            <td *ngIf="personalInfo.address">{{ personalInfo.address }}</td>
+            <td *ngIf="!personalInfo.address" class="text-muted">-</td>
+          </tr>
+          <tr>
+            <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-birthday-cake fa-fw"></i> Birthday</td>
+            <td *ngIf="personalInfo.birthday">{{ personalInfo.birthday | date:'dd MMM y' }}</td>
+            <td *ngIf="!personalInfo.birthday" class="text-muted">-</td>
+          </tr>
+          <tr>
+            <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-ship fa-fw"></i> Out of office</td>
+            <td *ngIf="personalInfo.vacations[0]">
+              <div *ngFor="let vacation of personalInfo.vacations">
+                {{vacation.start | date:'dd MMM y' }} - {{vacation.end | date:'dd MMM y' }} - {{vacation.where}}
+              </div>
+            </td>
+            <td *ngIf="!personalInfo.vacations[0]" class="text-muted">-</td>
+          </tr>
+          <!-- <tr>
+            <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-child fa-fw"></i> Kids</td>
+            <td *ngIf="personalInfo.kids[0]" class="row">
+              <div *ngFor="let kid of personalInfo.kids; let i=index" class="mr-2">
+                <img class="img-fluid" [src]=kid.pic>
+                <small>{{kid.name}}</small>
+              </div>
+            </td>
+            <td *ngIf="!personalInfo.kids[0]" class="text-muted">-</td>
+          </tr> -->
+        </tbody>
+      </table>
+    </div>
+
+    <button *ngIf="meFlag" [disabled]="streamInfo>0" role="button" mat-raised-button class="btn btn-round btn-light-blue mr-2" (click)="buttonInfoFunc()">
+      <span class="btn-label"><i class="material-icons">update</i></span> Update Info
+    </button>
+    <spinner-put [stream]=streamInfo (animationDoneEvent)="animationDone()"></spinner-put>
+
+    <button *ngIf="!meFlag" [disabled]="streamInfo>0" role="button" mat-raised-button class="btn btn-round btn-light-blue" (click)="buttonMessgeFunc()">
+      <span class="btn-label"><i class="material-icons">message</i></span> Message
+    </button>
+
+  </div>
+</div>

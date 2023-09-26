@@ -1,0 +1,35 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<ng-container *ngIf="sourceType<8 && streamRetrieved && outreachs.length>0">
+  <div class="row">
+    <div *ngFor="let outreach of outreachs; let i=index; let l=last" class="col-md-4">
+      <outreach-item [itemAutofocus]="itemFocus==i"
+                     [outreach]=outreach
+                     [sourceType]=sourceType
+                     [showEditBtn]=showEditBtn
+                     [stream]=stream[i]
+                     [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                     (animationDoneEvent)="animationDone()"
+                     (buttonEditClick)="buttonEditFunc(i)"
+                     (buttonDeleteClick)="buttonDeleteFunc(i)"
+                     (buttonSuggestionClick)="buttonSuggestionFunc($event,i)">
+      </outreach-item>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="sourceType>=8 && sourceType<=10 && streamRetrieved && outreachs.length>0">
+  <ul *ngFor="let outreach of outreachs; let i=index; let l=last" class="list-unstyled" [ngClass]="{'mb-4': !l}">
+    <outreach-item [itemAutofocus]="itemFocus==i"
+                   [outreach]=outreach
+                   [sourceType]=sourceType
+                   [showEditBtn]=showEditBtn
+                   [stream]=stream[i]
+                   [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                   (animationDoneEvent)="animationDone()"
+                   (buttonEditClick)="buttonEditFunc(i)"
+                   (buttonDeleteClick)="buttonDeleteFunc(i)"
+                   (buttonSuggestionClick)="buttonSuggestionFunc($event,i)">
+    </outreach-item>
+  </ul>
+</ng-container>

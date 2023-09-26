@@ -1,0 +1,76 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 *ngIf="newFlag" class="title text-center">New Meeting</h3>
+  <h3 *ngIf="!newFlag" class="title text-center">Edit Meeting Details</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()">
+
+      <build-slide-select-members [groupId]=groupId
+                                  [userId]=userId
+                                  [single]=true
+                                  [title]="'Presentor'"
+                                  [itemFirst]=true
+                                  [type]=0
+                                  [parentGroup]=formModel
+                                  [controlName]="'presentor'"
+                                  [preMembersInput]=preMembers
+                                  (membersOutput)=membersFunc($event)>
+      </build-slide-select-members>
+
+      <build-modal-text-field [itemTitle]="'Location'"
+                              [controlName]="'location'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'date'"
+                              [itemTitle]="'Date'"
+                              [labelRequired]=true
+                              [controlName]="'date'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <span *ngIf="mode==0" class="small text-muted">Choose a date before the next meeting. Up until {{nextDateMinus | date:'mediumDate'}}.</span>
+      <span *ngIf="mode==1" class="small text-muted">Choose a date between the previous and next meeting: {{previousDatePlus | date:'mediumDate'}} to {{nextDateMinus | date:'mediumDate'}}.</span>
+      <span *ngIf="mode==2" class="small text-muted">Choose a date after the previous meeting. Starting from {{previousDatePlus | date:'mediumDate'}}.</span>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'time'"
+                              [itemTitle]="'Time'"
+                              [labelRequired]=true
+                              [controlName]="'time'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=2
+                              [textAreaRows]=3
+                              [itemTitle]="'Topic'"
+                              [controlName]="'topic'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <p class="mt-3 mb-1">Presentation files:</p>
+      <div id="direct_upload" class="mt-0">
+        <div class="d-flex justify-content-center">
+          <input type="hidden" id="files"
+                 name="files"
+                 data-multiple
+                 data-multiple-max=2
+                 data-input-accept-types=".pdf, .doc, .docx, .ppt, .xls, .jpg, .jpeg"
+                 data-tabs="file url gdrive dropbox skydrive">
+        </div>
+      </div>
+
+      <div class="pull-left form-group mt-2">
+        <button type="submit" [disabled]="uploadFlag" mat-raised-button class="btn btn-sm btn-light-blue">{{newFlag ? 'Add' : 'Update'}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

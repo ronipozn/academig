@@ -1,0 +1,76 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">New Gallery</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="adminFlag && newFlag && groupId" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-modal-text-field [itemFirst]=true
+                              [labelRequired]=true
+                              [itemTitle]="'Title'"
+                              [controlName]="'title'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=true
+                              [fieldType]=2
+                              [textAreaRows]=4
+                              [itemTitle]="'Gallery Description'"
+                              [controlName]="'description'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-month-field [itemTitle]="'Date'"
+                         [controlName]="'date'"
+                         [parentGroup]="formModel"
+                         [submitStatus]=submitStatus>
+      </build-month-field>
+
+      <div *ngIf="newFlag" id="direct_upload">
+        <div class="card-columns">
+          <div *ngFor="let dummy of filesCount; let i=index" class="card">
+            <single-pic [centerFlag]=true
+                        [pic]="fileGroup ? fileGroup + '/nth/' + i + '/' : null"
+                        [thumbnailFlag]=true
+                        [type]=1>
+            </single-pic>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': fileGroup}">
+          <input type="hidden" id="fileGroup"
+                 name="fileGroup"
+                 data-images-only
+                 data-preview-step
+                 data-multiple
+                 data-crop="free, 16:9, 4:3, 5:4, 1:1"
+                 data-image-shrink="1024x1024"
+                 data-multiple-max=20>
+         </div>
+      </div>
+
+      <!-- <hr class="mt-2"> -->
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]="(!fileGroup && newFlag) || disableFlag" class="btn btn-sm btn-fill btn-light-blue">
+          <span *ngIf=newFlag>Add</span>
+          <span *ngIf=!newFlag>Update</span>
+        </button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

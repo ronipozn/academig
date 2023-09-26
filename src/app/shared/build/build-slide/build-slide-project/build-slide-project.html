@@ -1,0 +1,155 @@
+<div class="side-form">
+
+  <h3 *ngIf="!newFlag" class="title text-center">Update Project</h3>
+  <h3 *ngIf="modeNum==0 && newFlag" class="title text-center">Add Active Project</h3>
+  <h3 *ngIf="modeNum==1 && newFlag" class="title text-center">Add Past Project</h3>
+  <h3 *ngIf="modeNum==2 && newFlag" class="title text-center">Add Project</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="adminFlag && newFlag" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-modal-text-field [itemFirst]=true
+                              [labelRequired]=true
+                              [itemTitle]="'Title'"
+                              [controlName]="'title'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-month-field *ngIf="modeNum==0"
+                         [itemTitle]="'Start Date'"
+                         [controlName]="'start'"
+                         [parentGroup]="formModel"
+                         [labelRequired]=true
+                         [submitStatus]=submitStatus>
+      </build-month-field>
+
+      <P *ngIf="formModel.get('start').errors?.range" class="mt-1 mb-0 small text-danger">
+        End date should be greater than start date
+      </P>
+
+      <div *ngIf="modeNum==1 || modeNum==2" class="mb-4 row no-gutters">
+        <div class="col mr-1">
+          <build-month-field [itemTitle]="'Start Date'"
+                             [controlName]="'start'"
+                             [parentGroup]="formModel"
+                             [labelRequired]=true
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('start').errors && formModel.get('start').errors.range)">
+          </build-month-field>
+          <build-modal-text-field *ngIf="modeNum==2"
+                                  [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'active'"
+                                  (controlStatus)=controlStatusFunc($event)
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Active project']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <!-- [labelRequired]=true -->
+        <div class="col ml-1">
+          <build-month-field [itemTitle]="'End Date'"
+                             [controlName]="'end'"
+                             [parentGroup]="formModel"
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('end').errors && formModel.get('end').errors.range)"
+                             [labelRequired]="!formModel.controls['active']?.value[0] || modeNum!=2">
+          </build-month-field>
+        </div>
+      </div>
+
+      <build-slide-select-members *ngIf="newFlag && groupId"
+                                  [labelRequired]=false
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Choose project members'"
+                                  [parentGroup]=formModel
+                                  [controlName]="'members'"
+                                  [submitStatus]=submitStatus
+                                  [preMembersInput]=[null]
+                                  (membersOutput)=membersFunc($event)>
+      </build-slide-select-members>
+      <!-- [minSelected]=1 -->
+      <!-- [labelRequired]=true -->
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemFirst]="groupId!=null && newFlag"
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [itemTitle]="'Short introduction'"
+                              [controlName]="'description'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <!-- <p class="mt-4 mb-0 pb-0">Short Introduction:</p>
+      <trumbowyg-ngx-editor id="editor"
+                            class="mt-0 pt-0"
+                            formControlName="description">
+      </trumbowyg-ngx-editor> -->
+
+      <div id="direct_upload">
+        <single-pic *ngIf="file || project?.pic"
+                    [centerFlag]=true
+                    [pic]="file ? file : project.pic"
+                    [thumbnailFlag]=true
+                    [stackPic]="'cubes'"
+                    [type]=1
+                    [width]=112
+                    [height]=112
+                    [widthE]=4>
+        </single-pic>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': file || project?.pic}">
+          <input type="hidden" id="file"
+                 name="file"
+                 data-images-only
+                 data-preview-step
+                 data-crop="112x112 upscale">
+        </div>
+      </div>
+
+      <build-slide-select-collaborations *ngIf="newFlag && groupId"
+                                         [groupId]=groupId
+                                         [userId]=userId
+                                         [title]="'Choose project Collaborators'"
+                                         [parentGroup]=formModel
+                                         [controlName]="'collaborators'"
+                                         [preCollaborationsInput]=[null]
+                                         (collaborationsOutput)=collaborationsFunc($event)>
+      </build-slide-select-collaborations>
+
+      <build-slide-select-fundings *ngIf="newFlag && groupId"
+                                   [itemFirst]=true
+                                   [groupId]=groupId
+                                   [userId]=userId
+                                   [title]="'Choose project Fundings'"
+                                   [parentGroup]=formModel
+                                   [controlName]="'fundings'"
+                                   [preFundingsInput]=[null]
+                                   (fundingsOutput)=fundingsFunc($event)>
+      </build-slide-select-fundings>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]="uploadFlag || disableFlag" class="btn btn-sm btn-light-blue">
+          <span *ngIf="newFlag">Add</span>
+          <span *ngIf="!newFlag">Update</span>
+        </button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

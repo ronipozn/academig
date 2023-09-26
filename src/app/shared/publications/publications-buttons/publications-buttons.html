@@ -1,0 +1,21 @@
+<ng-container *ngFor="let typesName of typesNames; let i=index">
+  <form class="form-check form-check-inline">
+
+    <label *ngIf="(!typesData?.length && !streamRetrieved) || (typesData?.length && typesData[i]!=0)" mat-raised-button class="form-check-label mr-4">
+
+      <div *ngIf="!typesData?.length" class="mb-3">
+        <i class="pl-0 fa fa-cog fa-spin fa-1x"></i> {{typesName}}
+      </div>
+
+      <ng-container *ngIf="typesData?.length">
+        <input class="form-check-input" type="checkbox" [disabled]="typesCount==1 && typesCheck[i]==true" (change)="checkboxFunc(i)" checked>
+        {{ typesData[i] }} {{typesName}}
+        <span class="form-check-sign">
+          <span class="check"></span>
+        </span>
+      </ng-container>
+
+    </label>
+
+  </form>
+</ng-container>

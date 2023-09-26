@@ -1,0 +1,26 @@
+<b>Lab Logo</b><br>
+<span class="text-muted"><b>Drag and drop your photo file or click the button to upload.</b></span>
+
+<div id="direct_upload" class="mb-3">
+
+  <single-pic *ngIf="parentGroup.get('logo').value" [centerFlag]=true [pic]="parentGroup.get('logo').value" [thumbnailFlag]=true [stackPic]="'cubes'" [type]=0 [width]=96 [height]=96></single-pic>
+
+  <div *ngIf="!parentGroup.get('logo').value" class="d-flex justify-content-center">
+    <a class="fa-stack fa-3x mb-1" [style.color]="'#cdcdc1'">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <span *ngIf="acronym" class="fa fa-stack-1x fa-inverse">{{acronym}}</span>
+    </a>
+  </div>
+
+  <div class="d-flex justify-content-center mt-3" [ngClass]="{'mt-3': parentGroup.get('logo').value || acronym}">
+    <input type="hidden" id="file" name="file" data-images-only data-preview-step data-crop="128x128 upscale">
+  </div>
+
+  <div *ngIf="parentGroup.get('logo').value" class="d-flex justify-content-center">
+    <button type="button" (click)="uploadDelete()" mat-raised-button class="btn btn-link">
+      Delete
+    </button>
+  </div>
+
+</div>
+<!-- Your lab logo will appear at the header of your lab profile and on the job posting listing. -->

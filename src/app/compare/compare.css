@@ -1,0 +1,50 @@
+.middleColor {
+  /* background-color: #eefbfb */
+  background-color: #eef5fb
+  /* background-color: #EDF7FB */
+}
+
+.text-secondary {
+  vertical-align: top;
+}
+
+agm-map {
+  height: 150px;
+}
+
+/* .coverPic {
+  background-color: #478AB8;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%;
+  height: 87px;
+}
+
+.imgPic {
+  position:absolute;
+  margin-top: 0%;
+  margin-left: 50%;
+  transform: translate(-50%,5%);
+
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 2px;
+  padding: 3px;
+}
+
+.fa-circle-size {
+  color: rgb(234, 234, 234);
+  font-size: 32px;
+}
+
+.fa-name {
+  font-size: 15px;
+}
+
+.carousel-caption{
+    position:static;
+} */
+
+/* <!-- https://github.com/lipis/flag-icon-css --> */
+/* <!-- https://stackoverflow.com/questions/42275057/can-angular-cli-use-flag-icon-css --> */
+/* <!-- https://stackoverflow.com/questions/38039629/how-to-make-flag-using-flag-icon-css-fill-table-cell --> */

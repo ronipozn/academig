@@ -1,0 +1,168 @@
+<div *ngIf="!streamRetrieved" style="margin-top: 30px;">
+  <spinner></spinner>
+</div>
+
+<error-404 *ngIf="streamRetrieved && profileBasic==null" [source]=4></error-404>
+
+<!-- <div *ngIf="missionService.meFlag" class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card mt-0 flex-grow-1">
+    <div class="card-body">
+      <build-headline [headline]="'Improve your profile'"></build-headline>
+      <people-progress [source]=1 [profileProgress]= "[profile.pic!=null, profile.researchInterests.length!=0, profile.background!=null || profile.meetClip!=null, profile.positions.length!=0, profile.coverPic!=null]"></people-progress>
+      [source]=0 [peopleId]=userId [profileProgress]=userService.userProgress></people-progress>
+    </div>
+  </div>
+</div> -->
+
+<!-- <div *ngIf="missionService.meFlag"  class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card mt-0 flex-grow-1">
+    <build-headline [headline]="'Advance your carrer'"></build-headline>
+    <people-assist [source]=1></people-assist>
+  </div>
+</div> -->
+
+<!--
+[planStatus]=missionService.planStatus
+[planTrialEnd]=missionService.planTrialEnd
+[planNumber]=missionService.planNumber
+(addInfo)="addInfoFunc(true)"
+-->
+
+<div *ngIf="streamRetrieved && realFlag==true && missionService.meFlag && !userService.userEmailVerified" class="alert alert-warning py-3" style="margin-bottom: 0px;" role="alert">
+  Please confirm your email. Only verified users can manage their invitations and enjoy everything Academig has to offer.
+</div>
+
+<ng-container *ngIf="streamRetrieved && profileBasic">
+  <people-navbar [activePath]=currentUrlSegments[2]?.path
+                 [peopleId]=missionService.peopleId
+                 [peopleName]=missionService.peopleName
+                 [peoplePic]=missionService.peoplePic
+                 [peoplePositions]=missionService.peoplePositions
+                 [progress]=missionService.progress
+                 [previewStatus]=missionService.previewStatus
+                 [meFlag]=missionService.meFlag
+                 [followStatus]=missionService.followStatus
+                 [blockStatus]=missionService.blockStatus
+                 [streamName]=streamName
+                 [streamFollow]=streamFollow
+                 [streamBlock]=streamBlock
+                 (buttonNameClick)="profileName(0, $event, null)"
+                 (buttonPicClick)="profilePic(0, true, null)"
+                 (buttonMessageClick)="profileMessage()"
+                 (buttonFollowClick)="profileFollow()"
+                 (buttonBlockClick)="profileBlock()"
+                 (buttonReportClick)="profileReport()"
+                 (changeUserStatusDummy)="changeUserStatusDummyFunc()">
+  </people-navbar>
+</ng-container>
+
+<div *ngIf="streamRetrieved && profileBasic" class="d-flex flex-column-reverse" style="padding-top: 23px;">
+
+  <div>
+    <site-footer [name]=missionService.peopleName
+                 [pic]=missionService.peoplePic
+                 [link]=missionService.peopleId
+                 [public]=missionService.publicInfo
+                 [social]=missionService.socialInfo
+                 [linkFlag]=realFlag
+                 [streamPublic]=streamPublicInfo
+                 [streamSocial]=streamSocialInfo
+                 [groupIndex]=null
+                 [btnEditFlag]=missionService.meFlag
+                 [progress]=missionService.progress
+                 [privateFlag]=false
+                 (buttonPublicClick)="publicInfoSlide(true)"
+                 (buttonSocialClick)="socialInfoSlide(true)"
+                 (animationEndPublic)="publicInfoDone()"
+                 (animationEndSocial)="socialInfoDone()">
+    </site-footer>
+  </div>
+
+  <div style="min-height: 86vh">
+    <div class="container-fluid">
+      <!-- <div *ngIf="!realFlag && adminFlag" class="alert alert-info fade show py-3" style="margin-bottom: 50px;" role="alert">
+        <div class="d-flex justify-content-center align-items-center">
+          <b>Marketing: {{profileBasic.email}}; Counter: {{profileBasic.marketing.counter}}</b>
+          <button [disabled]="!streamMarketingRetrieved" (click)="marketingSlide(true)" type="button" class="btn btn-light ml-3">Marketing</button>
+          <i *ngIf="!streamMarketingRetrieved" class="fa fa-1x fa-spinner fa-spin ml-2"></i>
+        </div>
+      </div> -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-pic *ngIf=picBuildFlag
+                 (update)="profilePic(2, false, $event)"
+                 (cancel)="profilePic(0, false, $event)"
+                 [title]="'Profile Image'"
+                 [itemId]=missionService.peopleId
+                 [pic]=missionService.peoplePic
+                 [width]=128
+                 [height]=128
+                 [type]=0>
+</build-slide-pic>
+
+<build-slide-text *ngIf=nameBuildFlag
+                  (update)="profileName(2, false, $event)"
+                  (cancel)="profileName(0, false, $event)"
+                  [title]="'Update Name'"
+                  [fieldType]=1
+                  [text]=missionService.peopleName>
+</build-slide-text>
+
+<build-slide-info *ngIf=infoBuildFlag
+                  (update)="publicInfoUpdate($event)"
+                  (cancel)="publicInfoSlide(false)"
+                  [publicInfo]=missionService.publicInfo
+                  [mode]=0>
+</build-slide-info>
+
+<build-slide-social *ngIf=socialBuildFlag
+                    (update)="socialInfoUpdate($event)"
+                    (cancel)="socialInfoSlide(false)"
+                    [socialInfo]=missionService.socialInfo
+                    [mode]=0>
+</build-slide-social>
+
+<!-- [counter]=marketingCounter -->
+<build-slide-marketing *ngIf=marketingBuildFlag
+                       [marketing]=profileBasic.marketing
+                       [mode]=0
+                       (update)="marketingUpdate($event)"
+                       (cancel)="marketingSlide(false)">
+</build-slide-marketing>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleNavbarSignUpModal" #toggleNavbarSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpNavbarModal"></button>
+
+<div class="modal fade" id="signUpNavbarModal" data-target="#signUpNavbarModal" tabindex="-1" role="dialog" aria-labelledby="signUpNavbarModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="'user'"></modal-signup>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Report Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleReportModal" #toggleReportModal [hidden]="true" data-toggle="modal" data-target="#reportModal"></button>
+
+<div *ngIf="userService.userId" class="modal fade" id="reportModal" data-target="#reportModal" tabindex="-1" role="dialog" aria-labelledby="ReportModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-report [mode]=1 [item]=reportItem [userId]=userId (closeModal)="toggleReport.nativeElement.click()"></modal-report>
+    </div>
+  </div>
+</div>

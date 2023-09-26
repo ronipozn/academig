@@ -1,0 +1,19 @@
+<div [formGroup]="parentGroup">
+  <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <input matInput [matDatepicker]="dp" [placeholder]=itemTitle [formControlName]=controlName [required]=labelRequired>
+    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker #dp
+                    startView="multi-year"
+                    (yearSelected)="chosenYearHandler($event)"
+                    (monthSelected)="chosenMonthHandler($event, dp)"
+                    panelClass="example-month-picker">
+    </mat-datepicker>
+    <span class="form-control-feedback">
+      <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+      <i *ngIf="(parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)" class="material-icons">clear</i>
+    </span>
+    <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint>
+  </mat-form-field>
+</div>
+<!-- [ngClass]="displayFieldCss(parentGroup, controlName)"  -->

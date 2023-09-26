@@ -1,0 +1,37 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <img src="./assets/img/build/logo.svg" style="max-height: 15rem;" class="mx-auto d-block img-fluid" alt="academig_build_publications"> -->
+
+  <h3 class="mb-3 text-center">Choose your {{(labType==0) ? 'lab' : 'company'}} logo</h3>
+
+  <p class="text-center text-muted">You can also leave the default one.</p>
+  <!-- <p class="mb-4 text-center text-muted small">Drag and drop your file or click on the logo...</p> -->
+  <p class="mb-4 text-center text-muted small">Click on the logo to change it...</p>
+
+  <div class="d-flex justify-content-center">
+
+    <a *ngIf=groupPic style="cursor:pointer;" (click)="picOp()">
+      <single-pic class="imgFlow" [pic]=groupPic [width]=83 [height]=83 [type]=1></single-pic>
+    </a>
+
+    <a *ngIf="!groupPic" style="cursor:pointer;" class="fa-stack fa-3x" (click)="picOp()">
+      <i class="fa fa-square fa-stack-2x" [style.color]="'#cdcdc1'"></i>
+      <span class="fa fa-stack-1x fa-inverse">{{acronym}}</span>
+    </a>
+
+  </div>
+
+  <button type="button" [disabled]="!groupPic" (click)="picDeleteOp()" mat-raised-button class="small mt-4 d-flex mx-auto btn btn-link">
+    Delete
+  </button>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

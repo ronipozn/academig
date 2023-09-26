@@ -1,0 +1,9 @@
+<blockquote *ngIf="text" class=" mb-0">
+  <p class="mb-0">{{text}}</p>
+  <span class="blockquote-footer d-flex align-items-center">
+    <single-pic *ngIf="pic" [pic]=pic class="mr-2" [width]=36 [height]=36></single-pic>
+    {{name}}
+    <spinner-put class="ml-2" [stream]=stream (animationDoneEvent)="animationDone($event)"></spinner-put>
+    <build-buttons [showButton]="stream==0 && showEditBtn" (buttonEditClick)="buttonEditFunc()" (buttonDeleteClick)="buttonDeleteFunc()"></build-buttons>
+  </span>
+</blockquote>

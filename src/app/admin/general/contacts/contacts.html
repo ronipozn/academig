@@ -1,0 +1,49 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <button [disabled]="!streamRetrieved" role="button" class="btn btn-sm btn-info" (click)="updateList()">
+      Reload
+    </button>
+  </div>
+</div>
+
+<div *ngIf="!streamRetrieved" class="py-4">
+  <spinner [text]="'Page'"></spinner>
+</div>
+
+<div *ngIf="streamRetrieved" class="card mt-0">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>#</th>
+            <th class="text-nowrap">From</th>
+            <th class="text-nowrap">To</th>
+            <th class="text-nowrap">Date (Mode)</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <ng-container *ngFor="let contact of contacts; let i=index">
+            <tr *ngFor="let message of contact.messages; let j=index">
+              <th scope="row">{{i}}</th>
+              <th scope="row">{{j}}</th>
+              <td>
+                <a [routerLink]="['/people',contact._id]">{{contact._id}}</a>
+              </td>
+              <td>
+                {{message.toId}}
+              </td>
+              <td>
+                {{message.date | date}} ({{message.mode}})
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+.img-overlay-right {
+  position: absolute;
+  top:8px;
+  right:4px;
+}
+
+.coverPic {
+  background-color: #478AB8;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%;
+  height: 300px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.fa-name {
+  font-size: 50px;
+}
+
+/* .category-image img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: auto;
+  width: 100vw;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+} */

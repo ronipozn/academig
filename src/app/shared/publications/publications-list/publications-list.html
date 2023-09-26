@@ -1,0 +1,32 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<build-modal-intro *ngIf="streamRetrieved && !suggestFlag && !rejectFlag && publications[0]==null && !showHeadline && (sourceType==0 || sourceType==2)"
+                   [headline]="'No publications yet.'">
+</build-modal-intro>
+
+<build-modal-intro *ngIf="streamRetrieved && rejectFlag && publications[0]==null"
+                   [headline]="'No rejected publications.'">
+</build-modal-intro>
+
+<ul *ngFor="let publication of publications; let i=index" class="list-unstyled">
+  <publication-item [publication]=publication
+                    [stream]=stream[i]
+                    [streamFolder]=streamFolder[i]
+                    [streamSuggestion]="suggestFlag ? streamSuggestions[i] : null"
+                    [sourceType]=sourceType
+                    [smallPicFlag]=smallPicFlag
+                    [suggestFlag]=suggestFlag
+                    [rejectFlag]=rejectFlag
+                    [centerFlag]=centerFlag
+                    [showEditBtn]=showEditBtn
+                    [userId]=userId
+                    (pdf)="pdfSlide(true, $event)"
+                    (animationDoneEvent)="animationDone()"
+                    (btnFolder)="btnFolderFunc(publication._id,i,$event)"
+                    (btnAccept)="btnAccpetFunc(publication._id,i)"
+                    (btnReject)="btnRejectFunc(publication._id,i)">
+  </publication-item>
+  <hr>
+</ul>
+<!-- streamSuggestions[i] -->
+<!-- [itemAutofocus]="i==sortedLocation" -->

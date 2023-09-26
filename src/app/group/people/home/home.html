@@ -1,0 +1,399 @@
+<ng-container *ngIf="missionService.showPage">
+
+  <spinner *ngIf="!streamRetrieved[3]"></spinner>
+
+  <ul *ngIf="streamRetrieved[3]" class="d-flex justify-content-center nav nav-pills nav-pills-light-blue" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#members" role="tablist" (click)="peoplesTab(0)">
+        <i class="material-icons">person_add</i>
+        <span *ngIf="labFlag">Members</span>
+        <span *ngIf="!labFlag">Poeple</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#alumni" role="tablist" (click)="peoplesTab(2)">
+        <i class="material-icons">person_add_alt_1</i>
+        <span *ngIf="labFlag">Alumni</span>
+        <span *ngIf="!labFlag">Former</span>
+      </a>
+    </li>
+    <!-- <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#visitors" role="tablist" (click)="peoplesTab(1)">
+        <i class="material-icons">gavel</i> Visitors
+      </a>
+    </li> -->
+  </ul>
+
+  <div *ngIf="streamRetrieved[3] && !missionService.showEditBtn && missionService.groupStage==2 && userService.userId && missionService.userStatus==0" class="d-flex justify-content-center mt-4">
+    <button role="button" mat-raised-button class="btn btn-light-blue btn-round" [disabled]="!userService.userEmailVerified" (click)="peopleSlide(true, 0, 0, activeTab, 2)">
+      <i class="material-icons">add_circle_outline</i> JOIN {{tabJoin[activeTab]}}
+    </button>
+  </div>
+
+  <div *ngIf="streamRetrieved[3] && missionService.userStatus>=6 && missionService.userStatusMode==2" class="d-flex justify-content-center mt-4">
+    <button role="button" mat-raised-button class="btn btn-light-blue btn-round" (click)="peopleSlide(true, 0, 0, activeTab, 0)">
+      <i class="material-icons">add_circle_outline</i> ADD {{tabAdd[activeTab]}}
+    </button>
+  </div>
+
+  <div class="row no-gutters mb-3">
+    <div [ngClass]="{'col-md-12': !(missionService.showEditBtn || items?.visitUs), 'col-md-8': (missionService.showEditBtn || items?.visitUs) }">
+
+      <!-- <button *ngIf="missionService.userStatus==2" role="button" aria-haspopup="true" aria-expanded="false"
+              class="btn btn-sm btn-outline-info" (click)="peopleSlide(true, 0, 0, activeTab, 3)">
+        {{tabReJoin[activeTab]}}
+      </button> -->
+
+      <div *ngIf="streamRetrieved[3]" class="card" [@itemsAnimation]="('active')" #scrollInvite>
+        <div class="card-header">
+
+          <div class="tab-content">
+
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!-- - - - - - - - - Members - - - - - - - - - - - - - - -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+            <div class="tab-pane active" id="members" role="tabpanel">
+
+              <spinner *ngIf="!streamRetrieved[0]"></spinner>
+
+              <ng-container *ngIf="streamRetrieved[0] && labFlag">
+
+                <build-modal-intro *ngIf="actives[0]==null && missionService.showHeadline"
+                                   [headline]="'Add your lab members'"
+                                   [bodypic]="'user'"
+                                   [bodytext]="'Add your lab members. Showcase your lab\'s members by adding them to your lab.'">
+                </build-modal-intro>
+
+                <build-modal-intro *ngIf="actives[0]==null && !missionService.showHeadline"
+                                   [headline]="'Lab members'"
+                                   [bodypic]="'user'"
+                                   [bodytext]="'The lab members list hasn\'t been filled yet.'">
+                </build-modal-intro>
+
+                <ng-container *ngFor="let countIds of items.activesIds; let i=index">
+                  <ng-container *ngIf="countIds!=0">
+
+                     <!-- || i==0 -->
+                    <span *ngIf="countIds>0" class="lead" [ngSwitch]="i">
+                      <span *ngSwitchCase="0">Principal Investigator</span>
+                      <span *ngSwitchCase="1">Staff Members</span>
+                      <span *ngSwitchCase="2">Postdoctoral</span>
+                      <span *ngSwitchCase="3">Graduate Students</span>
+                      <span *ngSwitchCase="4">Undergraduate Students</span>
+                    </span>
+                    <hr class="mt-0 mb-4">
+
+                    <people-list [streamRetrieved]=streamRetrieved[0]
+                                 [peoples]="actives.slice(activesCounterPointer[i], activesCounterPointer[i]+countIds)"
+                                 [sourceType]="labFlag ? 0 : 12"
+                                 [itemFocus]=itemFocus
+                                 [stream]="streamActive.slice(activesCounterPointer[i], activesCounterPointer[i]+countIds)"
+                                 [streamFollow]="streamActiveFollow.slice(activesCounterPointer[i], activesCounterPointer[i]+countIds)"
+                                 [showEditBtn]="missionService.showEditBtn && missionService.userStatus>=6 && missionService.groupStage==2"
+                                 [groupStage]=missionService.groupStage
+                                 [activeId]=missionService.userId
+                                 (animationDoneEvent)="streamFunc()"
+                                 (btnAddClick)="peopleSlide(true, $event, i, activeTab, 6)"
+                                 (btnMainEditClick)="peopleSlide(true, $event, i, activeTab, 1)"
+                                 (btnEmailClick)="peopleSlide(true, $event, i, activeTab, 9)"
+                                 (btnEditClick)="positionSlide(true, $event, i, activeTab, 7)"
+                                 (btnDeleteClick)="positionSlide(true, $event, i, activeTab, 4)"
+                                 (btnEndClick)="positionSlide(true, $event, i, activeTab, 8)"
+                                 (btnFollowClick)="peopleFollow($event, i)"
+                                 (btnMessageClick)="peopleMessage($event, i)"
+                                 (btnAcceptClick)="invitePost($event, i, 3)"
+                                 (btnDeclineClick)="peopleDecline($event, i, 1, 0)"
+                                 (btnResendClick)="invitePost($event, i, 1)"
+                                 (btnCancelClick)="peopleMove($event, i, 0, 0)">
+                    </people-list>
+
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+
+              <ng-container *ngIf="streamRetrieved[0] && !labFlag">
+                <people-list [streamRetrieved]=streamRetrieved[0]
+                             [peoples]=actives
+                             [sourceType]="labFlag ? 0 : 12"
+                             [itemFocus]=itemFocus
+                             [stream]=streamActive
+                             [streamFollow]=streamActiveFollow
+                             [showEditBtn]="missionService.showEditBtn && missionService.userStatus>=6 && missionService.groupStage==2"
+                             [groupStage]=missionService.groupStage
+                             [activeId]=missionService.userId
+                             (animationDoneEvent)="streamFunc()"
+                             (btnAddClick)="peopleSlide(true, $event, 0, activeTab, 6)"
+                             (btnMainEditClick)="peopleSlide(true, $event, 0, activeTab, 1)"
+                             (btnEmailClick)="peopleSlide(true, $event, 0, activeTab, 9)"
+                             (btnEditClick)="positionSlide(true, $event, 0, activeTab, 7)"
+                             (btnDeleteClick)="positionSlide(true, $event, 0, activeTab, 4)"
+                             (btnEndClick)="positionSlide(true, $event, 0, activeTab, 8)"
+                             (btnFollowClick)="peopleFollow($event, 0)"
+                             (btnMessageClick)="peopleMessage($event, 0)"
+                             (btnAcceptClick)="invitePost($event, 0, 3)"
+                             (btnDeclineClick)="peopleDecline($event, 0, 1, 0)"
+                             (btnResendClick)="invitePost($event, 0, 1)"
+                             (btnCancelClick)="peopleMove($event, 0, 0, 0)">
+                </people-list>
+              </ng-container>
+
+            </div>
+
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!-- - - - - - - - - Visitors - - -  - - - - - - - - - - -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+            <div class="tab-pane" id="visitors" role="tabpanel">
+
+              <spinner *ngIf="!streamRetrieved[1]"></spinner>
+
+              <div *ngIf="streamRetrieved[1]">
+
+                <build-modal-intro *ngIf="items.visitorsIds[0]==null && missionService.showHeadline"
+                                   [headline]="'Add visitors to your lab'"
+                                   [bodypic]="'user'"
+                                   [bodytext]="'Add your lab visitros. A request to join will be sent to any new member you add.'">
+                </build-modal-intro>
+
+                <!-- <div *ngFor="let countIds of items.visitorsIds; let i=index"> -->
+                  <!-- <div *ngIf="countIds!=0"> -->
+                  <div *ngIf="visitors">
+
+                    <!-- <p class="lead" [ngSwitch]="i">
+                      <span *ngSwitchCase="0">Research Associates</span>
+                      <span *ngSwitchCase="1">Postdoctoral</span>
+                      <span *ngSwitchCase="2">Graduate Students</span>
+                      <span *ngSwitchCase="3">Undergraduate Students</span>
+                    </p> -->
+
+                    <!-- [peoples]="visitors.slice(visitorsCounterPointer[i], visitorsCounterPointer[i]+countIds)" -->
+
+                    <people-list [streamRetrieved]=streamRetrieved[1]
+                                 [peoples]=visitors
+                                 [sourceType]=2
+                                 [itemFocus]=itemFocus
+                                 [stream]=streamVisitor
+                                 [streamFollow]=streamVisitorFollow
+                                 (animationDoneEvent)="streamFunc()"
+                                 [showEditBtn]="missionService.showEditBtn && missionService.userStatus>=6"
+                                 [groupStage]=missionService.groupStage
+                                 [activeId]=missionService.userId
+                                 (btnEditClick)="peopleSlide(true, $event, 0, activeTab, 1)"
+                                 (btnDeleteClick)="peopleSlide(true, $event, 0, activeTab, 4)"
+                                 (btnFollowClick)="peopleFollow($event, 0)"
+                                 (btnAcceptClick)="invitePost($event, 0, 3)"
+                                 (btnDeclineClick)="peopleDecline($event, 0, 1, 0)"
+                                 (btnResendClick)="invitePost($event, 0, 1)"
+                                 (btnCancelClick)="peopleMove($event, 0, 0, 0)">
+                    </people-list>
+
+                  </div>
+                <!-- </div> -->
+
+              </div>
+
+            </div>
+
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+            <!-- - - - - - - - - Alumnis - - - - - - - - - - - - - - -->
+            <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+            <div class="tab-pane" id="alumni" role="tabpanel">
+
+              <spinner *ngIf="!streamRetrieved[2]"></spinner>
+
+              <ng-container *ngIf="streamRetrieved[2]">
+                <build-modal-intro *ngIf="alumnis[0]==null && missionService.showHeadline"
+                                   [headline]="'Add your lab alumni'"
+                                   [bodypic]="'user'"
+                                   [bodytext]="'Add your lab alumni. Showcase your lab\'s previous members by adding them to your lab.'">
+                </build-modal-intro>
+                <!-- A request to join will be sent to any new member you add. -->
+
+                <build-modal-intro *ngIf="alumnis[0]==null && !missionService.showHeadline"
+                                   [headline]="'Lab alumni'"
+                                   [bodypic]="'user'"
+                                   [bodytext]="'The lab alumni list hasn\'t been filled yet.'">
+                </build-modal-intro>
+
+                <div *ngFor="let countIds of items.alumniIds; let i=index">
+                  <div *ngIf="countIds!=0">
+
+                    <span class="lead" [ngSwitch]="i">
+                      <span *ngSwitchCase="0">Staff Members</span>
+                      <span *ngSwitchCase="1">Postdoctoral</span>
+                      <span *ngSwitchCase="2">Graduate Students</span>
+                      <span *ngSwitchCase="3">Undergraduate Students</span>
+                    </span>
+                    <hr class="mt-0 mb-4">
+
+                    <people-list [streamRetrieved]=streamRetrieved[2]
+                                 [peoples]="alumnis.slice(alumnisCounterPointer[i], alumnisCounterPointer[i]+countIds)"
+                                 [sourceType]=3
+                                 [itemFocus]=itemFocus
+                                 [stream]="streamAlumni.slice(alumnisCounterPointer[i], alumnisCounterPointer[i]+countIds)"
+                                 [streamFollow]="streamAlumniFollow.slice(alumnisCounterPointer[i], alumnisCounterPointer[i]+countIds)"
+                                 [showEditBtn]="missionService.showEditBtn && missionService.userStatus>=6"
+                                 [groupStage]=missionService.groupStage
+                                 [activeId]=missionService.userId
+                                 (animationDoneEvent)="streamFunc()"
+                                 (btnAddClick)="peopleSlide(true, $event, i, activeTab, 6)"
+                                 (btnMainEditClick)="peopleSlide(true, $event, i, activeTab, 1)"
+                                 (btnEditClick)="positionSlide(true, $event, i, activeTab, 7)"
+                                 (btnDeleteClick)="positionSlide(true, $event, i, activeTab, 4)"
+                                 (btnFollowClick)="peopleFollow($event, i)"
+                                 (btnMessageClick)="peopleMessage($event, i)"
+                                 (btnAcceptClick)="invitePost($event, i, 3)"
+                                 (btnDeclineClick)="peopleDecline($event, i, 1, 0)"
+                                 (btnResendClick)="invitePost($event, i, 1)"
+                                 (btnCancelClick)="peopleMove($event, i, 0, 0)">
+                    </people-list>
+
+                  </div>
+                </div>
+
+              </ng-container>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div *ngIf="missionService.showEditBtn || items?.visitUs" class="col-md-4">
+
+      <!-- <div class="card mt-0" *ngIf="streamRetrieved[3]" [@itemsAnimation]="('active')">
+        <build-headline [addButtonFlag]=false [headline]="'Statistics'"></build-headline>
+        <group-people-analytics></group-people-analytics>
+      </div> -->
+
+      <div *ngIf="streamRetrieved[3] && (missionService.showHeadline || items?.visitUs)" class="d-flex justify-content-start">
+        <div class="d-none d-md-block ml-4"></div>
+        <div class="card flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body" [@itemsAnimation]="('active')">
+            <build-headline *ngIf="missionService.showHeadline"
+                            [addButtonFlag]="items?.visitUs==null"
+                            [showEditBtn]="missionService.showEditBtn && items?.visitUs==null"
+                            [headline]="'How to visit us'"
+                            (buttonAddClick)="visitOp(0, true, null)">
+            </build-headline>
+
+            <build-modal-intro *ngIf="items?.visitUs==null && missionService.showHeadline"
+                               [headline]="'How to visit us'"
+                               [bodypic]="'align-left'"
+                               [bodytext]="'Explain what are the requirements for visiting your lab. What visitors should expect from you and what you expect from them.'">
+            </build-modal-intro>
+
+            <div build-text
+                 [text]=items?.visitUs
+                 [showEditBtn]=missionService.showEditBtn
+                 [stream]=streamVisitUs
+                 (animationDoneEvent)="visitOp(3)"
+                 (buttonEditClick)="visitOp(0, true, $event)"
+                 (buttonDeleteClick)="visitOp(1, false, $event)">
+            </div>
+
+            <!-- <button *ngIf="items.visitUs" disabled="missionService.userStatus<4" data-toggle="modal" data-target="#VisitRequestModal" role="button" class="btn btn-outline-info btn-sm mt-2">
+              <i class="fa fa-cogs fa-1x" aria-hidden="true"></i> Visiting Request
+            </button> -->
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text *ngIf=visitBuildFlag
+                  (update)="visitOp(2, false, $event)"
+                  (cancel)="visitOp(0, false, $event)"
+                  [title]="'How To Visit Us?'"
+                  [text]=items?.visitUs>
+</build-slide-text>
+
+<people-build *ngIf=peopleBuildFlag
+              (update)="peopleUpdate($event)"
+              (cancel)="peopleSlide(false)"
+              [people]=people
+              [stage]=missionService.groupStage
+              [positionIndex]=positionIndex
+              [typeFlag]=peopleTypeFlag
+              [userId]=missionService.userId
+              [groupId]=missionService.groupId
+              [labFlag]=labFlag
+              [activeTab]=activeTab>
+</people-build>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - Visit Request Modal - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!-- <div class="modal fade" id="VisitRequestModal" tabindex="-1" role="dialog" aria-labelledby="VisitRequestModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="VisitRequestModalLabel">Visiting Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="Textarea">Write your request.</label>
+        <textarea class="form-control" id="RequestTextarea" rows="6"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button role="button" class="btn btn-sm btn-outline-info" data-dismiss="modal">Close</button>
+        <button role="button" class="btn btn-sm btn-info">Send request</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Stage Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- <button id="toggleStageModal" #toggleStageModal [hidden]="true"
+        data-toggle="modal" data-target="#stageModalGroup"></button>
+
+<div class="modal fade" id="stageModalGroup" data-target="#stageModalGroup" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="StageModalLabel">Adding lab members</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span *ngIf="!missionService.instituteEmailVerified">
+          <b>Please confirm your institute email.</b> <br><br>
+          Once you confirm your email, we will review your new website before it can go live, in order to keep Academig clean.<br><br>
+          We usually approve new profiles in less than a day and you will get a notificaiton email from us.<br><br>
+          After that you will be able to add your lab members.
+        </span>
+        <span *ngIf="missionService.instituteEmailVerified==2 && missionService.groupStage<2">
+          Your site is under review. We review each new research lab website before it goes live in order to keep Academig clean.<br><br>
+          You will be able to add your lab members once the website goes live<br><br>
+          We usually approve new profiles in less than a day and you will get a notificaiton email from us.<br><br>
+          After that you will be able to add your lab members.
+        </span>
+        <span *ngIf="missionService.groupStage==3">
+        You can't add new member while your site is on hold.
+        </span>
+      </div>
+      <div class="modal-footer">
+        <button role="button" class="btn btn-sm btn-outline-info" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div> -->

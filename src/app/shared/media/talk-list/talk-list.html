@@ -1,0 +1,22 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && talks.length!=0">
+  <!-- <div [dragula]=bagName [(dragulaModel)]='talks'> -->
+
+    <ul *ngFor="let talk of talks; let i=index let l=last" class="list-unstyled">
+      <media-talks-item [itemAutofocus]="itemFocus==i"
+                        [talk]=talk
+                        [sourceType]=sourceType
+                        [showEditBtn]=showEditBtn
+                        [stream]=stream[i]
+                        [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                        (animationDoneEvent)="animationDone()"
+                        (buttonEditClick)="buttonEditFunc(i)"
+                        (buttonDeleteClick)="buttonDeleteFunc(i)"
+                        (buttonSuggestionClick)="buttonSuggestionFunc($event,i)">
+      </media-talks-item>
+      <div *ngIf="!l && sourceType==0" class="row mb-4"><hr class="col-8 offset-2"></div>
+    </ul>
+
+  <!-- </div> -->
+</div>

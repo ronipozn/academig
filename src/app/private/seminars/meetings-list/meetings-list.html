@@ -1,0 +1,200 @@
+<div #scrollAdd></div>
+
+<!-- <div *ngIf="userStatus>=5" class="alert alert-warning" role="alert">
+  The lab seminars page is visible to everyone.
+</div> -->
+
+<div class="row no-gutters mb-4">
+
+  <div *ngIf="futureMeetings?.meetings[0]" class="d-md-none col-md-12 card mt-0" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <private-meeting-next [streamRetrieved]=streamRetrieved[0]
+                            [meeting]=futureMeetings?.meetings[0]
+                            [sourceType]=sourceType
+                            [userId]=userId
+                            [userStatus]=userStatus
+                            [stream]=streamMeeting[0]
+                            (buttonClick)="meetingSlide($event, 0)"
+                            (pdfClick)=pdfSlide($event)>
+      </private-meeting-next>
+    </div>
+  </div>
+
+  <div [ngClass]="{ 'col-md-12': !futureMeetings?.meetings[0] || sourceType==1, 'col-md-8': futureMeetings?.meetings[0] && sourceType==0 }">
+
+    <div class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+
+        <build-headline [addButtonFlag]=true
+                        [headline]="'Future Seminars'">
+        </build-headline>
+        <!-- [showEditBtn]="streamRetrieved[0] && futureMeetings?.meetings.length<2 && userStatus>=5" -->
+        <!-- (buttonAddClick)="meetingSlide(9, 0)" -->
+
+        <!-- <button role="button" class="btn btn-sm btn-link px-0 py-0" aria-haspopup="true" aria-expanded="false" (click)="meetingSlide(7,null)">Add a single meeting</button> -->
+        <!-- <p class="text-muted small"><i class="fa fa-info-circle" aria-hidden="true"></i> The single meeting date is not affected by your scheduled meetings.</p> -->
+
+        <spinner *ngIf="!streamRetrieved[0]"></spinner>
+
+        <div *ngIf="streamRetrieved[0] && futureMeetings?.meetings.length==0 && userStatus<5" class="mr-auto">
+          <p class="lead">Empty</p>
+        </div>
+
+        <ng-container *ngIf="streamRetrieved[0] && futureMeetings.meetings[0]==null && userStatus>=5">
+          <build-modal-intro [headline]="'Schedule your Lab Seminars'"
+                             [bodypic]="'clock-o'"
+                             [bodytext]="'Your lab seminars list is still empty. Start scheduling your future seminars by clicking the Add button.'">
+          </build-modal-intro>
+          <button mat-raised-button class="btn btn-light-blue btn-round my-2" (click)="meetingSlide(9, 0)">
+            <i class="material-icons">add_circle_outline</i> Schedule Seminars
+          </button>
+          <img src="./assets/img/items/seminars.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="350" alt="academig_seminars">
+        </ng-container>
+
+        <div *ngIf="streamRetrieved[0] && futureMeetings?.meetings.length>1" class="table-responsive">
+          <table class="table table-hover my-0">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Presenter</th>
+                <th>Location</th>
+                <th>Title</th>
+                <th></th>
+                <th>
+                  <private-meeting-buttons *ngIf="userStatus>=5"
+                                           [type]=0
+                                           (buttonClick)="meetingSlide($event)">
+                  </private-meeting-buttons>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let meeting of futureMeetings.meetings | slice:1:(meetingsShown+1); let i=index" private-meeting-item
+                  [meeting]=meeting
+                  [sourceType]=sourceType
+                  [userStatus]=userStatus
+                  [userId]=userId
+                  [buttonType]=1
+                  [stream]=streamMeeting[i+1]
+                  (pdfSlideClick)="pdfSlide($event)"
+                  (buttonClick)="meetingSlide($event, i+1)">
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p *ngIf="streamRetrieved[0] && futureMeetings?.meetings.length>11" class="text-muted small mt-3 mb-0">
+          <i class="fa fa-info-circle" aria-hidden="true"></i>
+          Only the {{meetingsShown}} next seminars are shown.
+        </p>
+
+      </div>
+    </div>
+
+    <div class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+
+        <div class="d-flex justify-content-end mb-0 pb-0">
+          <div class="mr-auto">
+            <h4 class="card-title"><b>Past Seminars</b></h4>
+          </div>
+          <span *ngIf="streamRetrieved[1] && yearPastMeetings.length>0" class="mb-1">
+            <select class="small custom-select pl-2" (change)="onYearChange($event.target.value)">
+              <option *ngFor="let year of pastYears; let i=index" [selected]="i==0" [value]="year">{{ year }}</option>
+            </select>
+          </span>
+        </div>
+        <hr class="mt-0">
+
+        <spinner *ngIf="!streamRetrieved[1]"></spinner>
+
+        <p *ngIf="streamRetrieved[1] && yearPastMeetings.length==0 && userStatus<5" class="lead">Empty</p>
+
+        <build-modal-intro *ngIf="streamRetrieved[1] && pastMeetings.meetings[0]==null && userStatus>=5"
+                           [headline]="'Past Seminars'"
+                           [bodypic]="'history'"
+                           [bodytext]="'The past seminars list is still empty.'">
+        </build-modal-intro>
+
+        <div *ngIf="streamRetrieved[1] && yearPastMeetings.length>0" class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Presenter</th>
+                <th>Title</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let meeting of yearPastMeetings; let i=index" private-meeting-item
+                  [meeting]=meeting
+                  [sourceType]=sourceType
+                  [userStatus]=userStatus
+                  [userId]=userId
+                  [buttonType]=2
+                  [stream]=streamPastMeeting[i]
+                  (pdfSlideClick)="pdfSlide($event)"
+                  (buttonClick)="meetingSlide($event, i)">
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="futureMeetings?.meetings[0] && sourceType==0" class="d-none d-sm-block col-md-4">
+    <div class="d-flex justify-content-start">
+      <div class="ml-2"></div>
+      <div class="card flex-grow-1 mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <private-meeting-next [streamRetrieved]=streamRetrieved[0]
+                                [meeting]=futureMeetings?.meetings[0]
+                                [sourceType]=sourceType
+                                [userId]=userId
+                                [userStatus]=userStatus
+                                [stream]=streamMeeting[0]
+                                (buttonClick)="meetingSlide($event, 0)"
+                                (pdfClick)=pdfSlide($event)>
+          </private-meeting-next>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide($event)"
+           [title]=pdfTitle
+           [fileName]=pdfFileName>
+</slide-pdf>
+
+<meeting-build *ngIf=meetingBuildFlag
+               (update)="meetingsCreate($event)"
+               (cancel)="meetingSlide(10)"
+               [groupId]=groupId
+               [userId]=userId
+               [settings]=futureMeetings.settings
+               [newFlag]=meetingNewFlag>
+</meeting-build>
+
+<single-meeting-build *ngIf=singleMeetingBuildFlag
+                      (update)="singleMeetingPut($event)"
+                      (cancel)="meetingSlide(8)"
+                      [groupId]=groupId
+                      [userId]=userId
+                      [mode]=singleMeetingPlaceMode
+                      [newFlag]=singleMeetingNewFlag
+                      [meeting]=futureMeetings.meetings[singleMeetingIndex]
+                      [previousDate]=futureMeetings.meetings[singleMeetingIndex-1]?.date
+                      [nextDate]=futureMeetings.meetings[singleMeetingIndex+1]?.date>
+</single-meeting-build>

@@ -1,0 +1,41 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<!-- <p class="lead mt-0 mb-0">Let us brighten your inbox. Select the emails you’d love to receive</p> -->
+<div *ngIf="streamRetrieved" [formGroup]="formSubscribe">
+  <div class="form-group">
+    <ul class="list-unstyled" [formArrayName]="'subscribe'">
+      <ng-container *ngFor="let topic of topics; let i=index; let l=last">
+        <li class="d-flex align-items-center mb-0" [ngClass]="{'mb-3': !l}">
+          <div class="togglebutton">
+            <label for="customSwitch{{i}}">
+              <input [formControlName]="i" type="checkbox" id="customSwitch{{i}}" (change)="toogleNotification(i)">
+              <span class="toggle"></span>
+            </label>
+          </div>
+          <i class="fa fa-fw fa-1x fa-{{topicsIcon[i]}} mr-2" aria-hidden="true"></i> {{topic}}
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>
+
+<!-- <h5 class="mb-1">My Lab</h5>
+<ul>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Lab Members</li>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Lab Tools</li>
+</ul>
+<h5 class="mb-1">My Papers</h5>
+<ul>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Coauthors</li>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Cited Authors</li>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Refs Authors</li>
+</ul>
+<h5 class="mb-1">My Following</h5>
+<ul>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Followed Labs</li>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Followed Researchers</li>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Followed Podcasts</li>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Followed Events</li>
+  <li class="mb-1 text-dark"><input class="form-check-input" type="checkbox">Followed Apps</li>
+</ul> -->
+<!-- Followed Labs People -->

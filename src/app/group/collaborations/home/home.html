@@ -1,0 +1,298 @@
+<ng-container *ngIf="missionService.showPage">
+
+  <ul class="d-flex justify-content-center nav nav-pills nav-pills-light-blue" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link" style="cursor: pointer;" [ngClass]="{'active': activeTab===0}" data-toggle="tab" data-target="#collaborations" role="tablist" (click)="tabFunc(0)">
+        <i class="material-icons">group_work</i> Collaborations
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" style="cursor: pointer;" [ngClass]="{'active': activeTab===1}" data-toggle="tab" data-target="#sponsors" role="tablist" (click)="tabFunc(1)">
+        <i class="material-icons">star</i> Sponsors
+      </a>
+    </li>
+  </ul>
+
+  <spinner *ngIf="!streamRetrieved[0] && !streamRetrieved[1] && !streamRetrieved[2] && !streamRetrieved[3] && !streamRetrieved[4] && !streamRetrieved[5]"></spinner>
+
+  <div *ngIf="activeTab==0 && streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2] && streamRetrieved[5] && missionService.showEditBtn" class="d-flex justify-content-center my-4">
+    <button mat-raised-button class="btn btn-light-blue btn-round mr-2" (click)="collaborationSlide(true, 0, 0, 0)">
+      <i class="material-icons">add_circle_outline</i> Add Active Collaboration
+    </button>
+    <button mat-raised-button class="btn btn-light-blue btn-round mr-2" (click)="collaborationSlide(true, 0, 0, 1)">
+      <i class="material-icons">add_circle_outline</i> Add Past Collaboration
+    </button>
+  </div>
+
+  <div *ngIf="activeTab==1 && streamRetrieved[3] && streamRetrieved[4] && missionService.showEditBtn" class="d-flex justify-content-center my-4">
+    <button mat-raised-button class="btn btn-light-blue btn-round mr-2" (click)="sponsorSlide(true, 0, true, 0)">
+      <i class="material-icons">add_circle_outline</i> Add Industry Sponsors
+    </button>
+    <button mat-raised-button class="btn btn-light-blue btn-round" (click)="sponsorSlide(true, 0, true, 1)">
+      <i class="material-icons">add_circle_outline</i> Add Government Sponsors
+    </button>
+  </div>
+
+  <div class="tab-content">
+
+    <div class="tab-pane" [ngClass]="{'active': activeTab===0}" id="collaborations" role="tabpanel">
+
+      <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2] && streamRetrieved[5] && currentCollaborations[0]==null && pastCollaborations[0]==null" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [headline]="'Collaborations'"></build-headline>
+          <build-modal-intro *ngIf="!missionService.showHeadline"
+                             [headline]="'The list of collaborations is still empty.'">
+          </build-modal-intro>
+          <build-modal-intro *ngIf="missionService.showHeadline"
+                             [headline]="'Add your lab\' collaborations'"
+                             [bodytext]="'Start posting your active and past lab\' collaborators. A request to accept the collaboration invitation will be sent to the admins of the lab you add as a collaborator.'">
+          </build-modal-intro>
+        </div>
+      </div>
+
+      <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2] && streamRetrieved[3] && streamRetrieved[4] && missionService.groupStage<2 && missionService.showEditBtn"
+           class="mt-0 mb-4 alert alert-info alert-with-icon" data-notify="container">
+        <i class="material-icons" data-notify="icon">notifications</i>
+        <button mat-button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <i class="material-icons">close</i>
+        </button>
+        <span data-notify="icon" class="now-ui-icons ui-1_bell-53"></span>
+        <span data-notify="message">You can add new collaboration once your lab profile is approved. We usually approve new profiles in less than 12 hour.</span>
+      </div>
+
+      <div *ngIf="streamRetrieved[5] && missionService.showHeadline && missionService.groupStage==2 && approveCollaborations.length>0" id="accordion" role="tablist" aria-multiselectable="true" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body" role="tab" id="headingOne">
+          <h6 class="mb-0">
+            <div class="d-flex justify-content-end">
+              <div class="mr-auto">
+                <a class="card-title" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Collaborations Requests
+                </a>
+              </div>
+              <div>
+                <div *ngIf="!streamRetrieved[5]">
+                  <i class="fa fa-spinner fa-spin fa-fw fa-1x"></i>
+                </div>
+                <span *ngIf="streamRetrieved[5]" class="badge badge-primary">
+                  {{approveCollaborations.length}}
+                </span>
+              </div>
+            </div>
+          </h6>
+        </div>
+
+        <div *ngIf="streamRetrieved[5]" id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="card-body">
+            <build-modal-intro *ngIf="approveCollaborations.length==0"
+                               [headline]="'Pending Collaborations Requests'"
+                               [bodypic]="'clock-o'"
+                               [bodytext]="'Pending collaborations requests from other labs will appear here.'">
+            </build-modal-intro>
+            <div class="mx-2">
+              <groups-list [streamRetrieved]=streamRetrieved[5]
+                           [sourceType]=3
+                           [groupsPerRow]=3
+                           [groups]=approveCollaborations
+                           [showEditBtn]=missionService.showEditBtn
+                           [planNumber]=missionService.planNumber
+                           [stream]=streamApproveCollaborations
+                           [streamCompare]=streamApproveCollaborationsFollow
+                           [streamFollow]=streamApproveCollaborationsFollow
+                           [streamAdminFollow]=streamApproveCollaborationsAdminFollow
+                           (buttonApproveClick)="collaborationApprove($event,2)"
+                           (buttonDeclineClick)="collaborationApprove($event,3)"
+                           (animationDoneEvent)="streamFunc(2)">
+              </groups-list>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="streamRetrieved[1] && currentCollaborations[0]" class="card mt-0" [@itemsAnimation]="('active')" #scrollAdd>
+        <div class="card-body">
+          <build-headline [headline]="'Current Collaborations'"></build-headline>
+          <div class="mx-2">
+            <groups-list [streamRetrieved]=streamRetrieved[1]
+                         [sourceType]="(missionService.previewStatus>0) ? 5 : 1"
+                         [groupsPerRow]=3
+                         [groups]=currentCollaborations
+                         [showEditBtn]=missionService.showEditBtn
+                         [compareFlag]=true
+                         [planNumber]=missionService.planNumber
+                         [stream]=streamCurrentCollaborations
+                         [streamCompare]=streamCurrentCollaborationsFollow
+                         [streamFollow]=streamCurrentCollaborationsFollow
+                         [streamAdminFollow]=streamCurrentCollaborationsAdminFollow
+                         (buttonFollowClick)="collaborationFollow($event,0)"
+                         (buttonAdminFollowClick)="collaborationAdminFollow($event,0)"
+                         (buttonEditCollaborationClick)="collaborationSlide(true, $event, 1, 0)"
+                         (buttonEndCollaborationClick)="collaborationSlide(true, $event, 2, 0)"
+                         (buttonDeleteCollaborationClick)="collaborationDelete($event, 0)"
+                         (animationDoneEvent)="streamFunc(3)">
+            </groups-list>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="streamRetrieved[2] && pastCollaborations[0]" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [headline]="'Past Collaborations'"></build-headline>
+          <div class="mx-2">
+            <groups-list [streamRetrieved]=streamRetrieved[2]
+                         [sourceType]="(missionService.previewStatus>0) ? 5 : 4"
+                         [groupsPerRow]=3
+                         [groups]=pastCollaborations
+                         [showEditBtn]=missionService.showEditBtn
+                         [compareFlag]=true
+                         [stream]=streamPastCollaborations
+                         [streamCompare]=streamPastCollaborationsFollow
+                         [streamFollow]=streamPastCollaborationsFollow
+                         [streamAdminFollow]=streamPastCollaborationsAdminFollow
+                         (buttonFollowClick)="collaborationFollow($event,1)"
+                         (buttonAdminFollowClick)="collaborationAdminFollow($event,1)"
+                         (buttonEditCollaborationClick)="collaborationSlide(true, $event, 1, 1)"
+                         (buttonDeleteCollaborationClick)="collaborationDelete($event, 1)"
+                         (animationDoneEvent)="streamFunc(4)">
+            </groups-list>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="streamRetrieved[0] && (missionService.showEditBtn || items.collaborateWithUs)" class="d-flex justify-content-start">
+        <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <build-headline [showEditBtn]=missionService.showEditBtn
+                            [addButtonFlag]="items.collaborateWithUs==null"
+                            [headline]="'Collaborate with us'"
+                            (buttonAddClick)="howToOp(0, true, null)">
+            </build-headline>
+            <build-modal-intro *ngIf="items.collaborateWithUs==null && missionService.showHeadline"
+                               [headline]="'How to collaborate with us'"
+                               [bodypic]="'puzzle-piece'"
+                               [bodytext]="'Explain what are the requirements for starting a collaboration with your lab, including what you expect from such collaborations and what they should expect from you.'">
+            </build-modal-intro>
+            <div #scrollHowTo></div>
+            <div build-text
+                 [text]=items.collaborateWithUs
+                 [showEditBtn]=missionService.showEditBtn
+                 [stream]=streamHowTo
+                 (animationDoneEvent)="howToOp(3)"
+                 (buttonEditClick)="howToOp(0, true, $event)"
+                 (buttonDeleteClick)="howToOp(1, false, $event)">
+            </div>
+            <!-- <button *ngIf="items.collaborateWithUs" data-toggle="modal" data-target="#CollaborationRequestModal" role="button" class="btn btn-outline-info btn-sm mt-2" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-cogs fa-1x" aria-hidden="true"></i> Collaboration Request
+            </button> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tab-pane" [ngClass]="{'active': activeTab===1}" id="sponsors" role="tabpanel">
+
+      <div *ngIf="streamRetrieved[3] && streamRetrieved[4] && industries[0]==null && governments[0]==null" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [headline]="'Sponsors'"></build-headline>
+          <build-modal-intro *ngIf="!missionService.showHeadline"
+                             [headline]="'The list of sponsors is still empty.'">
+          </build-modal-intro>
+          <build-modal-intro *ngIf="missionService.showHeadline"
+                             [headline]="'Add your lab\' sponsors'"
+                             [bodytext]="'Start posting your lab\' industry and governments sponsors. This list should include companies and institutes that you have worked with over the years outside of the academic world.'">
+          </build-modal-intro>
+        </div>
+      </div>
+
+      <div *ngIf="streamRetrieved[3] && industries[0]" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [headline]="'Industry Sponsors'"></build-headline>
+          <group-collaborations-sponsors [items]=industries
+                                         [bagName]="'industries-bag'"
+                                         [showEditBtn]=missionService.showEditBtn
+                                         [stream]=streamIndustries
+                                         (animationDoneEvent)="streamFunc(0)"
+                                         (buttonEditClick)="sponsorSlide(true, $event, false, 0)"
+                                         (buttonDeleteClick)="sponsorDelete($event, 0)">
+          </group-collaborations-sponsors>
+        </div>
+      </div>
+
+      <div *ngIf="streamRetrieved[4] && governments[0]" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [headline]="'Government Sponsors'"></build-headline>
+          <group-collaborations-sponsors [items]=governments
+                                         [bagName]="'governments-bag'"
+                                         [showEditBtn]=missionService.showEditBtn
+                                         [stream]=streamGovernments
+                                         (animationDoneEvent)="streamFunc(1)"
+                                         (buttonEditClick)="sponsorSlide(true, $event, false, 1)"
+                                         (buttonDeleteClick)="sponsorDelete($event, 1)">
+          </group-collaborations-sponsors>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <img *ngIf="activeTab==0" src="./assets/img/items/collaborations.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_collaborations">
+  <img *ngIf="activeTab==1" src="./assets/img/items/sponsors.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_collaborations">
+
+</ng-container>
+
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+
+<collaboration-build *ngIf=collaborationBuildFlag
+                     (update)="collaborationUpdate($event)"
+                     (cancel)="collaborationSlide($event)"
+                     [modeNum]=modeNum
+                     [groupId]=missionService.groupId
+                     [userId]=missionService.userId
+                     [approveCollaborations]=approveCollaborations
+                     [currentCollaborations]=currentCollaborations
+                     [pastCollaborations]=pastCollaborations
+                     [newFlag]=collaborationNewFlag
+                     [collaboration]=collaborationBuild
+                     [collaborationName]=collaborationName>
+</collaboration-build>
+
+<sponsor-build *ngIf=sponsorBuildFlag
+               (update)="sponsorUpdate($event)"
+               (cancel)="sponsorSlide($event)"
+               [groupId]=missionService.groupId
+               [userId]=missionService.userId
+               [modeNum]=modeNum
+               [newFlag]=sponsorNewFlag
+               [sponsor]=sponsorBuild>
+</sponsor-build>
+
+<build-slide-text *ngIf=howToBuildFlag
+                  (update)="howToOp(2, false, $event)"
+                  (cancel)="howToOp(0, false, $event)"
+                  [title]="'How To Collaborate With Us?'"
+                  [text]=items.collaborateWithUs>
+</build-slide-text>
+
+<!-- Collaboration Request Modal -->
+<!-- <div class="modal fade" id="CollaborationRequestModal" tabindex="-1" role="dialog" aria-labelledby="CollaborationRequestModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="CollaborationRequestModalLabel">Collaboration Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="Textarea">Write your request.</label>
+        <textarea class="form-control" id="RequestTextarea" rows="6"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button role="button" class="btn btn-sm btn-outline-info" data-dismiss="modal">Close</button>
+        <button role="button" class="btn btn-sm btn-info" data-dismiss="modal">Send request</button>
+      </div>
+    </div>
+  </div>
+</div> -->

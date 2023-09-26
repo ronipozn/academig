@@ -1,0 +1,141 @@
+<ul class="timeline timeline-simple mt-0 py-0">
+  <ng-container *ngFor="let news of newses; let i=index">
+  <!-- [news]=news -->
+  <!-- <li *ngIf="news.actor && news.object" -->
+  <li *ngIf="news.actor && news.object"
+      class="timeline-inverted"
+      news-item
+
+     [actor]=news.actor
+     [verb]=news.verb
+     [object]=news.object
+     [target]=news.target
+     [members]=news.members
+     [commentors]=news.commentors
+
+     [own]=news.own_reactions
+     [latest]=news.latest_reactions
+     [reactionsCounts]=news.reaction_counts
+
+     [time]=news.time
+     [text]=news.text
+     [pic]=news.pic
+     [link]=news.link
+
+     [userId]=userId
+     [userName]=userService.userName
+     [userPic]=userService.userPic
+
+     [sourceType]=sourceType
+     [followings]=followingsClone
+     [compareStatus]=compareStatuses[i]
+
+     (pdf)="pdfSlide(true, $event)"
+     (animationDoneEvent)="animationDone()"
+
+     (buttonEditNewsClick)="buttonEditNewsFunc(i)"
+     (buttonDeleteNewsClick)="buttonDeleteNewsFunc(i)"
+
+     (buttonCompareClick)="groupCompare(i)"
+     (buttonFollowClick)="itemFollow(i,$event)"
+     (buttonShareClick)="openItmeShare()"
+
+     (buttonClapClick)="itemClap(i)"
+     (buttonUnClapClick)="itemUnClap(i)"
+
+     (buttonNewCommentClick)="newComment(i, $event, null)"
+     (buttonEditCommentClick)="editComment(i, $event, null)"
+     (buttonDeleteCommentClick)="deleteComment(i)"
+     (buttonShowCommentsClick)="showComments(i)"
+
+     (buttonModalClick)="openSignUpModal($event)">
+  </li>
+  </ng-container>
+  <li *ngIf="sourceType<7 && newses.length>9" class="timeline-inverted" style="cursor:pointer; margin-bottom: 100px;" (click)="buttonMoreNewsFunc()">
+    <div class="timeline-badge light-blue">
+      <i *ngIf="streamRetrieved" class="material-icons">arrow_downward</i>
+      <i *ngIf="!streamRetrieved" class="fa fa-1x fa-spinner fa-spin"></i>
+    </div>
+  </li>
+</ul>
+
+<build-slide-text-pic *ngIf=newsBuildFlag
+                      [title]="'Comment'"
+                      [itemId]=groupId
+                      [text]="newsNewFlag ? null : (newsCommentFlag ? newses[newsIndex].comments[commentIndex].text : newses[newsIndex].text)"
+                      [pic]="newsNewFlag ? null : (newsCommentFlag ? newses[newsIndex].comments[commentIndex].pic : newses[newsIndex].pic)"
+                      (update)="newsUpdate($event)"
+                      (cancel)="newsSlide(false, 0, false)">
+</build-slide-text-pic>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Share Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" data-target="#shareModalDetails"></button>
+
+<div class="modal fade" id="shareModalDetails" data-target="#shareModalDetails" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- <modal-share [mode]=mode -->
+      <modal-share [mode]=0
+                   [flag]=shareFlag
+                   (closeModal)="closeItmeShare()">
+      </modal-share>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - PDF Slide - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide(false, null)"
+           [title]=pdfTitle
+           [fileName]=pdfFileName
+           [type]=1>
+</slide-pdf>
+
+<!--
+[status]=news.status
+[type]=news.type
+[mode]=news.mode
+-->
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Compare Modal - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleCompareModal" #toggleCompareModal [hidden]="true" data-toggle="modal" data-target="#CompareModal"></button>
+
+<div class="modal fade" id="CompareModal" tabindex="-1" role="dialog" aria-labelledby="CompareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Compare labs</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Oops! You can only compare maximum of 3 research labs. Please remove one the labs before adding another one.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - Signup Modal  - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <p class="mt-4 pt-4">To {{signupAction}} this news on Academig, log in or create an account.</p>
+        <button class="btn btn-success mt-3" role="button" (click)="login()"><span class="px-4">Sign Up</span></button>
+        <div class="col-6 offset-3"><hr></div>
+        <p class="my-4 pb-4"><a style="cursor:pointer;" data-dismiss="modal" aria-label="Close">Not Now</a></p>
+      </div>
+    </div>
+  </div>
+</div>

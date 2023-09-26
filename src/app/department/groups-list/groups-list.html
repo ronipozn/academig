@@ -1,0 +1,21 @@
+<span *ngIf="mode==0 && streamRetrieved && groups.length==0">There are no active labs yet in this department.</span>
+
+<groups-list [streamRetrieved]=streamRetrieved
+             [compareFlag]=true
+             [sourceType]=7
+             [groups]=groups
+             [streamCompare]=streamCompare
+             [streamFollow]=streamFollow
+             [compareStatuses]=compareStatuses
+             [streamAdminFollow]=streamAdminFollow
+             (buttonFollowClick)="groupFollow($event)"
+             (buttonAdminFollowClick)="groupAdminFollow($event)"
+             (buttonCompareClick)="itemCompare($event)">
+</groups-list>
+<!-- [groupsPerRow]="(mode==0) ? 3 : 4" -->
+
+<button *ngIf="mode==1 && groups.length>0" mat-raised-button class="btn btn-twitter btn-block mt-0 mb-4" [routerLink]="['./labs']">
+  <i class="material-icons">supervised_user_circle</i> View all labs
+</button>
+
+<p *ngIf="mode==1"></p>

@@ -1,0 +1,562 @@
+<div *ngIf="userService.userId && !userService.userEmailVerified" class="row justify-content-md-center">
+  <div class="col-md-8">
+    <div class="alert alert-light border-secondary alert-dismissible fade show mt-4" role="alert">
+      <div class="d-flex flex-row">
+        <div class="mr-2">
+          <img src="./assets/img/verify_email.svg" style="width: 6rem;" alt="academig_verify_email">
+        </div>
+        <div>
+          <b>Please confirm your email at {{userService.userEmail}}.</b>
+          <hr class="mt-2">
+          Let us know this email belongs to you. Only verified users can manage their invitations and enjoy everything Academig has to offer.
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Resend verification email  -->
+  <!-- Update contact info -->
+</div>
+
+<div *ngIf="userService.userId && userService.userEmailVerified" class="container-fluid">
+  <div class="row justify-content-center mt-4">
+
+     <!-- col-lg-3 -->
+    <div class="col-md-4 col-xl-3">
+
+      <b>MY LABS</b>
+      <div *ngFor="let position of userService.userPositions; let l=last;" class="card-category">
+        <ng-container *ngIf="position.titles[0]!=4 && position.status!=8">
+          <h5 class="mb-1">
+            <ng-container *ngIf="position.group.university.name!='company'">
+              <img *ngIf="position.group.university.pic" class="mr-2" [src]="position.group.university.pic" height="13" [alt]="position.group.university.name">
+              <a class="text-dark" [routerLink]="['/', position.group.university.link]">{{position.group.university.name}}</a> &#183;
+              <a class="text-dark" [routerLink]="['/', position.group.university.link, position.group.department.link]">{{position.group.department.name}}</a> &#183;
+            </ng-container>
+            <a *ngIf="position.status<=7" class="text-dark" [routerLink]="['/', position.group.university.link, position.group.department.link, position.group.group.link]">{{position.group.group.name}}</a>
+            <a *ngIf="position.status>7" class="text-dark" style="cursor:pointer;" (click)="buildWebsitePositionFunc()">{{position.group.group.name}}</a>
+            <!-- <span *ngIf="position.group.university.name!='company'" class="text-dark"> ({{titlesSelect[position.titles[0]]}})</span> -->
+            <!-- <span *ngIf="position.group.university.name=='company'" class="text-dark"> ({{position.titles[0]}})</span> -->
+          </h5>
+          <!-- (opened)="buttonWallFunc(2,true)" (closed)="buttonWallFunc(2,false)" -->
+          <!-- <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Lab Tools</mat-panel-title>
+            </mat-expansion-panel-header>
+            <a class="dropdown-item py-0" [routerLink]="['/', position.group.university.link, position.group.department.link, position.group.group.link,'tools','news']"><i class="material-icons mr-2">rss_feed</i> Lab News</a><br>
+            <a class="dropdown-item py-0" [routerLink]="['/', position.group.university.link, position.group.department.link, position.group.group.link,'tools','chat']"><i class="material-icons mr-2">chat_bubble_outline</i> Lab Chat</a><br>
+            <a class="dropdown-item py-0" [routerLink]="['/', position.group.university.link, position.group.department.link, position.group.group.link,'tools','seminars']"><i class="material-icons mr-2">all_out</i> Lab Seminars</a><br>
+            <a class="dropdown-item py-0" [routerLink]="['/', position.group.university.link, position.group.department.link, position.group.group.link,'tools','assignments']"><i class="material-icons mr-2">post_add</i> Lab Assignments</a><br>
+            <a class="dropdown-item py-0" [routerLink]="['/', position.group.university.link, position.group.department.link, position.group.group.link,'tools','calendar']"><i class="material-icons mr-2">event</i> Lab Calendar</a>
+          </mat-expansion-panel> -->
+          <hr>
+        </ng-container>
+      </div>
+      <ng-container *ngIf="userService.userPositions?.length==0">
+        <a class="dropdown-item py-1" [routerLink]="['/build-lab']"><i class="material-icons mr-2">beenhere</i> Verify My Lab</a>
+        <hr>
+      </ng-container>
+
+      <b>MY ACADEMIG</b>
+      <a class="dropdown-item py-1" [routerLink]="['/people',userService.userId]"><img [src]=userService.userPic height="24rem" class="rounded-circle mr-2" [alt]=userService.userName> My Profile</a>
+      <a class="dropdown-item py-1" [routerLink]="['/people',userService.userId,'library']"><i class="material-icons mr-2">local_library</i> My Library</a>
+      <a class="dropdown-item py-1" [routerLink]="['/search','saved']"><i class="material-icons mr-2">check_box</i> My Saved Searches</a>
+      <a class="dropdown-item py-1" [routerLink]="['/manage-applications']"><i class="material-icons mr-2">format_align_left</i> My Applications</a>
+      <a class="dropdown-item py-1" [routerLink]="['/manage-services']"><i class="material-icons mr-2">build</i> My Service Requests</a>
+      <a class="d-block d-sm-none dropdown-item py-1" [routerLink]="['/search','labs']"><i class="material-icons mr-2" style="color: #566DFB">supervised_user_circle</i> Search Research Labs</a>
+      <!-- <a [routerLink]="['/labs-news']"><i class="material-icons mr-2">rss_feed</i> My Following Lists</a> -->
+      <hr>
+
+      <div class="d-none d-md-block">
+
+      <b>FOLLOWING</b>
+      <a class="dropdown-item py-1" [routerLink]="['/following','researchers']"><i class="material-icons mr-2">face</i> My Researchers Following</a>
+      <a class="dropdown-item py-1" [routerLink]="['/following','labs']"><i class="material-icons mr-2">list_alt</i> My Labs Following</a>
+      <hr>
+
+      <b>DISCOVER</b>
+      <a class="dropdown-item py-1" [routerLink]="['/search','institutes']"><i class="material-icons mr-2" style="color: #9AD472">account_balance</i> Search Institutes</a>
+      <a class="dropdown-item py-1" [routerLink]="['/search','labs']"><i class="material-icons mr-2" style="color: #566DFB">supervised_user_circle</i> Search Research Labs</a>
+      <a class="dropdown-item py-1" [routerLink]="['/search','services']"><i class="material-icons mr-2" style="color: #F09A50">build</i> Search Scientific Companies</a>
+      <a class="dropdown-item py-1" [routerLink]="['/search','researchers']"><i class="material-icons mr-2" style="color: #33AEF3">face</i> Search Researchers</a>
+      <a class="dropdown-item py-1" [routerLink]="['/search','publications']"><i class="material-icons mr-2" style="color: #77B251">article</i> Search Publications</a>
+      <a class="dropdown-item py-1" [routerLink]="['/search','trends']"><i class="material-icons mr-2" style="color: #1DADEC">trending_up</i> Search Trends</a>
+      <a class="dropdown-item py-1" [routerLink]="['/search','podcasts']"><i class="material-icons mr-2" style="color: #FD7329">graphic_eq</i> Search Podcasts</a>
+      <a class="dropdown-item py-1" [routerLink]="['/search','events']"><i class="material-icons mr-2" style="color: #9C31AF">event</i> Search Virtual Events</a>
+      <a class="dropdown-item py-1" [routerLink]="['/search','apps']"><i class="material-icons mr-2" style="color: #FD5C72">computer</i> Search Apps</a>
+      <a class="dropdown-item py-1" [routerLink]="['/build-lab']"><i class="material-icons mr-2">add_box</i> Contribute Lab Data</a>
+      <!-- Discover Academic Hubs<br> -->
+      <hr>
+
+      <!-- <div class="ribbon-wrapper">
+        <h3 class="ribbon">
+          <strong class="ribbon-inner">PapersMaster</strong>
+        </h3>
+      </div> -->
+      <div class="d-flex align-items-center mb-2" style="font-size: 16px">
+        <i class="material-icons mr-2" style="color: #FEBB2C">emoji_events</i>
+        <b>2020 PapersMaster</b>
+      </div>
+      <div class="ml-4">
+        <library-challenge [userRead]=userRead></library-challenge>
+      </div>
+      <hr>
+
+      <div class="carousel slide" id="carouselQuoteIndicators" data-ride="carousel">
+        <!-- <ol class="carousel-indicators pt-4 pb-0 mb-0">
+          <li class="active" data-target="#carouselQuoteIndicators" data-slide-to="0"></li>
+          <li data-target="#carouselQuoteIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselQuoteIndicators" data-slide-to="2"></li>
+        </ol> -->
+        <div class="carousel-inner">
+          <div class="ais-InstantSearch">
+            <ais-instantsearch [config]="config_quotes">
+              <ais-hits>
+                <ng-template let-hits="hits" let-results="results">
+                  <ais-configure [searchParameters]="{ hitsPerPage: 3 }"></ais-configure>
+                  <div *ngFor="let quote of hits; let f=first" class="carousel-item" [ngClass]="{'active': f}">
+                    <div class="media"><img class="rounded-circle" [src]="quote.author.pic" [alt]="quote.author.name" width="40">
+                      <div class="media-body ml-2">
+                        <blockquote class="blockquote border-0 p-0">
+                          <p class="font-italic small">{{quote.quote}}</p>
+                          <footer class="blockquote-footer small">{{quote.author.name}}
+                          </footer>
+                          <p class="small mt-2"><a [routerLink]="['./quotes']">More quotes...</a></p>
+                        </blockquote>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </ais-hits>
+            </ais-instantsearch>
+          </div>
+        </div>
+      </div>
+
+      </div>
+
+    </div>
+
+    <!-- col-lg-6 -->
+    <div class="col-12 col-md-8 col-xl-6 mb-2">
+
+      <div *ngIf="userService.userEmailVerified && userService.userWall[0]!=false">
+        <div class="alert alert-info border-secondary alert-dismissible fade show mt-0 mb-4" role="alert">
+          <div class="d-flex flex-row">
+            <div class="mr-2">
+              <img src="./assets/img/action/lighthouse.svg" style="width: 6rem;" alt="academig_verify_email">
+            </div>
+            <div>
+              <b>Hello and welcome to your new academic dashboard.</b>
+              <hr class="mt-2">
+              Keep up to date with your favorite labs, discover new labs in your field, and get personalized alerts. Start by following or comparing several labs below.
+            </div>
+          </div>
+          <button (click)="buttonWallFunc(0, false)" type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+
+      <mat-accordion *ngIf="userService.userEmailVerified" multi>
+
+        <mat-expansion-panel [expanded]="userService.userWall[1]!=false" (opened)="buttonWallFunc(1,true)" (closed)="buttonWallFunc(1,false)">
+          <mat-expansion-panel-header>
+            <mat-panel-title><i class="material-icons mr-2" style="color: #566DFB">assistant</i> Lab's Suggestions</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="ais-InstantSearch mb-4">
+            <ais-instantsearch [config]="config_labs">
+              <app-loading-indicator></app-loading-indicator>
+              <ais-hits [transformItems]="transformGroups">
+                <ng-template let-hits="hits" let-results="results">
+                  <ais-configure [searchParameters]="{ hitsPerPage: 15 }"></ais-configure>
+
+                  <nav mat-tab-nav-bar animationDuration="0ms" mat-align-tabs="center" [backgroundColor]="background">
+                    <div *ngFor="let group of hits; let i=index" mat-tab-link class="card card-suggestions card-product mr-3">
+                      <!-- style="pointer-events: none;" -->
+
+                      <div class="card-body">
+
+                        <a [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]">
+                          <img class="d-flex mx-auto rounded-circle" [height]=60 [src]="group.groupIndex?.university.pic">
+                        </a>
+
+                        <h4 class="card-title mt-3" style="color: black">
+                          <a [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]"><b>{{ group.groupIndex.group.name }}</b></a>
+                        </h4>
+                        <div *ngIf="group.country" class="flag my-1" [matTooltip]="group.city + ', ' + (group.state ? group.state + ', ' : '') + group.country" [matTooltipPosition]="'below'">
+                          <img [src]="'./assets/img/flags/' + (group.country | flag) + '.png'" alt="">
+                        </div>
+                        <div class="card-description mt-1" style="color: black">
+                          {{ group.groupIndex.university.name }}<br>
+                          {{ group.groupIndex.department.name }}
+                        </div>
+
+                        <p class="mt-2 mb-0">
+                          <button (click)="itemFollow(i)" mat-raised-button type="button" class="btn btn-light-blue btn-sm mr-2">
+                            <i *ngIf="!streamFollow[i]" class="fa fa-size-20 mr-2" aria-hidden="true" [ngClass]="{'fa-bookmark': followStatuses[i], 'fa-bookmark-o': !followStatuses[i]}"></i>
+                            <i *ngIf="streamFollow[i]" class="fa fa-circle-o-notch fa-spin fa-size-20 mr-2"></i>
+                            {{followStatuses[i] ? 'Unfollow' : 'Follow'}}
+                             <!-- style="color: gray" -->
+                          </button>
+                        </p>
+                        <p class="mb-2 mt-0">
+                          <button mat-raised-button (click)="itemCompare(i,hits[i])" type="button" class="btn btn-light-blue btn-sm">
+                            <i [ngClass]="{'text-success': compareStatuses[i]}" class="fa fa-size-20 fa-clone mr-2" aria-hidden="true"></i>
+                            {{compareStatuses[i] ? 'Uncompare' : 'Compare'}}
+                          </button>
+                        </p>
+
+                      </div>
+
+                      <!-- <div class="price"><h6>{{ group.membersCount }} members</h6></div> -->
+                      <!-- *ngIf="group.relation?.status<4 && relation?.status<4"  -->
+                    </div>
+                  </nav>
+                </ng-template>
+              </ais-hits>
+            </ais-instantsearch>
+          </div>
+          <!-- <div class="text-center">Looking to follow more? <a [routerLink]="['./search','labs']">Try searching for research labs</a></div> -->
+          <div class="text-center">Looking for more labs? <a [routerLink]="['./search']">Continue searching for research labs</a></div>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel [expanded]="userService.userWall[2]!=false" (opened)="buttonWallFunc(2,true)" (closed)="buttonWallFunc(2,false)">
+          <mat-expansion-panel-header>
+            <mat-panel-title><i class="material-icons mr-2" style="color: #1EBB83">local_library</i> Reading Library</mat-panel-title>
+          </mat-expansion-panel-header>
+          <table class="table mb-0 pb-0">
+            <tbody>
+              <tr>
+                <td *ngFor="let folder of userService.userFolders; let i=index">
+                  <a role="button" class="card-title" [routerLink]="['/people',userService.userId,'library']" [queryParams]="{folder: folder.folder}">
+                    {{folder.folder}} ({{folder.count}})
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <hr class="mt-2 mb-3">
+          <div class="text-muted">
+            <span class="text-center"><a [routerLink]="['/people',userService.userId,'library']">Manage my reading library</a></span>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- <mat-expansion-panel [expanded]="userService.userWall[3]!=false" [expanded]="true" (opened)="buttonWallFunc(3,true)" (closed)="buttonWallFunc(3,false)">
+          <mat-expansion-panel-header>
+            <mat-panel-title><i class="material-icons mr-2">access_time</i> Recent Activity</mat-panel-title>
+          </mat-expansion-panel-header>
+          My Lab Following<br>
+          Lifshitz Lab<br>
+          Tatyana Pozner<br>
+          <hr class="mt-2 mb-2">
+          <div class="text-center"><a [routerLink]="['./activities']">View all activities</a></div>
+        </mat-expansion-panel> -->
+
+      </mat-accordion>
+
+      <div class="my-3"><b>
+        News items from
+        <a [routerLink]="['/following','labs']">My Labs</a> and
+        <a [routerLink]="['/following','researchers']">My Researchers</a>
+        Following
+      </b></div>
+
+      <wall-news></wall-news>
+
+    </div>
+
+    <!-- offset-lg-0 col-lg-3 -->
+    <!-- d-none d-md-block -->
+    <div class="offset-md-4 col-md-8 offset-xl-0 col-xl-3">
+
+      <!-- <div class="card mt-0">
+        <div class="card-body">
+          <div class="d-flex align-items-center" style="font-size: 16px">
+            <div><img class="rounded-circle mr-2 mb-2" src="./assets/img/academig.jpg" [height]="20" alt="this_week_academig"></div>
+            <div><b>This Week on Academig</b></div>
+          </div>
+          <hr class="mt-0">
+          New labs
+          <hr>
+          Prominent funding (algolia)
+          <hr>
+          Big PIs moves (algolia)
+          <hr>
+          New academic facilities (algolia)
+          <hr>
+          New projects / jobs / services
+        </div>
+      </div> -->
+
+      <!-- (algolia ranking) -->
+      <!-- (by views/followers) -->
+      <!-- <img [src]="'./assets/img/flags/' + (group.country | flag) + '.png'" alt=""> -->
+      <!-- <button (click)="itemCompare(i,hits[i])" type="button" class="btn btn-light-blue btn-sm">
+        <i [ngClass]="{'text-success': compareStatuses[i]}" class="fa fa-size-20 fa-clone mr-2" aria-hidden="true"></i>
+        {{compareStatuses[i] ? 'Uncompare' : 'Compare'}}
+      </button> -->
+      <!-- <div class="card mt-0">
+        <div class="card-body">
+          <div class="d-flex align-items-center" style="font-size: 16px">
+            <i class="material-icons mr-2" style="color: #79B156">insert_chart_outlined</i>
+            <b>Trending Labs</b>
+          </div>
+          <hr class="mt-0">
+          <div class="ais-InstantSearch">
+            <ais-instantsearch [config]="config_labs">
+              <app-loading-indicator></app-loading-indicator>
+              <ais-hits [transformItems]="transformGroups">
+                <ng-template let-hits="hits" let-results="results">
+                  <ais-configure [searchParameters]="{ hitsPerPage: 5 }"></ais-configure>
+                  <table class="table table-borderless table-sm small p-0 m-0">
+                    <tbody class="p-0 m-0">
+                      <tr *ngFor="let group of hits; let i=index" class="p-0 m-0">
+                        <td>
+                          <a [matTooltip]="group.groupIndex.university.name + ', ' + group.groupIndex.department.name + ', ' + (group.state ? group.state + ', ' : '') + group.country" [matTooltipPosition]="'below'"
+                             class="text-dark card-title d-flex align-items-center" [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]">
+                            <img class="rounded-circle mr-1" [height]=20 [src]="group.groupIndex?.university.pic">
+                            {{group.groupIndex.group.name}}
+                          </a>
+                        </td>
+                        <td class="p-0 m-0">
+                          <button (click)="itemFollow(i)" mat-raised-button type="button" class="btn btn-outline-light-blue btn-sm px-2">
+                            <i *ngIf="!streamFollow[i]" class="fa fa-size-20 mr-2" aria-hidden="true" [ngClass]="{'fa-bookmark': followStatuses[i], 'fa-bookmark-o': !followStatuses[i]}"></i>
+                            <i *ngIf="streamFollow[i]" class="fa fa-circle-o-notch fa-spin fa-size-20 mr-2"></i>
+                            {{followStatuses[i] ? 'Unfollow' : 'Follow'}}
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </ng-template>
+              </ais-hits>
+            </ais-instantsearch>
+          </div>
+        </div>
+        <hr class="mt-0 mb-2">
+        <a [routerLink]="['search','labs']" class="text-center mt-0 mb-2">VIEW ALL RESEARCH LABS</a>
+      </div> -->
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <div class="d-flex align-items-center" style="font-size: 16px">
+            <i class="material-icons mr-2" style="color: #FDBA3F">star_outline</i>
+            <b>Featured Searches</b>
+          </div>
+          <hr class="mt-0">
+          <table class="table table-sm small p-0 m-0">
+            <tbody class="m-0 p-0">
+              <tr class="text-muted">
+                <th><b>Search Name</b></th>
+                <th><b>Entries</b></th>
+              </tr>
+              <tr *ngFor="let search of searches; let i=index">
+                <th><a class="card-title" [routerLink]="['/', 'search', 'labs']" [queryParams]="search.params">{{search.name}}</a></th>
+                <td><a class="card-title" [routerLink]="['/', 'search', 'labs']" [queryParams]="search.params">{{search.entries}}</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr class="mt-0 mb-2">
+        <a [routerLink]="['./featured']" class="text-center mt-0 mb-2">VIEW ALL FEATURED SEARCHES</a>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <div class="d-flex align-items-center" style="font-size: 16px">
+            <i class="material-icons mr-2" style="color: #1697A6">public</i>
+            <b>Recent Academic News</b>
+          </div>
+          <hr class="mt-0">
+          <div class="ais-InstantSearch">
+            <ais-instantsearch [config]="config_news">
+              <ais-hits>
+                <ng-template let-hits="hits" let-results="results">
+                  <ais-configure [searchParameters]="{ hitsPerPage: 3 }"></ais-configure>
+                  <div *ngFor="let news of hits; let l=last" class="small">
+                    <a class="card-title" [href]=news.link target="empty">{{news.topic}}</a> -
+                    <a class="card-title" [href]=news.website target="empty"><i>{{news.source}}</i></a>
+                    <hr *ngIf="!l">
+                  </div>
+                </ng-template>
+              </ais-hits>
+            </ais-instantsearch>
+          </div>
+        </div>
+        <hr class="mt-0 mb-2">
+        <a [routerLink]="['./news']" class="text-center mt-0 mb-2">VIEW ALL NEWS</a>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <div class="d-flex align-items-center" style="font-size: 16px">
+            <i class="material-icons mr-2" style="color: #FD5C72">computer</i>
+            <b>Featured Academic Apps</b>
+          </div>
+          <hr class="mt-0">
+           <div class="ais-InstantSearch">
+             <ais-instantsearch [config]="config_apps">
+               <ais-hits>
+                 <ng-template let-hits="hits" let-results="results">
+                   <ais-configure [searchParameters]="{ hitsPerPage: 3 }"></ais-configure>
+                   <table class="table table-responsive table-sm small p-0 m-0">
+                     <tbody class="m-0 p-0">
+                       <tr class="text-muted">
+                         <!-- <th></th> -->
+                         <th><b>Name</b></th>
+                         <th><b>Website</b></th>
+                       </tr>
+                       <tr *ngFor="let app of hits">
+                         <!-- <th>L</th> -->
+                         <th>{{app.name}}</th>
+                         <td><a class="card-title" [href]=app.website target="empty">{{app.website}}</a></td>
+                       </tr>
+                     </tbody>
+                   </table>
+                 </ng-template>
+               </ais-hits>
+             </ais-instantsearch>
+           </div>
+        </div>
+        <hr class="mt-0 mb-2">
+        <a [routerLink]="['/search','apps']" class="text-center mt-0 mb-2">VIEW ALL APPS</a>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <div class="d-flex align-items-center" style="font-size: 16px">
+            <i class="material-icons mr-2" style="color: #1DADEC">trending_up</i>
+            <b>Featured Academic Trends</b>
+          </div>
+          <hr class="mt-0">
+           <div class="ais-InstantSearch">
+             <ais-instantsearch [config]="config_trends">
+               <ais-hits>
+                 <ng-template let-hits="hits" let-results="results">
+                   <ais-configure [searchParameters]="{ hitsPerPage: 3 }"></ais-configure>
+                   <table class="table table-sm small p-0 m-0">
+                     <tbody class="m-0 p-0">
+                       <tr class="text-muted">
+                         <th><b>Topic</b></th>
+                         <th><b>Category</b></th>
+                       </tr>
+                       <tr *ngFor="let trend of hits; let i=index">
+                         <ng-container *ngIf="trend.clips">
+                           <td><a class="card-title" [href]="trend.clips[0]" target="empty">{{trend.topic}} {{trendTypes[0]}}</a></td>
+                           <td><a class="card-title" [routerLink]="['/search','trends']" [queryParams]="{category: trend.category}">{{trend.category}}</a></td>
+                         </ng-container>
+                       </tr>
+                     </tbody>
+                   </table>
+                 </ng-template>
+               </ais-hits>
+             </ais-instantsearch>
+           </div>
+        </div>
+        <hr class="mt-0 mb-2">
+        <a [routerLink]="['/search','trends']" class="text-center mt-0 mb-2">VIEW ALL TRENDS</a>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <div class="d-flex align-items-center" style="font-size: 16px">
+            <i class="material-icons mr-2" style="color: #FD7329">graphic_eq</i>
+            <b>Featured Academic Podcasts</b>
+          </div>
+          <hr class="mt-0">
+           <div class="ais-InstantSearch">
+             <ais-instantsearch [config]="config_podcasts">
+               <ais-hits>
+                 <ng-template let-hits="hits" let-results="results">
+                   <ais-configure [searchParameters]="{ hitsPerPage: 3 }"></ais-configure>
+                   <table class="table table-sm small p-0 m-0">
+                     <tbody class="m-0 p-0">
+                       <tr class="text-muted">
+                         <th><b>Name</b></th>
+                         <th><b>Category</b></th>
+                       </tr>
+                       <tr *ngFor="let podcast of hits; let i=index">
+                         <td><a class="card-title" [href]=podcast.website target="empty">{{podcast.name}}</a></td>
+                         <td><a class="card-title" [routerLink]="['/search','podcasts']" [queryParams]="{category: podcast.category}">{{podcast.category}}</a></td>
+                       </tr>
+                     </tbody>
+                   </table>
+                 </ng-template>
+               </ais-hits>
+             </ais-instantsearch>
+           </div>
+        </div>
+        <hr class="mt-0 mb-2">
+        <a [routerLink]="['/search','podcasts']" class="text-center mt-0 mb-2">VIEW ALL PODCASTS</a>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <div class="d-flex align-items-center" style="font-size: 16px">
+            <i class="material-icons mr-2" style="color: #9C31AF">event</i>
+            <b>Featured Academic Events</b>
+          </div>
+          <hr class="mt-0">
+           <div class="ais-InstantSearch">
+             <ais-instantsearch [config]="config_events">
+               <ais-hits>
+                 <ng-template let-hits="hits" let-results="results">
+                   <ais-configure [searchParameters]="{ hitsPerPage: 3 }"></ais-configure>
+                   <table class="table table-sm small p-0 m-0">
+                     <tbody class="m-0 p-0">
+                       <tr class="text-muted">
+                         <th><b>Name</b></th>
+                         <th><b>Dates</b></th>
+                       </tr>
+                       <tr *ngFor="let event of hits; let i=index">
+                         <td>
+                           <a class="card-title" [href]=event.website target="empty">{{event.name}}</a>
+                           (<a class="card-title" [routerLink]="['/search','events']" [queryParams]="{category: event.category}">{{event.category}}</a>)
+                         </td>
+                         <td><a class="card-title" [href]=event.website target="empty">{{event.dateStart}}-{{event.dateEnd}}</a></td>
+                       </tr>
+                     </tbody>
+                   </table>
+                 </ng-template>
+               </ais-hits>
+             </ais-instantsearch>
+           </div>
+        </div>
+        <hr class="mt-0 mb-2">
+        <a [routerLink]="['/search','events']" class="text-center mt-0 mb-2">VIEW ALL VIRTUAL EVENTS</a>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Compare Modal - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleCompareModal" #toggleCompareModal [hidden]="true" data-toggle="modal" data-target="#CompareModal"></button>
+
+<div class="modal fade" id="CompareModal" tabindex="-1" role="dialog" aria-labelledby="CompareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="InsightsLabel">Compare labs</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Oops! You can only compare maximum of 3 research labs. Please remove one the labs before adding another one.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <button role="button" class="btn btn-outline-info mr-2">LEARN MORE</button>
+<button role="button" class="btn btn-info" (click)="openTour()">TAKE TOUR</button> -->
+
+<!-- <a [routerLink]="[{ outlets: { primary: ['products'],sidebar: ['products'] } }]">Products List</a> -->
+<!-- [routerLinkActiveOptions]="{exact: true}" -->
+<!-- [routerLink]="[{ outlets: { small: ['my-following'] } }]"> -->

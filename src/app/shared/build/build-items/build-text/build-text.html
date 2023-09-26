@@ -1,0 +1,43 @@
+<table class="table m-0 p-0">
+  <tbody>
+    <tr>
+
+      <td *ngIf="text" class="m-0 p-0">
+        <!-- <span class="mb-0 pb-0" style='white-space:pre-wrap;' [innerHTML]="text | safeHtml"></span> -->
+
+        <span *ngIf="text && (textMax==0 || text.length<=textMax)" [innerHTML]="text | safeHtml" class="m-0 p-0" style='white-space:pre-wrap;'></span>
+
+        <ng-container *ngIf="textMax>0 && !toggleFlag && text && text.length>textMax">
+          <span [innerHTML]="text | slice:0:textMax-50 | safeHtml"></span>
+          <div class="text-center">
+            <hr class="mb-0 mt-1"><button class="btn btn-sm btn-link" (click)="toggleAbstract()">Show More</button><hr class="my-0">
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="textMax>0 && toggleFlag && text && text.length>textMax">
+          <span [innerHTML]="text | safeHtml"></span>
+          <div class="text-center">
+            <hr class="mb-0 mt-1"><button class="btn btn-sm btn-link" (click)="toggleAbstract()">Show Less</button><hr class="my-0">
+          </div>
+        </ng-container>
+
+      </td>
+
+      <td *ngIf="showEditBtn && text" class="td-actions text-right">
+        <button [disabled]="stream>0" mat-raised-button type="button" (click)="buttonEditFunc()" matTooltip="Edit Text" [matTooltipPosition]="'above'" class="btn btn-primary btn-link btn-sm btn-just-icon">
+          <i class="material-icons">edit</i>
+        </button>
+        <button [disabled]="!text || stream>0" mat-raised-button type="button" (click)="buttonDeleteFunc()" matTooltip="Delete" [matTooltipPosition]="'above'" class="btn btn-danger btn-link btn-sm btn-just-icon">
+          <i class="material-icons">close</i>
+        </button>
+        <spinner-put class="btn btn-primary btn-link btn-sm btn-just-icon" [stream]=stream (animationDoneEvent)="animationDone()"></spinner-put>
+      </td>
+
+    </tr>
+  </tbody>
+</table>
+
+<!--
+<button role="button" class="btnBuild btn btn-sm btn-light border btnText" (click)="buttonEditFunc($event)">
+<button [disabled]="!text" role="button" class="btn btn-sm btn-light border ml-2" (click)="buttonDeleteFunc($event)">
+-->

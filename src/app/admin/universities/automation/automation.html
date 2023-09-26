@@ -1,0 +1,32 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <h5>Universities CSV</h5>
+    <button class="btn btn-light-blue mr-2" (click)="csvOp(0, true, null)">Upload CSVs</button>
+  </div>
+</div>
+
+<div *ngIf="files.length>0" class="card mt-0">
+  <div class="card-body">
+    <h5>Number of files: {{files.length-1}}</h5>
+    <ul *ngFor="let file of files; let i=index; let l=last">
+      <li *ngIf="!l">
+        {{file}}
+        <i *ngIf="current==i" class="fa fa-1x fa-spinner fa-spin fa-fw" style="color:green"></i>
+        <i *ngIf="current>i" class="fa fa-1x fa-check" style="color:green"></i>
+        <span *ngIf="current>i" class="ml-2">S_{{statuses[i]}}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-pic *ngIf=csvBuildFlag
+                 (update)="csvOp(2, false, $event)"
+                 (cancel)="csvOp(0, false, $event)"
+                 [title]="'Apps CSV'"
+                 [type]=7>
+</build-slide-pic>

@@ -1,0 +1,21 @@
+<ng-container *ngIf="mode==0">
+  <img src="./assets/img/build/welcome.svg" style="max-width: 15rem;" class="mx-auto d-block mx-2 mt-4 img-fluid" alt="academig_welcome">
+  <h3 class="mb-3 text-center">Hi, {{userName}}</h3>
+  <p class="mb-4 text-center text-muted">
+    Before you can build an additional lab profile,<br>you need to change your plan.
+  </p>
+  <button type="button" mat-raised-button class="d-flex mx-auto btn btn-light-blue" [routerLink]="['/settings/plan']">
+    Change Plan
+  </button>
+</ng-container>
+
+<ng-container *ngIf="mode==1">
+  <img src="./assets/img/build/welcome.svg" style="max-width: 15rem;" class="mx-auto d-block mx-2 mt-4 img-fluid" alt="academig_welcome">
+  <h3 class="mb-3 text-center">Hi, {{userName}}</h3>
+  <p class="mb-4 text-center text-muted">
+    You've already built your personal profile.
+  </p>
+  <button type="button" mat-raised-button class="d-flex mx-auto btn btn-light-blue" [routerLink]="['/']">
+    Go to your home page
+  </button>
+</ng-container>

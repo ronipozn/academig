@@ -1,0 +1,110 @@
+<div class="media">
+
+  <img *ngIf="project.pic" class="d-none d-sm-block mt-1 mx-2 pr-2" [width]="80" [src]="project.pic">
+  <span *ngIf="!project.pic" class="d-none d-sm-block mr-2"></span>
+
+  <div class="media-body">
+
+    <img *ngIf="project.pic" class="d-block d-sm-none" [width]="80" [src]="project.pic">
+
+    <div *ngIf="project.period" class="mt-0 mb-0 text-dark">
+      <ng-container *ngIf="project.period.mode==2 && project.period.start">
+        <b>STARTED ON {{ project.period.start | date: 'MMM y' | uppercase }}</b>
+      </ng-container>
+      <ng-container *ngIf="project.period.mode==0">
+        <span *ngIf="project.period.start"><b>BETWEEN {{ project.period.start | date: 'MMM y' | uppercase }} - {{ project.period.end | date: 'MMM y' | uppercase }}</b></span>
+        <span *ngIf="!project.period.start"><b>UNTIL {{ project.period.end | date: 'MMM y' | uppercase }}</b></span>
+      </ng-container>
+    </div>
+
+    <!-- [ngClass]="{'card-title': sourceType!=2}" -->
+    <div class="d-flex align-items-center">
+      <div class="mr-auto">
+        <div class="card-title mt-0">
+          <a *ngIf="project._id && (sourceType<2 || sourceType==5 || sourceType==8 || sourceType==9 || sourceType==10)" class="h3" [routerLink]="[project._id]"><b>{{ project.name }}</b></a>
+          <a *ngIf="project._id && sourceType==2" class="h3" [routerLink]="['/projects',project._id]"><b>{{ project.name }}</b></a>
+          <a *ngIf="project._id && sourceType==3" class="h3" [routerLink]="['../../projects',project._id]"><b>{{ project.name }}</b></a>
+          <a *ngIf="project._id && sourceType==4" class="h3" [routerLink]="['../projects',project._id]"><b>{{ project.name }}</b></a>
+          <a *ngIf="project._id && (sourceType==6 || sourceType==7)" class="h3" [routerLink]="['/',project.group.university.link,project.group.department.link,project.group.group.link,'projects',project._id]"><b>{{ project.name }}</b></a>
+          <span *ngIf="!project._id" class="h3"><b>{{ project.name }}</b></span>
+        </div>
+      </div>
+      <div>
+        <build-buttons *ngIf="sourceType!=2" class="ml-2" [showButton]=showEditBtn (buttonEditClick)="buttonEditFunc()" (buttonDeleteClick)="buttonDeleteFunc()"></build-buttons>
+        <spinner-put *ngIf="sourceType!=2" class="ml-2" [stream]=stream (animationDoneEvent)="animationDone()"></spinner-put>
+      </div>
+    </div>
+
+    <p *ngIf="project.description && sourceType!=8" class="my-0">
+      <span style='white-space:pre-wrap;' [innerHTML]="project.description | safeHtml"></span>
+    </p>
+    <!-- [textMax]="sourceType==2 ? 0 : 200" -->
+
+    <group-link *ngIf="sourceType>=1 && sourceType<=7 && project.group" [groupIndex]=project.group [flag]="sourceType==6 ? 1 : 0"></group-link>
+
+    <p *ngIf="sourceType>=1 && sourceType<5 && project.profile" class="d-flex justify-content-start align-items-center">
+      <img [src]="project.profile.pic" [width]=20 [height]=20 class="rounded-circle ml-0 pl-0">
+      <a class="ml-2" style="color: black" [routerLink]="['/people',project.profile._id]">{{ project.profile.name }}</a>
+    </p>
+  </div>
+
+</div>
+
+<ng-container *ngIf="0 && sourceType!=2 && sourceType!=4 && sourceType!=8 && sourceType!=9 && sourceType!=10">
+  <hr>
+  <follow-btn class="mr-2"
+              [followStatus]="project.followStatus || followStatus"
+              [streamFollow]=streamFollow
+              [stream]=stream
+              (buttonFollowClick)="buttonFollowFunc($event)">
+  </follow-btn>
+  <button [disabled]="stream>0" mat-raised-button role="button" class="btn btn-sm btn-light-blue" (click)="openShareModalFunc()">
+    <i class="fa fa-share-alt" aria-hidden="true"></i> Share
+  </button>
+  <button *ngIf="sourceType==0 && showEditBtn" (click)="buttonMoveFunc()" [disabled]="stream>0" role="button" mat-raised-button class="ml-2 btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false">
+    <span *ngIf="project.period.mode==2">
+      <i class="fa fa-hand-stop-o" aria-hidden="true"></i> End Project
+    </span>
+    <span *ngIf="project.period.mode==0">
+      <i class="fa fa-reply" aria-hidden="true"></i> Move to Active
+    </span>
+  </button>
+</ng-container>
+
+<div *ngIf="sourceType==8" class="mt-2">
+  <hr>
+  <button [disabled]="streamSuggestion>0 || aiFlag" role="button" mat-raised-button class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+  <button [disabled]="streamSuggestion>0 || aiFlag" role="button" mat-raised-button class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+  <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+</div>
+<div *ngIf="sourceType==10">
+  <hr>
+  <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+  <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Share Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" attr.data-target="#ShareModal{{project._id}}"></button>
+
+<div class="modal fade" id="ShareModal{{project._id}}" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=4 [itemId]=project._id [flag]=shareFlag (closeModal)="closeShareModalFunc()"></modal-share>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="'user'"></modal-signup>
+    </div>
+  </div>
+</div>

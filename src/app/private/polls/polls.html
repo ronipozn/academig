@@ -1,0 +1,19 @@
+<div class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <build-headline [addButtonFlag]=true [headline]="'Polls'"></build-headline>
+
+    What's the occasion?<br>
+    Whst are the options?<br>
+    Poll settings<br>
+
+  </div>
+</div>
+
+<!-- <personal-build *ngIf=infoBuildFlag
+                (update)="infoOp(1,false,$event)"
+                (cancel)="infoOp(0,false)"
+                [headline]="'Personal Info'"
+                [personalInfo]=personalInfo
+                [userId]=userId>
+</personal-build> -->

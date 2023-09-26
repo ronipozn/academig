@@ -1,0 +1,8 @@
+::ng-deep .mat-horizontal-stepper-header-container {
+  display: none !important;
+}
+
+::ng-deep .mat-dialog-container {
+   height: 350px !important;
+   width: 450px !important;
+}

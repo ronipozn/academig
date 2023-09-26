@@ -1,0 +1,90 @@
+<div class="card mt-0">
+  <div class="card-body">
+
+    <spinner *ngIf="!streamTasksRetrieved"></spinner>
+
+    <private-calendar-header *ngIf="streamTasksRetrieved" [(view)]="view" [(viewDate)]="viewDate"></private-calendar-header>
+
+    <div *ngIf="streamTasksRetrieved" [ngSwitch]="view">
+      <mwl-calendar-month-view *ngSwitchCase="'month'"
+                               [viewDate]="viewDate"
+                               [events]="events"
+                               (eventClicked)="eventClicked($event)">
+      </mwl-calendar-month-view>
+      <mwl-calendar-week-view *ngSwitchCase="'week'"
+                              [viewDate]="viewDate"
+                              [events]="events"
+                              (eventClicked)="eventClicked($event)">
+      </mwl-calendar-week-view>
+      <mwl-calendar-day-view *ngSwitchCase="'day'"
+                             [viewDate]="viewDate"
+                             [events]="events"
+                             (eventClicked)="eventClicked($event)">
+      </mwl-calendar-day-view>
+    </div>
+    <!-- [activeDayIsOpen]="true" -->
+
+    <!-- mwlDroppable (drop)="externalDrop($event.dropData.event)" dragOverClass="drag-over" -->
+    <!-- <p *ngIf="events.length === 0"><em>No events added</em></p> -->
+    <!-- mwlDraggable [dropData]="{event: event}" dragActiveClass="drag-active" -->
+
+    <!-- <ul>
+      <li *ngFor="let event of events">
+        <a href="javascript:;" [style.color]="event.color.primary"><b>{{ event.title }}</b></a>
+      </li>
+    </ul> -->
+
+  </div>
+</div>
+
+<!-- <div class="card mt-0">
+  <div class="card-body">
+
+    <div class="d-flex justify-content-end mb-0 pb-0">
+      <span class="lead mr-auto"><b>Next 2 months</b></span>
+      <div *ngIf="showEditBtn">
+        <button role="button" (click)="calendarSlide($event)" class="btn btn-sm btn-info" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-plus" aria-hidden="true"></i> Add
+        </button>
+      </div>
+    </div>
+    <hr class="mt-0 mb-4">
+
+    <span class="lead mt-1">Mar, 2017</span>
+    <div class="table-responsive">
+      <table class="table table-responsive table-sm">
+        <tbody>
+          <tr on-mouseover='buttonOver(true,0)' on-mouseleave='buttonOver(false,0)' [ngClass]="{'build': showEditBtn}">
+            <td class="text-nowrap text-left text-muted pr-2"> 13-17</td>
+            <td>Lab trip to Nurenberg</td>
+            <td><build-buttons [showButton]=showButton[0]></build-buttons></td>
+          </tr>
+          <tr on-mouseover='buttonOver(true,1)' on-mouseleave='buttonOver(false,1)' [ngClass]="{'build': showEditBtn}">
+            <td class="text-nowrap text-left text-muted pr-2"> 21</td>
+            <td>Lab meeting <span class="text-muted small">Presenter: Gary Saitz</span></td>
+            <td><build-buttons [showButton]=showButton[1]></build-buttons></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <span class="lead mt-1">May, 2017</span>
+    <div class="table-responsive">
+      <table class="table table-responsive table-sm">
+        <tbody>
+          <tr on-mouseover='buttonOver(true,2)' on-mouseleave='buttonOver(false,2)' [ngClass]="{'build': showEditBtn}">
+            <td class="text-nowrap text-left text-muted pr-2"> 5-8</td>
+            <td>Munich Conference <span class="text-muted small">Tatyana Pk</span></td>
+            <td><build-buttons [showButton]=showButton[2]></build-buttons></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<calendar-build *ngIf=calendarBuildFlag
+                (save)="calendarSlide($event)"
+                [groupId]=groupId>
+</calendar-build> -->

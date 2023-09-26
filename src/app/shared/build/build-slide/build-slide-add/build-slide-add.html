@@ -1,0 +1,102 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <button type="button" (click)="onCancel()" class="close mt-4 mb-0 pb-0" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="title mb-2 pb-0"><b>Add your information</b></h3>
+
+  <mat-accordion>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>About me</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>Research Interests</mat-label>
+        <input matInput>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Favorite Quote</mat-label>
+        <input matInput>
+      </mat-form-field>
+        <!-- <mat-label>Position</mat-label>
+        <input matInput>
+        <mat-label>Education</mat-label>
+        <input matInput>
+        <mat-label>Contact Info</mat-label>
+        <input matInput>
+        <mat-label>Social Info</mat-label>
+        <input matInput> -->
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Publication</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>Article</mat-label>
+        <input matInput>
+        <mat-label>Suggestions</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Project</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>Current project</mat-label>
+        <input matInput>
+        <mat-label>Past project</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Service</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>First name</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Teaching</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>First name</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Media</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>Talk</mat-label>
+        <input matInput>
+        <mat-label>Poster</mat-label>
+        <input matInput>
+        <mat-label>Press Release</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>News</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>First name</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+</div>

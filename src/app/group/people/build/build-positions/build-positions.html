@@ -1,0 +1,79 @@
+<label class="mb-0 pl-0">
+  <b>{{itemTitle}}</b>
+</label>
+
+<p class="text-muted mb-0 pl-0">
+  Note that each user can has only one active position and multiple alumni positions. {{activeIndex}}
+</p>
+
+<div [formGroup]="parentGroup">
+  <ul [formArrayName]=controlName class="list-unstyled">
+    <li *ngFor="let e of getControls(parentGroup); let i=index" class="mb-1">
+
+      <div class="card">
+        <div class="card-body pt-1 pb-2">
+
+          <div [formGroupName]="i">
+
+            <build-modal-text-field [labelRequired]=true
+                                    [fieldType]=3
+                                    [itemTitle]="'Title'"
+                                    [itemArray]=titleSelect
+                                    [controlName]="'titles'"
+                                    [submitStatus]=submitStatus
+                                    (controlStatus)=controlStatusFunc(i)
+                                    [parentGroup]=e>
+            </build-modal-text-field>
+
+            <div class="row no-gutters">
+              <div class="col mr-1">
+
+                <build-month-field [itemTitle]="'Start Date'"
+                                   [controlName]="'start'"
+                                   [parentGroup]=e
+                                   [submitStatus]=submitStatus
+                                   [labelRequired]=true>
+                </build-month-field>
+
+              </div>
+              <div class="col ml-1">
+
+                <build-month-field [itemTitle]="'End Date'"
+                                   [controlName]="'end'"
+                                   [parentGroup]=e
+                                   [submitStatus]=submitStatus
+                                   [labelRequired]="activeIndex!=i">
+                </build-month-field>
+
+                <build-modal-text-field *ngIf="activeIndex==-1 || activeIndex==i"
+                                        [itemFirst]=true
+                                        [labelHide]=true
+                                        [fieldType]=7
+                                        [controlName]="'present'"
+                                        (controlStatus)=controlStatusFunc(i)
+                                        [parentGroup]=e
+                                        [itemArray]="['Active position']"
+                                        [submitStatus]=submitStatus>
+                </build-modal-text-field>
+
+              </div>
+            </div>
+
+            <button [disabled]="getControls(parentGroup).length==1" role="button" class="btn btn-link p-0 mt-2" (click)="deleteField(i)">
+               <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </li>
+
+    <button type="button" class="btn btn-sm btn-link p-0" (click)="addField(null)">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+    </button>
+
+  </ul>
+
+</div>

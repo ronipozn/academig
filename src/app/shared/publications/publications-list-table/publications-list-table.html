@@ -1,0 +1,244 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<build-modal-intro *ngIf="streamRetrieved && publications[0]==null && !showHeadline && (sourceType==0 || sourceType==2)"
+                   [headline]="'No publications yet.'">
+</build-modal-intro>
+
+<!-- https://stackoverflow.com/questions/41747667/bootstrap-4-responsive-tables-wont-take-up-100-width -->
+<div class="table-responsive table-sm">
+  <table *ngIf="streamRetrieved && publications.length!=0" class="table">
+
+    <thead>
+      <tr class="text-nowrap">
+
+        <th *ngIf="showEditBtn" class="d-none d-sm-block">
+          <div *ngIf="publications!=null" class="form-check">
+            <label class="form-check-label mb-2">
+              <input class="form-check-input" #generalCheckbox type="checkbox" name="generalToggle" [(ngModel)]="generalToggle">
+              <span class="form-check-sign">
+                <span class="check"></span>
+              </span>
+            </label>
+          </div>
+        </th>
+
+        <th style="width: 80%">
+          <div class="d-flex align-items-center">
+            <div *ngIf="publications!=null" class="dropdown">
+              <a data-toggle="dropdown" style="cursor: pointer;">
+                <span *ngIf="tableSortCategory==0"><b>{{tableTitleTabs[tableTitleSlected]}}</b></span>
+                <span *ngIf="tableSortCategory!=0">{{tableTitleTabs[tableTitleSlected]}}</span>
+              </a>
+              <span *ngIf="publications!=null" class="small dropdown-menu" aria-labelledby="dropdownTitle">
+                <a *ngFor="let tableTitleTab of tableTitleTabs; let i=index"
+                   role="button" class="dropdown-item small pl-2" data-toggle='dropdownTitle' style="cursor: pointer;" (click)="onSortFunc(i)">
+                  <i class="fa fa-1x fa-{{tableSort[i]}} fa-fw mr-1" aria-hidden="true"></i> {{tableTitleTab}}
+                </a>
+                <div class="dropdown-divider"></div>
+                <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=0}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(0)">
+                  <i class="fa fa-1x fa-{{tableSortOrder[0]}} fa-fw mr-1" aria-hidden="true"></i> Ascending
+                </a>
+                <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=0}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(1)">
+                  <i class="fa fa-1x fa-{{tableSortOrder[1]}} fa-fw mr-1" aria-hidden="true"></i> Descending
+                </a>
+              </span>
+            </div>
+            <button *ngIf="showEditBtn && checkId.length && publications.length>0" [disabled]="streamDelete" role="button" mat-raised-button class="ml-2 btn btn-round btn-sm btn-light-blue mt-2" (click)="publicationDelete()">
+              <i class="material-icons" data-notify="icon">delete</i>Delete <i *ngIf="streamDelete" class="fa fa-1x fa-spinner fa-spin"></i>
+            </button>
+            <!-- <button  *ngIf="showEditBtn && checkId.length && publications.length>0" [disabled]="streamDelete" role="button" class="ml-2 btn btn-sm btn-info">
+              <i class="fa fa-download" aria-hidden="true"></i> Download
+            </button> -->
+            <!-- <button  *ngIf="showEditBtn && checkId.length && publications.length>0" [disabled]="streamDelete" role="button" class="ml-2 btn btn-sm btn-info">
+              <i class="fa fa-share-alt" aria-hidden="true"></i> Share
+            </button> -->
+          </div>
+        </th>
+
+        <th *ngIf="0">
+          <div *ngIf="publications!=null" class="dropdown">
+            <a data-toggle="dropdown" class="pull-right" style="cursor: pointer;">
+              <span *ngIf="tableSortCategory==1"><b>{{tableIndexTabs[tableIndexSlected]}}</b></span>
+              <span *ngIf="tableSortCategory!=1">{{tableIndexTabs[tableIndexSlected]}}</span>
+            </a>
+            <span class="small dropdown-menu" aria-labelledby="dropdownTitle">
+              <a *ngFor="let tableIndexTab of tableIndexTabs; let i=index"
+                 role="button" class="dropdown-item small pl-2" style="cursor: pointer;" (click)="onSortFunc(i+4)">
+                <i class="fa fa-1x fa-{{tableSort[i+4]}} fa-fw mr-1" aria-hidden="true"></i> {{tableIndexTab}}
+              </a>
+              <!-- (Real) Citations -->
+              <!-- (Real) Impact factors -->
+              <div class="dropdown-divider"></div>
+              <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=1}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(2)">
+                <i class="fa fa-1x fa-{{tableSortOrder[2]}} fa-fw mr-1" aria-hidden="true"></i> Ascending
+              </a>
+              <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=1}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(3)">
+                <i class="fa fa-1x fa-{{tableSortOrder[3]}} fa-fw mr-1" aria-hidden="true"></i> Descending
+              </a>
+            </span>
+          </div>
+        </th>
+
+        <!-- <th class="d-none d-sm-block"> -->
+        <th *ngIf="!isMobileMenu()">
+          <div class="dropdown">
+            <a data-toggle="dropdown" style="cursor: pointer;">
+              <span *ngIf="tableSortCategory==2"><b>{{tableYearsTabs[tableYearsSlected]}}</b></span>
+              <span *ngIf="tableSortCategory!=2">{{tableYearsTabs[tableYearsSlected]}}</span>
+            </a>
+            <span class="small dropdown-menu" aria-labelledby="dropdownTitle">
+              <a *ngFor="let tableYearsTab of (tableYearsTabs | slice:0:3); let i=index"
+                 role="button" class="dropdown-item small pl-2" style="cursor: pointer;" (click)="onSortFunc(i+7)">
+                <i class="fa fa-1x fa-{{tableSort[i+7]}} fa-fw mr-1" aria-hidden="true"></i> {{tableYearsTab}}
+              </a>
+              <a role="button" style="cursor: pointer;" class="dropdown-item small pl-2" href="#rangeModal" data-toggle="modal">
+                <i class="fa fa-1x fa-{{tableSort[11]}} fa-fw mr-1" aria-hidden="true"></i> Range
+              </a>
+              <div class="dropdown-divider"></div>
+              <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=2}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(4)">
+                <i class="fa fa-1x fa-{{tableSortOrder[4]}} fa-fw mr-1" aria-hidden="true"></i> Ascending
+              </a>
+              <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=2}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(5)">
+                <i class="fa fa-1x fa-{{tableSortOrder[5]}} fa-fw mr-1" aria-hidden="true"></i> Descending
+              </a>
+            </span>
+          </div>
+        </th>
+        <th *ngIf="!isMobileMenu() && sourceType==5">
+          <div class="dropdown">
+            <!-- <a data-toggle="dropdown" style="cursor: pointer;"> -->
+              <span *ngIf="tableSortCategory==3"><b>Folders</b></span>
+              <span *ngIf="tableSortCategory!=3">Folders</span>
+            <!-- </a> -->
+          </div>
+        </th>
+
+        <th *ngIf="!isMobileMenu() && sourceType==5">
+          <div class="dropdown">
+            <a data-toggle="dropdown" style="cursor: pointer;">
+              <span *ngIf="tableSortCategory==4"><b>Date read</b></span>
+              <span *ngIf="tableSortCategory!=4">Date read</span>
+            </a>
+            <span class="small dropdown-menu" aria-labelledby="dropdownTitle">
+              <a *ngFor="let tableIndexTab of tableReadTabs; let i=index"
+                 role="button" class="dropdown-item small pl-2" style="cursor: pointer;" (click)="onSortFunc(i+12)">
+                <i class="fa fa-1x fa-{{tableSort[i+12]}} fa-fw mr-1" aria-hidden="true"></i> {{tableIndexTab}}
+              </a>
+              <div class="dropdown-divider"></div>
+              <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=4}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(6)">
+                <i class="fa fa-1x fa-{{tableSortOrder[6]}} fa-fw mr-1" aria-hidden="true"></i> Ascending
+              </a>
+              <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=4}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(7)">
+                <i class="fa fa-1x fa-{{tableSortOrder[7]}} fa-fw mr-1" aria-hidden="true"></i> Descending
+              </a>
+            </span>
+          </div>
+        </th>
+
+        <th *ngIf="!isMobileMenu() && sourceType==5">
+          <div class="dropdown">
+            <a data-toggle="dropdown" style="cursor: pointer;">
+              <span *ngIf="tableSortCategory==5"><b>Date added</b></span>
+              <span *ngIf="tableSortCategory!=5">Date added</span>
+            </a>
+            <span class="small dropdown-menu" aria-labelledby="dropdownTitle">
+              <a *ngFor="let tableIndexTab of tableAddedTabs; let i=index"
+                 role="button" class="dropdown-item small pl-2" style="cursor: pointer;" (click)="onSortFunc(i+16)">
+                <i class="fa fa-1x fa-{{tableSort[i+16]}} fa-fw mr-1" aria-hidden="true"></i> {{tableIndexTab}}
+              </a>
+              <div class="dropdown-divider"></div>
+              <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=5}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(8)">
+                <i class="fa fa-1x fa-{{tableSortOrder[8]}} fa-fw mr-1" aria-hidden="true"></i> Ascending
+              </a>
+              <a role="button" style="cursor: pointer;" [ngClass]="{'disabled': tableSortCategory!=5}" class="dropdown-item small pl-2" (click)="onSortOrderFunc(9)">
+                <i class="fa fa-1x fa-{{tableSortOrder[9]}} fa-fw mr-1" aria-hidden="true"></i> Descending
+              </a>
+            </span>
+          </div>
+        </th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <ng-container *ngFor="let publication of publicationsOriginal; let i=index">
+        <tr *ngIf="typesFlag[publication.type]"
+            publication-item-table
+            [index]=i
+            [itemAutofocus]="i==sortedLocation"
+            [generalToggle]=generalToggle
+            [folderToggle]=folderToggle
+            [publication]=publication
+            [typesFlag]=typesFlag
+            [stream]=stream[i]
+            [streamFolder]=streamFolder[i]
+            [sourceType]=sourceType
+            [showEditBtn]=showEditBtn
+            [userId]=userId
+            (stats)="calcStatsFunc($event)"
+            (checkboxTouch)=checkboxTouch($event,publication._id,true)
+            (generalTouch)=checkboxTouch($event,publication._id,false)
+            (pdf)="pdfSlide(true, $event)"
+            (animationDoneEvent)="animationDone()"
+            (btnFolder)="btnFolderFunc(publication._id,publication._id,$event)"
+            (btnReadAdd)="btnReadAddFunc(publication._id)">
+        </tr>
+        <tr *ngIf="sourceType==5" style="border: 0;">
+          <td *ngIf="showEditBtn"></td>
+          <td colspan="6">
+            <publication-read [folders]=publication.folders
+                              [title]=publication.title
+                              [journal]=publication.journal
+                              [date]=publication.date
+                              [showEditBtn]=showEditBtn
+                              (btnReadEdit)="btnReadEditFunc(publication._id,$event)"
+                              (btnReadRemove)="btnReadRemoveFunc(publication._id,$event)">
+            </publication-read>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+
+    <!-- <tbody *ngIf="publicationsOriginal==0">
+      <br><br><br><br><br><br><br><br>
+    </tbody>
+    <tbody *ngIf="publicationsOriginal==1">
+      <br><br><br><br>
+    </tbody> -->
+
+  </table>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Range Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<div class="modal fade" id="rangeModal" data-target="#rangeModal" tabindex="-1" role="dialog" aria-labelledby="RangeModal" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="RangeModalLabel">Years Range</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="d-flex justify-content-center">
+          <div class="form-inline">
+            <input class="form-control mr-1" type="text" id="from" [(ngModel)]="tableYearsFilter[4]">
+            -
+            <input class="form-control ml-1" type="text" id="to" [(ngModel)]="tableYearsFilter[5]">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button role="button" mat-raised-button class="btn btn-link mr-2" data-dismiss="modal">Close</button>
+        <button role="button" mat-raised-button class="btn btn-light-blue" data-dismiss="modal" (click)="onSortFunc(11)">Apply</button>
+      </div>
+
+    </div>
+  </div>
+</div>

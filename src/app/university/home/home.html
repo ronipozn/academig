@@ -1,0 +1,292 @@
+<div *ngIf="!streamRetrieved[0] || !streamRetrieved[1] || !streamRetrieved[2]" class="d-flex justify-content-center">
+  <spinner></spinner>
+</div>
+
+<ng-container *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2]">
+
+  <div class="card mt-0">
+    <div class="card-body">
+      <div class="row">
+
+        <div class="col-lg-4 border-right">
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <span class="material-icons mr-1">home</span>
+              <b>About</b>
+            </div>
+          </h3>
+
+          <div *ngIf="shortDescription?.length>0" class="mb-2">
+            <div build-text [text]=shortDescription></div>
+            <!-- *ngIf="shortDescription.length<missionService.universityDescription" -->
+            <a style="cursor: pointer;" class="card-title" (click)="scrollFullBackground()">View full description</a>
+          </div>
+          <hr class="mt-2">
+
+          <university-about *ngIf="missionService.universityName!='company'"
+                            [streamRetrieved]="streamRetrieved[0]"
+                            [showEditBtn]=missionService.showEditBtn
+                            [universityCountry]=missionService.universityCountry
+                            [universityState]=missionService.universityState
+                            [universityCity]=missionService.universityCity
+                            [universityExternalLink]=missionService.universityExternalLink
+                            [universityLocation]=missionService.universityLocation
+                            [publicInfo]=missionService.publicInfo
+                            [socialInfo]=missionService.socialInfo
+                            [departments]=items.departments
+                            [categories]=items.categories
+                            [details]=items.details
+                            (buttonLocationClick)="locationOp(0, true, null)">
+          </university-about>
+
+          <dl class="row mb-0">
+            <dt class="col-12 mt-2">Share</dt>
+            <dd class="col-12"><share-buttons [show]="4" [theme]="material-light" [include]="['facebook','twitter','linkedin', 'email']"></share-buttons></dd>
+          </dl>
+
+        </div>
+
+        <div class="col-lg-4 border-right">
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <i class="fa fa-twitter mr-1" aria-hidden="true"></i>
+              <b>Twitter</b>
+              <button *ngIf="missionService.showEditBtn && !missionService.socialInfo?.twitter" (click)="twitterOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-sm btn-just-icon">
+                <i class="material-icons">add_circle</i>
+              </button>
+            </div>
+            <ngx-twitter-timeline *ngIf="missionService.socialInfo?.twitter"
+                                  [data]="{sourceType: 'url', url: 'https://twitter.com/'+missionService.socialInfo.twitter}"
+                                  [opts]="{tweetLimit: 2}">
+            </ngx-twitter-timeline>
+            <button *ngIf="missionService.showEditBtn && missionService.socialInfo?.twitter" (click)="twitterOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-sm btn-just-icon">
+              <i class="material-icons">add_circle</i>
+            </button>
+            <button *ngIf="missionService.showEditBtn && missionService.socialInfo?.twitter" (click)="twitterOp(2, false, {event: null})" mat-raised-button type="button" class="btn btn-link btn-sm btn-just-icon">
+              <i class="material-icons">clear</i>
+            </button>
+          </h3>
+
+          <!-- <div [@itemsAnimation]="('active')" [ngClass]="{'topMargin': publications?.length==0}"> -->
+          <!-- <spinner *ngIf="!streamRetrieved[2]"></spinner> -->
+          <news-list [newses]=newses
+                     [userId]=missionService.userId
+                     [sourceType]=1>
+          </news-list>
+          <ul *ngIf="streamRetrieved[2] && newses[0]" class="timeline timeline-simple mt-0 py-0">
+            <li class="timeline-inverted mt-0 pt-0" style="cursor:pointer; margin-bottom: 100px;" [routerLink]="['./news']">
+              <div class="timeline-badge light-blue mt-0 pt-0">
+                <i class="material-icons">arrow_downward</i>
+              </div>
+            </li>
+          </ul>
+          <!-- </div> -->
+
+        </div>
+
+        <div class="col-lg-4">
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <span class="material-icons mr-1">description</span>
+              <b>Recent Publications</b>
+            </div>
+          </h3>
+          <ng-container *ngIf="streamRetrieved[1] && publications.length>0">
+            <publications-list [streamRetrieved]=streamRetrieved[1]
+                               [publications]=publications
+                               [sourceType]=2
+                               [userId]=missionService.userId
+                               [stream]=streamPublications
+                               [streamFolder]=streamPublicationsFolder
+                               (btnPDF)="pdfSlide($event)"
+                               (btnFollow)="publicationFollow($event)">
+            </publications-list>
+            <a role="button" class="card-title" [routerLink]="['./publications']">View All Publications</a>
+          </ng-container>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-12" [ngClass]="{'col-md-8': missionService.universityName!='company'}">
+
+      <!-- DESCRIPTION -->
+      <div *ngIf="missionService.universityDescription && missionService.universityName!='company'" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-header">
+          <p class="mb-2">
+            {{missionService.universityDescription}}
+            <a *ngIf="missionService.universitySource" [href]=missionService.universitySource class="card-title" target="_empty"><sup>[source]</sup></a>
+          </p>
+        </div>
+      </div>
+
+      <!-- RANKS -->
+      <div *ngIf="streamRetrieved[0] && items.rank" class="card mt-0">
+        <div class="card-body">
+
+          <h4><b>Institute Ranking</b></h4>
+
+          <ng-container *ngIf="items.rank.times">
+            <dl class="row mb-0">
+              <dt class="col-sm-9">World University Rankings</dt>
+              <dd class="col-sm-3 mb-0"><span class="pull-right"><b>{{items.rank.times | rankPipe:0}}</b> (2019)</span></dd>
+              <dd class="col-sm-12 text-muted mt-0">by Times Higher Education</dd>
+              <dd class="col-sm-12">
+                <span *ngIf="!toggleRank[0]">{{textRank[0] | slice:0:232}}</span>
+                <span *ngIf="toggleRank[0]">{{textRank[0]}}</span>
+                <a (click)="toggleRank[0]=!toggleRank[0]" [routerLink]="['.']" class="ml-1" style="cursor: pointer;">Show {{!toggleRank[0] ? 'More' : 'Less'}}</a>
+              </dd>
+            </dl>
+            <hr class="mt-1 mb-3">
+          </ng-container>
+
+          <ng-container *ngIf="items.rank.shanghai">
+            <dl class="row mb-0">
+              <dt class="col-sm-9">Academic Ranking of World Universities</dt>
+              <dd class="col-sm-3 mb-0"><span class="pull-right"><b>{{items.rank.shanghai | rankPipe:1}}</b> (2019)</span></dd>
+              <dd class="col-sm-12 text-muted mt-0">by Shanghai Jiao Tong University</dd>
+              <dd class="col-sm-12">
+                <span *ngIf="!toggleRank[1]">{{textRank[1] | slice:0:147}}</span>
+                <span *ngIf="toggleRank[1]">{{textRank[1]}}</span>
+                <a (click)="toggleRank[1]=!toggleRank[1]" [routerLink]="['.']" class="ml-1" style="cursor: pointer;">Show {{!toggleRank[1] ? 'More' : 'Less'}}</a>
+              </dd>
+            </dl>
+            <hr class="mt-1 mb-3">
+          </ng-container>
+
+          <ng-container *ngIf="items.rank.top">
+            <dl class="row mb-0">
+              <dt class="col-sm-9">QS World University Rankings</dt>
+              <dd class="col-sm-3 mb-0"><span class="pull-right"><b>{{items.rank.top | rankPipe:2}}</b> (2019)</span></dd>
+              <dd class="col-sm-12 text-muted mt-0">by TopUniversities</dd>
+              <dd class="col-sm-12">
+                <span *ngIf="!toggleRank[2]">{{textRank[2] | slice:0:194}}</span>
+                <span *ngIf="toggleRank[2]">{{textRank[2]}}</span>
+                <a (click)="toggleRank[2]=!toggleRank[2]" [routerLink]="['.']" class="ml-1" style="cursor: pointer;">Show {{!toggleRank[2] ? 'More' : 'Less'}}</a>
+              </dd>
+            </dl>
+            <hr class="mt-1 mb-3">
+          </ng-container>
+
+          <ng-container *ngIf="items.rank.usnews">
+            <dl class="row mb-0">
+              <dt class="col-sm-9">Best Global Universities Rankings</dt>
+              <dd class="col-sm-3 mb-0"><span class="pull-right"><b>{{items.rank.usnews | rankPipe:3}}</b> (2019)</span></dd>
+              <dd class="col-sm-12 text-muted mt-0">by U.S. News & World Report</dd>
+              <dd class="col-sm-12">
+                <span *ngIf="!toggleRank[3]">{{textRank[3] | slice:0:197}}</span>
+                <span *ngIf="toggleRank[3]">{{textRank[3]}}</span>
+                <a (click)="toggleRank[3]=!toggleRank[3]" [routerLink]="['.']" class="ml-1" style="cursor: pointer;">Show {{!toggleRank[3] ? 'More' : 'Less'}}</a>
+              </dd>
+            </dl>
+            <hr class="mt-1 mb-3">
+          </ng-container>
+
+        </div>
+      </div>
+
+      <!-- <div *ngIf="streamRetrieved[0] && items.departments?.length>0" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <h4 class="my-0"><b>{{missionService.universityName=='company' ? 'Find the services you need' : 'Departments'}}</b></h4>
+          <hr>
+          <ng-container *ngFor="let category of items.categories; let c=last">
+            <ng-container *ngIf="!category.empty">
+              <ng-container *ngFor="let department of items.departments; let d=last">
+                <div *ngIf="category.id==department.categoryId" class="mb-2">
+                  <img width="23" class="mr-2" [src]="'./assets/img/units/'+(department.name | departmentIcon)+'.svg'">
+                  <a class="card-title mb-0" [routerLink]="['/',missionService.universityLink,department.link]"><b>{{department.name}}</b></a>
+                  <hr *ngIf="!c || !d">
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div> -->
+      <!-- <a style="cursor: pointer;" (click)="onSearch(department.name)">{{department.name}} <i class="ml-1 fa fa-external-link" aria-hidden="true"></i></a> -->
+
+      <!-- SLIDESHOW -->
+      <div *ngIf="galleryImages.length>0 || missionService.showEditBtn" class="card mt-2" [@itemsAnimation]="('active')">
+        <div class="card-header">
+          <ng-container *ngIf="galleryImages.length>0">
+            <ngx-gallery [options]="galleryOptionsSm" [images]="galleryImages"></ngx-gallery>
+          </ng-container>
+          <a *ngIf="missionService.showEditBtn" role="button" [routerLink]="['./slideshow']" class="card-title small">Manage Slideshow</a>
+          <!-- <img *ngIf="missionService.universityPics[0]" class="mx-auto d-block img-fluid img-thumbnail" [src]="missionService.universityPics[0].pic"> -->
+        </div>
+      </div>
+
+    </div>
+
+    <div *ngIf="missionService.universityName!='company'" class="col-md-4">
+
+      <p class="text-center text-dark"><a (click)="imrpoveFunc()" style="cursor: pointer;"><b>Improve page content</b></a></p>
+
+      <div *ngIf="((userService.userId && userService.planNumber==0) || userService.userId==null)" class="card mt-0" [@itemsAnimation]="('active')" style="height: 22rem;">
+        <div class="card-body">
+          <google-adsense></google-adsense>
+          <div *ngIf="userService.userId && userService.planNumber==0" style="position: absolute; bottom: 0;">
+            <button mat-raised-button type="button" class="btn btn-link p-0" (click)="planUpdate()">Upgrade to PRO to remove Ads</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COPYRIGHTS -->
+      <div class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-header">
+          <build-headline [headline]="'Copyrights'"></build-headline>
+          <p class="text-muted small">
+            The institution’s information and logo displayed here are not approved by the institution itself.
+            In certain jurisdictions, the information may be the property of the institution.
+          </p>
+        </div>
+      </div>
+
+      <!-- MEMBERS -->
+      <div class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-header">
+          <build-headline *ngIf="streamRetrieved[3]" [headline]="peopleCount + ' Members'"></build-headline>
+          <people-list [streamRetrieved]=streamRetrieved[3]
+                       [peoples]=peoples
+                       [sourceType]=11
+                       [activeId]=missionService.userId
+                       [stream]=streamPeople
+                       [streamFollow]=streamPeople>
+          </people-list>
+          <span *ngIf="streamRetrieved[3] && !peoples[0]" class="text-muted">No Members</span>
+          <p *ngIf="streamRetrieved[3] && peoples[0]" class="mt-0 mb-0">
+            <a role="button" class="card-title" [routerLink]="['./people']">View All Members</a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-location *ngIf=locationBuildFlag
+                      (update)="locationOp(2, false, $event)"
+                      (cancel)="locationOp(0, false, null)"
+                      [country_id]=missionService.universityCountry
+                      [city]=missionService.universityCity
+                      [state]=missionService.universityState
+                      [name]=missionService.universityName
+                      [lat]=missionService.universityLocation[0]
+                      [lng]=missionService.universityLocation[1]>
+</build-slide-location>
+
+<build-slide-text *ngIf=twitterBuildFlag
+                  (update)="twitterOp(2, false, $event)"
+                  (cancel)="twitterOp(0, false, null)"
+                  [title]="'Update Twitter Feed'"
+                  [fieldType]=0
+                  [text]="missionService.socialInfo?.twitter">
+</build-slide-text>

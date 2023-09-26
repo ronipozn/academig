@@ -1,0 +1,78 @@
+<div *ngIf="missionService.departmentLocation[0]" class="card" [@itemsAnimation]="('active')">
+  <agm-map [zoom]=16 [latitude]="missionService.departmentLocation[0]" [longitude]="missionService.departmentLocation[1]">
+    <agm-marker [latitude]="missionService.departmentLocation[0]" [longitude]="missionService.departmentLocation[1]"></agm-marker>
+  </agm-map>
+</div>
+
+<div class="card">
+  <div class="card-header">
+
+    <build-headline [showEditBtn]=missionService.showEditBtn
+                    [addButtonFlag]=true
+                    [headline]="'Contact Us'"
+                    (buttonAddClick)="contactSlide(true, null, true)">
+    </build-headline>
+
+    <contact-list [streamRetrieved]=streamRetrieved[0]
+                  [contacts]=contacts
+                  [itemFocus]=itemFocus
+                  [stream]=stream
+                  [showEditBtn]=missionService.showEditBtn
+                  (animationDoneEvent)="streamFunc()"
+                  (buttonEditClick)="contactSlide(true, $event, false)"
+                  (buttonDeleteClick)="contactDelete($event)">
+    </contact-list>
+
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+
+    <build-headline *ngIf="streamRetrieved[1]"
+                    [addButtonFlag]="items.findUs==null"
+                    [showEditBtn]=missionService.showEditBtn
+                    [headline]="'Find Us'"
+                    (buttonAddClick)="findUsOp(0, true, $event)">
+    </build-headline>
+
+    <spinner *ngIf="!streamRetrieved[1]"></spinner>
+
+    <div *ngIf="streamRetrieved[1] && items.findUs" build-text-pic
+         [text]=items.findUs
+         [pic]=items.findUsPic
+         [caption]=items.findUsCaption
+         [showEditBtn]=missionService.showEditBtn
+         [stream]=streamFindUs
+         [imgCenter]=true
+         (animationDoneEvent)="findUsOp(3)"
+         (buttonEditClick)="findUsOp(0, true, $event)"
+         (buttonDeleteClick)="findUsOp(1, false, $event)">
+    </div>
+
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-contact *ngIf=contactBuildFlag
+                     [contact]=contacts[contactIndex]
+                     [newFlag]=contactNewFlag
+                     [groupMode]=false
+                     (update)="contactUpdate($event)"
+                     (cancel)="contactSlide(false, null, null)">
+</build-slide-contact>
+
+<build-slide-text-pic *ngIf=findUsBuildFlag
+                      [title]="'Find Us Information'"
+                      [text]=items.findUs
+                      [pic]=items.findUsPic
+                      [caption]=items.findUsCaption
+                      [captionFlag]=true
+                      [itemId]=missionService.departmentId
+                      (update)="findUsOp(2, false, $event)"
+                      (cancel)="findUsOp(0, false, $event)">
+</build-slide-text-pic>

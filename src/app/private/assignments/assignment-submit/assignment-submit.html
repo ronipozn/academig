@@ -1,0 +1,56 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">Submit Assignment</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()">
+
+      <build-modal-text-field [fieldType]=0
+                              [itemTitle]="'Assignment title'"
+                              [itemFirst]=true
+                              [labelRequired]=true
+                              [controlName]="'title'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <!-- AutoCheckin -->
+      <build-modal-text-field [fieldType]=0
+                              [itemTitle]="'What did you work on this week?'"
+                              [itemFirst]=true
+                              [controlName]="'current'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+      <build-modal-text-field [fieldType]=0
+                              [itemTitle]="'What will you work on next week?'"
+                              [itemFirst]=true
+                              [controlName]="'next'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+      <build-modal-text-field [fieldType]=0
+                              [itemTitle]="'What might delay your planned work?'"
+                              [itemFirst]=true
+                              [controlName]="'delay'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div id="direct_upload">
+        <div class="d-flex justify-content-center">
+          <input type="hidden" id="file"
+                 name="file"
+                 data-input-accept-types=".pdf, .doc, .docx, .ppt, .xls, .jpg, .jpeg"
+                 data-tabs="file url gdrive dropbox skydrive">
+        </div>
+      </div>
+
+      <div class="pull-left form-group mt-2">
+        <button type="submit" [disabled]="!file" mat-raised-button class="btn btn-sm btn-light-blue">{{newFlag ? 'Add' : 'Update'}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

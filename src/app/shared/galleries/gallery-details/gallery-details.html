@@ -1,0 +1,62 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-header">
+    <span class="h4">{{ gallery.title }}</span>
+    <p class="small text-muted mb-0">
+      <i class="fa fa-clock-o mr-1" aria-hidden="true"></i> {{ gallery.date | date: 'mediumDate' }}
+    </p>
+    <button *ngIf="showEditBtn" role="button" mat-raised-button class="btn btn-sm btn-light-blue mt-2" (click)="picsSlide(true, i, true)">
+      Add pictures
+    </button>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+    {{ gallery.description }}
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+    <div class="card-columns">
+      <div *ngFor="let picObject of gallery.pics; let i=index">
+        <gallery-item [_id]=picObject._id
+                      [pic]=picObject.pic
+                      [title]=picObject.name
+                      [showEditBtn]=showEditBtn
+                      [stream]=streamPics[i]
+                      [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                      [picsLen]=gallery.pics.length
+                      [mode]=1
+                      (animationDoneEvent)="streamFunc()"
+                      (buttonEditClick)="picsSlide($event, i, false)"
+                      (buttonDeleteClick)="galleryPicDelete(i)">
+        </gallery-item>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-pic-multi *ngIf="picsAddFlag && picsNewFlag"
+                       [limit]="20-gallery.pics.length"
+                       [itemId]=parentId
+                       (addMultiple)="galleryPicsUpdate($event)"
+                       (cancel)="picsSlide(false, null, null)"
+                       [title]="'Add Pictures'">
+</build-slide-pic-multi>
+
+<build-slide-text-pic *ngIf="picsAddFlag && !picsNewFlag"
+                      [title]="'Update Picture'"
+                      [type]=2
+                      [text]="gallery.pics[this.picsIndex].name"
+                      [pic]="gallery.pics[this.picsIndex].pic"
+                      (update)="galleryPicsUpdate($event)"
+                      (cancel)="picsSlide(false, null, null)">
+</build-slide-text-pic>

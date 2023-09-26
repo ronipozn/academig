@@ -1,0 +1,73 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">{{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-slide-select-members *ngIf="mode==0"
+                                  [title]="'Choose members'"
+                                  [itemFirst]=true
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [parentGroup]=formModel
+                                  [controlName]=controlName
+                                  [minSelected]=minSelected
+                                  [labelRequired]="minSelected>0"
+                                  [preMembersInput]=preMembersInput
+                                  [submitStatus]=submitStatus
+                                  (membersOutput)=membersFunc($event)>
+      </build-slide-select-members>
+
+      <build-slide-select-collaborations *ngIf="mode==1"
+                                         [title]="'Choose collaborations'"
+                                         [itemFirst]=true
+                                         [groupId]=groupId
+                                         [userId]=userId
+                                         [parentGroup]=formModel
+                                         [controlName]=controlName
+                                         [preCollaborationsInput]=preCollaborationsInput
+                                         (collaborationsOutput)=collaborationsFunc($event)>
+      </build-slide-select-collaborations>
+
+      <build-slide-select-fundings *ngIf="mode==2"
+                                   [title]="'Choose fundings'"
+                                   [itemFirst]=true
+                                   [groupId]=groupId
+                                   [userId]=userId
+                                   [parentGroup]=formModel
+                                   [controlName]=controlName
+                                   [preFundingsInput]=preFundingsInput
+                                   (fundingsOutput)=fundingsFunc($event)>
+      </build-slide-select-fundings>
+
+      <build-slide-select-projects *ngIf="mode==3"
+                                   [title]="'Choose projects'"
+                                   [itemFirst]=true
+                                   [groupId]=groupId
+                                   [userId]=userId
+                                   [parentGroup]=formModel
+                                   [controlName]=controlName
+                                   [preProjectsInput]=preProjectsInput
+                                   (projectsOutput)=projectsFunc($event)>
+      </build-slide-select-projects>
+
+      <build-tag-fetch-field *ngIf="mode==4"
+                             [labelRequired]=true
+                             [itemTitle]="'Choose user'"
+                             [itemPlaceholder]="'+ User'"
+                             [controlName]="'users'"
+                             [parentGroup]=formModel
+                             [submitStatus]=submitStatus>
+      </build-tag-fetch-field>
+
+      <hr class="mt-2">
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-light-blue">{{newFlag ? 'Add' : 'Update'}}</button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

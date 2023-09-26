@@ -1,0 +1,80 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <button [disabled]="!streamRetrieved[0]" role="button" class="btn btn-sm btn-info" (click)="updateList()">
+      Reload
+    </button>
+  </div>
+</div>
+
+<div *ngIf="!streamRetrieved[0]" class="py-4">
+  <spinner [text]="'Page'"></spinner>
+</div>
+
+<div *ngIf="streamRetrieved[0]" class="card mt-0">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th class="text-nowrap">Report Type</th>
+            <th class="text-nowrap">Message</th>
+            <th class="text-nowrap">Reply</th>
+            <th class="text-nowrap">Item Name</th>
+            <th>Item ID</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let report of reports; let i=index">
+
+            <th scope="row">{{i}}</th>
+
+            <td>
+              {{report.date | date:'dd MMM y' }}<br>{{report.date | date:'HH:mm' }}
+            </td>
+
+            <td>{{type[report.type]}}</td>
+
+            <td>{{report.message}}</td>
+
+            <td>{{report.reply}}</td>
+
+            <td>{{reportMode[report.mode]}}</td>
+
+            <td class="h6">
+              <group-link *ngIf="report.mode==0" [smallFlag]=false [groupIndex]=report.group></group-link>
+              <a *ngIf="report.mode==1" [routerLink]="['/people',report.item._id]">{{ report.item.name }}</a>
+              <a *ngIf="report.mode==2" [routerLink]="['/publications',report.item._id]">{{ report.item.name }}</a>
+              <a *ngIf="report.mode==3" [routerLink]="['/services',report.item._id]">{{ report.item.name }}</a>
+              <a *ngIf="report.mode==4" [routerLink]="['/projects',report.item._id]">{{ report.item.name }}</a>
+              <a *ngIf="report.mode==5" [routerLink]="['/positions',report.item._id]">{{ report.item.name }}</a>
+            </td>
+
+            <td>
+              <div *ngIf="report.status==0" class="btn-group btn-group-vertical" role="group" aria-label="Report buttons">
+                <button (click)="setActiveIndex(i,0,true)" [disabled]="streamRetrieved[1]" role="button" type="button" class="d-flex mx-auto btn btn-sm btn-success mb-1">
+                  Approve <i *ngIf="streamRetrieved[1]==true && reportIndex==i" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+                </button>
+                <button (click)="setActiveIndex(i,1,true)" [disabled]="streamRetrieved[1]" role="button" type="button" class="d-flex mx-auto btn btn-sm btn-danger">
+                  Decline <i *ngIf="streamRetrieved[1]==true && reportIndex==i" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>
+
+<report-build *ngIf=reportBuildFlag
+              (update)="sendRepsonse($event)"
+              (cancel)="setActiveIndex(0,0,false)"
+              [title]=btnsNames[reportAction]>
+</report-build>

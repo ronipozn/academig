@@ -1,0 +1,78 @@
+<ul class="mt-4 nav nav-pills nav-pills-light-blue nav-pills-icons justify-content-center" role="tablist">
+  <li class="nav-item" *ngFor="let tab of tabs; let i=index; let f=first">
+    <a class="nav-link" [ngClass]="{'active': f}" data-toggle="tab" href="#{{tab}}" (click)="showTabFunc(i)">{{tab}}</a>
+  </li>
+</ul>
+
+<div class="card">
+  <div class="card-header">
+
+    <div class="tab-content">
+
+      <p *ngIf="streamRetrieved[activeTab] && count[activeTab]" class="text-muted small">
+        {{count[activeTab]}}
+        <span *ngIf="count[activeTab]==1">result was found</span>
+        <span *ngIf="count[activeTab]>1">results were found</span>
+      </p>
+
+      <div class="tab-pane active" id="Talks" role="tabpanel">
+
+        <media-talk-list [streamRetrieved]="streamRetrieved[0] || moreFlag"
+                         [talks]=talks
+                         [showEditBtn]=false
+                         [sourceType]=4
+                         [stream]=streamTalk>
+        </media-talk-list>
+
+      </div>
+
+      <div class="tab-pane" id="Posters" role="tabpanel">
+
+        <media-poster-list [streamRetrieved]="streamRetrieved[1] || moreFlag"
+                           [posters]=posters
+                           [showEditBtn]=false
+                           [sourceType]=4
+                           [stream]=streamPoster
+                           (btnPDF)="pdfSlide(true,$event)">
+        </media-poster-list>
+
+      </div>
+
+      <div class="tab-pane" id="Press" role="tabpanel">
+
+        <media-press-list [streamRetrieved]="streamRetrieved[2] || moreFlag"
+                          [presses]=presses
+                          [showEditBtn]=false
+                          [sourceType]=4
+                          [stream]=streamPress>
+        </media-press-list>
+
+      </div>
+
+      <div *ngIf="moreFlag" class="d-flex justify-content-center">
+        <button role="button" [disabled]="!streamMore" class="btn btn-sm btn-outline-info" (click)="showMoreFunc()">
+          <i class="fa fa-arrow-down" aria-hidden="true"></i> Show more
+          <i *ngIf="!streamMore" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+        </button>
+      </div>
+
+      <div *ngIf="streamRetrieved[activeTab] && !count[activeTab]" class="text-center text-muted">
+        The media list is still empty.<br>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide($event)"
+           [title]=fileTitle
+           [fileName]=fileName
+           [type]=1>
+</slide-pdf>

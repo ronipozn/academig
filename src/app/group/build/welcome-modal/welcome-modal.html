@@ -1,0 +1,84 @@
+<div class="d-flex align-items-center justify-content-center">
+  <!-- <div *ngIf="groupStage==2" class="mx-4 px-4">
+    <button role="button" class="btn btn-link mx-4 px-4 fa-stack fa-lg" (click)="changeStep(false,null)">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-arrow-left fa-stack-1x" style="color: white"></i>
+    </button>
+  </div> -->
+  <img *ngIf="groupStage!=2" src="./assets/img/build_lab.svg" class="mx-auto d-block mb-2" [width]="150" alt="academig_cover">
+  <div *ngIf="groupStage==2" class="mt-0">
+    <p class="d-flex mx-auto fa-stack fa-4x fa-lg mt-0">
+      <i class="fa fa-circle fa-stack-2x" style="color: #1DAAF1;"></i>
+      <i class="fa fa-{{icons[stepNum]}} fa-stack-1x fa-inverse"></i>
+    </p>
+  </div>
+  <!-- <div *ngIf="groupStage==2" class="mx-4 px-4">
+    <button role="button" class="btn btn-link mx-4 px-4 fa-stack fa-lg" (click)="changeStep(true,null)">
+      <i class="fa fa-circle fa-stack-2x"></i>
+      <i class="fa fa-arrow-right fa-stack-1x" style="color: white"></i>
+    </button>
+  </div> -->
+</div>
+
+<div *ngIf="groupStage<=1" class="d-flex align-items-center justify-content-center">
+  <h5 class="modal-title">WELCOME TO YOUR NEW {{entity}} PROFILE</h5>
+</div>
+
+<div *ngIf="groupStage==-1" class="d-flex align-items-center justify-content-center">
+  <small class="my-2">
+    We are starting to build your new professional {{entity}} profile. We will send you an email
+    once your {{entity}} profile is ready.
+    <!-- based on your existing {{entity}} website -->
+  </small>
+</div>
+
+<div *ngIf="groupStage==1" class="d-flex justify-content-center">
+  <small class="my-2">
+    <p class="text-center">
+      We look forward to helping you get started and manage your {{entity}} brand on Academig. Start with these three simple steps.
+    </p>
+    <ol>
+      <li class="mb-2">Update your {{entity}} profile with great logo and a cover photo that represents your {{entity}} to make first great impression on potential new partners and candidates.</li>
+      <li class="mb-2">Give visitors full context around your {{entity}} by filling out all sections of your {{entity}} profile.</li>
+      <li>Explore all the {{entity}} profile pages to learn what Academig can offer for you.</li>
+      <!-- <li>Want to have an international presence? Don’t forget to set your company name and company description in each language you are targeting.</li> -->
+    </ol>
+  </small>
+</div>
+
+<div *ngIf="groupStage==2" [hidden]="stepNum!=0">
+  <div class="d-flex justify-content-center mb-2">
+    <h5>YOUR {{entity}} PROFILE IS READY TO USE.</h5>
+  </div>
+  <!-- <div *ngIf="(onBehalf==8 || onBehalf==9) || labFlag" class="d-flex justify-content-center">
+    <span class="text-center mb-2">
+      You can manage your job posting <a [routerLink]="['jobs']">here</a>.
+    </span>
+  </div> -->
+  <div *ngIf="labFlag" class="d-flex justify-content-center">
+    <small class="text-center mt-2 mb-4">
+      You can also find it in the institute page at:<br>
+      <a target="_empty" [routerLink]="['/', groupIndex.university.link, groupIndex.department.link, 'labs']">{{groupIndex.university.name}} / {{groupIndex.department.name}}</a>.
+    </small>
+  </div>
+</div>
+
+<!-- LAB NEWS / COMPANY NEWS: The {{entity}} news page is automatically updated with all the changes that are made in the {{entity}}' profile pages. Whoever follows your {{entity}} will get updates.-->
+<!-- LABS JOBS POSTINGS: Are you Looking for new lab members? Start posting your lab' open positions online at the jobs page. -->
+<!-- MEMBERS TOOLS: The members tools page is the place for your lab members, where you can manage the lab seminars, reports, events and internal communication. By default, the members area is visible only to lab members. -->
+<!-- FOLLOWINGS AND FOLLOWERS: Your lab can follow other labs and other labs can follow your lab. Members of your lab automatically see news from all the labs you follow. It is a quick and easy way to get them familiarize with your favorite labs. -->
+
+<!--
+<h5>Lab PRO.</h5>
+Your lab profile starts with the PRO plan. You can try PRO for free for 30 days. No credit card required.
+At the end of that period, you can continue with PRO or change to a different plan.
+<a [routerLink]="['/pricing']" class="mr-1" target="_empty">Learn more</a> about PRO and the other Academig plans.
+-->
+
+<!-- <dots-nav *ngIf="groupStage==2 && labFlag"
+          [cyclic]=true
+          [stepNum]=stepNum
+          [stepTotal]=totSteps
+          [stepsInvalid]=[false,false,false,false]
+          (stepChange)=changeStep(null,$event)>
+</dots-nav> -->

@@ -1,0 +1,300 @@
+<div style="background-image: linear-gradient(#283E73, #74B1CC); padding-top: -15rem" class="text-white pt-0 pb-4 mb-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="d-none d-sm-block text-center display-4 pt-4">
+        Become an Academig Event Partner <span class="small">(Beta)</span>
+      </div>
+      <div class="d-block d-sm-none text-center lead pt-4">
+        Become an Academig Event Partner <span class="small">(Beta)</span>
+      </div>
+      <!-- <p class="text-center lead">
+        Get paid to be promoted to our academic audience.
+        Apply to collaborate with us. -->
+        <!-- to millions of academics. -->
+        <!-- Academig is the #1 marketplace for academic SaaS tools, educational content, and small academic tools. -->
+        <!-- Are you a good fit for an Academig launch?  -->
+      <!-- </p> -->
+      <!--
+      Submit this form to begin the AppSumo promotion process.
+      Facebook Twitter LinkedIn Email More
+      -->
+    </div>
+  </div>
+</div>
+
+<div class="form-container mb-4">
+  <div class="container">
+
+    <ng-template #stepEvent>
+      <form [formGroup]="eventFormGroup">
+        <div class="card">
+          <div class="card-body">
+            <div *ngIf="eventInvalid.length>0" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+              <p *ngFor="let item of eventInvalid; let l=last" [ngClass]="{'mb-0': l}"><b>{{ item }}.</b></p>
+            </div>
+            <h4>Tell us about your event</h4>
+
+            <mat-form-field appearance="outline" class="mt-4">
+              <mat-label>Event name?</mat-label>
+              <input matInput formControlName="eventName" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Event URL?</mat-label>
+              <input matInput formControlName="eventURL" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Event Start Date?</mat-label>
+              <input matInput formControlName="eventStart" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Event End Date?</mat-label>
+              <input matInput formControlName="eventEnd" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Event Industry?</mat-label>
+              <input matInput formControlName="eventMarkets" required>
+            </mat-form-field>
+
+            <mat-label>What type of event is this?</mat-label>
+            <div *ngFor="let type of eventType; let f=first; let i=index" class="form-check">
+              <label class="form-check-label text-dark">
+                <!-- id="radioStacked{{i}}"  -->
+                <input class="form-check-input" type="radio" [value]=i formControlName="eventType" [required]=true>
+                {{type}}
+                <span class="circle">
+                  <span class="check"></span>
+                </span>
+              </label>
+            </div>
+
+            <mat-form-field hintLabel="120 characters or less" appearance="outline" class="mt-4">
+              <mat-label>Pitch your event in one sentence</mat-label>
+              <input matInput #input maxlength="120" formControlName="eventDescription" required>
+              <mat-hint align="end">{{input.value?.length || 0}}/120</mat-hint>
+            </mat-form-field>
+            <!-- Describe your event in one or two paragraphs starting with its name -->
+            <!-- Hint: No buzzwords. Talk like a person. Focus on event features and value proposition. -->
+
+            <mat-form-field appearance="outline" class="mt-4">
+              <mat-label>Please outline 2-4 benefits of your event</mat-label>
+              <textarea matInput formControlName="eventBenefits" [rows]=8 required></textarea>
+            </mat-form-field>
+            <!-- Please summarize the key feature of the tool. Max. 80 characters -->
+
+            <!-- Special offer for the Academig community -->
+            <!-- Hint: Optional. Could be an invite link for access to private beta, a discount code, etc. -->
+          </div>
+        </div>
+      </form>
+    </ng-template>
+
+    <ng-template #stepTeam>
+      <form [formGroup]="teamFormGroup">
+        <div class="card">
+          <div class="card-body">
+            <div *ngIf="teamInvalid.length>0" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+              <p *ngFor="let item of teamInvalid; let l=last" [ngClass]="{'mb-0': l}"><b>{{ item }}.</b></p>
+            </div>
+            <h4>Tell us about yourself</h4>
+            <mat-form-field appearance="outline" class="mt-4">
+              <mat-label>Your email</mat-label>
+              <input matInput formControlName="email" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Twitter account</mat-label>
+              <input matInput formControlName="twitter" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>First name</mat-label>
+              <input matInput formControlName="firstName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Last name</mat-label>
+              <input matInput formControlName="lastName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>What is your role in the event?</mat-label>
+              <!-- <mat-hint>CEO? CMO? Master of all trades?</mat-hint> -->
+              <input matInput formControlName="role" required>
+            </mat-form-field>
+            <!-- Who's behind your startup?
+            Add Twitter accounts of all your team members
+            @tatyana_pk Maker ×
+            @ronipozner Maker ×
+            Add team member -->
+          </div>
+        </div>
+      </form>
+    </ng-template>
+
+    <ng-template #stepGoal>
+      <form [formGroup]="goalFormGroup">
+        <div class="card">
+          <div class="card-body">
+            <div *ngIf="goalInvalid.length>0" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+              <p *ngFor="let item of goalInvalid; let l=last" [ngClass]="{'mb-0': l}"><b>{{ item }}.</b></p>
+            </div>
+            <h4 class="mb-4">Choose your goals</h4>
+
+            <mat-label>Which best describes your goal</mat-label>
+            <!-- card mt-2  -->
+            <div *ngFor="let title of goalsTitle; let f=first; let i=index" class="form-check">
+              <!-- py-3  -->
+              <label class="form-check-label text-dark">
+                <input class="form-check-input ml-2" type="radio" [value]=i formControlName="goal" [required]=true>
+                {{title}}: {{goalsExplain[i]}}
+                <!-- ml-2 mr-4 mt-3  -->
+                <span class="circle">
+                  <span class="check"></span>
+                </span>
+              </label>
+            </div>
+
+            <p></p>
+
+            <mat-label class="mt-4">What is the main thing you want to get out of an Academig promotion?</mat-label>
+            <div *ngFor="let type of goalMain; let f=first; let i=index" class="form-check">
+              <label class="form-check-label text-dark">
+                <input class="form-check-input" type="radio" [value]=i formControlName="goalMain" [required]=true>
+                {{type}}
+                <span class="circle">
+                  <span class="check"></span>
+                </span>
+              </label>
+            </div>
+
+            <p></p>
+
+            <mat-label class="mt-4">Please select the option that most closely reflects the deal you would like to feature.
+              <!-- <br>If selected, you can discuss the details further with our team on a discovery call. -->
+            </mat-label>
+            <div *ngFor="let type of goalType; let f=first; let i=index" class="form-check">
+              <label class="form-check-label text-dark">
+                <input class="form-check-input" type="radio" [value]=i formControlName="goalType" [required]=true>
+                {{type}}
+                <span class="circle">
+                  <span class="check"></span>
+                </span>
+              </label>
+            </div>
+
+            <mat-form-field appearance="outline" class="mt-4">
+              <mat-label>What is the current price of this event?</mat-label>
+              <input matInput formControlName="priceFull" required>
+            </mat-form-field>
+
+            <!-- <mat-form-field appearance="outline" class="mt-4">
+              <mat-label>
+                Have you ever ran a deal on another site or group?<br>
+                We like to work exclusively with our partners. Running deals on multiple platforms will lessen your chances of getting accepted.
+              </mat-label> -->
+              <!-- <input matInput formControlName="email" required> YES / NO -->
+            <!-- </mat-form-field> -->
+            <!-- Which site(s)?  -->
+            <!-- List sites & the specifics of the deal. -->
+
+          </div>
+        </div>
+      </form>
+    </ng-template>
+
+    <ng-template #stepFinish>
+      <form *ngIf="!submitCompleted" [formGroup]="finishFormGroup">
+        <div class="card">
+          <div class="card-body">
+            <div *ngIf="finishInvalid.length>0" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+              <p *ngFor="let item of finishInvalid; let l=last" [ngClass]="{'mb-0': l}"><b>{{ item }}.</b></p>
+            </div>
+            <h4>Submit your event</h4>
+            <mat-form-field appearance="outline" class="mt-4">
+              <mat-label>Who referred you?</mat-label>
+              <input matInput formControlName="referred" required>
+              <mat-hint>Where did you hear about running an app campaign with Academig.</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="mt-4">
+              <mat-label>Any comments for our team?</mat-label>
+              <textarea matInput formControlName="comments" [rows]=4 required></textarea>
+              <mat-hint>Optional. Will not be published. Fruitful academic advices are welcome too (:</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+
+      <div *ngIf="submitCompleted" class="card">
+        <div class="card-body text-center">
+          <h4>Event Submission Successful</h4>
+          <p>We will contact you if we see a great fit!</p>
+          <a *ngIf="submitCompleted" class="btn btn-sm btn-light-blue" [routerLink]="['/','search','events']">Go back to search events.</a>
+        </div>
+      </div>
+
+    </ng-template>
+
+    <!-- <ng-template #bigScreen> -->
+     <!-- (selectionChange)="selectionChange($event)" -->
+      <mat-horizontal-stepper #stepper labelPosition="bottom" [linear]="true" class="bg-color">
+
+        <ng-template matStepperIcon="event">
+          <mat-icon>category</mat-icon>
+        </ng-template>
+
+        <ng-template matStepperIcon="you">
+          <mat-icon>person_outline</mat-icon>
+        </ng-template>
+
+        <ng-template matStepperIcon="goal">
+          <mat-icon>show_chart</mat-icon>
+        </ng-template>
+
+        <ng-template matStepperIcon="submit">
+          <mat-icon>check_circle_outline</mat-icon>
+        </ng-template>
+
+        <mat-step [stepControl]="eventFormGroup" state="event">
+          <ng-template matStepLabel>Event</ng-template>
+          <ng-container *ngTemplateOutlet="stepEvent"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <div class="col-lg-6">
+              <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(1)">Continue to: Your Details</button>
+              <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </mat-step>
+        <mat-step [stepControl]="teamFormGroup" state="you">
+          <ng-template matStepLabel>Your details</ng-template>
+          <ng-container *ngTemplateOutlet="stepTeam"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <div class="col-lg-6">
+              <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(2)">Continue to: Goals</button>
+              <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </mat-step>
+        <mat-step [stepControl]="goalFormGroup" state="goal">
+          <ng-template matStepLabel>Goals</ng-template>
+          <ng-container *ngTemplateOutlet="stepGoal"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <div class="col-lg-6">
+              <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(3)">Continue to: Submit</button>
+              <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </mat-step>
+        <mat-step [stepControl]="finishFormGroup" state="submit">
+          <ng-template matStepLabel>Submit</ng-template>
+          <ng-container *ngTemplateOutlet="stepFinish"></ng-container>
+          <button *ngIf="!submitCompleted" mat-button [disabled]="submitFlag" matStepperNext class="btn btn-success" (click)="onContinue(4)">
+            Submit <i *ngIf="submitFlag" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+          </button>
+          <button *ngIf="!submitCompleted" mat-button [disabled]="submitFlag" matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+        </mat-step>
+      </mat-horizontal-stepper>
+    <!-- </ng-template> -->
+
+  </div>
+</div>

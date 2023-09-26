@@ -1,0 +1,90 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <img src="./assets/img/build/info.svg" style="max-height: 15rem;" class="mx-auto d-block img-fluid" alt="academig_welcome"> -->
+
+  <!-- Tell us a little bit about you -->
+  <h3 class="mb-3 text-center"><b>Welcome to Academig</b></h3>
+
+  <p class="text-center">
+    <b>Your answers to the next few questions will
+    help us find the right research labs for you</b>
+  </p>
+
+  <div class="col-12 col-md-9 col-xl-8 mx-auto">
+    <div class="card mt-0">
+      <div class="card-body">
+
+        <!-- <p class="mb-4 text-center text-muted small">Click on your profile picture to change it...</p> -->
+        <div class="d-flex justify-content-center">
+          <a style="cursor:pointer;" (click)="picOp()">
+            <single-pic class="imgFlow" [pic]=userPic [width]=60 [height]=60 [type]=0></single-pic>
+          </a>
+        </div>
+
+        <!-- no-gutters -->
+         <div class="row mt-4">
+           <div class="col-lg-6">
+             <build-modal-text-field [fieldType]=1
+                                     [itemTitle]="'First name'"
+                                     [labelRequired]=true
+                                     [controlName]="'firstName'"
+                                     [submitStatus]=errorFlag[0]
+                                     [parentGroup]=parentGroup>
+             </build-modal-text-field>
+           </div>
+           <div class="col-lg-6">
+             <build-modal-text-field [fieldType]=1
+                                     [itemTitle]="'Last name'"
+                                     [labelRequired]=true
+                                     [controlName]="'lastName'"
+                                     [submitStatus]=errorFlag[1]
+                                     [parentGroup]=parentGroup>
+             </build-modal-text-field>
+           </div>
+         </div>
+
+         <div class="input-group" autocomplete="nope">
+           <ng-template #rt let-r="result" let-t="term">
+             <img [src]="'./assets/img/flags/' + r['code'] + '.png'" class="mr-1" style="width: 16px">
+             <!-- <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="mr-1" style="width: 16px"> -->
+             <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+           </ng-template>
+           <mat-form-field appearance="outline">
+             <mat-label>Country</mat-label>
+             <input matInput
+                    type="text"
+                    [formControlName]="'country'"
+                    [placeholder]="'Select your country'"
+                    [ngbTypeahead]="search"
+                    [resultTemplate]="rt"
+                    [inputFormatter]="formatter"
+                    [editable]='false'>
+             <mat-hint>Pick your country from the drop down list</mat-hint>
+           </mat-form-field>
+           <!-- FIX: also Company in group-info.ts -->
+           <!-- {{parentGroup.get('country').value | json}} -->
+         </div>
+
+         <!-- <mat-form-field appearance="outline">
+           <mat-label>Select your country</mat-label>
+           <mat-select placeholder="Select your country" [formControlName]="'country_id'" ariaLabel="countries[0]">
+             <mat-option *ngFor="let country of countries" [value]="country.id">
+               {{ country.name }}
+             </mat-option>
+           </mat-select>
+         </mat-form-field> -->
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <!-- <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button> -->
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,23 @@
+<h4><b>Uploads</b></h4>
+
+<ng-container *ngFor="let typeName of typeNames; let i=index">
+  <div class="card mt-0">
+    <div class="card-body mt-0">
+      <h3 class="mt-0">{{typeName}}</h3>
+      <button [disabled]="!streamRetrieved[i]" class="btn btn-sm btn-light-blue" (click)="csvOp(0, i, true, null)">Upload CSV</button>
+      <spinner *ngIf="!streamRetrieved[i]" class="py-4"></spinner>
+    </div>
+  </div>
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-pic *ngIf=csvBuildFlag
+                 (update)="csvOp(2, null, false, $event)"
+                 (cancel)="csvOp(0, null, false, $event)"
+                 [title]="typeNames[type] + ' CSV'"
+                 [type]=7>
+</build-slide-pic>

@@ -1,0 +1,33 @@
+<div *ngIf="!channel.users[0]" style="height: 19vh;"></div>
+
+<div class="d-flex align-items-center" *ngIf="channel.users[0]">
+
+  <div class="mr-3">
+    <single-pic class="profile" [pic]=channel.users[0].pic [width]=40 [height]=40 [type]=0></single-pic>
+    <i *ngIf="presence" class="fa fa-circle circle" style="color:#44b449"></i>
+    <i *ngIf="!presence" class="fa fa-circle circle" style="color:red"></i>
+  </div>
+
+  <div class="mt-2">
+    <a [routerLink]="['/people',channel.users[0]._id]" class="card-title">
+      <h5>{{channel.users[0].name}}</h5>
+    </a>
+    <span *ngIf="channel.block" class="ml-1">
+      <i class="fa fa-ban" aria-hidden="true"></i> Blocked
+    </span>
+    <!-- <p *ngFor="let position of channel.users[0].positions" class="mb-0">
+      <span *ngIf="position.period.mode>0" class="text-muted">
+        <group-link [groupIndex]=position.group></group-link>
+        <span class="text-muted small">&middot; {{titlesSelect[position.titles[0]]}}</span>
+      </span>
+    </p> -->
+  </div>
+
+  <div class="ml-auto">
+    <button mat-raised-button class="btn btn-sm btn-light-blue" (click)="buttonDeleteFunc()">
+      <span class="btn-label"><i class="material-icons">delete</i></span> Delete All
+    </button>
+  </div>
+
+</div>
+<hr *ngIf="channel.users[0]" class="mt-1">

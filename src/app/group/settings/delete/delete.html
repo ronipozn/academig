@@ -1,0 +1,163 @@
+<p>
+  <b>Please note:</b> Once you delete your {{missionService.groupTypeTitle | lowercase}} profile, all your {{missionService.groupTypeTitle | lowercase}} members, alumni, publications, services, projects, media, funding and collaborations will be affected.
+  Some data, such as your lab collaborations and funding, may still be visible to others for a short period.
+</p>
+
+<div *ngIf="!streamRetrieved[0] || !streamRetrieved[1] || !streamRetrieved[2]">
+  <i class="fa fa-spinner fa-spin fa-1x mb-4"></i>
+</div>
+
+<!-- <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2]" class="d-flex flex-row mb-4">
+  <single-pic *ngFor="let people of actives" class="d-flex mr-2" [pic]=people.pic [width]=32 [height]=32></single-pic>
+  <single-pic *ngFor="let people of visitors" class="d-flex mr-2" [pic]=people.pic [width]=32 [height]=32></single-pic>
+  <single-pic *ngFor="let people of alumnis" class="d-flex mr-2" [pic]=people.pic [width]=32 [height]=32></single-pic>
+</div> -->
+
+<!-- <p>You can always manage your <a [routerLink]="['../../people']" class="card-title">People</a> page.</p> -->
+
+<div *ngIf="missionService.showPage && missionService.groupStage==2">
+
+  <!-- <p class="small">Please check the <a [routerLink]="['/privacy']">Privacy Settings</a> and <a [routerLink]="['/notifications']">Notifications Settings</a> to make sure your problem can't be resolved there or <a target="_blank" [routerLink]="['/help/contact']">contact us</a> with any question you have.</p> -->
+  <p class="small">
+    Please check the <a [routerLink]="['../privacy']">Privacy Settings</a>
+    to make sure your problem can't be resolved there
+    or <a target="_blank" [routerLink]="['/help/contact']">contact us</a>
+    with any question you have.
+  </p>
+
+  <h6 class="mt-4">Consider the following before deleting:</h6>
+
+  <p>
+    <button role="button" mat-raised-button class="btn btn-outline-danger" [disabled]="!streamRetrieved[3]" (click)="changeStageFunc(0)">
+      <i class="fa fa-{{holdIcon}} pr-2"></i> {{holdString}}
+      <div *ngIf="!streamRetrieved[3] && deleteType==0" class="ml-2">
+        <i class="fa fa-1x fa-spinner fa-spin"></i>
+      </div>
+    </button>
+  </p>
+
+  <button role="button" mat-raised-button class="btn btn-outline-warning" [disabled]="missionService.groupStage==3 || !streamRetrieved[3]" data-toggle="modal" data-target="#ScratchModal">
+      <i class="fa fa-undo pr-2"></i> Build from scratch
+      <div *ngIf="!streamRetrieved[3] && deleteType==1" class="ml-2">
+        <i class="fa fa-1x fa-spinner fa-spin"></i>
+      </div>
+  </button>
+</div>
+
+<h6 class="mt-4 mb-0">Danger Zone</h6>
+<hr class="mt-0">
+
+<div class="card card-outline-danger">
+  <div class="card-body">
+    <blockquote class="card-blockquote">
+
+      <p class="text-danger">Warning! This can't be undone.<br><br>This will delete your {{missionService.groupTypeTitle | lowercase}} lab profile. If applicable, we will cancel your subscription and stop charging your credit card.</p>
+
+      <button role="button" mat-raised-button class="btn btn-danger" [disabled]="missionService.groupStage==3 || !streamRetrieved[3]" data-toggle="modal" data-target="#deleteSiteModal">
+        <div class="d-flex align-items-center">
+        <i class="material-icons" data-notify="icon">delete</i> Delete {{missionService.groupTypeTitle}} profile
+          <div *ngIf="!streamRetrieved[3] && deleteType==2" class="ml-2">
+            <i class="fa fa-1x fa-spinner fa-spin"></i>
+          </div>
+        </div>
+      </button>
+
+    </blockquote>
+  </div>
+</div>
+
+<!-- - - - - - - - - - -->
+<!-- - - - - - - - - - -->
+<!-- Delete Site Modal -->
+<!-- - - - - - - - - - -->
+<!-- - - - - - - - - - -->
+<div class="modal fade" id="deleteSiteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSiteModal" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <p class="lead modal-title" id="ModalLabel">Delete my lab profile</p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body pb-0">
+
+        <p class="small text-muted">
+          <i class="mt-2 fa fa-info-circle" aria-hidden="true"></i> Once you delete your lab profile, you can build a new one in its place.
+          If you do not want to build a new lab profile, use the <a [routerLink]="['/settings/plan']">Plans page</a> to manage or cancel your plan.
+        </p>
+
+        <div class="form-group">
+          <p>Your feedback matters. Why are you deleting your lab profile? (optional).</p>
+          <select for="categorySelect" [(ngModel)]="category" class="form-control" id="InputCategory">
+            <option [ngValue]="0">I have a privacy problem</option>
+            <option [ngValue]="1">My lab profile was hacked</option>
+            <option [ngValue]="2">I find it too difficult to build and maintain the lab profile</option>
+            <option [ngValue]="3">I don’t find Academig useful</option>
+            <option [ngValue]="4">I must have a feature which does not exist</option>
+            <option [ngValue]="5">I am moving to a different institute</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="messageleTextarea"><small><b>Message</b></small></label>
+          <textarea [(ngModel)]="message" class="form-control" id="MessageTextarea" rows="3"></textarea>
+        </div>
+
+        <!-- <div class="form-group">
+          <label for="InputPassword">For your security, enter your password.</label>
+          <input type="password" class="col-6 form-control" id="DeletePassword" placeholder="Password">
+          That’s not the right password. Please try again or reset your password.
+        </div> -->
+
+      </div>
+
+      <div class="modal-footer">
+        <button role="button" mat-raised-button class="btn btn-sm btn-link" data-dismiss="modal">Close</button>
+        <button role="button" mat-raised-button class="btn btn-sm btn-danger" data-dismiss="modal" (click)="changeStageFunc(2)">
+          <i class="fa fa-trash pr-2"></i> Delete Lab Profile
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Build From Scratch Modal -->
+<div class="modal fade" id="ScratchModal" tabindex="-1" role="dialog" aria-labelledby="ScratchModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <p class="lead modal-title" id="ModalLabel">Build from scratch</p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body pb-0">
+        <div class="form-group">
+          <label for="InputFeedback">Your feedback matters. Why do you want to build your lab profile from scratch? (optional).</label>
+          <textarea class="col-11 form-control" id="FeedbackTextarea" [(ngModel)]="message" rows="3"></textarea>
+        </div>
+        <!-- <div class="form-group">
+          <label for="InputPassword">For your security, enter your password.</label>
+          <input type="password" class="col-6 form-control" id="ScratchPassword" placeholder="Password">
+          That’s not the right password. Please try again or reset your password.
+        </div> -->
+        <p class="small text-muted">
+          Note that this is an irreversible operation.
+          After you click the From Scratch button, all your lab profile content will be permanently deleted beside your lab people, collaborations and fundings.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button role="button" mat-raised-button class="btn btn-link" data-dismiss="modal">Close</button>
+        <button role="button" mat-raised-button class="btn btn-outline-warning" data-dismiss="modal" (click)="changeStageFunc(1)"><i class="fa fa-trash pr-2"></i>From Scratch</button>
+      </div>
+
+    </div>
+  </div>
+</div>

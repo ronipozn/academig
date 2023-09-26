@@ -1,0 +1,26 @@
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-2 offset-md-1 mb-4">
+      <ul class="nav nav-pills nav-pills-light-blue flex-column" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['terms']" data-toggle="tab" role="tablist">Terms</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['policy']" data-toggle="tab" role="tablist">Policy</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['advertising']" data-toggle="tab" role="tablist">Advertising</a>
+        </li>
+      </ul>
+        <!-- <a [routerLinkActive]="['active']" [routerLink]="['copyright']" role="button" class="btn btn-light btn-sm text-left py-2">Copyright</a> -->
+    </div>
+    <div class="col-md-9">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="col-md-3 col-lg-2">
+</div> -->
+
+<info-footer></info-footer>

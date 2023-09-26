@@ -1,0 +1,112 @@
+<div [formGroup]="parentGroup">
+
+  <div class="col-md-10 mx-auto">
+
+    <h3 *ngIf="forkNum==8" class="mb-3 text-center">Choose your profile cover picture</h3>
+    <h3 *ngIf="forkNum<8" class="mb-3 text-center">Choose your {{(labType==0) ? 'lab' : 'company'}} cover picture</h3>
+
+    <div *ngIf="coverPic" class="mt-4 d-flex justify-content-center">
+      <a style="cursor:pointer;" (click)="picOp()">
+        <single-pic [pic]=coverPic [height]=130 [type]=1></single-pic>
+      </a>
+    </div>
+    <button *ngIf="coverPic" type="button" style="color: #24A2B6;" mat-raised-button class="my-2 d-flex mx-auto btn btn-link" (click)="picDeleteOp()">
+      <small>Delete</small>
+    </button>
+
+    <!-- {{parentGroup.get('theme').value}} {{parentGroup.get('themeIndex').value}} -->
+    <div *ngIf="coverPic==null" class="d-flex justify-content-center">
+      <ul class="nav nav-pills nav-pills-light-blue" id="Disciplines" role="tablist">
+        <li class="nav-item" *ngFor="let discipline of disciplines; let f=first, let i=index">
+          <a class="nav-link" [ngClass]="{'active': i==selectedTab}" id="{{discipline}}-tab" data-toggle="tab" (click)="updateThemeValue(i)" href="#{{disciplinesTags[i]}}" role="tab">
+            <span class="d-md-none small">{{discipline}}</span>
+            <span class="d-none d-md-block">{{discipline}}</span>
+          </a>
+        </li>
+        <!-- aria-controls="{{discipline}}"  -->
+      </ul>
+    </div>
+
+    <!-- <label class="form-check-label" [ngClass]="{'small': itemSmall}">
+      <input id="radioStacked{{i}}" class="form-check-input" type="radio" [value]=i [checked]="(i==parentGroup.get(controlName).value)" [formControlName]=controlName> {{item}}
+      <span class="circle">
+        <span class="check"></span>
+      </span>
+    </label>
+     -->
+
+    <div *ngIf="coverPic==null" class="tab-content mt-3" id="DisciplinesContent">
+
+      <div *ngFor="let discipline of disciplines; let f=first, let i=index" class="tab-pane fade" [ngClass]="{'show active': i==selectedTab}" id="{{disciplinesTags[i]}}" role="tabpanel">
+
+        <div class="col-xs-12 col-lg-8 offset-lg-2 px-3" style="height: 40vh; overflow-y: scroll;">
+
+         <div class="subHover mb-1" *ngFor="let sub of sub_disciplines[i]; let ff=first, let j=index">
+           <div class="px-2">
+
+             <div class="py-0 form-check mb-0">
+
+               <label for="privacyRadio{{j+sub_length[i]}}" class="form-check-label">
+
+                 <!-- <input class="form-check-input" [value]="j+sub_length[i]" type="radio" formControlName="theme" id="privacyRadio{{j+sub_length[i]}}" [checked]=ff> -->
+                 <input class="form-check-input" [value]="j+sub_length[i]" type="radio" formControlName="theme" id="privacyRadio{{j+sub_length[i]}}" [checked]="j==selectedPic">
+
+                 {{sub}}<br>
+
+                 <div id="carouselThemeControls{{j+sub_length[i]}}" class="carousel slide" data-interval="false" data-ride="carousel">
+                   <div class="carousel-inner">
+                     <div class="carousel-item" [ngClass]="{'active': 0==selectedIndex || j!=selectedPic}">
+                       <img [src]="'https://s3.amazonaws.com/academig/coverPics/big/' + sub_pics[i][j] + '_0.jpeg'" height=130 class="pt-1 img-fluid">
+                     </div>
+                     <div class="carousel-item" [ngClass]="{'active': 1==selectedIndex && j==selectedPic}">
+                       <img [src]="'https://s3.amazonaws.com/academig/coverPics/big/' + sub_pics[i][j] + '_1.jpeg'" height=130 class="pt-1 img-fluid">
+                     </div>
+                     <div class="carousel-item" [ngClass]="{'active': 2==selectedIndex && j==selectedPic}">
+                       <img [src]="'https://s3.amazonaws.com/academig/coverPics/big/' + sub_pics[i][j] + '_2.jpeg'" height=130 class="pt-1 img-fluid">
+                     </div>
+                   </div>
+                   <a class="carousel-control-prev" style="margin-left: 50px; margin-top: 65px;" href="#carouselThemeControls{{j+sub_length[i]}}" (click)="updateThemeIndex(i,j,-1)" role="button" data-slide="prev">
+                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                     <span class="sr-only">Previous</span>
+                   </a>
+                   <a class="carousel-control-next" style="margin-top: 65px;" href="#carouselThemeControls{{j+sub_length[i]}}" (click)="updateThemeIndex(i,j,+1)" role="button" data-slide="next">
+                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                     <span class="sr-only">Next</span>
+                   </a>
+                 </div>
+
+                 <span class="circle">
+                   <span class="check"></span>
+                 </span>
+
+               </label>
+
+             </div>
+
+           </div>
+         </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="d-flex justify-content-center mb-2 mt-4 d-flex mx-auto">
+    <button type="button" (click)="picOp()" mat-raised-button class="btn btn-sm btn-light-blue">
+      UPLOAD YOUR OWN COVER PICTURE
+    </button>
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

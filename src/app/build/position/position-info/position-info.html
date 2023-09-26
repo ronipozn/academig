@@ -1,0 +1,351 @@
+<div class="card">
+  <div class="card-body">
+    <h3 class="mt-0 text-success"><b>First, tell us about the academic position</b></h3>
+
+    <div *ngIf="invalid.length>0" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+      <p *ngFor="let item of invalid; let l=last" [ngClass]="{'mb-0': l}"><b>{{ item }}.</b></p>
+    </div>
+
+    <div [formGroup]="parentGroup">
+
+      <build-modal-text-field [typeSelected]="'number'"
+                              [itemTitle]="'Job Opening Title'"
+                              [itemExplain]="'Example: Infection biology, immunology and evolutionary pathogenomics. Titles must describe one position.'"
+                              [controlName]="'title'"
+                              [parentGroup]=parentGroup
+                              [labelRequired]=true
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="row mt-3">
+        <div class="col-lg-6">
+          <build-modal-text-field [labelRequired]=true
+                                  [fieldType]=3
+                                  [itemTitle]="'Job Position'"
+                                  [itemArray]=titleSelect
+                                  [controlName]="'job'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col-lg-6">
+          <build-modal-text-field [labelRequired]=true
+                                  [fieldType]=4
+                                  [itemTitle]="'Job Type'"
+                                  [itemArray]=typeSelect
+                                  [controlName]="'type'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- <div class="col-lg-6">
+          <div class="row no-gutters">
+            <div class="col-3 pr-1">
+              <build-modal-text-field [fieldType]=4
+                                      [itemTitle]="'Period'"
+                                      [itemArray]=lengthSelect
+                                      [controlName]="'contractLengthType'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+            <div class="col-9 pl-1 mt-1">
+              <build-modal-text-field [fieldType]=1
+                                      [typeSelected]="'number'"
+                                      [itemTitle]="'Contract Length'"
+                                      [controlName]="'contractLength'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="col-lg-6" formGroupName="contract">
+          <div class="row">
+            <div class="col-lg-3 pr-1">
+              <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('contract.lengthType').valid && parentGroup.get('contract.lengthType').dirty, 'has-danger': (parentGroup.get('contract.lengthType').invalid) || (parentGroup.get('contract.lengthType').dirty && parentGroup.get('contract.lengthType').invalid)}">
+                <mat-label>Period</mat-label>
+                <mat-select [placeholder]="'Period'" formControlName=lengthType ariaLabel="lengthSelect[0]" (selectionChange)="periodFunc()">
+                  <mat-option *ngFor="let item of lengthSelect; let i=index" [value]=i>
+                    {{ item }}
+                  </mat-option>
+                </mat-select>
+                <span class="form-control-feedback">
+                  <i *ngIf="parentGroup.get('contract.lengthType').valid && parentGroup.get('contract.lengthType').dirty" class="material-icons">done</i>
+                  <i *ngIf="parentGroup.get('contract.lengthType').invalid || (parentGroup.get('contract.lengthType').dirty && parentGroup.get('contract.lengthType').invalid)" class="material-icons">clear</i>
+                </span>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-9 pl-1 mt-1">
+              <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('contract.length').valid && parentGroup.get('contract.length').dirty, 'has-danger': parentGroup.get('contract.length').dirty && parentGroup.get('contract.length').invalid}">
+                <mat-label>Contract Length {{lengthLabel[parentGroup.get('contract.lengthType').value]}}</mat-label>
+                <!-- [placeholder]="directSelect[parentGroup.get('apply.how').value]" -->
+                <input matInput type="number" formControlName="length" [required]=true>
+                <span class="form-control-feedback">
+                  <i *ngIf="parentGroup.get('contract.length').valid && parentGroup.get('contract.length').dirty" class="material-icons">done</i>
+                  <i *ngIf="parentGroup.get('contract.length').dirty && parentGroup.get('contract.length').invalid" class="material-icons">clear</i>
+                </span>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 mt-1">
+          <div class="row no-gutters">
+            <div class="col-lg-4 pr-1">
+              <build-modal-text-field [fieldType]=4
+                                      [itemTitle]="'Spots Available'"
+                                      [itemArray]=spotSelect
+                                      [controlName]="'spotsAvailable'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+            <div class="col-lg-8 pl-1">
+              <build-modal-text-field [itemTitle]="'Job Position Reference Number'"
+                                      [controlName]="'internalId'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div formGroupName="apply">
+        <div class="row">
+          <div class="col-lg-6">
+          <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('apply.how').valid && parentGroup.get('apply.how').dirty, 'has-danger': (parentGroup.get('apply.how').invalid) || (parentGroup.get('apply.how').dirty && parentGroup.get('apply.how').invalid)}">
+            <mat-label>How to Apply</mat-label>
+            <mat-select [placeholder]="'How to Apply'" formControlName=how ariaLabel="howSelect[0]" [required]=true (selectionChange)="howFunc()">
+              <mat-option *ngFor="let item of howSelect; let i=index" [value]=i>
+                {{ item }}
+              </mat-option>
+            </mat-select>
+            <span class="form-control-feedback">
+              <i *ngIf="parentGroup.get('apply.how').valid && parentGroup.get('apply.how').dirty" class="material-icons">done</i>
+              <i *ngIf="parentGroup.get('apply.how').invalid || (parentGroup.get('apply.how').dirty && parentGroup.get('apply.how').invalid)" class="material-icons">clear</i>
+            </span>
+          </mat-form-field>
+          <!-- [itemExplain]="'How would you like to receive your applicants?'" -->
+          <!-- Let candidates apply with their LinkedIn profile and notify me by email
+               Enter email address for getting notifications from applicants who apply with their LinkedIn profile: roni.pozner@gmail.com -->
+        </div>
+          <div class="col-lg-6 mt-1">
+            <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('apply.direct').valid && parentGroup.get('apply.direct').dirty, 'has-danger': parentGroup.get('apply.direct').dirty && parentGroup.get('apply.direct').invalid}">
+              <mat-label>{{directSelect[parentGroup.get('apply.how').value]}}</mat-label>
+              <input *ngIf="parentGroup.get('apply.how').value==1" matInput email type="email" [placeholder]="directSelect[parentGroup.get('apply.how').value]" formControlName="direct" [required]=true>
+              <input *ngIf="parentGroup.get('apply.how').value!=1" matInput type="text" [placeholder]="directSelect[parentGroup.get('apply.how').value]" formControlName="direct" [required]=true>
+              <span class="form-control-feedback">
+                <i *ngIf="parentGroup.get('apply.direct').valid && parentGroup.get('apply.direct').dirty" class="material-icons">done</i>
+                <i *ngIf="parentGroup.get('apply.direct').dirty && parentGroup.get('apply.direct').invalid" class="material-icons">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Documents required for submission</mat-label>
+            <mat-select multiple formControlName=lettersRequired placeholder="Documents required for submission" ariaLabel="lettersSelect[0]">
+              <mat-option *ngFor="let letter of lettersSelect; let i=index" [value]="letter.value">
+                {{ letter.viewValue }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Grades required for submission</mat-label>
+            <mat-select multiple formControlName=gradesRequired placeholder="Grades required for submission" ariaLabel="lettersSelect[0]">
+              <mat-option *ngFor="let grade of gradesSelect; let i=index" [value]="grade.value">
+                {{ grade.viewValue }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4 mt-1">
+          <build-modal-text-field [fieldType]=4
+                                  [itemTitle]="'Number of Referees'"
+                                  [itemArray]=refereeSelect
+                                  [controlName]="'numReferees'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <div id="accordion" role="tablist">
+        <div class="card-collapse pt-1 pb-3">
+          <div class="card-header pt-1" role="tab" id="headingLetters">
+            <h5 class="my-0">
+              <a class="collapsed" data-toggle="collapse" href="#collapseLetters" aria-expanded="false" aria-controls="collapseLetters">
+                <b>Guidelines for documents (optional)</b> <i class="material-icons">keyboard_arrow_down</i>
+              </a>
+            </h5>
+          </div>
+          <div id="collapseLetters" class="collapse my-0 py-0" role="tabpanel" aria-labelledby="headingLetters" data-parent="#accordion">
+            <div class="card-body mb-0 pb-0">
+              <mat-form-field appearance="outline">
+                <mat-label>Guidelines for documents</mat-label>
+                <textarea matInput formControlName=lettersGuidelines [rows]=3></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-lg-4">
+          <build-modal-text-field [itemFirst]=true
+                                  [typeSelected]="'date'"
+                                  [fieldType]=1
+                                  [itemTitle]="'Submission Deadline'"
+                                  [itemExplain]="'Leave empty for no specific deadline.'"
+                                  [controlName]="'jobEndDate'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=submitStatus
+                                  (controlStatus)=datesValidatelFunc()>
+          </build-modal-text-field>
+        </div>
+        <div class="col-lg-4">
+          <build-modal-text-field [itemFirst]=true
+                                  [typeSelected]="'date'"
+                                  [fieldType]=1
+                                  [itemTitle]="'Final Decision Date'"
+                                  [itemExplain]="'Leave empty for no specific date.'"
+                                  [controlName]="'jobDescisionDate'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=submitStatus
+                                  (controlStatus)=datesValidatelFunc()>
+          </build-modal-text-field>
+        </div>
+        <div class="col-lg-4">
+          <build-modal-text-field [typeSelected]="'date'"
+                                  [fieldType]=1
+                                  [itemTitle]="'Start Date'"
+                                  [itemExplain]="'Leave empty for no specific date.'"
+                                  [controlName]="'jobStartDate'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=submitStatus
+                                  (controlStatus)=datesValidatelFunc()>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <div *ngIf="datesRangeValid==false" class="alert alert-warning border-warning alert-dismissible fade show mt-4" role="alert">
+        Make sure the dates follow each other.
+      </div>
+
+      <div *ngIf="datesBeforeValid==false" class="alert alert-warning border-warning alert-dismissible fade show mt-4" role="alert">
+        Make sure all dates are set after the current date
+      </div>
+
+      <build-modal-text-field [fieldType]=8
+                              [itemTitle]="'Add skill keywords to make your job more visible to the right candidates (Select up to 10) separated by commas (,) or press enter.'"
+                              [controlName]="'tags'"
+                              [itemPlaceholder]="'+ Keyword'"
+                              [itemSecondaryPlaceholder]="'Add keyword'"
+                              [maxItems]=10
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=12
+                              [labelRequired]=true
+                              [itemTitle]="'Job Opening Description'"
+                              [controlName]="'jobDescription'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div id="accordion" role="tablist">
+
+        <div class="card-collapse mb-0">
+          <div class="card-header" role="tab" id="headingOne">
+            <h5 class="my-0 py-0">
+              <a class="collapsed" data-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                Additional skills and experience (optional) <i class="material-icons">keyboard_arrow_down</i>
+              </a>
+            </h5>
+          </div>
+          <div id="collapseOne" class="collapse my-0 py-0" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body my-0 py-0">
+              <build-modal-text-field [fieldType]=12
+                                      [controlName]="'jobExperience'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-collapse mb-0">
+          <div class="card-header" role="tab" id="headingTwo">
+            <h5 class="my-0 py-0">
+              <a class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                More about the employer and scholarship (optional) <i class="material-icons">keyboard_arrow_down</i>
+              </a>
+            </h5>
+          </div>
+          <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+            <div class="card-body my-0 py-0">
+              <build-modal-text-field [fieldType]=12
+                                      [controlName]="'jobScholarship'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-collapse mb-0">
+          <div class="card-header" role="tab" id="headingThree">
+            <h5 class="my-0 py-0">
+              <a class="collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Duties and Tasks (optional) <i class="material-icons">keyboard_arrow_down</i>
+              </a>
+            </h5>
+          </div>
+          <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+            <div class="card-body my-0 py-0">
+              <build-modal-text-field [fieldType]=12
+                                      [controlName]="'jobDuties'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-collapse mb-0">
+          <div class="card-header" role="tab" id="headingFour">
+            <h5 class="my-0 py-0">
+              <a class="collapsed" data-toggle="collapse" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+                Expectations (optional) <i class="material-icons">keyboard_arrow_down</i>
+              </a>
+            </h5>
+          </div>
+          <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingFour" data-parent="#accordion">
+            <div class="card-body my-0 py-0">
+              <build-modal-text-field [fieldType]=12
+                                      [controlName]="'jobExpectations'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

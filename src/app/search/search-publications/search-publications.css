@@ -1,0 +1,9 @@
+.fa-circle {
+  font-size: 14px;
+}
+
+.circle {
+  position: absolute;
+  top: 0.5rem;
+  left: 1.4rem;
+}

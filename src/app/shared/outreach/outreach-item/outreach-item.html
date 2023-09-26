@@ -1,0 +1,119 @@
+<div *ngIf="sourceType<8" class="card card-product">
+  <div class="card-header card-header-image" data-header-animation="false">
+    <a *ngIf="outreach.pic" target="_blank" [href]="outreach.link">
+      <img class="img" [src]="outreach.pic">
+    </a>
+    <figcaption *ngIf="outreach.caption" class="figure-caption text-left">{{outreach.caption}}</figcaption>
+  </div>
+  <div class="card-body">
+    <h4 class="card-title" [ngClass]="{'mt-4': !outreach.pic}">
+      {{ outreach.name }}
+    </h4>
+    <div *ngIf="showEditBtn && stream==0" class="text-center">
+      <button mat-raised-button type="button" [disabled]="stream>0" (click)="buttonEditFunc()" class="btn btn-success btn-link" matTooltip="Edit" [matTooltipPosition]="'below'">
+        <i class="material-icons">edit</i>
+      </button>
+      <button mat-raised-button type="button" [disabled]="stream>0" (click)="buttonDeleteFunc()" class="btn btn-danger btn-link" matTooltip="Remove" [matTooltipPosition]="'below'">
+        <i class="material-icons">close</i>
+      </button>
+      <spinner-put [stream]=stream (animationDoneEvent)="animationDone($event)"></spinner-put>
+    </div>
+    <p *ngIf="outreach.link" class="card-title">
+      <a target="_blank" [href]="outreach.link">{{outreach.link}}</a>
+    </p>
+    <div class="card-description text-dark">
+      <span class=""[innerHTML]="outreach.description | safeHtml"></span>
+    </div>
+    <div *ngIf="outreach.clip" class="embed-responsive embed-responsive-16by9">
+      <iframe [src]="url" frameborder="1" allowfullscreen></iframe>
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="price">
+      <h4>
+        <ng-container *ngIf="outreach.period.mode==2">{{ outreach.period.start | date: 'MMM y' }}</ng-container>
+        <ng-container *ngIf="outreach.period.mode==0">{{ outreach.period.start | date: 'MMM y' }} - {{ outreach.period.end | date: 'MMM y' }}</ng-container>
+      </h4>
+    </div>
+    <div class="stats">
+      <p class="card-category"><i class="material-icons">place</i> {{ outreach.location }}</p>
+    </div>
+  </div>
+</div>
+
+<li *ngIf="sourceType>=8 && sourceType<=10" class="media">
+  <div class="media-body">
+
+    <span class="lead mr-2">{{ outreach.name }}</span>
+
+    <build-buttons [showButton]="showEditBtn && stream==0"
+                   (buttonEditClick)="buttonEditFunc()"
+                   (buttonDeleteClick)="buttonDeleteFunc()">
+    </build-buttons>
+
+    <spinner-put [stream]=stream
+                 (animationDoneEvent)="animationDone($event)">
+    </spinner-put>
+
+    <div *ngIf="outreach.period && outreach.period.start" class="small text-muted mb-2">
+      <i class="fa fa-clock-o" aria-hidden="true"></i>
+      <ng-container *ngIf="outreach.period.mode==2">{{ outreach.period.start | date: 'MMM y' }}</ng-container>
+      <ng-container *ngIf="outreach.period.mode==0">{{ outreach.period.start | date: 'MMM y' }} - {{ outreach.period.end | date: 'MMM y' }}</ng-container>
+    </div>
+
+    <div *ngIf="sourceType>=1 && sourceType<=7 && outreach.group">
+      <group-link [groupIndex]=outreach.group></group-link>
+    </div>
+
+    <p *ngIf="outreach.location">
+      <span class="text-muted">Location: </span> {{ outreach.location }}
+    </p>
+
+    <p *ngIf="outreach.description">
+      <span [innerHTML]="outreach.description | safeHtml"></span>
+    </p>
+
+    <p *ngIf="outreach.link">
+      <a target="_blank" [href]="outreach.link">{{outreach.link}}</a>
+    </p>
+
+    <figure *ngIf="outreach.pic" class="figure text-center mx-auto d-block">
+      <img class="figure-img mt-2 img-fluid mx-auto d-block col-lg-6 offset-lg-3" [src]=outreach.pic>
+      <div class="col-lg-6 offset-lg-3"><figcaption class="figure-caption text-left">{{outreach.caption}}</figcaption></div>
+    </figure>
+
+    <div *ngIf="outreach.clip" class="col-lg-6 offset-lg-3 embed-responsive embed-responsive-16by9">
+      <iframe [src]="url" frameborder="1" allowfullscreen></iframe>
+    </div>
+
+    <ng-container *ngIf="sourceType==8">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+      <button [disabled]="streamSuggestion>0" role="button" class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </ng-container>
+    <ng-container *ngIf="sourceType==10">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </ng-container>
+
+  </div>
+</li>
+
+<hr *ngIf="sourceType>=8 && sourceType<=10">
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Share Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- <button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" attr.data-target="#ShareModal{{outreach._id}}"></button>
+
+<div class="modal fade" id="ShareModal{{outreach._id}}" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=4
+                   [itemId]=outreach._id
+                   [flag]=shareFlag
+                   (closeModal)="closeShareModalFunc()">
+      </modal-share>
+    </div>
+  </div>
+</div> -->

@@ -1,0 +1,5 @@
+.btn:focus,.btn:active {
+   box-shadow: none;
+   /*-webkit-box-shadow: none;
+   -moz-box-shadow: none;*/
+}

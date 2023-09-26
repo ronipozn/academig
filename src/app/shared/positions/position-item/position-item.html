@@ -1,0 +1,187 @@
+<div class="mt-2 mb-0" [ngClass]="{'ml-2 text-dark': sourceType!=2, 'text-dark': sourceType==2 && position.standout==0, 'text-white': sourceType==2 && position.standout>0}">
+  <div *ngIf="position.standout<3 || position.standout==null" class="d-flex align-items-center">
+    <b>POSTED {{ position.created_on | momentPipe:'':1 | uppercase }}</b>
+  </div>
+  <div *ngIf="position.standout==3" class="mr-auto">
+    <b>FEATURED JOB</b>
+  </div>
+</div>
+
+<div *ngIf="position.title" class="card-title mt-0" [ngClass]="{'text-dark mt-2 ml-2 mb-2': sourceType!=2, 'text-dark': sourceType==2 && position.standout==0, 'text-white': sourceType==2 && position.standout>0}">
+  <div class="d-flex align-items-center">
+
+    <div class="mr-auto">
+      <a *ngIf="position._id && sourceType<2" class="h3" [routerLink]="[position._id]">
+        <b>{{position.title}}</b>
+      </a>
+      <a *ngIf="position._id && sourceType==2" class="h3 mt-2" [routerLink]="['/',groupIndex.university.link,groupIndex.department.link,groupIndex.group.link,'jobs',position._id]">
+        <b>{{position.title}}</b>
+      </a>
+      <a *ngIf="position._id && (sourceType==3 || sourceType==4)" class="h3" [routerLink]="['/',position.group.university.link,position.group.department.link,position.group.group.link,'jobs',position._id]">
+        <b>{{position.title}}</b>
+      </a>
+      <h3 *ngIf="!position._id">
+        <b>{{position.title}}</b>
+      </h3>
+    </div>
+
+    <div>
+      <div class="d-flex align-items-center">
+
+        <ng-container *ngIf="showEditBtn"> <!-- sourceType==0 -->
+          <span *ngIf="!position.payment" [matTooltip]="'Job posting is hidden for visitors.'" [matTooltipPosition]="'below'" class="badge badge-danger">Payment missing</span>
+          <ng-container *ngIf="position.payment">
+            <span *ngIf="position.mode==0" class="badge badge-pill badge-warning" style="color: white">On Hold</span>
+            <span *ngIf="position.mode==1" class="badge badge-pill badge-warning" style="color: white">Active</span>
+            <span *ngIf="position.mode==2" class="badge badge-pill badge-danger" style="color: white">Expired</span>
+            <!-- Subsciption ended -->
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="!showEditBtn">
+          <span *ngIf="createdDays<15" class="badge badge-pill badge-warning" style="color: white">NEW!</span>
+          <span *ngIf="deadlineDays!=null && deadlineDays<0" class="badge badge-danger">Deadline passed</span>
+          <span *ngIf="deadlineDays>0 && deadlineDays<14" class="badge badge-warning">Deadline approaching</span>
+        </ng-container>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<ng-container *ngIf="position.apply">
+  <p *ngIf="position.apply[0]?.status>0 && position.apply[0]?.status<9" class="ml-2 badge badge-pill badge-light-blue">Watching</p>
+  <p *ngIf="position.apply[0]?.status>=9 && position.apply[0]?.status<100" class="ml-2 badge badge-pill badge-warning">Applied: {{ position.apply[0].date[0] | momentPipe:'':1 | uppercase }}</p>
+  <p *ngIf="position.apply[0]?.status>=100 && position.apply[0]?.status<200" class="ml-2 badge badge-pill badge-warning">Application Withdrawn: {{ position.apply[0].date[0] | momentPipe:'':1 | uppercase }}</p>
+</ng-container>
+
+<!-- <p *ngIf="detailsFlag && status>9 && status<100" class="badge badge-pill badge-warning">Applied: {{ applyDate | date: 'y MMMM d' }}</p>
+<p *ngIf="detailsFlag && status>199 && status<300" class="badge badge-pill badge-warning">Rejected: {{ applyDate | date: 'y MMMM d' }}. {{ position.note }} <a href="">Read rejection letter.</a></p> -->
+<!-- Accepted for video interview -->
+
+<div class="media mb-0 pb-0">
+
+  <img *ngIf="sourceType==2 && position.group && position.group.university.pic" class="mx-2 pr-2" [height]=80 [src]=position.group.university.pic>
+  <span *ngIf="sourceType!=2 || (position.group && !position.group.university.pic)" class="mr-2"></span>
+
+  <div class="media-body mb-0 pb-0">
+
+    <div *ngIf="sourceType>=1 && sourceType!=2 && position.group" class="mb-1">
+      <group-link [groupIndex]=position.group></group-link>
+      <span *ngIf="position.country" class="small">
+        <br><span class="flag mr-2"><img [src]="'./assets/img/flags/' + (position.country | flag) + '.png'" alt=""></span> <span *ngIf="position.state">{{position.state}},</span> <span *ngIf="position.city">{{position.city}},</span> {{position.country}}
+      </span>
+    </div>
+
+    <!-- <div *ngIf="sourceType==2" class="small d-flex align-items-center" [ngClass]="{'text-dark': position.standout==0, 'text-white': position.standout>0}">
+      <span class="mr-4">{{titlesTypes[position.position]}}</span>
+      <span *ngIf="position.type!=null" class="mr-4">{{typeSelect[position.type]}}</span>
+      <span *ngIf="position.contractLength!=null" class="mr-4">{{position.contractLength}} {{lengthSelect[position.contractLengthType]}}</span>
+      <span *ngIf="position.spotsAvailable" class="mr-4">{{position.spotsAvailable}} Spots</span>
+      <span *ngIf="position.stepsDates && position.stepsDates[0]" class="mr-4">Deadline: {{ position.stepsDates[0] | date }}</span>
+      <span *ngIf="position.stepsDates && position.stepsDates[8]">Start date: {{ position.stepsDates[8] | date }}</span>
+    </div> -->
+
+    <!-- <div *ngIf="sourceType!=2" class="d-none d-sm-block"> -->
+    <div class="d-none d-sm-block">
+      <div class="d-flex flex-row card-title mb-0" [ngClass]="{'text-dark': position.standout==0, 'text-white': position.standout>0}">
+        <span class="mr-4">{{titlesTypes[position.position]}}</span>
+        <span *ngIf="position.type!=null" class="mr-4">{{typeSelect[position.type]}}</span>
+        <span *ngIf="position.contractLength!=null" class="mr-4">{{position.contractLength}} {{lengthSelect[position.contractLengthType]}}</span>
+        <span *ngIf="position.spotsAvailable" class="mr-4">{{position.spotsAvailable}} Spots Available</span>
+        <span *ngIf="position.stepsDates && position.stepsDates[0]" class="mr-4">Deadline: {{ position.stepsDates[0] | date }}</span>
+        <span *ngIf="position.stepsDates && position.stepsDates[8]">Start date: {{ position.stepsDates[8] | date }}</span>
+        <a *ngIf="position.stepsDates[0]" style="cursor:pointer" class="pl-0 ml-1" data-toggle="modal" attr.data-target="#PositionSteps{{position._id}}">
+          <span class="material-icons" [ngClass]="{'text-dark': position.standout==0, 'text-white': position.standout>0}">update</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- <div *ngIf="sourceType!=2" class="d-sm-none text-dark mb-0"> -->
+    <div class="d-sm-none text-dark mb-0">
+      <p class="mb-0">{{titlesTypes[position.position]}}</p>
+      <p *ngIf="position.type!=null" class="mb-0">{{typeSelect[position.type]}}</p>
+      <p *ngIf="position.contractLength!=null" class="mb-0">{{position.contractLength}} {{lengthSelect[position.contractLengthType]}}</p>
+      <p *ngIf="position.spotsAvailable" class="mb-0">{{position.spotsAvailable}} Spots Available</p>
+      <p *ngIf="position.stepsDates && position.stepsDates[0]" class="mb-0">Submission deadline: {{ position.stepsDates[0] | date }}</p>
+      <p *ngIf="position.stepsDates && position.stepsDates[8]" class="mb-0">
+        Start date: {{ position.stepsDates[8] | date }}
+        <!-- <a *ngIf="position.stepsDates[0]" style="cursor:pointer" class="pl-0 ml-1" data-toggle="modal" attr.data-target="#PositionSteps{{position._id}}">
+          <i class="ml-0 fa fa-clock-o" aria-hidden="true"></i>
+        </a> -->
+      </p>
+    </div>
+
+    <ng-container *ngIf="showEditBtn">
+      <p *ngIf="position.payment" class="mt-3 mb-1">
+        <a *ngIf="position.mode==0" class="lead" [routerLink]="[position._id]" style="color: #FD9827"><b><u>Resume Job Listing</u></b></a>
+        <a *ngIf="position.mode==1" class="lead" [routerLink]="[position._id]" style="color: #FD9827"><b><u>Edit Job Listing</u></b></a>
+        <!-- Expired => Renew Job Listing => Readd to Algolia -->
+      </p>
+    </ng-container>
+
+    <!-- <span *ngIf="sourceType!=2 && position.description" build-text [text]="position.description" [textMax]=400></span>
+    <p *ngIf="sourceType==2 && position.description" class="mt-0 mb-2">
+      <span style='white-space:pre-wrap;' [innerHTML]="position.description | slice: 0:150 | safeHtml"></span>
+    </p> -->
+
+  </div>
+
+</div>
+
+<ng-container *ngIf="0 && sourceType!=2 && sourceType!=5 && sourceType!=6 && sourceType!=7">
+  <hr class="mt-0">
+  <!-- <ng-container *ngIf="position.apply[0]?.status>=10"> -->
+  <!-- <position-buttons [id]=position._id
+                    [status]=position.apply[0]?.status
+                    [stream]=stream
+                    [userStatus]=userStatus
+                    [sourceType]=sourceType
+                    [detailsFlag]=false
+                    [deadlineDays]=deadlineDays
+                    (buttonApplyClick)="buttonApplyFunc($event)">
+  </position-buttons> -->
+  <!-- </ng-container> -->
+  <details-buttons class="ml-2"
+                   [mode]=5
+                   [item]="{_id: position._id, name: position.title, pic: null}"
+                   [followStatus]="position.apply[0]?.status==1"
+                   [followFlag]="position.apply[0]?.status<=1 || position.apply[0]?.status==null"
+                   [streamFollow]=streamFollow
+                   (buttonFollowClick)="buttonFollowFunc()">
+  </details-buttons>
+</ng-container>
+
+<div *ngIf="sourceType==5" class="mt-4">
+  <hr class="mt-0">
+  <button [disabled]="streamSuggestion>0" mat-raised-button role="button" class="mr-2 btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+  <button [disabled]="streamSuggestion>0" mat-raised-button role="button" class="mr-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+  <i *ngIf="streamSuggestion==3" class="mr-2 fa fa-1x fa-spinner fa-spin"></i>
+</div>
+<div *ngIf="sourceType==7" class="mt-4">
+  <hr class="mt-0">
+  <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+  <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+</div>
+
+<!------------------------------------->
+<!------ Application Steps Modal ------>
+<!------------------------------------->
+<div class="modal fade" id="PositionSteps{{position._id}}" tabindex="-1" role="dialog" aria-labelledby="PositionStepsLabel" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content pb-4">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">Application Steps</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <position-steps *ngIf="position.stepsDates"
+                      [stepsDates]=position.stepsDates
+                      [activeStep]=position.activeStep
+                      [showEditBtn]=false>
+      </position-steps>
+    </div>
+  </div>
+</div>

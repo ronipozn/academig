@@ -1,0 +1,25 @@
+<hr class="mt-0">
+
+<div class="d-flex justify-content-start align-items-center" aria-label="new message">
+
+  <input *ngIf="!channelBlock"
+         type="hidden" id="file"
+         name="file"
+         data-images-only
+         data-preview-step
+         data-system-dialog
+         data-crop="free, 16:9, 4:3, 5:4, 1:1">
+
+  <!-- <a *ngIf="!channelBlock" role="button" aria-label="emoji" class="ml-3">
+    <i class="fa fa-1x fa-smile-o" aria-hidden="true"></i>
+  </a> -->
+
+  <input class="ml-2 form-control"
+         (keydown.enter)="newMessage(message)"
+         [disabled]=channelBlock
+         type="text"
+         id="message"
+         placeholder="Type a message"
+         [(ngModel)]="message">
+
+</div>

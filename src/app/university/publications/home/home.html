@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="card-header">
+
+    <build-headline [headline]="'Publications'"></build-headline>
+
+    <p *ngIf="streamRetrieved && count" class="text-muted small">
+      {{count}}
+      <span *ngIf="count==1">result was found</span>
+      <span *ngIf="count>1">results were found</span>
+    </p>
+
+    <publications-list [streamRetrieved]="streamRetrieved || moreFlag"
+                       [publications]=publications
+                       [sourceType]=2
+                       [userId]=missionService.userId
+                       [stream]=stream
+                       [streamFolder]=streamFolder
+                       (btnPDF)="pdfSlide($event)"
+                       (btnFolder)="publicationFolder($event)">
+    </publications-list>
+
+    <div *ngIf="moreFlag" class="d-flex justify-content-center">
+      <button role="button" [disabled]="!streamMore" class="btn btn-sm btn-outline-info" (click)="showMoreFunc()">
+        <i class="fa fa-arrow-down" aria-hidden="true"></i> Show more
+        <i *ngIf="!streamMore" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+      </button>
+    </div>
+
+    <div *ngIf="streamRetrieved && !count" class="text-center text-muted">
+      The publications list is still empty.<br>
+    </div>
+
+  </div>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide(false, null)"
+           [title]=pdfTitle
+           [fileName]=pdfFileName
+           [type]=1>
+</slide-pdf>

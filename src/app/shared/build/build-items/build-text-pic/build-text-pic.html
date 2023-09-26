@@ -1,0 +1,59 @@
+<table class="table m-0 p-0">
+  <tbody>
+    <tr>
+
+      <td class="m-0 p-0">
+
+        <span *ngIf="text && (textMax==0 || text.length<=textMax)" [innerHTML]="text | safeHtml"
+              class="m-0 p-0" [ngClass]="{'small': smallFlag}" style='white-space:pre-wrap;'>
+        </span>
+
+        <ng-container *ngIf="textMax>0 && !toggleFlag && text && text.length>textMax">
+          <span [innerHTML]="text | slice:0:textMax-50 | safeHtml"></span>
+          <div class="text-center">
+            <hr class="mb-0 mt-1">
+            <button class="btn btn-sm btn-link" (click)="toggleAbstract()">Show More</button>
+            <hr class="my-0">
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="textMax>0 && toggleFlag && text && text.length>textMax">
+          <span [innerHTML]="text | safeHtml"></span>
+          <div class="text-center">
+            <hr class="mb-0 mt-1">
+            <button class="btn btn-sm btn-link" (click)="toggleAbstract()">Show Less</button>
+            <hr class="my-0">
+          </div>
+        </ng-container>
+
+        <p></p>
+
+        <figure *ngIf="pic && mode==false" class="figure text-center" [ngClass]="{'mx-auto d-block': imgCenter}">
+          <img *ngIf="imgSize>0" [ngClass]="{'mx-auto d-block': imgCenter}" class="figure-img mt-2 img-fluid" [style.max-height]="imgSize + 'px'" [src]=pic>
+          <img *ngIf="imgSize==0" [ngClass]="{'mx-auto d-block': imgCenter}" class="figure-img mt-2 img-fluid" [src]=pic>
+          <div class="col-lg-6 offset-lg-3"><figcaption class="figure-caption text-left">{{caption}}</figcaption></div>
+        </figure>
+
+        <div *ngIf="pic && mode==true" class="mt-4 col-sm-10 offset-sm-1 embed-responsive embed-responsive-16by9">
+          <iframe [src]="videoUrl" frameborder="0" allowfullscreen ng-show="showvideo"></iframe>
+        </div>
+
+      </td>
+
+      <td *ngIf="showEditBtn && (text || pic)" class="td-actions pull-right">
+        <button [disabled]="stream>0" mat-raised-button type="button" (click)="buttonEditFunc()" matTooltip="Edit Text" [matTooltipPosition]="'above'" class="btn btn-primary btn-link btn-sm btn-just-icon">
+          <i class="material-icons">edit</i>
+        </button>
+        <button [disabled]="(!text && !pic) || stream>0" mat-raised-button type="button" (click)="buttonDeleteFunc()" matTooltip="Delete" [matTooltipPosition]="'above'" class="btn btn-danger btn-link btn-sm btn-just-icon">
+          <i class="material-icons">close</i>
+        </button>
+        <spinner-put *ngIf="stream>0"
+                     class="btn btn-primary btn-link btn-sm btn-just-icon"
+                     [stream]=stream
+                     (animationDoneEvent)="animationDone()">
+        </spinner-put>
+      </td>
+
+    </tr>
+  </tbody>
+</table>

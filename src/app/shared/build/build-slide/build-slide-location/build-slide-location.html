@@ -1,0 +1,69 @@
+<div class="side-form">
+
+  <h3 class="title text-center">
+    <span *ngIf=!lat>New</span>
+    <span *ngIf=lat>Update</span>
+    Location
+  </h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemFirst]=true
+                              [labelRequired]=true
+                              [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Latitude'"
+                              [controlName]="'lat'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=true
+                              [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Longitude'"
+                              [controlName]="'lng'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <button type="button" class="btn btn-sm btn-outline-light-blue mt-0" (click)="coordGenerate()">
+        Query coordinates
+      </button>
+
+      <!-- locationiq.com -->
+      <p *ngFor="let q of query" class="small">
+        {{q | json}}
+      </p>
+
+      <mat-form-field class="mt-4">
+        <mat-select placeholder="Country" [formControlName]="'country_id'" [compareWith]="compareIds" ariaLabel="countries[0]">
+          <mat-option *ngFor="let country of countries" [value]="country.id">
+            {{ country.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <build-modal-text-field [labelRequired]=false
+                              [itemTitle]="'State'"
+                              [controlName]="'state'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemTitle]="'City'"
+                              [controlName]="'city'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button type="submit" [disabled]="disableFlag" mat-raised-button class="btn btn-sm btn-fill btn-light-blue">{{!lat ? 'Add' : 'Update'}}</button>
+        <button type="button" [disabled]="disableFlag" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

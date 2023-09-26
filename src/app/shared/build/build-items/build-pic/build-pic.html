@@ -1,0 +1,27 @@
+<div on-mouseover='imgOver(true)'
+     on-mouseleave='imgOver(false)'
+     [ngClass]="{'img-wrapper mt-0': showEditBtn}">
+
+  <img *ngIf="pic"
+       style="top:0; left:0;"
+       [ngStyle]="{'width': widthFlag ? '100%' : 'null'}"
+       [src]=pic
+       [ngClass]="{'img-fluid': fluidFlag, 'figure-img rounded': type==3}">
+
+  <div *ngIf="!pic && type==0" class="jumbotron jumbotron-fluid mb-0">
+    <div class="container">
+      <h1 class="display-3">{{titleText}}&nbsp;</h1>
+      <p class="lead">{{bodyText}}&nbsp;</p>
+    </div>
+  </div>
+
+  <div *ngIf="btnFlag" class="btn-toolbar" role="toolbar" [ngClass]="{'img-overlay-left': leftFlag, 'img-overlay-right': !leftFlag}">
+    <button role="button" class="btnBuild btn btn-sm btn-light border" [ngClass]="{'btnPhoto': type!=2 && type!=4, 'btnAlbum': type==2 && hoverFlag}" (click)="buttonEditFunc($event)">
+      <i class="fa fa-camera" aria-hidden="true"></i>
+    </button>
+    <button [disabled]="!pic || !deleteFlag" role="button" class="btn btn-sm btn-light border ml-2" (click)="buttonDeleteFunc($event)">
+      <i class="fa fa-trash" aria-hidden="true"></i>
+    </button>
+  </div>
+
+</div>

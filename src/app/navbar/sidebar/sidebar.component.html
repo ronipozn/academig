@@ -1,0 +1,203 @@
+<div *ngIf="!isAuthenticated" class="logo">
+  <a [routerLink]="['/']" class="simple-text">
+    <div class="logo-img mb-4">
+      <img class="rounded-circle" src="./assets/img/academig.jpg"/>
+    </div>
+  </a>
+</div>
+
+<div class="sidebar-wrapper">
+
+  <div *ngIf="isMobileMenu()">
+
+    <!-- <form *ngIf="router.url!='/search'" class="navbar-form">
+      <span class="bmd-form-group"><div class="input-group no-border">
+        <input #input type="text" (keyup)="keyUpOp(input.value)" value="" class="form-control" placeholder="Search labs...">
+        <button mat-raised-button type="submit" (click)="onSearch()" class="btn btn-white btn-round btn-just-icon">
+          <i class="material-icons">search</i>
+          <div class="ripple-container"></div>
+        </button>
+      </div></span>
+    </form> -->
+
+    <ul class="nav navbar-nav nav-mobile-menu">
+
+      <!-- <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
+        <a class="nav-link" [routerLink]="[menuItem.path]">
+          <i class="material-icons">{{menuItem.icon}}</i>
+          <p>{{menuItem.title}}</p>
+        </a>
+      </li> -->
+
+      <li *ngIf="isAuthenticated && userService.userEmailVerified && planNumber==0" class="mx-2">
+        <button class="btn btn-success btn-block" (click)="planUpdate(1)">
+          <!-- <i class="material-icons">trending_up</i>  -->
+          Try PRO Free
+        </button>
+      </li>
+
+      <!-- <li *ngIf="isAuthenticated" class="nav-item py-1" [ngClass]="{'pt-4': !userService.userEmailVerified || planNumber>0}">
+        <a class="nav-link py-0" href="javascript:void(0)" (click)="buildWebsiteFunc()">
+          <p><span class="h4"><b>New Lab Profile</b></span></p>
+        </a>
+      </li>
+      <li *ngIf="isAuthenticated" class="nav-item py-1" [ngClass]="{'pt-4': !userService.userEmailVerified || planNumber>0}">
+        <a class="nav-link py-0" [routerLink]="['/post-job']">
+          <p><span class="h4"><b>Post Job</b></span></p>
+        </a>
+      </li>
+      <li *ngIf="isAuthenticated" class="nav-item py-1" [ngClass]="{'pt-4': !userService.userEmailVerified || planNumber>0}">
+        <a class="nav-link py-0" [routerLink]="['/post-service']">
+          <p><span class="h4"><b>Post Service</b></span></p>
+        </a>
+      </li> -->
+
+      <!-- <li *ngIf="isAuthenticated" class="nav-item">
+        <a class="nav-link" [routerLink]="['/']">
+          <i class="material-icons">search</i>
+          <p><span class="d-lg-none d-md-block">Search Labs</span></p>
+        </a>
+      </li> -->
+
+      <li class="nav-item py-1 dropdown" [ngClass]="{'pt-4': !isAuthenticated}">
+        <a class="nav-link py-0" href="javascript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i *ngIf="isAuthenticated" class="material-icons">search</i>
+          <p><span class="h4"><b>Academic Search</b></span></p>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item py-0" [routerLink]="['/search','institutes']">Institutes</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','labs']">Labs</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','companies']">Companies</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','researchers']">Researchers</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','services']">Services</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','mentors']">Mentors</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','trends']">Trends</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','podcasts']">Podcasts</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','events']">Events</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','apps']">Apps</a>
+          <a class="dropdown-item py-0" [routerLink]="['/search','papers-kits']">PapersKits</a>
+          <a *ngIf="!isAuthenticated" class="dropdown-item py-0" [routerLink]="['/featured/']">Featured Searches</a>
+          <!-- <a class="dropdown-item" [routerLink]="['/top-universities/']"><i class="fa fa-university mr-2" aria-hidden="true"></i>Top Universities</a> - -->
+        </div>
+      </li>
+
+      <li *ngIf="isAuthenticated" class="nav-item py-1">
+        <a class="nav-link py-0" [routerLink]="['/']">
+          <i class="material-icons">rss_feed</i>
+          <p><span class="h4"><b>Feed</b></span></p>
+        </a>
+      </li>
+
+      <li *ngIf="isAuthenticated" class="nav-item py-1 dropdown">
+        <a class="nav-link py-0" href="javascript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="material-icons">bookmarks</i>
+          <p><span class="h4"><b>Following</b></span></p>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item py-0" [routerLink]="['/search','saved']">Saved Searches</a>
+          <a class="dropdown-item py-0" [routerLink]="['/following']">Following</a>
+          <div class="dropdown-divider py-0"></div>
+          <a class="dropdown-item py-0" [routerLink]="['/featured/']">Featured Searches</a>
+        </div>
+      </li>
+
+      <li *ngIf="!isAuthenticated" class="nav-item py-1 dropdown">
+        <a class="nav-link py-0" href="javascript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i *ngIf="isAuthenticated" class="material-icons">category</i>
+          <p><span class="h4"><b>Products</b></span></p>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item py-0" [routerLink]="['/academig-pro']">Academig Pro</a>
+          <a class="dropdown-item py-0" [routerLink]="['/academig-lab-tools']">Academig Lab Tools</a>
+          <a class="dropdown-item py-0" [routerLink]="['/academig-jobs']">Academig Jobs</a>
+          <a class="dropdown-item py-0" [routerLink]="['/academig-services-marketplace']">Academig Marketplace</a>
+          <a class="dropdown-item py-0" [routerLink]="['/academig-campaigns']">Academig Campaigns</a>
+          <a class="dropdown-item py-0" [routerLink]="['/academig-mentors']">Academig Mentors</a>
+          <a class="dropdown-item py-0" [routerLink]="['/academig-reading-library']">Academig Reading Library</a>
+        </div>
+      </li>
+
+      <li class="nav-item py-1 dropdown">
+        <a class="nav-link py-0" href="javascript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i *ngIf="isAuthenticated" class="material-icons">info</i>
+          <p><span class="h4"><b>Info</b></span></p>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item py-0" [routerLink]="['/contact']">Contact Us</a>
+          <a class="dropdown-item py-0" [routerLink]="['/about']">About Us</a>
+          <a class="dropdown-item py-0" [routerLink]="['/blog']">Blog</a>
+          <a class="dropdown-item py-0" [routerLink]="['/frequently-asked-questions']">FAQ</a>
+          <!-- <a class="dropdown-item" [routerLink]="['/tour']">How It Works</a> -->
+          <!-- <a class="dropdown-item" [routerLink]="['/features']">Features</a> -->
+          <!-- <a class="dropdown-item" [routerLink]="['/help/']">Help Center</a> -->
+          <div *ngIf="isAuthenticated" class="dropdown-divider py-0"></div>
+          <div *ngIf="isAuthenticated" class="dropdown-item py-0" style="pointer-events: none;"><b>PRODUCTS</b></div>
+          <a *ngIf="isAuthenticated" class="dropdown-item py-0" [routerLink]="['/academig-pro']">Academig Pro</a>
+          <a *ngIf="isAuthenticated" class="dropdown-item py-0" [routerLink]="['/academig-lab-tools']">Academig Lab Tools</a>
+          <a *ngIf="isAuthenticated" class="dropdown-item py-0" [routerLink]="['/academig-jobs']">Academig Jobs</a>
+          <a *ngIf="isAuthenticated" class="dropdown-item py-0" [routerLink]="['/academig-services-marketplace']">Academig Marketplace</a>
+          <a *ngIf="isAuthenticated" class="dropdown-item py-0" [routerLink]="['/academig-campaigns']">Academig Campaigns</a>
+          <a *ngIf="isAuthenticated" class="dropdown-item py-0" [routerLink]="['/academig-mentors']">Academig Mentors</a>
+          <a *ngIf="isAuthenticated" class="dropdown-item py-0" [routerLink]="['/academig-reading-library']">Academig Reading Library</a>
+
+          <div class="dropdown-divider py-0"></div>
+          <div class="dropdown-item py-0" style="pointer-events: none;"><b>NEWS</b></div>
+          <a class="dropdown-item py-0" [routerLink]="['/academig-daily']">Academig Daily</a>
+          <a class="dropdown-item py-0" [routerLink]="['/academig-morning']">Academig Morning</a>
+          <div class="dropdown-divider py-0"></div>
+          <div class="dropdown-item py-0" style="pointer-events: none;"><b>LEGAL</b></div>
+          <a class="dropdown-item py-0" [routerLink]="['/legal//terms']">Terms And Conditions</a>
+          <a class="dropdown-item py-0" [routerLink]="['/legal//policy']">Privacy Policy</a>
+          <!-- <a class="dropdown-item" [routerLink]="['/legal//advertising']">Advertising</a> -->
+        </div>
+      </li>
+
+      <li *ngIf="!isAuthenticated" class="nav-item py-1">
+        <a class="nav-link py-0" href="javascript:void(0)" (click)="login()">
+          <p><span class="h4"><b>Log In</b></span></p>
+        </a>
+      </li>
+
+      <li *ngIf="isAuthenticated" class="nav-item py-1">
+        <a class="d-flex align-items-center nav-link py-0" [routerLink]="['/notifications']">
+          <i class="material-icons">notifications</i>
+          <span *ngIf="unseen>0" class="notification">{{unseen}}</span>
+          <p><span class="h4"><b>Notifications</b></span></p>
+        </a>
+      </li>
+
+      <li *ngIf="isAuthenticated" class="nav-item py-1">
+        <a class="nav-link py-0" [routerLink]="['/messages']">
+          <i class="material-icons">message</i>
+          <span *ngIf="unread && unread>0" class="notification">{{unread}}</span>
+          <p><span class="h4"><b>Messages</b></span></p>
+        </a>
+      </li>
+
+      <li *ngIf="isAuthenticated" class="nav-item py-0 dropdown">
+        <a class="nav-link py-0" href="javascript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="material-icons">person</i>
+          <p><span class="h4"><b>Account</b></span></p>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+          <!-- <a class="d-flex flex-row nav-link py-0" [routerLink]="['./people/',userService.userId]">
+            <img class="rounded-circle" [width]=20 [height]=20 [src]="userService.userPic">
+            <p><span class="ml-3">{{userService.userName}}</span></p>
+          </a> -->
+          <a class="dropdown-item py-0" [routerLink]="['./people/',userService.userId]">Profile</a>
+          <a class="dropdown-item py-0" [routerLink]="['/settings/']">Settings</a>
+          <a class="dropdown-item py-0" [routerLink]="['/relations/']">Relations</a>
+          <a class="dropdown-item py-0" [routerLink]="['/calendar/']">Calendar</a>
+          <div class="dropdown-divider py-0"></div>
+          <a class="dropdown-item py-0" [routerLink]="['/manage-services/']">Service Requests</a>
+          <a class="dropdown-item py-0" [routerLink]="['/manage-applications/']">Applications</a>
+          <div class="dropdown-divider py-0"></div>
+          <a class="dropdown-item py-0" [routerLink]="['/admin']">Admin</a>
+          <a class="dropdown-item py-0" href="javascript:void(0)" (click)="logout()">Log Out</a>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+
+</div>

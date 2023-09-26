@@ -1,0 +1,55 @@
+<div class="card text-white bg-warning mt-0" *ngIf="!userService.userEmailVerified">
+  <div class="card-body">
+    <b>Please confirm your email at {{userService.userEmail}}.</b>
+  </div>
+</div>
+
+<div *ngIf="userService.userEmailVerified" class="container-fluid mt-4">
+
+  <div class="row">
+
+    <div class="col-md-3 col-lg-2">
+      <h5><b>ACCOUNT SETTINGS</b></h5>
+      <span style="background-color: #CBCBCB" class="pl-2 pr-4 py-2"><b>{{ userService.userName }} account</b></span>
+    </div>
+
+    <div class="col-md-9 col-lg-10">
+
+      <div *ngIf="!userService.userProgress[5]" class="card mt-0">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="mr-auto lead"><b>
+              <i class="fa fa-info-circle mr-2" aria-hidden="true"></i> Finish setting up your profile, and enjoy everything Academig has to offer.</b>
+            </div>
+            <div class=""><button mat-button class="btn btn-light-blue" (click)="userNavigate()">Set Up</button></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="lead mt-0 mb-0">Account Information</p>
+      <hr class="mt-0">
+      <settings-account></settings-account>
+
+      <p class="lead mt-0 mb-0">Reading Library</p>
+      <hr class="mt-0">
+      <settings-library></settings-library>
+
+      <p class="lead mt-0 mb-0">Reporting and Blocking</p>
+      <hr class="mt-0">
+      <settings-report></settings-report>
+
+      <!-- <p class="lead mt-0 mb-0">Theme</p>
+      <hr class="mt-0"> -->
+
+      <p class="lead mt-0 mb-0">Subscription Plan Management</p>
+      <hr class="mt-0">
+      <settings-plan></settings-plan>
+
+      <p class="lead mt-0 mb-0">Delete Account</p>
+      <hr class="mt-0">
+      <settings-delete></settings-delete>
+
+    </div>
+
+  </div>
+</div>

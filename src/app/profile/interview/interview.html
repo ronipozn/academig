@@ -1,0 +1,33 @@
+<div *ngIf="missionService.peopleId" class="card mt-0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+
+    <build-headline [showEditBtn]=false
+                    [headline]="'Interview'">
+    </build-headline>
+
+    <build-modal-intro *ngIf="streamRetrieved && false"
+                       [headline]="'No interview yet.'"
+                       [bodypic]="'feed'">
+    </build-modal-intro>
+
+    <build-modal-intro [headline]="'Add your interview.'"
+                       [bodypic]="'podcast'"
+                       [bodytext]="'Add your interview with us.'">
+    </build-modal-intro>
+
+    <spinner *ngIf="!streamRetrieved && offset==0"></spinner>
+
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<!-- <build-slide-text-pic *ngIf=newsBuildFlag
+                      [title]="'Add News'"
+                      [itemId]=missionService.peopleId
+                      (update)="newsUpdate($event)"
+                      (cancel)="newsSlide(false, 0, false)">
+</build-slide-text-pic> -->

@@ -1,0 +1,10 @@
+<h4 class="mat-dialog-title text-center mb-4"><b>Remove Paper Summary</b></h4>
+
+<div mat-dialog-actions class="mt-0 pt-0">
+  <button (click)="onRemove()" [disabled]=streamFlag mat-raised-button style="background-color: #6D69FB" class="btn d-flex mx-auto">
+    <i class="material-icons mr-2">clear</i> Remove <i *ngIf="streamFlag" class="fa fa-1x fa-spinner fa-spin fa-fw"></i>
+  </button>
+</div>
+<div mat-dialog-actions class="mt-2">
+  <button mat-button mat-dialog-close class="card-title btn-link d-flex mx-auto">Close</button>
+</div>

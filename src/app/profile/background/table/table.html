@@ -1,0 +1,437 @@
+<!-- meFlag ||  -->
+
+<div class="card mt-0"
+     *ngIf="(tableMode==0 && positions.length!=0) ||
+                      (tableMode==1 && educations.length!=0) ||
+                      (tableMode==2 && profile.honors.length!=0) ||
+                      (tableMode==3 && positions.length!=0) ||
+                      (tableMode==4 && profile.outreach.length!=0) ||
+                      (tableMode==6 && profile.services.length!=0) ||
+                      (tableMode==7 && profile.societies.length!=0) ||
+                      (tableMode==8 && profile.languages.length!=0)">
+
+<div class="card-body pb-0">
+
+  <build-headline [showEditBtn]=meFlag
+                  [addButtonFlag]=meFlag
+                  [headline]=headlineText
+                  (buttonAddClick)="tableSlide(true)">
+  </build-headline>
+
+  <div class="table-responsive table-borderless">
+  <table class="table"
+         *ngIf="(tableMode==0 && positions.length!=0) ||
+                (tableMode==1 && educations.length!=0) ||
+                (tableMode==2 && profile.honors.length!=0) ||
+                (tableMode==3 && positions.length!=0) ||
+                (tableMode==4 && profile.outreach.length!=0) ||
+                (tableMode==6 && profile.services.length!=0) ||
+                (tableMode==7 && profile.societies.length!=0) ||
+                (tableMode==8 && profile.languages.length!=0)">
+
+    <!-- <thead class="d-none d-lg-block">
+      <tr><th *ngFor="let theadText of theadTexts;">{{ theadText }}</th></tr>
+    </thead> -->
+
+    <!-- <thead class="d-md-none">
+      <tr><th *ngFor="let theadText of theadTextsXS;">{{ theadText }}</th></tr>
+    </thead> -->
+
+    <tbody *ngIf="tableMode==0 || tableMode==3" class="d-none d-md-block">
+      <tr *ngFor="let position of positionsSort; let i=index" class="d-flex align-items-top">
+        <th *ngIf="position.group.university.link!='academig'" scope="row" class="text-nowrap" style="width: 15%;">
+          <img *ngIf="tableMode==0 && position.group.university.pic" [height]=60 [src]=position.group.university.pic>
+          <i *ngIf="tableMode==0 && !position.group.university.pic" class="fa fa-4x fa-university" style="color: #999999" aria-hidden="true"></i>
+          <img *ngIf="tableMode==3 && position.group.group.pic" [height]=60 [src]=position.group.group.pic>
+          <i *ngIf="tableMode==3 && !position.group.university.pic" class="fa fa-4x fa-building-o" style="color: #999999" aria-hidden="true"></i>
+      </th>
+        <th *ngIf="position.group.university.link!='academig'" scope="row" class="text-nowrap" style="width: 25%">
+          <span *ngIf="position.period.start">{{ position.period.start | date:'MMM y' }} -</span> {{(position.period.mode==0) ? (position.period.end | date:'MMM y') : "Present" }}
+        </th>
+        <td *ngIf="position.group.university.link!='academig'" [ngClass]="{'pr-2': meFlag}" style="width: 60%">
+
+          <span *ngIf="tableMode==0">{{titlesSelect[position.titles[0]]}}</span>
+          <span *ngIf="tableMode==3">{{position.titles[0]}}</span>
+
+          <ng-container *ngIf="tableMode==0">
+            <ng-container *ngIf="position.group.university.link; then universityLink else universityNonLink"></ng-container>
+            <ng-template #universityLink>
+              <br><a [routerLink]="['/',position.group.university.link]">{{position.group.university.name}}</a>
+            </ng-template>
+            <ng-template #universityNonLink>
+              <br>{{position.group.university.name}}
+            </ng-template>
+          </ng-container>
+
+          <ng-container *ngIf="tableMode==0">
+            <ng-container *ngIf="position.group.department.link; then departmentLink else departmentNonLink"></ng-container>
+            <ng-template #departmentLink>
+              <br><a [routerLink]="['/',position.group.university.link,position.group.department.link]">{{position.group.department.name}}</a>
+            </ng-template>
+            <ng-template #departmentNonLink>
+              <br>{{position.group.department.name}}
+            </ng-template>
+          </ng-container>
+
+          <ng-container *ngIf="position.group.group.link && (position.stage==2 || meFlag); then groupLink else groupNonLink"></ng-container>
+          <ng-template #groupLink>
+            <br><a [routerLink]="['/',position.group.university.link,position.group.department.link,position.group.group.link]">{{position.group.group.name}}</a>
+          </ng-template>
+          <ng-template #groupNonLink>
+            <br>
+            <ng-container *ngIf="(position.status==8 || position.status==9) && meFlag; then groupBuild else groupNonBuild"></ng-container>
+            <ng-template #groupBuild>
+              <a style="cursor: pointer;" (click)="buildWebsiteFunc(position._id, this.tableMode==3 ? 2 : 0)">{{position.group.group.name}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </ng-template>
+            <ng-template #groupNonBuild>
+              {{position.group.group.name}}
+            </ng-template>
+          </ng-template>
+
+          <span *ngIf="positions.text" build-text-pic [text]="positions.text" [textMax]=100></span>
+
+          <!-- <span *ngIf="position.mode==0 || position.mode==4 || position.stage==0 || position.stage==1"><br></span> -->
+          <!-- <p *ngIf="position.mode==0" class="badge badge-warning mb-0" [matTooltipPosition]="'below'" matTooltip="The position has not been approved by the user yet.">Position Status</p> -->
+          <!-- <p *ngIf="position.mode==4" class="badge badge-warning mb-0" [matTooltipPosition]="'below'" matTooltip="The position has not been approved by the group yet.">Lab Status</p> -->
+          <!-- <p *ngIf="position.stage==0 || position.stage==1" class="badge badge-warning mb-0" [matTooltipPosition]="'below'" matTooltip="The group site has not been approved yet.">Lab Status</p> -->
+
+          <!-- <p *ngIf="(position.status==8 || position.status==9) && meFlag">
+            <button (click)="buildWebsiteFunc(position._id,0)" class="btn btn-info btn-sm mt-2">Build the lab profile</button>
+          </p> -->
+
+        </td>
+        <td *ngIf="meFlag">
+          <ng-container *ngIf="!position.group.group.link && position.group.group._id">
+            <spinner-put [stream]=stream[i]
+                         (animationDoneEvent)="animationDone($event,i)">
+            </spinner-put>
+            <build-buttons [showButton]="stream[i]==0"
+                           (buttonEditClick)="buttonEditFunc(i, position._id)"
+                           (buttonDeleteClick)="buttonDeleteFunc(i, position._id)">
+            </build-buttons>
+          </ng-container>
+          <ng-container *ngIf="position.group.group.link && position.group.group._id">
+            <a mat-raised-button type="button" matTooltip="Edit" [matTooltipPosition]="'above'" class="ml-4 btn btn-primary btn-link btn-sm btn-just-icon"
+               [routerLink]="['/',position.group.university.link,position.group.department.link,position.group.group.link,'people']">
+              <i class="material-icons">edit</i>
+            </a>
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="tableMode==0 || tableMode==3" class="d-md-none">
+      <tr *ngFor="let position of positionsSort; let i=index">
+        <th *ngIf="position.group.university.link!='academig'" scope="row" class="text-nowrap" style="width: 15%;">
+          <img *ngIf="position.group.university.pic" [height]=60 [src]=position.group.university.pic>
+        </th>
+        <td *ngIf="position.group.university.link!='academig'" [ngClass]="{'pr-2': meFlag}">
+
+          <b><span *ngIf="position.period.start">{{ position.period.start | date:'MMM y' }} -</span> {{(position.period.mode==0) ? (position.period.end | date:'MMM y') : "Present" }}</b><br>
+
+          <span *ngIf="tableMode==0">{{titlesSelect[position.titles[0]]}}</span>
+          <span *ngIf="tableMode==3">{{position.titles[0]}}</span>
+          <spinner-put class="ml-1" [stream]=stream[i] (animationDoneEvent)="animationDone($event,i)"></spinner-put>
+
+          <build-buttons *ngIf="meFlag && !position.group.group.link && position.group.group._id"
+                         [showButton]=true
+                         (buttonEditClick)="buttonEditFunc(i, position._id)"
+                         (buttonDeleteClick)="buttonDeleteFunc(i, position._id)">
+          </build-buttons>
+
+          <ng-container *ngIf="position.group.university.link; then universityLink else universityNonLink"></ng-container>
+          <ng-template #universityLink>
+            <br><a [routerLink]="['/',position.group.university.link]">{{position.group.university.name}}</a>
+          </ng-template>
+          <ng-template #universityNonLink>
+            <br>{{position.group.university.name}}
+          </ng-template>
+
+          <ng-container *ngIf="position.group.department.link; then departmentLink else departmentNonLink"></ng-container>
+          <ng-template #departmentLink>
+            <br><a [routerLink]="['/',position.group.university.link,position.group.department.link]">{{position.group.department.name}}</a>
+          </ng-template>
+          <ng-template #departmentNonLink>
+            <br>{{position.group.department.name}}
+          </ng-template>
+
+          <ng-container *ngIf="position.group.group.link && (position.stage==2 || meFlag); then groupLink else groupNonLink"></ng-container>
+          <ng-template #groupLink>
+            <br><a [routerLink]="['/',position.group.university.link,position.group.department.link,position.group.group.link]">{{position.group.group.name}}</a>
+          </ng-template>
+          <ng-template #groupNonLink>
+            <br>
+            <ng-container *ngIf="(position.status==8 || position.status==9) && meFlag; then groupBuild else groupNonBuild"></ng-container>
+            <ng-template #groupBuild>
+              <a style="cursor: pointer;" (click)="buildWebsiteFunc(position._id, this.tableMode==3 ? 2 : 0)">{{position.group.group.name}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </ng-template>
+            <ng-template #groupNonBuild>
+              {{position.group.group.name}}
+            </ng-template>
+          </ng-template>
+
+          <span *ngIf="positions.text" build-text-pic [text]="positions.text" [textMax]=100></span>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+    <tbody *ngIf="tableMode==1" class="d-none d-md-block">
+      <tr *ngFor="let education of educationsSort; let i=index" class="d-flex align-items-top">
+        <th scope="row" class="text-nowrap" style="width: 15%;">
+          <i *ngIf="!education.group.university.pic" class="fa fa-4x fa-university" style="color: #999999" aria-hidden="true"></i>
+          <img *ngIf="education.group.university.pic" [height]=60 [src]=education.group.university.pic>
+        </th>
+        <th scope="row" class="text-nowrap" style="width: 25%">
+          <span *ngIf="education.period.start">{{ education.period.start | date:'MMM y' }} -</span> {{(education.period.mode==0) ? (education.period.end | date:'MMM y') : "Present" }}
+        </th>
+        <td [ngClass]="{'pr-2': meFlag}" style="width: 60%">
+          {{titlesSelect[education.titles[0]]}} <span *ngIf="education.degree && education.degree.field">in {{ education.degree.field }}</span>
+          <ng-container *ngIf="education.group.university.link; then universityLink else universityNonLink"></ng-container>
+          <ng-template #universityLink>
+            <br><a [routerLink]="['/',education.group.university.link]">{{education.group.university.name}}</a>
+          </ng-template>
+          <ng-template #universityNonLink>
+            <br>{{education.group.university.name}}
+          </ng-template>
+
+          <ng-container *ngIf="education.group.department.link; then departmentLink else departmentNonLink"></ng-container>
+          <ng-template #departmentLink>
+            <br><a [routerLink]="['/',education.group.university.link,education.group.department.link]">{{education.group.department.name}}</a>
+          </ng-template>
+          <ng-template #departmentNonLink>
+            <br>{{education.group.department.name}}
+          </ng-template>
+
+          <ng-container *ngIf="education.group.group.link && (education.stage==2 || meFlag); then groupLink else groupNonLink"></ng-container>
+          <ng-template #groupLink>
+            <br><a [routerLink]="['/',education.group.university.link,education.group.department.link,education.group.group.link]">{{education.group.group.name}}</a>
+          </ng-template>
+          <ng-template #groupNonLink>
+            <br>
+            <ng-container *ngIf="(education.status==8 || education.status==9) && meFlag; then groupBuild else groupNonBuild"></ng-container>
+            <ng-template #groupBuild>
+              <a style="cursor: pointer;" (click)="buildWebsiteFunc(education._id, 1)">{{education.group.group.name}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </ng-template>
+            <ng-template #groupNonBuild>
+              {{education.group.group.name}}
+            </ng-template>
+          </ng-template>
+
+          <span *ngIf="education.text" build-text-pic [text]="education.text" [textMax]=100> </span>
+
+          <span *ngIf="education.degree">
+            <span *ngIf="education.degree.thesis">
+              <br><span class="text-muted">Title:</span> {{ education.degree.thesis }}
+            </span>
+            <span *ngIf="education.degree.file">
+              <br><button role="button" class="pl-0 btn btn-sm btn-link" (click)="pdfSlide(null,education.degree.file)">PDF</button>
+            </span>
+          </span>
+          <!-- <span *ngIf="education.degree.grade"><br><span class="text-muted">Grade:</span> {{ education.degree.grade }}</span> -->
+          <!-- <span *ngIf=education.degree.honor class="text-muted"><br>{{ education.degree.honor}}</span> -->
+
+          <!-- <span *ngIf="education.mode==0 || education.mode==4 || education.stage==0 || education.stage==1"><br></span> -->
+          <!-- <p *ngIf="education.mode==0" class="badge badge-warning mb-1" [matTooltipPosition]="'below'" matTooltip="The position has not been approved by the user yet.">Pending</p> -->
+          <!-- <p *ngIf="education.mode==4 && education.titles[0]!=400 && education.titles[0]!=401 && education.titles[0]!=402 && education.titles[0]!=302" class="badge badge-warning mb-1" [matTooltipPosition]="'below'" matTooltip="The position has not been approved by the group yet.">Pending</p> -->
+          <!-- <p *ngIf="education.stage==0 || education.stage==1" class="badge badge-warning mb-1" [matTooltipPosition]="'below'" matTooltip="The group site has not been approved yet.">Pending</p> -->
+        </td>
+        <td *ngIf="meFlag">
+          <ng-container *ngIf="!education.group.group.link && education.group.group._id">
+            <spinner-put [stream]=stream[i]
+                         (animationDoneEvent)="animationDone($event,i)">
+            </spinner-put>
+            <build-buttons [showButton]="stream[i]==0"
+                           (buttonEditClick)="buttonEditFunc(i, education._id)"
+                           (buttonDeleteClick)="buttonDeleteFunc(i, education._id)">
+            </build-buttons>
+          </ng-container>
+          <ng-container *ngIf="education.group.group.link && education.group.group._id">
+            <a mat-raised-button type="button" matTooltip="Edit" [matTooltipPosition]="'above'" class="ml-4 btn btn-primary btn-link btn-sm btn-just-icon"
+               [routerLink]="['/',education.group.university.link,education.group.department.link,education.group.group.link,'people']">
+              <i class="material-icons">edit</i>
+            </a>
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="tableMode==1" class="d-md-none">
+      <tr *ngFor="let education of educationsSort; let i=index">
+        <th scope="row" class="text-nowrap" style="width: 15%;">
+          <img *ngIf="education.group.university.pic" [height]=60 [src]=education.group.university.pic>
+        </th>
+        <td [ngClass]="{'pr-2': meFlag}">
+          <b><span *ngIf="education.period.start">{{ education.period.start | date:'MMM y' }} -</span> {{(education.period.mode==0) ? (education.period.end | date:'MMM y') : "Present" }}</b><br>
+          {{titlesSelect[education.titles[0]]}} <span *ngIf="education.degree && education.degree.field">in {{ education.degree.field }}</span>
+          <spinner-put class="ml-1"
+                       [stream]=stream[i]
+                       (animationDoneEvent)="animationDone($event,i)">
+          </spinner-put>
+          <build-buttons *ngIf="meFlag && !education.group.group.link && education.group.group._id"
+                         [showButton]=true
+                         (buttonEditClick)="buttonEditFunc(i, education._id)"
+                         (buttonDeleteClick)="buttonDeleteFunc(i, education._id)">
+          </build-buttons>
+
+          <ng-container *ngIf="education.group.university.link; then universityLink else universityNonLink"></ng-container>
+          <ng-template #universityLink>
+            <br><a [routerLink]="['/',education.group.university.link]">{{education.group.university.name}}</a>
+          </ng-template>
+          <ng-template #universityNonLink>
+            <br>{{education.group.university.name}}
+          </ng-template>
+
+          <ng-container *ngIf="education.group.department.link; then departmentLink else departmentNonLink"></ng-container>
+          <ng-template #departmentLink>
+            <br><a [routerLink]="['/',education.group.university.link,education.group.department.link]">{{education.group.department.name}}</a>
+          </ng-template>
+          <ng-template #departmentNonLink>
+            <br>{{education.group.department.name}}
+          </ng-template>
+
+          <ng-container *ngIf="education.group.group.link && (education.stage==2 || meFlag); then groupLink else groupNonLink"></ng-container>
+          <ng-template #groupLink>
+            <br><a [routerLink]="['/',education.group.university.link,education.group.department.link,education.group.group.link]">{{education.group.group.name}}</a>
+          </ng-template>
+          <ng-template #groupNonLink>
+            <br>
+            <ng-container *ngIf="(education.status==8 || education.status==9) && meFlag; then groupBuild else groupNonBuild"></ng-container>
+            <ng-template #groupBuild>
+              <a style="cursor: pointer;" (click)="buildWebsiteFunc(education._id, 1)">{{education.group.group.name}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </ng-template>
+            <ng-template #groupNonBuild>
+              {{education.group.group.name}}
+            </ng-template>
+          </ng-template>
+
+          <span *ngIf="education.text" build-text-pic [text]="education.text" [textMax]=100></span>
+
+          <span *ngIf="education.degree">
+            <span *ngIf="education.degree.thesis">
+              <br><span class="text-muted">Title:</span> {{ education.degree.thesis }}
+            </span>
+            <span *ngIf="education.degree.file">
+              <br><button role="button" class="pl-0 btn btn-sm btn-link" (click)="pdfSlide(null,education.degree.file)">PDF</button>
+            </span>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="tableMode==2">
+      <tr *ngFor="let honor of honorsSort; let i=index" class="d-flex align-items-center">
+        <th scope="row" style="width: 25%" class="d-none d-md-block text-nowrap">
+          {{ honor.period.start | date:'MMM y' }} - {{(honor.period.mode==0) ? (honor.period.end | date:'MMM y') : "Present" }}
+        </th>
+        <td style="width: 75%">
+          <span class="d-md-none"><b>{{ honor.period.start | date:'MMM y' }} - {{(honor.period.mode==0) ? (honor.period.end | date:'MMM y') : "Present" }}</b><br></span>
+          {{ honor.name }}
+          <spinner-put class="ml-1"
+                       [stream]=stream[i]
+                       (animationDoneEvent)="animationDone($event,i)">
+          </spinner-put>
+          <build-buttons *ngIf="meFlag" class="ml-1"
+                         [showButton]=meFlag
+                         (buttonEditClick)="buttonEditFunc(i, honor._id)"
+                         (buttonDeleteClick)="buttonDeleteFunc(i, honor._id)">
+          </build-buttons>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="tableMode==4">
+      <tr *ngFor="let outreach of outreachSort; let i=index" class="d-flex align-items-center">
+        <th scope="row" style="width: 25%" class="d-none d-md-block text-nowrap">
+          {{ outreach.period.start | date:'MMM y' }} - {{(outreach.period.mode==0) ? (outreach.period.end | date:'MMM y') : "Present" }}
+        </th>
+        <td style="width: 75%">
+          <span class="d-md-none"><b>{{ outreach.period.start | date:'MMM y' }} - {{(outreach.period.mode==0) ? (outreach.period.end | date:'MMM y') : "Present" }}</b><br></span>
+          <b>{{ outreach.name }}</b>
+          <spinner-put class="ml-1"
+                       [stream]=stream[i]
+                       (animationDoneEvent)="animationDone($event,i)">
+          </spinner-put>
+          <build-buttons *ngIf="meFlag" class="ml-1"
+                         [showButton]=meFlag
+                         (buttonEditClick)="buttonEditFunc(i, outreach._id)"
+                         (buttonDeleteClick)="buttonDeleteFunc(i, outreach._id)">
+          </build-buttons>
+          <br>{{ outreach.role }}
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="tableMode==6">
+      <tr *ngFor="let service of servicesSort; let i=index" class="d-flex align-items-center">
+        <th scope="row" style="width: 25%" class="d-none d-md-block text-nowrap">
+          {{ service.period.start | date:'MMM y' }} - {{(service.period.mode==0) ? (service.period.end | date:'MMM y') : "Present" }}
+        </th>
+        <td style="width: 75%">
+          <span class="d-md-none"><b>{{ service.period.start | date:'MMM y' }} - {{(service.period.mode==0) ? (service.period.end | date:'MMM y') : "Present" }}</b><br></span>
+          <b>{{ service.journal.name }}</b>
+          <spinner-put class="ml-1"
+                       [stream]=stream[i]
+                       (animationDoneEvent)="animationDone($event,i)">
+          </spinner-put>
+          <build-buttons *ngIf="meFlag" class="ml-1"
+                         [showButton]=meFlag
+                         (buttonEditClick)="buttonEditFunc(i, service._id)"
+                         (buttonDeleteClick)="buttonDeleteFunc(i, service._id)">
+          </build-buttons>
+          <br>
+          <span *ngIf="service.role==0">Editorial Board</span>
+          <span *ngIf="service.role==1">Deputy Editor</span>
+          <span *ngIf="service.role==2">Associate Editor</span>
+          <span *ngIf="service.role==3">Consulting Editor</span>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="tableMode==7">
+      <tr *ngFor="let society of profile.societies; let i=index" class="d-flex align-items-center">
+        <td>
+          {{ society.name }}
+          <spinner-put class="ml-1"
+                       [stream]=stream[i]
+                       (animationDoneEvent)="animationDone($event,i)">
+          </spinner-put>
+          <build-buttons *ngIf="meFlag" class="ml-1"
+                         [showButton]=meFlag
+                         (buttonEditClick)="buttonEditFunc(i, society._id)"
+                         (buttonDeleteClick)="buttonDeleteFunc(i, society._id)">
+          </build-buttons>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody *ngIf="tableMode==8">
+      <tr *ngFor="let language of profile.languages; let i=index" class="d-flex align-items-center">
+        <td style="width: 25%">
+          {{ language.name }}
+        </td>
+        <td style="width: 75%">
+          <span *ngIf="language.level==0">Beginner</span>
+          <span *ngIf="language.level==1">Intermediate</span>
+          <span *ngIf="language.level==2">Advanced</span>
+          <span *ngIf="language.level==3">Proficient</span>
+          <spinner-put class="ml-1"
+                       [stream]=stream[i]
+                       (animationDoneEvent)="animationDone($event,i)">
+          </spinner-put>
+          <build-buttons *ngIf="meFlag" class="ml-1"
+                         [showButton]=meFlag
+                         (buttonEditClick)="buttonEditFunc(i, language._id)"
+                         (buttonDeleteClick)="buttonDeleteFunc(i, language._id)">
+          </build-buttons>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+  </div>
+
+</div>
+</div>

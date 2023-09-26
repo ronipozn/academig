@@ -1,0 +1,53 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <button [disabled]="!streamRetrieved[0]" role="button" class="btn btn-sm btn-info" (click)="updateList()">
+      Reload
+    </button>
+  </div>
+</div>
+
+<div *ngIf="!streamRetrieved[0]" class="py-4">
+  <spinner [text]="'Page'"></spinner>
+</div>
+
+<div *ngIf="streamRetrieved[0]" class="card mt-0">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th class="text-nowrap">Item ID</th>
+            <th class="text-nowrap">User ID</th>
+            <th class="text-nowrap">Details</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let claim of claims; let i=index">
+
+            <th scope="row">{{i}}</th>
+
+            <td>
+              <a [routerLink]="['/publications',claim.itemId]">{{claim.itemId}}</a><br>
+            </td>
+
+            <td>
+              <a [routerLink]="['/profile',claim.userId]">{{claim.userId}}</a>
+            </td>
+
+            <td class="text-nowrap">
+              <b>name: </b> {{claim.name}}
+              <br><b>message: </b> {{claim.message}}
+              <br><b>mode: </b> {{claim.mode}}
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>

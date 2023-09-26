@@ -1,0 +1,103 @@
+<ng-container *ngIf="missionService.showPage">
+
+  <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && missionService.showEditBtn" class="d-flex justify-content-center mb-4">
+    <button mat-raised-button class="btn btn-light-blue btn-round mr-2" (click)="fundingSlide(true, null, 1, 0)">
+      <i class="material-icons">add_circle_outline</i> Add Current Funding
+    </button>
+    <button mat-raised-button class="btn btn-light-blue btn-round" (click)="fundingSlide(true, 0, 1, 1)">
+      <i class="material-icons">add_circle_outline</i> Add Past Funding
+    </button>
+  </div>
+
+  <spinner *ngIf="!streamRetrieved[0] && !streamRetrieved[1]"></spinner>
+
+  <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && !missionService.showHeadline && currentFundings[0]==null && pastFundings[0]==null" class="card mt-0">
+    <div class="card-header" [@itemsAnimation]="('active')">
+      <build-headline [headline]="'Funding'"></build-headline>
+      <build-modal-intro [headline]="'There are no funding yet.'"
+                         [bodypic]="'money'">
+      </build-modal-intro>ֿ
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && (currentFundings[0]==null || pastFundings[0]==null) && missionService.showEditBtn" class="card mt-0">
+    <div class="card-body" [@itemsAnimation]="('active')">
+      <build-modal-intro [headline]="'Add your lab\' funding'"
+                         [bodypic]="'money'"
+                         [bodytext]="'Start posting your lab\' current and past funding sources.'">
+      </build-modal-intro>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[0] && currentFundings[0]" class="card mt-0" #scrollAdd>
+    <div class="card-body" [@itemsAnimation]="('active')">
+      <build-headline [headline]="'Current Funding'"></build-headline>
+      <fundings-list [streamRetrieved]=streamRetrieved[0]
+                     [bagName]="'current-bag'"
+                     [fundings]=currentFundings
+                     [sourceType]=0
+                     [groupStage]=missionService.groupStage
+                     [activeId]=missionService.userId
+                     [showEditBtn]=missionService.showEditBtn
+                     [planNumber]=missionService.planNumber
+                     [itemFocus]=itemFocus
+                     [stream]=streamCurrentFundings
+                     [streamRole]=streamCurrentFundingsRole
+                     (animationDoneEvent)="streamFunc(0)"
+                     (buttonEditClick)="fundingSlide(true, $event, 0, 0)"
+                     (buttonDeleteClick)="fundingDelete($event, 0)"
+                     (buttonRoleAddClick)="fundingSlide(true, $event, 4, 0)"
+                     (buttonRoleEditClick)="fundingSlide(true, $event[1], 2, 0, $event[0])"
+                     (buttonRoleLeaveClick)="fundingSlide(true, $event[1], 3, 0, $event[0])"
+                     (buttonRoleApproveClick)="fundingDecide($event[1], $event[0], 2, 0)"
+                     (buttonRoleDeclineClick)="fundingDecide($event[1], $event[0], 1, 0)">
+      </fundings-list>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[1] && pastFundings[0]" class="card mt-0">
+    <div class="card-body" [@itemsAnimation]="('active')">
+      <build-headline [headline]="'Current Funding'"></build-headline>
+      <fundings-list [streamRetrieved]=streamRetrieved[1]
+                     [bagName]="'past-bag'"
+                     [fundings]=pastFundings
+                     [sourceType]=0
+                     [groupStage]=missionService.groupStage
+                     [activeId]=missionService.userId
+                     [showEditBtn]=missionService.showEditBtn
+                     [planNumber]=missionService.planNumber
+                     [itemFocus]=itemFocus
+                     [stream]=streamPastFundings
+                     [streamRole]=streamPastFundingsRole
+                     (animationDoneEvent)="streamFunc(1)"
+                     (buttonEditClick)="fundingSlide(true, $event, 0, 1)"
+                     (buttonDeleteClick)="fundingDelete($event, 1)"
+                     (buttonRoleAddClick)="fundingSlide(true, $event, 4, 1)"
+                     (buttonRoleEditClick)="fundingSlide(true, $event[1], 2, 1, $event[0])"
+                     (buttonRoleLeaveClick)="fundingSlide(true, $event[1], 3, 1, $event[0])"
+                     (buttonRoleApproveClick)="fundingDecide($event[1], $event[0], 2, 1)"
+                     (buttonRoleDeclineClick)="fundingDecide($event[1], $event[0], 1, 1)">
+      </fundings-list>
+    </div>
+  </div>
+
+</ng-container>
+
+<img src="./assets/img/items/funding.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_funding">
+
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+
+<build-slide-funding *ngIf=fundingBuildFlag
+                     (update)="fundingUpdate($event)"
+                     (cancel)="fundingSlide($event)"
+                     [modeNum]=modeNum
+                     [groupId]=missionService.groupId
+                     [userId]=missionService.userId
+                     [roleIndex]=fundingRoleIndex
+                     [newFlag]=fundingNewFlag
+                     [groupStage]=missionService.groupStage
+                     [funding]=fundingBuild>
+</build-slide-funding>

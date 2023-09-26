@@ -1,0 +1,84 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <button [disabled]="!streamRetrieved" role="button" class="btn btn-sm btn-light-blue mr-2" (click)="updateList()">
+      Reload
+    </button>
+  </div>
+</div>
+
+<div class="card mt-0">
+  <div class="card-body">
+    <p class="lead"><b>Mentors</b></p>
+    <spinner *ngIf="!streamRetrieved" class="py-4"></spinner>
+    <ng-container *ngIf="streamRetrieved">
+      <b>Total mentors:</b> {{mentors.length}}<br>
+      <table class="table table-responsive table-sm">
+        <thead>
+          <tr>
+            <!-- <th>User / Non-user</th> -->
+            <th scope="col">#</th>
+            <th scope="col">User ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Status</th>
+            <th scope="col">Price</th>
+            <th scope="col">Coaching</th>
+            <th scope="col">Time</th>
+            <th scope="col">Days</th>
+            <th scope="col">Sessions</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Submission</th>
+            <th scope="col">Actions</th>
+            <th scope="col">Emails</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mentor of mentors; let i=index">
+            <th scope="row">{{i+1}}</th>
+            <th><a [routerLink]="['/','people',mentor.userId]">{{mentor.userId}}</a></th>
+            <th>{{mentor.name || '-'}}</th>
+            <th>-</th>
+            <th>{{statusTypes[mentor.status]}}</th>
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th>
+              <button type="button" [disabled]="streamStatus==3 || mentor.status!=1" class="btn btn-sm btn-light-blue" (click)="statusOp(2, i)">Approve</button>
+              <button type="button" [disabled]="streamStatus==3 || mentor.status!=1" class="btn btn-sm btn-light-blue" (click)="statusOp(5, i)">Decline</button>
+              <button type="button" [disabled]="streamStatus==3 || mentor.status!=2" class="btn btn-sm btn-light-blue" (click)="statusOp(3, i)">Activate</button>
+              <button type="button" [disabled]="streamStatus==3 || mentor.status<=2" class="btn btn-sm btn-light-blue" (click)="statusOp(4, i)">On Hold</button>
+              <button type="button" [disabled]="streamStatus==3 || mentor.status<=2" class="btn btn-sm btn-light-blue" (click)="statusOp(6, i)">Delete</button>
+            </th>
+            <th>
+              <!-- Mentors Just In / Welcome Mentor -->
+              <button type="button" [disabled]="streamStatus==3 || mentor.status<=1" class="btn btn-sm btn-light-blue" (click)="emailOp(0, i)">
+                New Mentor | {{mentor.emails[0]?.date}}
+              </button>
+              <!-- Learn More / Interview -->
+              <button type="button" [disabled]="streamStatus==3 || mentor.status<=1" class="btn btn-sm btn-light-blue" (click)="emailOp(1, i)">
+                Introduce Mentor | {{mentor.emails[1]?.date}}
+              </button>
+              <!-- <button type="button" [disabled]="mentor.status==0" class="btn btn-sm btn-light-blue" (click)="emailOp(2, i)">Bye Mentor</button> -->
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<!-- <build-slide-pic *ngIf=csvBuildFlag
+                 (update)="csvOp(2, false, $event)"
+                 (cancel)="csvOp(0, false, $event)"
+                 [title]="typeName + ' CSV'"
+                 [type]=7>
+</build-slide-pic> -->

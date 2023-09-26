@@ -1,0 +1,50 @@
+
+<h6 class="mt-4 mb-0">Danger Zone</h6>
+<hr class="mt-0">
+
+<div class="card card-outline-danger">
+  <div class="card-body">
+    <blockquote class="card-blockquote">
+
+      <p class="text-danger">
+        Warning! This can't be undone.<br><br>
+        This will delete the University completely.
+      </p>
+
+      <p *ngIf="departmentsLength>0">The university departments page isn't empty. You must delete all the departments before you can delete the university.</p>
+
+      <button role="button" mat-raised-button class="btn btn-danger" [disabled]="!streamRetrieved || !streamDelete" data-toggle="modal" data-target="#deleteSiteModal">
+        <i class="fa fa-trash pr-2"></i> Delete University
+        <div *ngIf="!streamRetrieved" class="ml-2">
+          <i class="fa fa-1x fa-spinner fa-spin"></i>
+        </div>
+      </button>
+
+    </blockquote>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - -->
+<!-- Delete University Modal -->
+<!-- - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - -->
+<div class="modal fade" id="deleteSiteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSiteModal" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <p class="lead modal-title" id="ModalLabel">Delete University</p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-footer">
+        <button role="button" mat-raised-button class="btn btn-sm btn-link mr-2" data-dismiss="modal">Close</button>
+        <button role="button" mat-raised-button class="btn btn-sm btn-danger" data-dismiss="modal" (click)="deleteFunc()"><i class="fa fa-trash pr-2"></i>Delete</button>
+      </div>
+
+    </div>
+  </div>
+</div>

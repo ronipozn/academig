@@ -1,0 +1,344 @@
+<div style="min-height: 86vh">
+  <div class="container-fluid">
+
+    <div *ngIf="streamRetrieved" class="row no-gutters">
+      <div class="col-md-8">
+
+        <div class="card">
+          <div class="card-body">
+            <h3 class="text-dark mt-0">
+              <div class="d-flex align-items-center">
+                <span class="material-icons mr-1">text_snippet</span>
+                <b>Background</b>
+                <button *ngIf="missionService.showEditBtn" (click)="backgroundOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-just-icon">
+                  <i class="material-icons text-dark">edit</i>
+                </button>
+              </div>
+            </h3>
+            <hr class="mt-2">
+            <h2 class="card-title mt-2"><b>{{missionService.name}}</b></h2>
+            <h3><b>{{description}}</b></h3>
+            <img *ngIf="cover" [src]="cover" class="card-img-top" [alt]="missionService.name">
+            <div *ngIf="longDescription" [innerHTML]="longDescription | safeHtml"></div>
+            <!-- <p class="card-text">Introducing the <a [href]="website" target="_empty">{{missionService.name}}</a>.</p> -->
+          </div>
+        </div>
+
+        <div class="card mt-0">
+          <div class="card-body">
+            <h3 class="text-dark mt-0">
+              <div class="d-flex align-items-center">
+                <span class="material-icons mr-1">view_list</span>
+                <b>TL;DR</b>
+                <button *ngIf="missionService.showEditBtn" (click)="tldrOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-just-icon">
+                  <i class="material-icons text-dark">edit</i>
+                </button>
+              </div>
+            </h3>
+            <hr class="mt-2">
+            <div class="row">
+              <div *ngFor="let item of tldr; let i=index" class="col-lg-6 my-2">
+                <div class="media">
+                  <img src="/assets/img/star.svg" class="mr-3" width="40px">
+                  <div class="media-body">
+                    <span *ngIf="i==1"><b>Best for:</b></span>
+                    <span *ngIf="i==3"><b>Alternative to:</b></span>
+                    {{item}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <h3 class="text-dark mt-0">
+            <div *ngIf="missionService.showEditBtn" class="d-flex align-items-center">
+              <span class="material-icons mr-1">video_library</span>
+              <b>Clip</b>
+              <button (click)="clipOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-just-icon">
+                <i class="material-icons text-dark">edit</i>
+              </button>
+            </div>
+          </h3>
+          <hr class="mt-0">
+          <h3 *ngIf="clip" [innerHTML]="clip.text | safeHtml"></h3>
+          <div *ngIf="clip" class="text-center">
+            <iframe width="750" height="450" [src]="clip.link" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <ng-container *ngFor="let block of blocks; let i=index">
+            <h3 *ngIf="missionService.showEditBtn" class="text-dark mt-0">
+              <div class="d-flex align-items-center">
+                <span class="material-icons mr-1">text_snippet</span>
+                <b *ngIf="i<4">Content Block {{i+1}}</b>
+                <b *ngIf="i==4">Content Summary</b>
+                <button (click)="blockOp(i, 0, true, null)" mat-raised-button type="button" class="btn btn-link btn-just-icon">
+                  <i class="material-icons text-dark">edit</i>
+                </button>
+              </div>
+            </h3>
+            <!-- <hr class="mt-0"> -->
+            <!-- <p class="mt-2">{{}}</p> -->
+            <div *ngIf="block.text" [innerHTML]="block.text | safeHtml"></div>
+            <figure class="figure text-center mx-auto d-block">
+              <!-- <img *ngIf="imgSize>0" [ngClass]="{'mx-auto d-block': imgCenter}" class="figure-img mt-2 img-fluid" [style.max-height]="imgSize + 'px'" [src]=pic> -->
+              <img *ngIf="block.pic" class="mx-auto d-block figure-img mt-2 img-thumbnail img-fluid" [src]=block.pic [alt]="block.caption">
+              <div class="col-lg-6 offset-lg-3"><figcaption class="figure-caption text-left">{{block.caption}}</figcaption></div>
+              <p *ngIf="!block.pic"></p>
+            </figure>
+            <hr *ngIf="missionService.showEditBtn" class="mt-4 mb-0">
+          </ng-container>
+        </div>
+      </div>
+
+      <div *ngIf="deal || missionService.showEditBtn" class="card mt-0">
+        <div class="card-body">
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <!-- <b>Deal details</b> -->
+              <b>Plans and Features</b>
+               <!-- && deal.status==0 -->
+              <button *ngIf="missionService.showEditBtn" (click)="dealOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-just-icon">
+                <i class="material-icons text-dark">edit</i>
+              </button>
+            </div>
+          </h3>
+          <ng-container *ngIf="deal">
+
+            <div *ngIf="missionService.showEditBtn" class="card bg-light text-dark">
+              <div class="card-body">
+                <p class="lead"><b>Deal details</b></p>
+                <b>Status:</b> {{deal.status}}
+                <br><b>Start Date:</b> {{moment(deal.dateStart).format("dddd, MMMM Do YYYY")}}
+                <br><b>End Date:</b> {{moment(deal.dateEnd).format("dddd, MMMM Do YYYY")}}
+                <br><b>Total plans:</b> {{deal.plansTotal}}
+                <br><b>Total codes:</b> {{deal.codesTotal}}
+                <br><b>Remaining codes:</b> {{deal.codesTotal}}
+              </div>
+            </div>
+
+            <p class="mt-2"><b>Get access to {{missionService.name}} today!</b></p>
+            <p>
+              <b>P.S.</b> Join us for a webinar and walk-through of {{missionService.name}} on <b>{{moment(deal.webinarDate).format("dddd, MMMM Do YYYY, h:mm:ss a")}} CST</b>.
+              <a [href]="deal.webinarLink">Click here to register.</a>
+            </p>
+            <hr>
+
+            <h2><b>Academig Apps Offer</b></h2>
+
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title><span class="lead"><b>Deal terms</b></span></mat-panel-title>
+                </mat-expansion-panel-header>
+                <div [innerHTML]="deal.terms | safeHtml"></div>
+              </mat-expansion-panel>
+            </mat-accordion>
+
+            <p></p>
+
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title><span class="lead"><b>Deal features</b></span></mat-panel-title>
+                </mat-expansion-panel-header>
+                <div [innerHTML]="deal.features | safeHtml"></div>
+              </mat-expansion-panel>
+            </mat-accordion>
+
+            <div *ngIf="deal.status==1 && deal.dateEnd" class="alert alert-info border-info alert-dismissible fade show mt-4" role="alert">
+              <ng-container *ngIf="time1$ | async as time1">
+                <div class="d-flex justify-content-center align-items-center">
+                  <span class="material-icons mr-1">timer</span>
+                  <span class="lead">{{time1.days}} Days {{time1.hours}} Hours {{time1.minutes}} Minutes {{time1.seconds}} Seconds</span>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+
+          <div class="row mt-4" #scrollPlans>
+            <div *ngFor="let plan of plans; let i=index" class="col-lg-4">
+              <div *ngIf="i<=2" class="card bg-light text-dark my-0">
+                <div class="card-body">
+                  <h3 *ngIf="i==0" class="text-center mt-0"><b>Single</b></h3>
+                  <h3 *ngIf="i==1" class="text-center mt-0"><b>Dobule</b></h3>
+                  <h3 *ngIf="i==2" class="text-center mt-0"><b>Multiple</b></h3>
+                  <hr>
+                  <ng-container *ngIf="plan">
+                    <p class="text-center">One Time Purchase of<br><span class="lead"><b>${{plan.price_reduced}}</b> | ${{plan.price_full}}</span></p>
+                    <hr>
+                    <div [innerHTML]="plan.features | safeHtml"></div>
+                    <ng-container *ngIf="plans.length>3">
+                      <p *ngIf="i<2" class="my-4 py-4"></p>
+                      <mat-form-field *ngIf="i==2" appearance="fill">
+                        <mat-label>Select more codes</mat-label>
+                        <mat-select [(value)]="codeIndex">
+                          <!-- <mat-option>None</mat-option> -->
+                          <ng-container *ngFor="let plan of plans; let p=index">
+                            <mat-option *ngIf="p>=2" [value]="p">{{p+1}} Codes</mat-option>
+                          </ng-container>
+                        </mat-select>
+                      </mat-form-field>
+                    </ng-container>
+                    <button [disabled]="streamBuy || deal.status!=1" class="btn btn-warning btn-block p-3" (click)="buyOp(i+1)">
+                      Buy Now
+                      <span *ngIf="deal.plansTotal>1">({{i+1}} Codes)</span>
+                      <div *ngIf="streamBuy && (i+1)==quantityNum" class="ml-1 spinner-border spinner-border-sm text-white" role="status"><span class="sr-only">Loading...</span></div>
+                    </button>
+                  </ng-container>
+                </div>
+                <button *ngIf="missionService.showEditBtn" type="button" class="btn btn-link p-0" (click)="planOp(0, (i==2) ? codeIndex : i, true, null)">Edit Details</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Questions for Tool Owners: https://labworm.com/discussions -->
+      <!-- https://talk.hyvor.com/plans, https://talk.hyvor.com/blog/disqus-alternatives -->
+      <div class="card mb-0">
+        <div class="card-body my-0">
+          <h2><b>Reviews & Questions</b></h2>
+          <div id="hyvor-talk-view"></div>
+        </div>
+      </div>
+
+      <div class="d-block d-md-none col-12 mb-4">
+        <div class="text-center">
+          Share<br>
+          <!-- <share-buttons [show]="4" [theme]="material-light" [include]="['facebook','twitter','linkedin', 'email']"></share-buttons> -->
+        </div>
+      </div>
+
+    </div>
+
+    <div class="d-none d-md-block col-md-4">
+
+      <!-- [ngClass]="{'sticky-top': !backgroundBuildFlag && !clipBuildFlag && !tldrBuildFlag && !blockBuildFlag && !dealBuildFlag && !planBuildFlag}" style="padding-top: 100px;" -->
+      <div  *ngIf="deal.status!=null" class="text-center">
+        <div class="d-flex justify-content-start">
+          <div class="d-none d-md-block ml-4"></div>
+          <div class="card flex-grow-1">
+            <div class="card-body">
+
+              <ng-container *ngIf="deal.status==2">
+                <h5><b>This Deal is Sold Out</b></h5>
+                <p>Don't ever relive this heartbreak — sign up below to get the latest deals!</p>
+                <div class="btn btn-warning btn-block p-3">Sign Up</div>
+              </ng-container>
+
+              <button *ngIf="deal.status<2" [disabled]="streamBuy || deal.status!=1" class="btn btn-warning btn-block p-3" (click)="buyOp(1)">
+                <spinner *ngIf="streamBuy && 1==quantityNum"></spinner> Buy Now
+              </button>
+
+              <p *ngIf="deal.plansTotal==1 && plans[0]" class="mt-4 lead"><b>${{plans[0].price_reduced}}</b> | <s>${{plans[0].price_full}}</s></p>
+              <p *ngIf="deal.plansTotal>1 && plans[0]" class="mt-4 lead"><b>Starting at ${{plans[0].price_reduced}}</b> | <s>${{plans[0].price_full}}</s></p>
+              <p class="text-dark lead my-2">{{dealType[deal.type]}}</p>
+              <p class="mt-2 mb-4"><a href="javascript:void(0)" (click)="scrollToPlans()">View plans for more codes</a></p>
+
+              <ng-template #t let-fill="fill">
+                <span class="star" [class.full]="fill === 100">
+                  <span class="half" [style.width.%]="fill">&#8734;</span>&#8734;
+                </span>
+              </ng-template>
+
+              <ngb-rating [rate]="3.5" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
+
+               <!-- [routerLink]="['./news']"  -->
+              <p class="lead"><a>42 Reviews</a></p>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- https://stackoverflow.com/questions/36461089/time-countdown-in-angular-2 -->
+      <!-- https://www.npmjs.com/package/ngx-countdown -->
+      <!-- https://medium.com/javascript-in-plain-english/implement-a-countdown-timer-with-rxjs-in-angular-3852f21a4ea0 -->
+      <ng-container *ngIf="deal.status==1">
+        <div class="d-flex justify-content-start">
+          <div class="d-none d-md-block ml-4"></div>
+          <div class="flex-grow-1">
+            <ng-container *ngIf="time1$ | async as time1">
+              <div class="text-center">
+                <span class="lead">{{time1.days}} : {{time1.hours}} : {{time1.minutes}} : {{time1.seconds}}</span>
+                <div class="d-flex justify-content-center align-items-center">
+                  <span class="material-icons mr-1">timer</span>
+                  <span class="small">Days : Hours : Minutes : Seconds</span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- <div class="d-flex justify-content-end fixed-bottom">
+        <button mat-fab (click)="scrollTop()" class="mb-4 mr-4">
+          <mat-icon>arrow_circle_up</mat-icon>
+        </button>
+      </div> -->
+    </div>
+
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text-pic *ngIf=backgroundBuildFlag
+                      [title]="'Background'"
+                      [text]=longDescription
+                      [pic]=cover
+                      [caption]=null
+                      [captionFlag]=false
+                      (update)="backgroundOp(2, false, $event)"
+                      (cancel)="backgroundOp(0, false, $event)">
+</build-slide-text-pic>
+
+<build-slide-tldr *ngIf=tldrBuildFlag
+                  [tldr]=tldr
+                  (update)="tldrOp(2, false, $event)"
+                  (cancel)="tldrOp(0, false, $event)">
+</build-slide-tldr>
+
+<build-slide-text-clip *ngIf=clipBuildFlag
+                      [text]="clip?.text"
+                      [clip]="clip?.link"
+                      (update)="clipOp(2, false, $event)"
+                      (cancel)="clipOp(0, false, $event)">
+</build-slide-text-clip>
+
+<build-slide-text-pic *ngIf=blockBuildFlag
+                      [title]="'Block ' + (blockNum+1)"
+                      [text]=blocks[blockNum].text
+                      [pic]=blocks[blockNum].pic
+                      [caption]=blocks[blockNum].caption
+                      [captionFlag]="blockNum<4"
+                      (update)="blockOp(null, 2, false, $event)"
+                      (cancel)="blockOp(null, 0, false, $event)">
+</build-slide-text-pic>
+
+<build-slide-deal *ngIf=dealBuildFlag
+                  [deal]=deal
+                  (update)="dealOp(2, false, $event)"
+                  (cancel)="dealOp(0, false, $event)">
+</build-slide-deal>
+
+<build-slide-plan *ngIf=planBuildFlag
+                  [index]=planIndex
+                  [plan]=plans[planIndex]
+                  (update)="planOp(2, null, false, $event)"
+                  (cancel)="planOp(0, null, false, $event)">
+</build-slide-plan>
+<!-- [itemId]=project._id -->

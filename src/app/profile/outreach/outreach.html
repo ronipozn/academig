@@ -1,0 +1,54 @@
+<div *ngIf="streamRetrieved && missionService.meFlag" class="d-flex justify-content-center mb-4">
+  <button mat-raised-button class="btn btn-light-blue btn-round" (click)="outreachSlide(true, 0, true, 0)">
+    <i class="material-icons">add_circle_outline</i> Add Outreach
+  </button>
+</div>
+
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && !missionService.meFlag && outreachs[0]==null" class="card mt-0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Outreach'"></build-headline>
+    <build-modal-intro [headline]="'The outreach list is still empty.'"
+                       [bodypic]="'graduation-cap'">
+    </build-modal-intro>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved && (missionService.meFlag || outreachs[0])" class="card mt-0" #scrollAdd>
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Outreach'"></build-headline>
+    <ng-container *ngIf="outreachs[0]==null && missionService.meFlag">
+      <build-modal-intro [headline]="'Add your outreach.'"
+                         [bodypic]="'graduation-cap'"
+                         [bodytext]="'Start posting your outreach online.'">
+      </build-modal-intro>
+    </ng-container>
+    <outreachs-list [streamRetrieved]=streamRetrieved
+                    [outreachs]=outreachs
+                    [sourceType]=0
+                    [itemFocus]=itemFocus
+                    [stream]=streamOutreachs
+                    [showEditBtn]=missionService.meFlag
+                    (animationDoneEvent)="streamFunc()"
+                    (buttonEditClick)="outreachSlide(true, $event, false, 0)"
+                    (buttonDeleteClick)="outreachDelete($event, 0)">
+    </outreachs-list>
+  </div>
+</div>
+
+<img *ngIf="streamRetrieved" src="./assets/img/items/outreach.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_outreach">
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-outreach *ngIf=outreachBuildFlag
+                      (update)="outreachUpdate($event)"
+                      (cancel)="outreachSlide($event)"
+                      [newFlag]=outreachNewFlag
+                      [groupId]=projId
+                      [userId]=missionService.userId
+                      [outreach]=outreachBuild>
+</build-slide-outreach>

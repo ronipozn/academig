@@ -1,0 +1,81 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<ng-container *ngIf="streamRetrieved">
+  <div class="row">
+    <div class="col-lg-6">
+      <affiliation-item [affiliation]=affiliation
+                        [showEditBtn]=true
+                        [index]=null
+                        [stream]=streamAffiliation
+                        [updateFlag]=true
+                        (animationDoneEvent)="affiliationStreamFunc()"
+                        (buttonUpdateClick)="affiliationSlide(true)">
+      </affiliation-item>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-4">
+        <div class="card-body mt-0">
+          <p class="mb-0"><b>Stage</b></p>
+          <hr class="mt-0 mb-1">
+          <div class="togglebutton">
+            <label for="UniversityStage">
+              <input type="checkbox" id="UniversityStage" [(ngModel)]="account.stage" (change)="toogleStage()">
+              <span class="toggle"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-0">
+        <div class="card-body mt-0">
+          <p class="mb-0"><b>Country, State & City</b></p>
+          <hr class="mt-0 mb-2">
+          <p>Country: {{missionService.universityCountry | country}}</p>
+          <p>State: {{missionService.universityState || '-'}}</p>
+          <p>City: {{missionService.universityCity || '-'}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-0">
+        <div class="card-body mt-0">
+          <p class="mb-0"><b>Ranks</b></p>
+          <hr class="mt-0 mb-2">
+          <p>Official ranks</p>
+          <p *ngIf="rank?.times">Times Higher Education Ranking: {{rank.times | rankPipe:0}}</p>
+          <p *ngIf="rank?.shanghai">Shanghai Jiao Tong University Ranking: {{rank.shanghai | rankPipe:1}}</p>
+          <p *ngIf="rank?.top">TopUniversities Ranking: {{rank.top | rankPipe:2}}</p>
+          <p *ngIf="rank?.usnews">U.S. News & World Report Ranking: {{rank.usnews | rankPipe:3}}</p>
+          <p>Social ranks</p>
+          <p *ngIf="rank?.facebook">Facebook Fans: {{rank.facebook}}</p>
+          <p *ngIf="rank?.twitter">Twitter Followers: {{rank.twitter}}</p>
+          <p *ngIf="rank?.linkedin">Linkedin Fans: {{rank.linkedin}}</p>
+          <p *ngIf="rank?.instagram">Instagram Fans: {{rank.instagram}}</p>
+          <p *ngIf="rank?.youtube">Youtube Fans: {{rank.youtube}}</p>
+          <build-buttons [showButton]="streamRank==0" [editFlag]=true (buttonEditClick)="rankOp(0, true, $event)"></build-buttons>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-affiliation *ngIf=affiliationBuildFlag
+                         (update)="affiliationUpdate($event)"
+                         (cancel)="affiliationSlide($event)"
+                         [itemId]=missionService.departmentId
+                         [affilation]=affiliation
+                         [newFlag]=affiliationNewFlag>
+</build-slide-affiliation>
+
+<build-slide-rank *ngIf=rankBuildFlag
+                  (update)="rankOp(1, false, $event)"
+                  (cancel)="rankOp(0, false, null)"
+                  [rank]=rank
+                  [mode]=3>
+</build-slide-rank>

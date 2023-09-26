@@ -1,0 +1,30 @@
+/* @media (min-width: 1200px) {
+  .navbar {
+    display: inline-block;
+    padding-left: 9%;
+    padding-right: 8%;
+    width: 100%;
+  }
+} */
+/*to make sure .navbar accepts width*/
+
+.material-icons {
+  transform: scale(1.2);
+  /* color: rgba(0, 0, 0, 0.26); */
+}
+
+.material-icons:hover {
+  /* color: rgba(0, 0, 0, 0.54); */
+}
+
+.nav-link {
+  color: rgba(0, 0, 0, 0.26)!important;
+}
+
+.nav-link:hover {
+  color: rgba(0, 0, 0, 0.54)!important;
+}
+
+.active-link {
+  color: #4CAF50!important;
+}

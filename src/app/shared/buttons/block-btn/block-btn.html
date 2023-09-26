@@ -1,0 +1,21 @@
+<button *ngIf="blockStatus" (click)="buttonBlockFunc($event)" role="button"
+        [disabled]="streamBlock==3 || disabledFlag || !userService.userEmailVerified"
+        class="btn btn-sm btn-light-blue" aria-haspopup="true" aria-expanded="false"
+        [ngClass]="{'btnBlocking': streamBlock==0,
+                    'btnUnblock' : streamBlock>=2}">
+
+  <i class="fa fa-ban mr-1" aria-hidden="true"></i>
+  <span *ngIf="streamBlock==3">Unblock</span>
+  <spinner-put *ngIf="streamBlock==3" [stream]=streamBlock></spinner-put>
+
+</button>
+
+<button *ngIf="!blockStatus" (click)="buttonBlockFunc($event)" role="button"
+        [disabled]="streamBlock==3 || disabledFlag || !userService.userEmailVerified"
+        class="btn btn-sm" aria-haspopup="true" aria-expanded="false"
+        [ngClass]="{'btn-outline-light-blue' : streamBlock==0, 'btn-ligt-blue': streamBlock>=2}">
+
+  <i class="fa fa-circle-o mr-1" aria-hidden="true"></i>Block
+  <spinner-put *ngIf="streamBlock==3" [stream]=streamBlock></spinner-put>
+
+</button>

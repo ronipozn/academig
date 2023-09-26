@@ -1,0 +1,53 @@
+ <!-- && deals.length==0 -->
+<div *ngIf="streamRetrieved" class="offset-md-1 col-md-10 pt-4 mb-4">
+  <div class="card mt-0">
+    <div class="card-body mt-2">
+      <h4 class="text-dark mb-2"><b>No mentors</b></h4>
+      <p>You have not coordinated any mentors sessions yet.</p>
+      <button mat-raised-button class="btn btn-light-blue" [routerLink]="['/search/apps']">
+        <i class="material-icons mr-1">hearing</i> Browse Mentors
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- && deals.length>0 -->
+<div *ngIf="streamRetrieved" class="offset-md-1 col-md-10 pt-4 mb-4">
+
+  <h3><b>My Mentors</b></h3>
+
+  <!-- Search box<br> -->
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row justify-content-between">
+        <div class="col-md-4">
+          <div class="media">
+            <img src="https://apps.shopifycdn.com/listing_images/0be1e6fca3171739b71ec72978c9a0bb/icon/17e77f0b4af478508ce5f2b1c14ebb09.png" width="50" class="mr-3" alt="...">
+            <div class="media-body">
+              <h4 class="mt-0"><b>Udi Aloni</b></h4>
+              List of upcoming and past sessions: Status<br>
+              <!-- Sessions placed: 30 November 2020<br> -->
+              <!-- Sessions ID: #028-9479585-3251509<br> -->
+              On-Going Coaching<br>
+              <!-- 500$ per month<br> -->
+              <!-- Eligible for refund until 31 Jan 2021<br> -->
+              <!-- Status: Redeemed<br> -->
+              <button class="mt-2 btn btn-light-blue">View mentor</button>
+            </div>
+          </div>
+          <!-- Purchase Codes: 2 -->
+        </div>
+        <div class="col-md-4">
+          <div class="btn-group-vertical pull-right">
+            <!-- <button class="btn btn-secondary">Refund</button> -->
+            <!-- <button class="btn btn-secondary">View Invoice</button> -->
+            <button class="btn btn-secondary">Refer a friend</button>
+            <button class="btn btn-secondary">Write a review</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

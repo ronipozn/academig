@@ -1,0 +1,89 @@
+<div *ngIf="streamRetrieved[0] && streamRetrieved[1] && missionService.meFlag" class="d-flex justify-content-center mb-4">
+  <button mat-raised-button class="btn btn-light-blue btn-round" (click)="fundingEdit(true, true, null)">
+    <i class="material-icons">add_circle_outline</i> Add Funding
+  </button>
+</div>
+
+<div class="card mt-0" *ngIf="streamRetrieved[0] && streamRetrieved[1] && fundingsSort.length==0 && groupsFundings.length==0">
+  <div class="card-header" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Funding and Grants'"></build-headline>
+    <build-modal-intro *ngIf="!missionService.meFlag" [headline]="'The funding list is still empty.'" [bodypic]="'microphone'"></build-modal-intro>
+    <build-modal-intro *ngIf="missionService.meFlag" [headline]="'Add your first funding'" [bodytext]="'Your funding and grants list is still empty.'"></build-modal-intro>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved[0] && fundingsSort.length>0" class="card mt-0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Funding and Grants'"></build-headline>
+    <spinner *ngIf="!streamRetrieved[0] || !streamRetrieved[1]"></spinner>
+    <ng-container *ngIf="streamRetrieved[0] && streamRetrieved[1] && fundingsSort.length>0">
+      <ul *ngFor="let funding of fundingsSort; let i=index; let l=last" class="list-unstyled">
+        <li class="media">
+          <single-pic class="d-flex mr-3" [pic]=funding.pic [width]=96 [height]=96 [widthE]=3
+                      [type]=2 [stack]=true [stackColor]="'5E5770'" [stackPic]="'money'">
+          </single-pic>
+          <div class="media-body">
+            <p class="lead mb-0">
+              {{ funding.name }}
+              <build-buttons [showButton]=missionService.meFlag
+                             (buttonEditClick)="fundingEdit(true, false, funding._id)"
+                             (buttonDeleteClick)="fundingDelete(i, funding._id)">
+              </build-buttons>
+              <spinner-put [stream]=streamFundings[i] (animationDoneEvent)="streamFunc(i)"></spinner-put>
+              <br><span class="text-muted">{{ funding.abbr }}</span>
+            </p>
+            <span class="text-muted">ID:</span> {{ funding.officalId }}
+            <br>{{ funding.description }}
+            <br>{{ funding.period.start | date:'MMM y' }} - {{(funding.period.mode==0) ? (funding.period.end | date:'MMM y') : "Present" }}
+          </div>
+        </li>
+      </ul>
+    </ng-container>
+  </div>
+</div>
+
+<fundings-list *ngIf="streamRetrieved[0] && streamRetrieved[1]"
+               [streamRetrieved]=streamRetrieved[1]
+               [fundings]=groupsFundings
+               [activeId]=userService.userId
+               [sourceType]=2
+               [itemFocus]=itemFocus
+               [stream]=streamGroupsFunding
+               [streamRole]=streamGroupsFundingRole
+               [userGroups]=userGroups
+               (buttonGroupAddClick)="fundingGroupPut($event)"
+               (buttonGroupDeleteClick)="fundingGroupDelete($event)"
+               (buttonRoleEditClick)="fundingGroupSlide(true, $event[1], 2, $event[0])"
+               (buttonRoleLeaveClick)="fundingGroupSlide(true, $event[1], 3, $event[0])">
+               <!-- (buttonRoleApproveClick)="fundingDecide($event[1], $event[0], 2, 1)"
+               (buttonRoleDeclineClick)="fundingDecide($event[1], $event[0], 1, 1)"> -->
+</fundings-list>
+
+<img *ngIf="streamRetrieved[0] && streamRetrieved[1]" src="./assets/img/items/funding.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_funding">
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-table *ngIf=fundingBuildFlag
+                   (update)="fundingUpdate($event)"
+                   (cancel)="fundingEdit(false, false, null)"
+                   [headline]="'Funding'"
+                   [newFlag]=fundingNewFlag
+                   [mode]=9
+                   [userId]=userService.userId
+                   [funding]="fundings[fundingIndex]">
+</build-slide-table>
+
+<build-slide-funding *ngIf=fundingGroupBuildFlag
+                     (update)="fundingGroupUpdate($event)"
+                     (cancel)="fundingGroupSlide($event)"
+                     [modeNum]=0
+                     [userId]=userService.userId
+                     [roleIndex]=fundingRoleIndex
+                     [newFlag]=fundingGroupNewFlag
+                     [funding]=fundingGroupBuild>
+</build-slide-funding>
+<!-- [groupId]=missionService.groupId -->
+<!-- [modeNum]=modeNum -->

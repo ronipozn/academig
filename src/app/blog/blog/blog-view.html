@@ -1,0 +1,81 @@
+<div class="ais-InstantSearch">
+<ais-instantsearch [config]="config_posts">
+
+<app-loading-indicator></app-loading-indicator>
+
+<div style="background-image: linear-gradient(#283E73, #74B1CC);">
+  <div class="text-center text-white" style="padding-top: 50px; padding-bottom: 50px">
+   <h2>Academig Blog</h2>
+   <p class="subheading">A blog about academic research</p>
+    <!-- <app-search-box [query]="'search_input'" (onQuerySuggestionClick)="setQuery($event)"></app-search-box> -->
+    <!-- <ais-configure [searchParameters]="{ hitsPerPage: 20 }"></ais-configure> -->
+  </div>
+</div>
+
+<!-- <div><button type="button" mat-raised-button class="btn btn-sm btn-success mt-0" [routerLink]="'submit'">Want go guest post?</button></div> -->
+
+<div class="container-fluid" style="background: white;font-size:20px;color:#212529;font-family:Lora,'Times New Roman',serif">
+
+  <div class="container" style="padding-top: 50px;">
+    <div class="row justify-content-center">
+
+      <div class="col-md-2 offset-lg-1 col-lg-2">
+        <app-refinement-list [att]="'categories'"></app-refinement-list>
+      </div>
+
+      <div class="col-md-10 col-lg-7">
+
+        <ul class="list-unstyled">
+          <ais-hits>
+            <ng-template let-hits="hits" let-results="results">
+              <li *ngFor="let post of hits" class="media">
+                <a [routerLink]="['post',post.link]">
+                  <img class="mr-3 img-fluid" [width]="180" src="./assets/img/blog/laboratory-blog.jpg" alt="">
+                </a>
+                <div class="media-body">
+                  <h3 class="mt-0 mb-1"><a [routerLink]="['post',post.link]">{{post.title}}</a></h3>
+                  <span class="text-muted small">{{post.text}}</span>
+                  <p class="my-2 small">
+                    <a [routerLink]="['post',post.link]">Continue reading →</a>
+                  </p>
+                  <p class="mt-0 post-meta text-muted small">Posted by
+                    <a [routerLink]="['/people',post.author_id]">{{post.author}}</a> on {{post.date}} &middot; {{post.read_time}} min read
+                  </p>
+                </div>
+                <hr>
+              </li>
+              <!-- <p class="my-4"></p> -->
+              <!-- <app-pagination *ngIf="hits.length>0" class="mb-2"></app-pagination> -->
+            </ng-template>
+          </ais-hits>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</ais-instantsearch>
+</div>
+
+<info-footer></info-footer>
+
+<!-- <ng-container *ngFor="let post of posts">
+  <div class="post-preview">
+    <a [routerLink]="['post',post.link]">
+      <img class="mx-auto d-block img-fluid" [width]="550" src="./assets/img/blog/laboratory-blog.jpg" alt="">
+    </a>
+    <a class="row justify-content-center" [routerLink]="['post',post.link]">
+      <h1 class="col-lg-10 text-center post-title">{{post.title}}</h1>
+    </a>
+    <p class="lead">{{post.text}}</p>
+    <p class="mb-4 pb-4">
+      <a [routerLink]="['post',post.link]">Continue reading →</a>
+    </p>
+    <p class="text-center post-meta">Posted by
+      <a [routerLink]="['/people',post.author_id]">{{post.author}}</a> on {{post.date}} &middot; {{post.read_time}} min read
+    </p>
+  </div>
+  <hr>
+</ng-container> -->

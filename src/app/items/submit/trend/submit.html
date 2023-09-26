@@ -1,0 +1,37 @@
+<div style="background-image: linear-gradient(#283E73, #74B1CC); padding-top: -15rem" class="text-white pt-0 pb-4 mb-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="d-none d-sm-block text-center display-4 pt-4">Request an Academic Trend</div>
+      <div class="d-block d-sm-none text-center lead pt-4">Request an Academic Trend</div>
+    </div>
+  </div>
+</div>
+
+<div class="form-container mb-4">
+  <div class="container">
+
+    <form *ngIf="!submitCompleted" [formGroup]="trendFormGroup">
+      <div class="card">
+        <div class="card-body">
+          <h4>Describe your trend request</h4>
+          <mat-form-field appearance="outline" class="mt-2">
+            <!-- <mat-label>Please outline 2-4 benefits of your academic product</mat-label> -->
+            <textarea matInput formControlName="trend" [rows]=8 required></textarea>
+            <mat-hint></mat-hint>
+          </mat-form-field>
+          <button mat-button [disabled]="submitFlag" class="btn btn-success" (click)="onSubmit()">
+            Submit <i *ngIf="submitFlag" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div *ngIf="submitCompleted" class="card">
+      <div class="card-body text-center">
+        <h4>Trend Submission Successful</h4>
+        <a *ngIf="submitCompleted" class="btn btn-light-blue" [routerLink]="['/','search','trends']">Go back to search trends.</a>
+      </div>
+    </div>
+
+  </div>
+</div>

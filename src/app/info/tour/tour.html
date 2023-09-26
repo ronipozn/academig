@@ -1,0 +1,118 @@
+<div class="container my-4">
+  <div class="bg-white">
+
+  <div class="text-center pt-4 mt-4">
+    <h2>How It Works</h2>
+  </div>
+
+  <div class="mx-3">
+
+    <div class="tab-content" id="pills-tabContent">
+
+      <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div *ngFor="let text of textsGroups; let i=index" class="pt-4 my-4">
+          <div class="row justify-content-start pb-4 mb-4">
+
+            <div class="d-md-none col-12">
+              <!-- <div class="circle">{{i+1}}</div> -->
+              <span class="fa-stack fa-2x mb-3">
+                <i class="fa fa-circle fa-stack-2x" style="color: #F1F3F4"></i>
+                <i class="fa fa-{{iconsGroups[i]}} fa-stack-1x fa-inverse" style="color: #505050"></i>
+              </span>
+              <!-- <h4>{{i+1}}. {{stepsGroups[i]}}</h4> -->
+              <h1 class="display-4">{{stepsGroups[i]}}</h1>
+              <p class="mt-4">{{text}}</p>
+              <p *ngIf="devGroups[i]" class="mt-4"><i>Under Development</i></p>
+            </div>
+
+            <div *ngIf="i%2==0" class="d-none d-md-block col-md-6">
+              <!-- <div class="circle">{{i+1}}</div> -->
+              <span class="fa-stack fa-2x mb-3">
+                <i class="fa fa-circle fa-stack-2x" style="color: #F1F3F4"></i>
+                <i class="fa fa-{{iconsGroups[i]}} fa-stack-1x fa-inverse" style="color: #505050"></i>
+              </span>
+              <!-- <h4>{{i+1}}. {{stepsGroups[i]}}</h4> -->
+              <h1 class="display-4">{{stepsGroups[i]}}</h1>
+              <p class="mt-4">{{text}}</p>
+              <p *ngIf="devGroups[i]" class="mt-4"><i>Under Development</i></p>
+            </div>
+
+            <div class="col-md-6 text-center" [ngClass]="{'pl-4': i%2==0, 'pr-4': i%2==1}">
+              <img class="img-fluid border" [src]="'./assets/img/tour/tour-group-'+ (i+1) +'.jpg'">
+            </div>
+
+            <div *ngIf="i%2==1" class="d-none d-md-block col-md-6">
+              <span class="fa-stack fa-2x mb-3">
+                <i class="fa fa-circle fa-stack-2x" style="color: #F1F3F4"></i>
+                <i class="fa fa-{{iconsGroups[i]}} fa-stack-1x fa-inverse" style="color: #505050"></i>
+              </span>
+              <!-- <h4>{{i+1}}. {{stepsGroups[i]}}</h4> -->
+              <h1 class="display-4">{{stepsGroups[i]}}</h1>
+              <p class="mt-4">{{text}}</p>
+              <p *ngIf="devGroups[i]" class="mt-4"><i>Under Development</i></p>
+            </div>
+
+          </div>
+          <hr>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+        <div *ngFor="let text of textsPersonal; let i=index" class="pt-4 my-4">
+          <div class="row justify-content-start align-items-center pb-4 mb-4">
+
+            <div class="d-md-none col-12">
+              <span class="fa-stack fa-2x mb-3">
+                <i class="fa fa-circle fa-stack-2x" style="color: #F1F3F4"></i>
+                <i class="fa fa-{{iconsPersonal[i]}} fa-stack-1x fa-inverse" style="color: #505050"></i>
+              </span>
+              <h1 class="display-4">{{stepsPersonal[i]}}</h1>
+              <p class="mt-4">{{text}}</p>
+              <p *ngIf="devPersonal[i]" class="mt-4"><i>Under Development</i></p>
+            </div>
+
+            <div *ngIf="i%2==0" class="d-none d-md-block col-md-6">
+              <span class="fa-stack fa-2x mb-3">
+                <i class="fa fa-circle fa-stack-2x" style="color: #F1F3F4"></i>
+                <i class="fa fa-{{iconsPersonal[i]}} fa-stack-1x fa-inverse" style="color: #505050"></i>
+              </span>
+              <h1 class="display-4">{{stepsPersonal[i]}}</h1>
+              <p class="mt-4">{{text}}</p>
+              <p *ngIf="devPersonal[i]" class="mt-4"><i>Under Development</i></p>
+            </div>
+
+            <div class="d-none d-md-block col-md-6 text-center">
+              <!-- <img class="img-fluid" class="img-thumbnail" [src]="'https://s3.amazonaws.com/academig/tour/tour-personal-'+ (i+1) +'.jpg'"> -->
+            </div>
+
+            <div *ngIf="i%2==1" class="d-none d-md-block col-md-6">
+              <span class="fa-stack fa-2x mb-3">
+                <i class="fa fa-circle fa-stack-2x" style="color: #F1F3F4"></i>
+                <i class="fa fa-{{iconsPersonal[i]}} fa-stack-1x fa-inverse" style="color: #505050"></i>
+              </span>
+              <h1 class="display-4">{{stepsPersonal[i]}}</h1>
+              <p class="mt-4">{{text}}</p>
+              <p *ngIf="devPersonal[i]" class="mt-4"><i>Under Development</i></p>
+            </div>
+
+          </div>
+          <hr>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  </div>
+</div>
+
+<div class="mb-4 pb-4 mt-0 row justify-content-center">
+  <button style="display:inline-block;text-decoration:none;background-color:#5bc0de;color:white;cursor:pointer;font-family:Helvetica,Arial,sans-serif;font-size:20px;line-height:50px;text-align:center;margin:0;height:50px;padding:0px 33px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;"
+          role="button" class="btn"
+          (click)="login()">
+    <i class="fa fa-sign-in fa-1x mr-2" aria-hidden="true"></i> Get Started
+  </button>
+</div>
+
+<info-footer></info-footer>

@@ -1,0 +1,106 @@
+<div class="bg-white pt-4 mb-4">
+  <div class="container">
+    <div class="row justify-content-start">
+
+      <div class="d-md-none col-12">
+        <!-- <i class="material-icons" style="color: #505050">{{iconsGroups[i]}}</i> -->
+        <!-- <h1 class="display-4"><b>{{stepsGroups[i]}}</b></h1> -->
+        <!-- <p class="mt-4 text-dark font-weight-light">{{text}}</p> -->
+        <button role="button" class="btn btn-light-blue" (click)="login()">Get Started</button>
+      </div>
+
+      <div class="d-none d-md-block col-md-6">
+        <h1 class="display-4"><b>Academig PRO</b></h1>
+        <p class="mt-4 text-dark font-weight-light">Find Companies, Research Your Market, and Track Industry Trends</p>
+        Use Crunchbase Pro to get meaningful search results and discover your next business deal.
+        <p class="mt-4 text-dark font-weight-light">Unlock prospecting and research tools on Crunchbase:</p>
+        SALES PROSPECTING
+        FIND INVESTMENTS
+        RAISE CAPITAL
+        MARKET RESEARCH<br><br>
+        <button role="button" class="btn btn-light-blue" (click)="login()">Get Started</button>
+      </div>
+
+      <div class="col-md-6 text-center pl-4">
+        <img class="img-fluid text-center" [src]="'https://about.crunchbase.com/wp-content/uploads/2020/04/LPHeader_Mackbook_SearchMenu_1.png'">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container my-4">
+  <div class="row justify-content-start my-4">
+    <img class="img-fluid" [src]="'https://about.crunchbase.com/wp-content/uploads/2020/09/plaid-logo-v2.png'">
+  </div>
+</div>
+
+<div class="bg-white">
+  <div class="container mt-4 pt-4">
+
+    <div class="my-4 row justify-content-md-center">
+      <div class="col-md-10 col-lg-8 text-center">
+        <h1>Academig Lab Tools Pro</h1>
+        <h2><strong>Make Your Lab Stronger</strong></h2>
+        <span class="lead text-dark mt-2"><b>Use academic tools build specifically to help labs.</b></span>
+        <!-- <p class="text-dark">See how <b>Academig Lab Pro</b> can help your lab members. Check out these exclusive Lab Pro features:</p> -->
+      </div>
+    </div>
+
+    <div *ngFor="let text of textsGroups; let i=index" class="pt-4 my-4">
+      <div class="row justify-content-start pb-4 mb-4">
+
+        <div class="d-md-none col-12">
+          <i class="material-icons" style="color: #505050">{{iconsGroups[i]}}</i>
+          <h1 class="display-4"><b>{{stepsGroups[i]}}</b></h1>
+          <p class="mt-4 text-dark font-weight-light">{{text}}</p>
+          <button role="button" class="btn btn-light-blue" (click)="login()">Get Started</button>
+        </div>
+
+        <div *ngIf="i%2==0" class="d-none d-md-block col-md-6">
+          <i class="material-icons" style="color: #505050">{{iconsGroups[i]}}</i>
+          <h1 class="display-4"><b>{{stepsGroups[i]}}</b></h1>
+          <p class="mt-4 text-dark font-weight-light">{{text}}</p>
+          <button role="button" class="btn btn-light-blue" (click)="login()">Get Started</button>
+        </div>
+
+         <!-- [ngClass]="{'pl-4': i%2==0, 'pr-4': i%2==1}" -->
+        <div class="col-md-6 text-center p-4">
+          <!-- <img class="img-fluid border" [src]="'./assets/img/tour/tour-group-'+ (i+1) +'.jpg'"> -->
+          <img class="img-fluid" [src]="'https://about.crunchbase.com/wp-content/uploads/2019/11/expensive-manual.png'">
+        </div>
+
+        <div *ngIf="i%2==1" class="d-none d-md-block col-md-6">
+          <i class="material-icons" style="color: #505050">{{iconsGroups[i]}}</i>
+          <h1 class="display-4"><b>{{stepsGroups[i]}}</b></h1>
+          <p class="mt-4 text-dark font-weight-light">{{text}}</p>
+          <button role="button" class="btn btn-light-blue" (click)="login()">Get Started</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="mb-4 pb-4 mt-0 row justify-content-center">
+  <button style="display:inline-block;text-decoration:none;background-color:#5bc0de;color:white;cursor:pointer;font-family:Helvetica,Arial,sans-serif;font-size:20px;line-height:50px;text-align:center;margin:0;height:50px;padding:0px 33px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;"
+          role="button" class="btn"
+          (click)="login()">
+    <i class="fa fa-sign-in fa-1x mr-2" aria-hidden="true"></i> Get Started
+  </button>
+</div>
+
+<div class="my-4 row justify-content-md-center">
+  <div class="col-md-10 col-lg-8 text-center">
+    <!-- <button role="button" class="btn btn-lg btn-success my-4" (click)="upgradeFunc()">
+      <i class="fa fa-star fa-1x mr-2" aria-hidden="true"></i> TRY PRO FOR FREE
+    </button> -->
+    <p>Only 10$ monthly, cancel anytime.</p>
+    <!-- <button role="button" class="btn btn-link my-4" [routerLink]="['/pricing']" [fragment]="'labs'">
+      PRICING
+    </button> -->
+  </div>
+</div>
+
+<!-- <img class="card-img" src="./assets/img/pro/team_lab.svg" class="mx-auto d-block img-fluid" [width]="450" alt="Academig Pro"> -->
+
+<info-footer></info-footer>

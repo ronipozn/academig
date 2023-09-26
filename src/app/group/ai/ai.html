@@ -1,0 +1,39 @@
+<ng-container *ngIf="missionService.showPage && missionService.userStatus>=4">
+  <group-ai-list [archiveFlag]=false
+                 [adminFlag]=adminFlag
+                 (archiveBtnClick)="openArchiveModalFunc()">
+  </group-ai-list>
+</ng-container>
+
+<div *ngIf="missionService.groupId && missionService.userStatus<4" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-header">
+    <span class="card-title">You don't have access to this page</span>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - Arhicve Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleArchiveModal" #toggleArchiveModal [hidden]="true" data-toggle="modal" data-target="#archiveModalGroup"></button>
+
+<div class="modal fade" id="archiveModalGroup" data-target="#archiveModalGroup" tabindex="-1" role="dialog" aria-labelledby="ArchiveModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="ArchiveModalLabel">Archive</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <group-ai-list *ngIf="archiveRetrieve"
+                       [archiveFlag]=true
+                       [archiveToggle]=archiveToggle>
+        </group-ai-list>
+      </div>
+
+    </div>
+  </div>
+</div>

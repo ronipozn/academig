@@ -1,0 +1,11 @@
+agm-map-lg {
+  height: 200px;
+}
+
+agm-map-sm {
+  height: 500px;
+}
+
+.topMargin {
+  margin-top: 30px;
+}

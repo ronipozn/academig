@@ -1,0 +1,13 @@
+@media (min-width: 1200px) {
+  .navbar {
+    display: inline-block;  /*to make sure .navbar accepts width*/
+    padding-left: 4%;
+    padding-right: 4%;
+    width: 100%;
+  }
+}
+
+/* ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  background-color: white;
+  border-radius: 10px;
+} */

@@ -1,0 +1,114 @@
+<!-- card-stats card-stats -->
+<div class="card mt-0 mb-2" style="border-radius: 0px; background-color: #F3F9FE">
+  <div class="media">
+
+    <div class="d-none d-lg-block mb-0 pb-0">
+      <img *ngIf="pic" [width]=120 [height]=120 [src]="pic" style="cursor:pointer;" [routerLink]="['./']">
+    </div>
+
+    <div class="media-body">
+
+      <div class="card-header py-0 mt-2 mb-0"> <!-- card-header-icon -->
+
+        <div class="d-flex align-items-center">
+          <div class="mr-auto">
+            <div class="d-flex align-items-center small mb-1">
+              <mat-icon class="text-muted mr-1">{{typeIcon[type]}}</mat-icon> {{typeName[type]}}
+            </div>
+            <div class="d-flex align-items-center">
+              <h3 class="my-0 pb-0 text-dark"><b>{{name}}</b></h3>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <!-- <button *ngIf="btnEditFlag" mat-raised-button class="btn btn-sm btn-raised btn-round btn-outline secondary" data-toggle="modal" data-target="#pointsModal">
+              <i class="fa fa-bar-chart" aria-hidden="true"></i> 15.43
+            </button> -->
+            <button *ngIf="btnEditFlag" mat-raised-button type="button" class="btn btn-link btn-sm" [routerLink]="['./settings']">
+              <i class="text-muted fa fa-size-20 fa-cog" aria-hidden="true"></i>
+            </button>
+            <!-- !btnEditFlag -->
+            <button *ngIf="type>0" mat-raised-button class="btn btn-round ml-2" [ngClass]="{'btn-light-blue': followStatus, 'btn-outline-light-blue': !followStatus}" (click)="toggleFollowFunc()">
+              <i *ngIf="!streamFollow" class="material-icons">{{followStatus ? 'bookmark' : 'bookmark_border'}}</i> {{followStatus ? 'Unfollow lab' : 'Follow'}}
+              <i *ngIf="streamFollow" class="fa fa-circle-o-notch fa-spin fa-size-20" style="color: gray"></i>
+            </button>
+            <!-- <button mat-raised-button class="d-none d-lg-block btn btn-round btn-light-blue ml-2" (click)="toggleCompareFunc()">
+              <i class="material-icons">compare</i> {{compareFlag ? 'Uncompare lab' : 'Compare lab'}}
+            </button> -->
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-lg-none">
+        <div class="col-12">
+          <mat-form-field>
+            <!-- selectionChange -->
+            <mat-select [(value)]="modifiedPath" name="nav" (valueChange)="selectChange($event)">
+              <mat-option [value]="'.'">Summary</mat-option>
+              <mat-option [value]="'deal'">deal</mat-option>
+              <mat-option [value]="'news'">News</mat-option>
+              <!-- <mat-option [value]="'publications'">Publications</mat-option> -->
+              <!-- <mat-option [value]="'contact'">Contact</mat-option> -->
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="d-none d-lg-block card-footer my-0 pb-0">
+
+        <ul class="mt-0 pt-0 ml-0 pl-0 nav nav-pills card-header-tabs">
+
+          <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['.']">Summary</a>
+          </li>
+
+          <!-- <ng-container *ngFor="let searchItem of searchItems; let i=index">
+            <li class="mx-2">
+              <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="[searchLinks[i]]">{{searchItem}}</a>
+            </li>
+          </ng-container> -->
+
+          <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./deal']">Deal</a>
+          </li>
+
+          <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./news']">News</a>
+          </li>
+
+          <!-- <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./contact']">Contact</a>
+          </li> -->
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- <div class="col-lg-8 offset-lg-2 mb-4">
+  <div class="input-group">
+    <input type="text" style="z-index: 0" class="form-control" placeholder="Search" [(ngModel)]="searchText" (keyup.enter)="onSearch()">
+    <div class="dropdown">
+      <button class="SearchBtn btn btn-link btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+        <i class="fa fa-{{searchIcons[searchType]}} mr-1" aria-hidden="true"></i> {{searchItems[searchType]}}
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+        <div *ngFor="let searchItem of searchItems; let i=index">
+          <a *ngIf="i>1 && i<7" role="button" class="dropdown-item small pl-2" (click)="onSearchType(i)" style="cursor:pointer">
+            <i class="fa fa-{{searchIcons[i]}} fa-fw mr-2"></i> {{searchItem}}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="input-group-btn">
+      <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon" (click)="onSearch()">
+          <i class="material-icons">search</i>
+          <div class="ripple-container"></div>
+      </button>
+    </div>
+  </div>
+</div> -->

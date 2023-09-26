@@ -1,0 +1,27 @@
+<!-- <span class="text-nowrap"> -->
+
+  <button *ngIf="addFlag" [disabled]="!showButton" role="button" class="btn btn-link py-0" (click)="buttonAddFunc($event)">
+    <i class="fa fa-plus" aria-hidden="true"></i><small *ngIf="addText" class="ml-1">{{addText}}</small>
+  </button>
+  <br *ngIf="addFlag">
+  
+  <button *ngIf="editFlag" [disabled]="!showButton" role="button" class="btn btn-link py-0" (click)="buttonEditFunc($event)">
+    <i class="fa fa-pencil" aria-hidden="true"></i><small *ngIf="editText" class="ml-1">{{editText}}</small>
+  </button>
+  <br *ngIf="editFlag">
+  
+  <button *ngIf="deleteFlag" [disabled]="!showButton" role="button" class="btn btn-link py-0" (click)="buttonDeleteFunc($event)">
+    <i class="fa fa-trash-o" aria-hidden="true"></i><small *ngIf="deleteText" class="ml-1">{{deleteText}}</small>
+  </button>
+  <br *ngIf="deleteFlag">
+
+  <button *ngIf="endFlag" [disabled]="!showButton" role="button" class="btn btn-link py-0" (click)="buttonEndFunc($event)">
+    <i class="fa fa-share" aria-hidden="true"></i><small *ngIf="endText" class="ml-1">{{endText}}</small>
+  </button>
+  <br *ngIf="endFlag">
+
+  <!-- <button *ngIf="!showButton" class="btn btn-link p-0">
+    <i class="fa fa-fw" aria-hidden="true"></i>
+  </button> -->
+
+<!-- </span> -->

@@ -1,0 +1,178 @@
+<div [formGroup]="firstFormGroup">
+
+  <div class="row no-gutters">
+    <div class="col-md-9">
+
+      <div class="card mt-0">
+        <div class="card-header">
+          <p class="text-dark mb-2">
+            <b>POSTED </b> {{ date | momentPipe:'':1 | uppercase }}
+          </p>
+          <div class="d-flex align-items-center">
+            <h3 class="card-title"><b>{{firstFormGroup.get('title').value}}</b></h3>
+          </div>
+          <a>{{secondFormGroup.get('university').value | name}}</a> / <a>{{secondFormGroup.get('department').value | name}}</a> / <a>{{secondFormGroup.get('group').value}}</a>
+          <!-- class="d-flex justify-content-start d-flex align-items-center" -->
+          <div *ngIf="firstFormGroup.get('tags').value">
+            <ng-container *ngFor="let tag of firstFormGroup.get('tags').value; let l=last">
+              <button *ngIf="tag" mat-raised-button style="background-color: #DDE1F3" class="btn btn-sm btn-outline-light-blue mr-1">
+                {{ tag }}
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="firstFormGroup.get('description').value" class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="'About the service'"></build-headline>
+          <div build-text [text]="firstFormGroup.get('description').value"></div>
+        </div>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="'FAQ'"></build-headline>
+        </div>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="'Gallery'"></build-headline>
+        </div>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="'Publications'"></build-headline>
+        </div>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="'Links'"></build-headline>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center justify-content-center mb-4">
+        <div class="d-none d-sm-block mr-auto">
+          <div class="d-flex flex-row">
+            <button type="button" mat-raised-button class="btn btn-outline-info mr-2">Follow</button>
+            <button type="button" mat-raised-button class="btn btn-danger">Service Request &#9658;</button>
+          </div>
+        </div>
+        <div>
+          <div class="text-center">
+            Share this service:<br>
+            <div class="d-flex justify-content-center mt-2">
+              <a role="button" style="cursor: pointer;"><i class="mr-4 fa fa-facebook" style="font-size: 19px" aria-hidden="true"></i></a>
+              <a role="button" style="cursor: pointer;"><i class="mx-4 fa fa-twitter" style="font-size: 19px" aria-hidden="true"></i></a>
+              <a role="button" style="cursor: pointer;"><i class="mx-4 fa fa-linkedin" style="font-size: 19px" aria-hidden="true"></i></a>
+              <a role="button" style="cursor: pointer;"><i class="ml-4 fa fa-envelope" style="font-size: 19px" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+      <div class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <h4 class="card-title"><b>SERVICE DETAILS</b></h4>
+            </div>
+            <hr class="mt-0 mb-3">
+            <p *ngIf="firstFormGroup.get('internalId').value"><span class="text-dark">Internal ID: </span> <b>{{ firstFormGroup.get('internalId').value }}</b></p>
+            <p *ngIf="secondFormGroup.get('website').value"><span class="text-dark">Website:</span> <a [href]="secondFormGroup.get('website').value" target="_empty"><i class="fa fa-link ml-1" aria-hidden="true"></i></a></p>
+            <!-- <p *ngIf="(position.stepsDates && position.stepsDates[0])"><span class="text-dark">Submission deadline: </span> <b>{{ position.stepsDates[0] | date:'dd MMM y' }}</b></p> -->
+            <!-- <p *ngIf="firstFormGroup.get('contract.length').value"><span class="text-dark">Contract Length: </span> <b>{{ firstFormGroup.get('contract.length').value }} {{lengthSelect[firstFormGroup.get('contract.lengthType').value]}}</b></p> -->
+            <!-- <p *ngIf="firstFormGroup.get('salary').value"><span class="text-dark">Salary: </span> <b>{{ position.salary }} {{ this.currencySelect[position.salaryCurrency] }}</b></p> -->
+
+            <!-- <p *ngIf="detailsPreview?.university">
+              <span class="text-dark">Location:</span>
+               {{ detailsPreview.university?.country ? (detailsPreview.university.country | country) + ',' : '' }}
+               {{ detailsPreview.university?.state ? detailsPreview.university.state + ',' : '' }}
+               {{ detailsPreview.university?.city }}
+               <span class="flag ml-1"><img [src]="'./assets/img/flags/' + (detailsPreview.university?.country | country | flag) + '.png'" alt=""></span>
+            </p> -->
+
+            <button mat-raised-button class="btn btn-danger">
+              Request service &#9658;
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1">
+          <div class="card-body">
+            <button class="btn px-4" style="background-color: #4469B0"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i></button>
+            <button class="btn px-4" style="background-color: #1DADEC"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i></button>
+            <button class="btn px-4" style="background-color: #0F70A4"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i></button>
+            <button class="btn px-4" style="background-color: #FD9631"><i class="fa fa-fw fa-envelope" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="detailsPreview && detailsPreview.university" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1">
+          <div class="card-body">
+            <div id="carouselIndicators" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <single-pic class="d-block w-100" [pic]="detailsPreview.university.pic" [type]=2 [height]=64 [fluidFlag]=true [centerFlag]=true [stackPic]="'university'"></single-pic>
+                  <h6 class="mt-4">{{detailsPreview.university.name}}</h6>
+                  <p class="my-2 text-muted small">{{detailsPreview.university.description}}</p>
+                  <p class="my-2"><a *ngIf="detailsPreview.university.externalLink" [href]=detailsPreview.university.externalLink target="_empty" role="button" class="pl-0 btn btn-sm btn-link" aria-label="ExternalWebsite">Official site</a></p>
+                  <a type="button" mat-raised-button class="mx-auto btn btn-light-blue btn-block" [routerLink]="['/',detailsPreview.university.link]">
+                    View University Page &#9658;
+                  </a>
+                </div>
+                <div *ngIf="detailsPreview.department" class="carousel-item">
+                  <single-pic class="d-block w-100" [pic]="detailsPreview.department.pic" [type]=2 [height]=64 [fluidFlag]=true [centerFlag]=true [stackPic]="'university'"></single-pic>
+                  <h6 class="mt-4">{{detailsPreview.department.name}}</h6>
+                  <p class="my-2 text-muted small">{{detailsPreview.department.description}}</p>
+                  <p class="my-2"><a *ngIf="detailsPreview.department.externalLink" [href]=detailsPreview.department.externalLink target="_empty" role="button" class="pl-0 btn btn-sm btn-link" aria-label="ExternalWebsite">Official site</a></p>
+                  <a type="button" mat-raised-button class="mx-auto btn btn-light-blue btn-block" [routerLink]="['/',detailsPreview.university.link,detailsPreview.department.link]">
+                    View Department Page &#9658;
+                  </a>
+                </div>
+              </div>
+              <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div *ngIf="detailsPreview?.university?.location && detailsPreview.university.location[0]" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1">
+          <div class="card-body">
+            <build-headline [headline]="'LOCATION'"></build-headline>
+            <agm-map [zoom]=16 [latitude]="detailsPreview.university.location[0]" [longitude]="detailsPreview.university.location[1]">
+              <agm-marker [latitude]="detailsPreview.university.location[0]" [longitude]="detailsPreview.university.location[1]"></agm-marker>
+            </agm-map>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- RELATED PROJECTS -->
+
+    </div>
+  </div>
+
+</div>

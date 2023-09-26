@@ -1,0 +1,44 @@
+<img *ngIf="pic && maxSizeFlag"
+     [style.max-width]="width + 'px'"
+     [style.max-height]="height + 'px'"
+     [ngClass]="{'mx-auto d-block': centerFlag,
+                 'hoverImg': hoverFlag,
+                 'selectImg': selectFlag,
+                 'rounded-circle': type==0,
+                 'rounded': type==1,
+                 'rounded-0': type==2,
+                 'img-fluid': fluidFlag,
+                 'img-thumbnail': thumbnailFlag}"
+     [src]=pic>
+
+<img *ngIf="pic && !maxSizeFlag"
+     [style.width]="width + 'px'"
+     [style.height]="height + 'px'"
+     [ngClass]="{'mx-auto d-block': centerFlag,
+                 'hoverImg': hoverFlag,
+                 'selectImg': selectFlag,
+                 'rounded-circle': type==0,
+                 'rounded': type==1,
+                 'rounded-0': type==2,
+                 'img-fluid': fluidFlag,
+                 'img-thumbnail': thumbnailFlag}"
+     [src]=pic
+     (error)="updateUrl($event)">
+
+<i *ngIf="!pic && !stack"
+   class="fa fb-btn fa-{{stackPic}}"
+   [style.font-size]="widthE + 'rem'"
+   [ngClass]="{'mx-auto d-block': centerFlag,
+               'hoverImg': hoverFlag,
+               'selectImg': selectFlag}">
+</i>
+
+<span *ngIf="!pic && stack"
+      class="fa-stack fa-lg"
+      [style.font-size]="widthE + 'rem'"
+      [ngClass]="{'mx-auto d-block': centerFlag,
+                  'hoverImg': hoverFlag,
+                  'selectImg': selectFlag}">
+  <i class="fa fa-stack-2x" [ngClass]="{'fa-circle': type==0, 'fa-square': type==1 || type==2}" style.color="#{{stackColor}}"></i>
+  <i class="fa fa-{{stackPic}} fa-stack-1x fa-inverse"></i>
+</span>

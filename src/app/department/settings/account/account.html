@@ -1,0 +1,66 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<ng-container *ngIf="streamRetrieved">
+  <div class="row">
+    <div class="col-lg-6">
+      <affiliation-item [affiliation]=affiliation
+                        [showEditBtn]=true
+                        [index]=null
+                        [stream]=streamAffiliation
+                        [updateFlag]=true
+                        (animationDoneEvent)="affiliationStreamFunc()"
+                        (buttonUpdateClick)="affiliationSlide(true)">
+      </affiliation-item>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-4">
+        <div class="card-body mt-0">
+          <p class="mb-0"><b>Stage</b></p>
+          <hr class="mt-0 mb-1">
+          <div class="togglebutton">
+            <label for="DepartmentStage">
+              <input type="checkbox" id="DepartmentStage" [(ngModel)]="account.stage" (change)="toogleStage()">
+              <span class="toggle"></span>
+            </label>
+          </div>
+          <p class="mt-3 mb-0"><b>University</b></p>
+          <hr class="mt-0 mb-1">
+          {{missionService.departmentIndex.university.name}}
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-0">
+        <div class="card-body mt-0">
+          <p class="mb-0"><b>Country, State & City</b></p>
+          <hr class="mt-0 mb-1">
+          <p>Country: {{missionService.departmentCountry | country}}</p>
+          <p>State: {{missionService.departmentState || '-'}}</p>
+          <p>City: {{missionService.departmentCity || '-'}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <p class="lead text-muted mt-4 mb-0">Labs Count</p>
+  <hr class="mt-0">
+  <p class="text-muted">TBD</p> -->
+
+  <!-- <p class="lead text-muted mt-4 mb-0">Admins</p>
+  <hr class="mt-0">
+  <p class="text-muted">TBD</p> -->
+
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-affiliation *ngIf=affiliationBuildFlag
+                         (update)="affiliationUpdate($event)"
+                         (cancel)="affiliationSlide($event)"
+                         [itemId]=missionService.departmentId
+                         [affilation]=affiliation
+                         [newFlag]=affiliationNewFlag>
+</build-slide-affiliation>

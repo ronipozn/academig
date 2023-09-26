@@ -1,0 +1,202 @@
+<!-- Posted before? Just enter your email and logo, all other info will be pulled in from your last position! -->
+<!-- Help us target the right candidates. Select the required skills for your job. To help you get started, we populated skills from your job description. Help us target your job to the right candidates by adding and removing skills. We recommend adding 10 skills for the best performance. + Add Skill -->
+
+<div class="card">
+  <div class="card-body">
+    <h3 class="mt-0 text-success"><b>Tell us more about your research lab</b></h3>
+
+    <div *ngIf="invalid.length>0" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+      <p *ngFor="let item of invalid; let l=last" [ngClass]="{'mb-0': l}"><b>{{ item }}.</b></p>
+    </div>
+
+    <div [formGroup]="parentGroup">
+
+      <div class="row mb-3">
+        <div class="col-lg-6">
+          <build-modal-name-field [signUpFlag]=true
+                                  [labelRequired]=true
+                                  [iconTitle]="'university'"
+                                  [mode]=13
+                                  [itemTitle]="'University'"
+                                  [placeholder]="'Choose your university'"
+                                  [controlName]="'university'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=errorFlag[0]
+                                  [itemExplain]="'Choose university from the drop down list.'"
+                                  (controlStatus)="keyUp(0)">
+          </build-modal-name-field>
+        </div>
+        <div class="col-lg-6">
+          <!-- <build-modal-name-field [signUpFlag]=true
+                                  [labelRequired]=true
+                                  [iconTitle]="'building-o'"
+                                  [universityId]=universityId
+                                  [mode]=2
+                                  [itemTitle]="'Department'"
+                                  [placeholder]="'Choose your department'"
+                                  [controlName]="'department'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=errorFlag[1]
+                                  [itemExplain]="'Choose department from the drop down list or write your own. Keep name between 5-50 characters.'"
+                                  (controlStatus)="keyUp(1)">
+          </build-modal-name-field> -->
+          <div class="input-group" autocomplete="nope">
+            <ng-template #rt let-r="result" let-t="term">
+              <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('department').valid, 'has-danger': (parentGroup.get('department').invalid && parentGroup.get('department').dirty) || errorFlag[1]}">
+              <mat-label>Department</mat-label>
+              <input matInput (keyup)="keyUp(1)"
+                     type="text"
+                     [formControlName]="'department'"
+                     [placeholder]="'Choose your department'"
+                     [ngbTypeahead]="search"
+                     [resultTemplate]="rt"
+                     [inputFormatter]="formatter"
+                     [editable]='true'
+                     [required]=true>
+              <span class="form-control-feedback d-flex flex-row">
+                <i *ngIf="parentGroup.get('department').valid" class="material-icons">done</i>
+                <i *ngIf="(parentGroup.get('department').invalid && parentGroup.get('department').dirty) || errorFlag[1]" class="material-icons">clear</i>
+              </span>
+              <mat-hint>Choose department from the drop down list or write your own.</mat-hint>
+            </mat-form-field>
+            <!-- {{parentGroup.get('country').value | json}} -->
+          </div>
+        </div>
+
+        <div class="col-lg-6 mt-3">
+          <!-- *ngIf="!fromPositionFlag"  -->
+          <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('group').valid && !existFlag, 'has-danger': (parentGroup.get('group').invalid && parentGroup.get('group').dirty) || existFlag || errorFlag[3]}">
+            <mat-label>Lab name</mat-label>
+            <input matInput type="text" [placeholder]="'Lab name'" (keyup)="keyUp(3)" formControlName=group [required]=true>
+            <span class="form-control-feedback d-flex flex-row">
+              <i *ngIf="parentGroup.get('group').valid && !existFlag" class="material-icons">done</i>
+              <!-- <i *ngIf="errorFlag[3] || existFlag" class="material-icons">clear</i> -->
+              <i *ngIf="(parentGroup.get('group').invalid && parentGroup.get('group').dirty) || existFlag || errorFlag[3]" class="material-icons">clear</i>
+            </span>
+            <mat-hint>
+              Keep name between 5-50 characters.
+            </mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-6 mt-3">
+          <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('topic').valid && parentGroup.get('topic').dirty, 'has-danger': (parentGroup.get('topic').invalid) || (parentGroup.get('topic').dirty && parentGroup.get('topic').invalid)}">
+            <mat-label>Research topics</mat-label>
+            <!-- ariaLabel="topics[0]" -->
+            <mat-select multiple formControlName=topic placeholder="Choose your lab main topics" (selectionChange)="topicsChanged()">
+              <mat-option *ngFor="let topic of topics; let i=index" [value]="topic">
+                {{ topic }}
+              </mat-option>
+            </mat-select>
+            <mat-hint>
+              Choose your research topics (select up to 6).
+            </mat-hint>
+            <span class="form-control-feedback">
+              <i *ngIf="parentGroup.get('topic').valid && parentGroup.get('topic').dirty" class="material-icons">done</i>
+              <i *ngIf="parentGroup.get('topic').invalid || (parentGroup.get('topic').dirty && parentGroup.get('topic').invalid)" class="material-icons">clear</i>
+            </span>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="existFlag" class="col-12 mt-3">
+          <div class="alert alert-warning border-warning alert-dismissible fade show" role="alert">
+            This name already exist in {{parentGroup.get('university').value.name}}/{{parentGroup.get('department').value.name}}. Please choose a different lab name.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-lg-4">
+          <build-modal-text-field [fieldType]=13
+                                  [typeSelected]="'url'"
+                                  [labelRequired]=true
+                                  [itemTitle]="'Lab\'s Website URL'"
+                                  [controlName]="'website'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col-lg-4">
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'email'"
+                                  [labelRequired]=true
+                                  [itemTitle]="'Lab\'s Contact Email'"
+                                  [controlName]="'contactEmail'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col-lg-4">
+          <build-modal-text-field [fieldType]=13
+                                  [typeSelected]="'url'"
+                                  [itemTitle]="'Lab\'s Twitter Account'"
+                                  [controlName]="'twitter'"
+                                  [parentGroup]=parentGroup
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <mat-form-field appearance="outline">
+            <mat-label>Number of people</mat-label>
+            <mat-select placeholder="Number of people" [formControlName]="'group_size'" ariaLabel="groupSize[0]">
+              <mat-option *ngFor="let size of groupSize" [value]="size.id">
+                {{ size.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-lg-6 mt-1">
+          <build-month-field [itemTitle]="'Lab\'s Date of Establishment'"
+                             [controlName]="'establishDate'"
+                             [parentGroup]=parentGroup>
+          </build-month-field>
+        </div>
+      </div>
+
+      <!-- <p *ngIf="parentGroup.get('firstInstituteEmail').value!='' && parentGroup.get('firstInstituteEmail').value==parentGroup.get('secondInstituteEmail').value">
+        Please provide different emails for your institutional email and your principal investigator institutional email.
+      </p>
+      * We will send a request to your Principal Investigator after you confirm your institutional email.<br> Your new Academic site will go live after we get both confirmations.
+      * Your lab email is a quick way to help us<br>verify your identity.
+      * We'll never share your email with anyone. -->
+
+      <build-modal-text-field [itemTitle]="'Lab Mission Statement'"
+                              [controlName]="'statement'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Lab Motto or Favorite Quote'"
+                              [controlName]="'quote'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <group-logo [parentGroup]=parentGroup [acronym]=acronym></group-logo>
+
+      <build-modal-text-field [fieldType]=8
+                              [itemTitle]="'Lab Research Interests (Select up to 6)'"
+                              [itemPlaceholder]="'+ Interest'"
+                              [itemSecondaryPlaceholder]="'Enter a new interest'"
+                              [maxItems]=6
+                              [controlName]="'interests'"
+                              [parentGroup]=parentGroup>
+      </build-modal-text-field>
+      <!-- [itemValues]=parentGroup.value.interests -->
+
+      <build-modal-text-field [fieldType]=12
+                              [itemTitle]="'Lab Description'"
+                              [controlName]="'background'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+    </div>
+
+  </div>
+</div>

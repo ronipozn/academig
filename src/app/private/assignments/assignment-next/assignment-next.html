@@ -1,0 +1,185 @@
+<div *ngIf="streamRetrieved && userStatus>=5 && report" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+    <h4 class="card-title"><b>Lab Assignments</b></h4>
+    <div class="d-flex flex-row">
+      <button role="button" mat-raised-button class="btn btn-sm btn-light-blue mr-2" (click)="buttonFunc(0)">
+        <i class="fa fa-pencil" aria-hidden="true"></i> Edit Future Schedule
+      </button>
+      <button role="button" class="btn btn-sm btn-light-blue" (click)="buttonFunc(2)">
+        <i class="fa fa-times" aria-hidden="true"></i> Cancel All
+        <!-- Assignments -->
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <build-headline [addButtonFlag]=false [headline]="'Upcoming Assignment'"></build-headline>
+
+    <spinner *ngIf="!streamReports || !streamRetrieved"></spinner>
+
+    <div *ngIf="streamRetrieved && streamReports && !report && userStatus<5" class="mr-auto">
+      <p class="lead">Empty</p>
+    </div>
+
+    <build-modal-intro *ngIf="streamRetrieved && streamReports && !report && userStatus>=5"
+                       [headline]="'Schedule your Lab Assignments'"
+                       [bodypic]="'bar-chart'"
+                       [bodytext]="'Your lab assignments list is still empty. Start scheduling your future assignments for your lab by clicking the Edit Future Schedule button.'">
+    </build-modal-intro>
+
+    <build-modal-intro *ngIf="streamRetrieved && streamReports && report && !validFlag && userStatus>=5"
+                       [headline]="'Reschedule your Lab Assignments'"
+                       [bodypic]="'bar-chart'"
+                       [bodytext]="'The current assignments schedule has come to an end. Schedule the future assignments for your lab by clicking the Add Assignments Schedule button.'">
+    </build-modal-intro>
+
+    <button *ngIf="streamRetrieved && streamReports && userStatus>=5 && !report" role="button" mat-raised-button class="btn btn-round btn-light-blue mt-3" (click)="buttonFunc(0)">
+      <i class="material-icons">add_circle_outline</i> Add Assignments Schedule
+    </button>
+
+    <div *ngIf="streamRetrieved && streamReports && validFlag && report">
+
+      <ul *ngIf="!expiredFlag && userStatus>=5" class="list-unstyled mb-1">
+        <li>
+          <div class="alert alert-warning" role="alert">
+            Submission time has passed.
+          </div>
+        </li>
+        <li>
+          <button role="button" class="btn btn-sm btn-link px-1" (click)="buttonFunc(7)">
+            <i class="fa fa-refresh mr-2" aria-hidden="true"></i>Extend submission
+          </button>
+        </li>
+        <li>
+          <button role="button" class="btn btn-sm btn-link px-1" (click)="buttonFunc(8)">
+            <i class="fa fa-hourglass-end mr-2" aria-hidden="true"></i>Finalize submission
+          </button>
+        </li>
+      </ul>
+
+      <ul *ngIf="expiredFlag && userStatus>=5" class="list-unstyled mb-1">
+        <li>
+          <button role="button" class="text-dark btn btn-sm btn-link px-1" (click)="buttonFunc(1)">
+            <i class="fa fa-times mr-2" aria-hidden="true"></i>Cancel assignment
+          </button>
+        </li>
+        <li>
+          <button role="button" class="text-dark btn btn-sm btn-link px-1" (click)="buttonFunc(4)">
+            <i class="fa fa-pencil mr-2" aria-hidden="true"></i>Edit details
+          </button>
+        </li>
+      </ul>
+
+      <!-- <button role="button" class="btn btn-sm btn-info mr-2" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-calendar" aria-hidden="true"></i> Reschedule
+      </button> -->
+
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <tbody>
+            <tr>
+              <td class="pt-2 text-nowrap text-dark"><i class="mr-2 fa fa-clock-o"></i> Submission date</td>
+              <td class="pt-2">{{ report.submissionDate | date:'fullDate' }}, {{ report.submissionDate | date:'HH:mm' }}</td>
+            </tr>
+            <tr>
+              <td class="pt-2 text-nowrap text-dark"><i class="mr-2 fa fa-user"></i> Who will see your assignment</td>
+              <td>
+                <div *ngFor="let people of report.whoSee; let l=last" class="d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+                  <single-pic class="mr-2" [pic]=people.pic [width]=32 [height]=32></single-pic>
+                  <a [routerLink]="['/people',people._id]" class="card-title">{{ people.name }}</a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="userStatus>=4" class="table-responsive">
+        <table class="table mt-2">
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Submission</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let people of report.whoSubmit; let i=index">
+              <td>
+                <div class="d-flex justify-content-start align-items-center">
+                  <single-pic class="mr-2" [pic]=people.pic [width]=32 [height]=32></single-pic>
+                  <a [routerLink]="['/people',people._id]" class="card-title">{{ people.name }}</a>
+                  <spinner-put [stream]=stream[i]></spinner-put>
+                </div>
+              </td>
+              <td class="pt-3">
+                <span *ngIf="people.submitStatus==0" class="text-muted">No submission yet</span>
+                <span *ngIf="people.submitStatus==1">
+                  <b>Title:</b> {{people.title}}<br>
+                  <b>What did you work on this week:</b><br>{{people.current}}<br>
+                  <b>What will you work on next week:</b><br>{{people.next}}<br>
+                  <b>What might delay your planned work:</b><br>{{people.delay}}
+                </span>
+                <span *ngIf="people.submitStatus==2" class="text-muted">Skipped</span>
+              </td>
+              <td class="text-right pt-3">
+                <!-- class="btn-group"  -->
+                <div *ngIf="people._id==userId" role="group">
+
+                  <button *ngIf="people.submitStatus==0" role="button" [disabled]="stream[i]>0" mat-raised-button class="btn btn-sm btn-success mr-1" (click)="actionFunc(i,4)">Submit</button>
+                  <button *ngIf="people.submitStatus==0" role="button" [disabled]="stream[i]>0" mat-raised-button class="btn btn-sm btn-success" (click)="actionFunc(i,2)">Skip</button>
+
+                  <a *ngIf="people.submitStatus==1" [href]="people.file" mat-raised-button class="btn btn-sm btn-success mr-1" download target="_blank">Download</a>
+                  <!-- <a *ngIf="!isPDF(manual.files)" [href]="baseRaw + manual.files" download></a> -->
+
+                  <button *ngIf="people.submitStatus==1" [disabled]="stream[i]>0" role="button" class="btn btn-sm btn-outline-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                  </button>
+
+                  <div *ngIf="people.submitStatus==1" class="dropdown-menu dropdown-menu-right" aria-labelledby="reportsUserActionButton">
+                    <a role="button" class="dropdown-item small pl-2" (click)="actionFunc(i,5)">
+                      <i class="fa fa-fw fa-refresh mr-2" aria-hidden="true"></i> Resubmit
+                    </a>
+                    <a role="button" class="dropdown-item small pl-2" (click)="actionFunc(i,0)">
+                      <i class="fa fa-fw fa-trash-o mr-2" aria-hidden="true"></i> Delete
+                    </a>
+                  </div>
+
+                  <button *ngIf="people.submitStatus==2" [disabled]="stream[i]>0" role="button" class="btn btn-sm btn-outline-success" (click)="actionFunc(i,1)">Resume</button>
+
+                </div>
+
+                <button *ngIf="people._id!=userId && people.submitStatus==0 && people._id!=userId && userStatus>=5" [disabled]="stream[i]>0" role="button" class="btn btn-sm btn-outline-warning" (click)="actionFunc(i,6)">Remind</button>
+                <a *ngIf="people._id!=userId && people.submitStatus==1" [href]="people.file" target="_empty" class="btn btn-sm btn-outline-info mr-1" download>Download</a>
+                <!-- <button *ngIf="people._id!=userId && people.submitStatus==1" role="button" class="btn btn-sm btn-outline-info" (click)="actionFunc(i,3)">Download</button> -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <hr>
+
+        <!-- <div *ngIf="userStatus>=5 && remindAllFlag" class="mb-2">
+          <button role="button" class="btn btn-sm btn-outline-info" aria-haspopup="true" aria-expanded="false" (click)="buttonFunc(9)">
+            <i class="fa fa-fw fa-download" aria-hidden="true"></i> Download all
+          </button>
+        </div> -->
+
+        <div *ngIf="userStatus>=5 && remindAllFlag">
+          <button role="button" [disabled]="streamRemindAll[i]>0 || streamRemindAll==3" class="btn btn-sm btn-outline-warning" (click)="buttonFunc(3)">
+            <i class="fa fa-fw fa-exclamation" aria-hidden="true"></i> Send reminders
+            <div *ngIf="streamRemindAll==3" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></div>
+          </button>
+          <p class="mt-1 small text-muted">
+            Reminders are sent to all members who didn't submit their report yet.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

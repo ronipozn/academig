@@ -1,0 +1,62 @@
+<div class="card build p-2 mb-3 mt-0" style="border: none;" on-mouseover='buttonOver(true)' on-mouseleave='buttonOver(false)' style="cursor: pointer;" (click)="buttonViewFunc($event)">
+
+  <div build-pic
+       class="card-img" [pic]=pic [type]="(mode==2) ? 4 : (mode==0 ? 2 : 1)" [leftFlag]=true [fluidFlag]=true [widthFlag]=false
+       [deleteFlag]="picsLen!=1" [showEditBtn]=showEditBtn (buttonEditClick)="buttonEditFunc()" (buttonDeleteClick)="buttonDeleteFunc()">
+  </div>
+
+  <div *ngIf="title || stream>0" class="card-body px-1 pb-0 pt-2">
+
+    <p class="card-title mb-0">
+      <a *ngIf="(mode==0 || mode==4 || mode==5 || mode==6) && _id" class="mr-1" [routerLink]="[_id]">{{ title }}</a>
+      <a *ngIf="(mode==0 || mode==4 || mode==5 || mode==6) && !_id" class="mr-1">{{ title }}</a>
+      <a *ngIf="mode==1 || mode==2" class="mr-1 mt-0" style="cursor: pointer;" (click)="buttonViewFunc($event)">{{ title }}</a>
+      <a *ngIf="mode==3" class="mr-1 mt-0" [routerLink]="['/',group.university.link,group.department.link,group.group.link,'gallery',_id]">{{ title }}</a>
+      <small *ngIf="mode==3" class="mr-1"><br>{{ group.group.name }}<br></small>
+      <small class="text-muted mr-1">{{ date | date:'MMM y' }}</small>
+      <spinner-put [stream]=stream (animationDoneEvent)="animationDone()"> </spinner-put>
+    </p>
+
+    <span *ngIf="mode==0 || mode==1" class="small">
+      {{ description }}
+    </span>
+
+    <p *ngIf="mode==4" class="mt-4">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+      <button [disabled]="streamSuggestion>0" role="button" class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </p>
+    <p *ngIf="mode==6" class="mt-4">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </p>
+
+  </div>
+
+</div>
+
+<!-- Pic Modal -->
+<button id="togglePicModal" #togglePicModal [hidden]="true" data-toggle="modal" attr.data-target="#picModal{{_id}}"></button>
+
+<div class="modal fade" id="picModal{{_id}}" tabindex="-1" role="dialog" aria-labelledby="pictureModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <!-- [ngClass]="{'modal-lg': mode==2}" -->
+    <div class="modal-content">
+      <div *ngIf="mode==0 || mode==1" class="modal-header">
+        <h5 class="modal-title">{{title}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <button *ngIf="mode==2" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <img [src]="pic" class="img-fluid d-flex mx-auto" alt="{{title}}">
+      </div>
+      <div *ngIf="mode==2" class="p-2 bg-light">
+        <span class="small"><span *ngIf="mode==2" class="mr-1">{{title}}.</span>{{ description }}</span>
+      </div>
+    </div>
+  </div>
+</div>

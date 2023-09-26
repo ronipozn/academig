@@ -1,0 +1,245 @@
+<ng-container *ngIf="profile.positions.length>0">
+  <ng-container *ngFor="let position of profile.positions; let f=first">
+    <ng-container *ngIf="f && (position.period.mode==1 || position.period.mode==2) && position.group.university.link!='academig'">
+      <dl class="row mb-0">
+
+        <dt class="col-sm-5">
+          <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">school</i>Position</div>
+        </dt>
+        <dd class="col-sm-7">
+          <span *ngIf="position.group.university.name!='company'">{{titlesSelect[position.titles[0]]}}</span>
+          <span *ngIf="position.group.university.name=='company'">{{position.titles[0]}}</span>
+        </dd>
+
+        <dt class="col-sm-5">
+          <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">supervised_user_circle</i> Lab</div>
+        </dt>
+        <dd class="col-sm-7">
+          <ng-container *ngIf="position.group.group.link && (position.stage==2 || meFlag); then groupLink else groupNonLink"></ng-container>
+          <ng-template #groupLink>
+            <a [routerLink]="['/',position.group.university.link,position.group.department.link,position.group.group.link]" class="card-title">{{position.group.group.name}}</a>
+          </ng-template>
+          <ng-template #groupNonLink>
+            <ng-container *ngIf="(position.status==8 || position.status==9) && meFlag; then groupBuild else groupNonBuild"></ng-container>
+            <ng-template #groupBuild>
+              <a style="cursor: pointer;" (click)="buildLabProfileFunc(position._id, this.tableMode==3 ? 2 : 0)">{{position.group.group.name}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </ng-template>
+            <ng-template #groupNonBuild>
+              {{position.group.group.name}}
+            </ng-template>
+          </ng-template>
+        </dd>
+
+        <dt class="col-sm-5">
+          <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">science</i>Department</div>
+        </dt>
+        <dd class="col-sm-7">
+          <ng-container *ngIf="position.group.department.link; then departmentLink else departmentNonLink"></ng-container>
+          <ng-template #departmentLink>
+            <a [routerLink]="['/',position.group.university.link,position.group.department.link]" class="card-title">{{position.group.department.name}}</a>
+          </ng-template>
+          <ng-template #departmentNonLink>
+            {{position.group.department.name}}
+          </ng-template>
+        </dd>
+
+        <dt class="col-sm-5">
+          <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">account_balance</i> Institute</div>
+        </dt>
+        <dd class="col-sm-7">
+          <ng-container *ngIf="position.group.university.link; then universityLink else universityNonLink"></ng-container>
+          <ng-template #universityLink>
+            <a [routerLink]="['/',position.group.university.link]" class="card-title">{{position.group.university.name}}</a>
+          </ng-template>
+          <ng-template #universityNonLink>
+            {{position.group.university.name}}
+          </ng-template>
+        </dd>
+
+      </dl>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<dl class="row mb-0">
+
+  <ng-container *ngIf="publicInfo?.website">
+    <dt class="col-sm-5">
+      <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">public</i> Website</div>
+    </dt>
+    <dd class="col-sm-7">
+      <a target="_empty" class="card-title" href="{{publicInfo?.website | linkHttp}}">{{publicInfo?.website}}</a>
+    </dd>
+  </ng-container>
+
+  <ng-container *ngIf="readings?.length>0">
+    <dt class="col-sm-5">
+      <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">bookmark</i> Currently reading</div>
+    </dt>
+    <dd class="col-sm-7">
+      <span *ngFor="let reading of readings; let l=last">
+        <a [routerLink]="['./library',reading._id]" class="card-title">{{reading.title}}</a><span *ngIf="!l">,</span>
+      </span>
+      <p class="card-title my-2"><a [routerLink]="['./library']">More of {{profile.name}}'s reading library…</a></p>
+    </dd>
+  </ng-container>
+
+  <!-- RESEARCH INTERESTS -->
+  <div #scrollInterests></div>
+  <ng-container *ngIf="profile.researchInterests?.length>0">
+    <dt class="col-sm-5">
+      <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">label</i> Research Interests</div>
+    </dt>
+    <dd class="col-sm-7">
+      <div *ngIf="profile.researchInterests?.length>0">
+        <div build-badge
+             [badges]=profile.researchInterests
+             [showEditBtn]=meFlag
+             [stream]=streamTags
+             (buttonEditClick)="tagsOpClick.emit(0)"
+             (buttonDeleteClick)="tagsOpClick.emit(1)"
+             (animationDoneEvent)="tagsOpClick.emit(3)">
+        </div>
+        <!-- (buttonTagClick)="tagsOpClick.emit(1)" -->
+      </div>
+    </dd>
+  </ng-container>
+
+  <!-- LANGUAGES -->
+  <div #scrollQuote></div>
+  <ng-container *ngIf="profile.languages?.length>0">
+    <dt class="col-sm-5">
+      <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">language</i> Languages</div>
+    </dt>
+    <dd class="col-sm-7">
+      <span *ngFor="let language of profile.languages; let l=last">{{ language.name }}<span *ngIf="!l">, </span></span>
+    </dd>
+  </ng-container>
+
+  <!-- QUOTE -->
+  <div #scrollQuote></div>
+  <ng-container *ngIf="profile.quote?.text">
+    <dt class="col-sm-5">
+      <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">format_quote</i> Favorite quote</div>
+    </dt>
+    <dd class="col-sm-7">
+      <div *ngIf="profile.quote?.text"
+           build-quote
+           [text]=profile.quote.text
+           [name]=profile.quote.name
+           [pic]=profile.quote.pic
+           [showEditBtn]=meFlag
+           [stream]=streamQuote
+           (buttonEditClick)="quoteOpClick.emit(0)"
+           (buttonDeleteClick)="quoteOpClick.emit(1)"
+           (animationDoneEvent)="quoteOpClick.emit(3)">
+      </div>
+    </dd>
+  </ng-container>
+</dl>
+
+<ng-container *ngIf="socialInfo || publicInfo">
+  <dl class="row mb-0">
+
+    <ng-container *ngIf="socialInfo?.scholar">
+      <dt class="col-sm-5"><i class="ai ai-google-scholar-square mr-2" style="font-size: 16px;"></i> Google scholar</dt>
+      <dd class="col-sm-7 card-title"><a href="https://scholar.google.com/citations?user={{socialInfo.scholar}}" target="_empty">View on Google Scholar <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+    <ng-container *ngIf="socialInfo?.orcid">
+      <dt class="col-sm-5"><i class="ai ai-orcid mr-2"></i> Orcid</dt>
+      <dd class="col-sm-7 card-title"> <a href="https://orcid.org/{{socialInfo.orcid}}" target="_empty">View on ORCID <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+    <ng-container *ngIf="socialInfo?.github">
+      <dt class="col-sm-5"><i class="fa fa-github-square " aria-hidden="true"></i> Github</dt>
+      <dd class="col-sm-7 card-title"><a href="https://github.com/{{socialInfo.github}}" target="_empty">View on Github <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+    <ng-container *ngIf="socialInfo?.linkedin">
+      <dt class="col-sm-5"><i class="fa fa-linkedin-square mr-2" style="font-size: 16px;" aria-hidden="true"></i> LinkedIn</dt>
+      <dd class="col-sm-7 card-title"><a href="https://www.linkedin.com/in/{{socialInfo.linkedin}}" target="_empty">View on LinkedIn <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+    <ng-container *ngIf="socialInfo?.twitter">
+      <dt class="col-sm-5"><i class="fa fa-twitter-square mr-2" style="font-size: 16px;" aria-hidden="true"></i> Twitter</dt>
+      <!-- <dd class="col-sm-7 card-title"><span class="text-muted">(5431) </span> <a href="https://www.twitter.com/{{socialInfo.twitter}}" target="_empty">View on Twitter <i class="fa fa-external-link" aria-hidden="true"></i></a></dd> -->
+      <dd class="col-sm-7 card-title"><a href="https://www.twitter.com/{{socialInfo.twitter}}" target="_empty">View on Twitter <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+    <ng-container *ngIf="socialInfo?.researchgate">
+      <dt class="col-sm-5"><i class="ai ai-researchgate mr-2" style="font-size: 16px;"></i> ResearchGate</dt>
+      <dd class="col-sm-7 card-title"><a href="https://www.researchgate.net/profile/{{socialInfo.researchgate}}" target="_empty">View on ResearchGate <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+    <ng-container *ngIf="socialInfo?.facebook">
+      <dt class="col-sm-5"><i class="fa fa-facebook-square mr-2" style="font-size: 16px;" aria-hidden="true"></i> Facebook</dt>
+      <dd class="col-sm-7 card-title"><a href="https://www.facebook.com/{{socialInfo.facebook}}" target="_empty">View on Facebook <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+    <ng-container *ngIf="socialInfo?.youtube">
+      <dt class="col-sm-5"><i class="fa fa-youtube-square mr-2" style="font-size: 16px;" aria-hidden="true"></i> Youtube</dt>
+      <dd class="col-sm-7 card-title"><a href="https://www.youtube.com/{{socialInfo.youtube}}" target="_empty">View on YouTube <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+    <ng-container *ngIf="socialInfo?.pinterest">
+      <dt class="col-sm-5"><i class="fa fa-pinterest-square mr-2" style="font-size: 16px;" aria-hidden="true"></i> Pinterest</dt>
+      <dd class="col-sm-7 card-title"><a href="https://www.pinterest.com/{{socialInfo.pinterest}}" target="_empty">View on Pinterest <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+    <ng-container *ngIf="socialInfo?.instagram">
+      <dt class="col-sm-5"><i class="fa fa-instagram mr-2" style="font-size: 16px;" aria-hidden="true"></i> Instagram</dt>
+      <dd class="col-sm-7 card-title"><a href="https://www.instagram.com/{{socialInfo.instagram}}" target="_empty">View on Instagram <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+
+  </dl>
+</ng-container>
+
+<!-- <h3 class="text-dark mt-0"><span class="material-icons mr-1">fact_check</span><b>Impact</b></h3> -->
+<!-- <div class="mx-2 row">
+  <div class="col-md-6 border-bottom">
+    <b>Global</b>
+    <div class="row justify-content-between">
+      <div class="col-6 col-lg-12">Followers <h3 class="mt-0"><a [routerLink]="['./network']">{{(followersLength + followingLength) || '-'}}</a></h3></div>
+      <div class="col-6 col-lg-12">Total Views <h3 class="mt-0">{{profile.views?.total | zeronize}}</h3></div>
+    </div>
+  </div>
+  <div class="col-md-6 border-bottom pt-2">
+    <b>Publications</b>
+    <div class="row justify-content-between">
+      <div class="col-6">Total <h3 class="mt-0"><a [routerLink]="['./publications']">{{profile.counts?.publications | zeronize}}</a></h3></div>
+      <div class="col-6">Views <h3 class="mt-0">{{profile.views?.publications | zeronize}}</h3></div>
+    </div>
+    <h5 class="text-info">325</h5> <p class="text-muted">Total Citations</p>
+  </div>
+  <div class="col-md-6 border-bottom pt-2">
+    <b>Services</b>
+    <div class="row justify-content-between">
+      <div class="col-6">Total <h3 class="mt-0"><a [routerLink]="['./services']">{{profile.counts?.resources | zeronize}}</a></h3></div>
+      <div class="col-6">Views <h3 class="mt-0">{{profile.views?.resources | zeronize}}</h3></div>
+    </div>
+  </div>
+  <div class="col-md-6 pt-2">
+    <b>Projects</b>
+    <div class="row justify-content-between">
+      <div class="col-6 col-lg-12">Total <h3 class="mt-0">{{profile.counts?.currentProjects + profile.counts?.pastProjects | zeronize}}</h3></div>
+      <div class="col-6 col-lg-12">Views <h3 class="mt-0">{{profile.views?.projects | zeronize}}</h3></div>
+    </div>
+  </div>
+</div>
+-->
+
+<!-- <div [ngStyle]="{ 'background-image': 'url(' + profile.coverPic + ')'}" [@itemsAnimation]="('active')"
+     class="coverPic" on-mouseover='buttonOver(true)' on-mouseleave='buttonOver(false)'>
+  <div *ngIf="showButton || streamCoverPic>0" class="btn-toolbar img-overlay-right mr-2" role="toolbar">
+    <button [disabled]="streamCoverPic>0" role="button" class="btn btn-sm btn-light" (click)="coverPicEdit()">
+      <i *ngIf="streamCoverPic==0" class="fa fa-camera" aria-hidden="true"></i>
+      <i *ngIf="streamCoverPic>0" class="fa fa-spinner fa-spin fa-1x" aria-hidden="true"></i>
+    </button>
+    <button [disabled]="!profile.coverPic || streamCoverPic>0" role="button" class="btn btn-sm btn-light ml-2" (click)="coverPicDelete()">
+      <i *ngIf="streamCoverPic==0" class="fa fa-trash" aria-hidden="true"></i>
+      <i *ngIf="streamCoverPic>0" class="fa fa-spinner fa-spin fa-1x" aria-hidden="true"></i>
+    </button>
+  </div>
+</div> -->
+<!-- [altText]="'ProfileCoverPicture'" -->

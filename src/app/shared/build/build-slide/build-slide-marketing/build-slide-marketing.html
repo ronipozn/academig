@@ -1,0 +1,42 @@
+<div class="side-form">
+
+  <h3 class="title text-center">{{item[mode]}} Marketing: {{emailType[marketing?.counter || 0]}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- <build-modal-text-field [labelRequired]=true
+                              [itemFirst]=true
+                              [typeSelected]="'url'"
+                              [fieldType]=1
+                              [itemTitle]="'Existing Website'"
+                              [controlName]="'url'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field> -->
+
+      <!-- <p class="mt-3 mb-0">Compare Picture:</p>
+      <div class="mt-1" id="direct_upload">
+        <single-pic *ngIf="file1" [centerFlag]=true [pic]="file1" [type]=2 [width]=112 [height]=112>
+        </single-pic>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': file1}">
+          <input type="hidden" id="file1" name="file1" data-images-only data-preview-step>
+        </div>
+      </div> -->
+
+      <build-modal-text-field [itemTitle]="'Personal message'"
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [controlName]="'text'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-primary">Send Notification</button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <img src="./assets/img/build/publications.svg" style="max-height: 15rem;" class="mx-auto d-block img-fluid" alt="academig_build_publications"> -->
+
+  <h3 class="mb-3 text-center"><b>Alternative Names</b></h3>
+
+  <p class="mb-0 text-center text-muted"><b>
+    Academig will look for all the publications under your name,
+    <!-- <span *ngIf="parentGroup.value.buildMode==0">{{userName}},</span> -->
+    <!-- <span *ngIf="parentGroup.value.buildMode>0">{{parentGroup.value.secondName}},</span> -->
+    <span *ngIf="forkNum==0">{{userName}},</span>
+    <span *ngIf="forkNum>0">{{parentGroup.value.secondName}},</span>
+    <br>If you have publications under different names, you can add them here.
+  </b></p>
+
+  <div class="form-group row">
+    <div class="col-10 col-sm-8 col-md-6 mx-auto">
+      <div class="card">
+        <div class="card-body">
+
+          <build-modal-text-field [fieldType]=8
+                                  [itemPlaceholder]="'+ Name'"
+                                  [itemSecondaryPlaceholder]="'Enter name'"
+                                  [itemExplain]="'Choose up to 2 names.'"
+                                  [maxItems]=2
+                                  [itemValues]=parentGroup.value.names
+                                  [controlName]="'names'"
+                                  [parentGroup]=parentGroup>
+          </build-modal-text-field>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

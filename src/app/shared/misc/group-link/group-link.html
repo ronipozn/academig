@@ -1,0 +1,60 @@
+<span [ngClass]="{'small': smallFlag}" class="card-title">
+
+  <span *ngIf="flag==0">
+  <!-- <a [routerLink]="['/', groupIndex.university.link]">{{groupIndex.university.name}}</a> / -->
+    <ng-container *ngIf="groupIndex.university.link; then universityLink else universityNonLink"></ng-container>
+    <ng-template #universityLink>
+      <a [routerLink]="['/',groupIndex.university.link]">{{groupIndex.university.name}}</a> /
+    </ng-template>
+    <ng-template #universityNonLink>
+      {{groupIndex.university.name}} /
+    </ng-template>
+  </span>
+
+  <span *ngIf="flag==0 || flag==2">
+    <!-- <a [routerLink]="['/', groupIndex.university.link, groupIndex.department.link]">{{groupIndex.department.name}}</a> / -->
+    <ng-container *ngIf="groupIndex.department.link; then departmentLink else departmentNonLink"></ng-container>
+    <ng-template #departmentLink>
+      <a [routerLink]="['/',groupIndex.university.link,groupIndex.department.link]">{{groupIndex.department.name}}</a> /
+    </ng-template>
+    <ng-template #departmentNonLink>
+      {{groupIndex.department.name}} /
+    </ng-template>
+  </span>
+
+    <!-- <a [routerLink]="['/', groupIndex.university.link, groupIndex.department.link, groupIndex.group.link]">{{groupIndex.group.name}}</a> -->
+    <ng-container *ngIf="groupIndex.group.link; then groupLink else groupNonLink"></ng-container>
+    <ng-template #groupLink>
+      <a [routerLink]="['/',groupIndex.university.link,groupIndex.department.link,groupIndex.group.link]">{{groupIndex.group.name}}</a>
+    </ng-template>
+    <ng-template #groupNonLink>
+      {{groupIndex.group.name}}
+    </ng-template>
+
+</span>
+
+<!-- <span *ngIf="flag==1">
+
+  <ng-container *ngIf="groupIndex.group.link; then groupLink else groupNonLink"></ng-container>
+  <ng-template #groupLink>
+    <a [routerLink]="['/',groupIndex.university.link,groupIndex.department.link,groupIndex.group.link]">{{groupIndex.group.name}}</a>
+  </ng-template>
+  <ng-template #groupNonLink>
+    {{groupIndex.group.name}}
+  </ng-template>
+
+</span> -->
+
+<!-- <span *ngIf="!flag" [ngClass]="{'small': smallFlag}">
+  <i class="fa fa-university" aria-hidden="true"></i>
+  <a [routerLink]="['/', groupIndex.university.link]">{{groupIndex.university.name}}</a> /
+  <a [routerLink]="['/', groupIndex.university.link, groupIndex.department.link]">{{groupIndex.department.name}}</a> /
+  <a [routerLink]="['/', groupIndex.university.link, groupIndex.department.link, groupIndex.group.link]">{{groupIndex.group.name}}</a>
+</span>
+
+<span *ngIf="flag" [ngClass]="{'small': smallFlag}">
+  <i class="fa fa-university" aria-hidden="true"></i>
+  <a [routerLink]="['/', groupIndex.university.link]">{{groupIndex.university.name}}</a> /
+  <a [routerLink]="['/', groupIndex.university.link, groupIndex.department.link]">{{groupIndex.department.name}}</a> /
+  <a [routerLink]="['/', groupIndex.university.link, groupIndex.department.link, groupIndex.group.link]">{{groupIndex.group.name}}</a>
+</span> -->

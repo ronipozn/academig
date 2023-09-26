@@ -1,0 +1,78 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 *ngIf="modeNum==0" class="title text-center">New Industry Sponsor</h3>
+  <h3 *ngIf="modeNum==1" class="title text-center">New Government Sponsor</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()">
+
+      <build-modal-text-field [itemFirst]=true
+                              [labelRequired]=true
+                              [itemTitle]="'Name'"
+                              [controlName]="'name'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Link'"
+                              [fieldType]=13
+                              [typeSelected]="'url'"
+                              [controlName]="'link'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div *ngIf="formModel.get('start') && formModel.get('end')" class="row no-gutters">
+        <div class="col mr-1">
+          <build-month-field [itemTitle]="'Start Date'"
+                             [controlName]="'start'"
+                             [parentGroup]=formModel
+                             [labelRequired]=true
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('start').errors && formModel.get('start').errors.range)">
+          </build-month-field>
+        </div>
+        <div class="col ml-1">
+          <build-month-field [itemTitle]="'End Date'"
+                             [controlName]="'end'"
+                             [parentGroup]=formModel
+                             [labelRequired]=true
+                             [submitStatus]=submitStatus
+                             [errorFlag]="(!formModel.get('end').errors && formModel.get('end').errors.range)">
+          </build-month-field>
+        </div>
+        <span *ngIf="formModel.get('start').errors">
+          <span *ngIf="formModel.get('start').errors.range" class="mt-1 mb-0 small">
+            <span class="text-danger mb-0">End date should be greater than start date</span>
+          </span>
+        </span>
+      </div>
+
+      <build-modal-text-field [itemFirst]=true
+                              [labelHide]=true
+                              [fieldType]=7
+                              [controlName]="'single'"
+                              (controlStatus)=controlStatusFunc($event)
+                              [parentGroup]=formModel
+                              [itemArray]="[sponsorType[modeNum]]"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-slide-select-projects [groupId]=groupId
+                                   [userId]=userId
+                                   [title]="'Choose projects'"
+                                   [parentGroup]=formModel
+                                   [controlName]="'projects'"
+                                   [preProjectsInput]=preProjects
+                                   (projectsOutput)=projectsFunc($event)>
+      </build-slide-select-projects>
+
+      <hr class="mt-2">
+      <div class="pull-left form-group">
+        <button role="button" class="btn btn-sm btn-light-blue">Add</button>
+        <button type="button" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div [formGroup]="parentGroup">
+
+  <mat-form-field class="example-chip-list">
+    <mat-label>{{itemTitle}} <i *ngIf="queryFlag" class="ml-2 fa fa-1x fa-spinner fa-spin"></i></mat-label>
+    <mat-chip-list #chipList aria-label="User selection">
+      <mat-chip *ngFor="let fruit of fruits; let i=index"
+                [selectable]="selectable"
+                [removable]="removable"
+                class="pl-0"
+                (removed)="remove(fruit)">
+        <img *ngIf="fruit.pic" [src]="fruit.pic" [height]="30" [width]="30" class="rounded-circle ml-0">
+        <span class="ml-2">{{fruit.name}}</span>
+        <mat-icon matChipRemove *ngIf="i>=nonremovableItems">cancel</mat-icon>
+      </mat-chip>
+      <!-- *ngIf="nonaddItems==false" -->
+      <input [placeholder]=itemPlaceholder
+             #fruitInput
+             [formControlName]=controlName
+             [matAutocomplete]="auto"
+             [matChipInputFor]="chipList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="add($event)">
+    </mat-chip-list>
+    <!-- *ngIf="nonaddItems" -->
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+        <img [src]="fruit.pic" [height]="30" [width]="30" class="rounded-circle mr-2" alt="User">{{fruit.name}}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint>
+  </mat-form-field>
+
+</div>

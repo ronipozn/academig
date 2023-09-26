@@ -1,0 +1,205 @@
+<div [formGroup]="parentGroup">
+
+  <ng-container *ngIf="forkNum==8">
+    <!-- <img class="mx-auto d-block rounded-circle mb-4" [height]=60 [width]=60 [src]=userPic> -->
+    <h3 class="mb-3 text-center"><b>About your role</b></h3>
+    <p class="mb-3 text-center text-muted"><b>This will help us to tailor your experience in Academig</b></p>
+  </ng-container>
+
+  <ng-container *ngIf="forkNum<8">
+    <img src="./assets/img/build/users_about.svg" style="max-height: 15rem;" class="mx-auto d-block img-fluid" alt="academig_build_users">
+    <h3 class="mb-4 text-center"><b>About your lab members</b></h3>
+    <p class="text-center text-muted"><b>Enter your lab member's information.</b></p>
+    <p class="text-center text-muted"><b>Some lab members aren't on Academig. Send them an invite to join your lab by entering their email address below.</b></p>
+    <p class="text-center text-muted">
+      <b>What happens after your lab is built?</b> Your lab members will get an invitation to join your lab on Academig.<br>
+      <ng-template #popContent let-emailContent="emailContent">
+        <b>From:</b>
+        <br>{{userName}} via Academig
+        <br><br><b>Subject:</b>
+        <br>{{userName}} invites you to join your research lab on Academig.
+        <br><br><b>Message:</b>
+        <br>{{userName}} invites you to join Academig and confirm that you're part of {{parentGroup.get('group').value}}'s Lab.
+        <br>In order to manage the request, sign up to Academig with the email you were invited with: <i>Email address</i>, and approve your email by clicking the verification email that will be sent to you.
+      </ng-template>
+      <ng-template #popTitle let-emailTitle="emailTitle">
+        Preview Email
+      </ng-template>
+      <button type="button" class="btn btn-sm btn-link mr-2 my-1 px-0" placement="bottom" [ngbPopover]="popContent" [popoverTitle]="popTitle" container="body" triggers="manual" #p1="ngbPopover" (click)="togglePreviewEmail(p1)">
+        Preview Email
+      </button>
+    </p>
+    <!-- We'll send a validation link to the new member's email address to verify their identity. -->
+    <!-- Your lab member will receive this email notification and, in some cases, up to two reminders. -->
+  </ng-container>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto">
+  <!-- <div [ngClass]="{'col-12 col-sm-11 col-md-9': forkNum==8}" class="mx-auto"> -->
+
+    <div *ngIf="emailDuplicated" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+      Please avoid using the same email address for different lab members.
+    </div>
+
+    <div *ngIf="piFlag" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+      Please mark one of your lab members as your lab head professor.
+    </div>
+
+    <ul [formArrayName]="'members'" class="list-unstyled mb-0">
+      <li *ngFor="let e of getControls(parentGroup); let i=index">
+        <div [formGroupName]="i">
+
+          <div class="card mt-0">
+            <div class="card-body" [ngClass]="{'border border-primary bg-color': i==headIndex}">
+              <h4 *ngIf="i==headIndex" class="selected border border-primary text-center text-dark"><b>LAB HEAD</b></h4>
+
+              <div *ngIf="i==0 || forkNum<8" class="d-flex align-items-center" [ngClass]="{'mt-2': userId==e.value?._id}">
+                <img *ngIf="e.value?.pic" [src]="e.value?.pic" [height]="30" [width]="30" class="rounded-circle ml-0 mr-2">
+                <b>{{e.value?.name}}</b>
+              </div>
+
+              <div class="mt-2 row align-items-center no-gutters">
+                <div *ngIf="i==1 && forkNum==8" class="col-12">
+                  <build-modal-text-field [fieldType]=1
+                                          [itemTitle]="'Name'"
+                                          [controlName]="'name'"
+                                          [parentGroup]=e
+                                          [submitStatus]=submitStatus>
+                  </build-modal-text-field>
+                </div>
+                <div [ngClass]="{'col-md-12': forkNum==8, 'col pr-2': forkNum!=8}">
+                  <!-- 'has-success': e.get('position').valid && e.get('position').dirty,  -->
+                  <mat-form-field *ngIf="labType==0" appearance="outline" [ngClass]="{'has-danger': e.get('position').invalid && submitStatus}">
+                    <mat-label>Position</mat-label>
+                    <mat-select [placeholder]="'Position'" formControlName=position [required]="(forkNum==8 && i==1) ? false : true">
+                      <!-- <mat-option (click)="controlStatusPosition(i)" *ngFor="let item of ((forkNum==8) ? positionSelect.concat(educationSelect) : ((((forkNum==2 || forkNum==3) && i==1) || ((forkNum==0 || forkNum==1) && i==0)) ? positionSelect : educationSelect))" [value]="item.value"> -->
+                      <mat-option (click)="controlStatusPosition(i)"
+                                   *ngFor="let item of (
+                                       (forkNum==8) ?
+                                         ((i==1) ? positionSelect : positionSelect.concat(educationSelect)) :
+                                         ((((forkNum==2 || forkNum==3) && i==1) || ((forkNum==0 || forkNum==1) && i==0)) ? positionSelect : educationSelect)
+                                     )"
+                                   [value]="item.value">
+                                   <!-- ((headIndex==null || headIndex==i) ? positionSelect.concat(educationSelect) : educationSelect) : -->
+                        {{ item.display }}
+                      </mat-option>
+                    </mat-select>
+                    <span class="form-control-feedback">
+                      <!-- <i *ngIf="e.get('position').valid && e.get('position').dirty" class="material-icons">done</i> -->
+                      <i *ngIf="e.get('position').invalid && submitStatus" class="material-icons">clear</i>
+                    </span>
+                  </mat-form-field>
+                  <build-modal-text-field *ngIf="labType==1"
+                                          [fieldType]=1
+                                          [labelRequired]=true
+                                          [itemTitle]="'Position'"
+                                          [controlName]="'position'"
+                                          [parentGroup]=e
+                                          [submitStatus]=submitStatus>
+                  </build-modal-text-field>
+                </div>
+                <div class="pr-2" [ngClass]="{'col-md-6': forkNum==8, 'col-md-3': !e.value?.active[0] && forkNum!=8, 'col-md-4': e.value?.active[0] && forkNum!=8}">
+                <!-- <div class="pr-2" [ngClass]="{'col-md-3': !e.value?.active[0], 'col-md-4': e.value?.active[0]}"> -->
+                  <build-month-field [itemTitle]="'Start Date'"
+                                     [controlName]="'startDate'"
+                                     [parentGroup]=e
+                                     [submitStatus]=submitStatus>
+                  </build-month-field>
+                </div>
+                <div *ngIf="labType==0 && (forkNum<8 || i==0)" [hidden]="e.value?.active[0] && forkNum!=8" [ngClass]="{'col-md-6': forkNum==8, 'col-md-3 pr-2': forkNum!=8}">
+                <!-- <div *ngIf="labType==0" class="col-md-3 pr-2" [hidden]="e.value?.active[0]"> -->
+                  <build-month-field [itemTitle]="'End Date'"
+                                     [controlName]="'endDate'"
+                                     [parentGroup]=e
+                                     [labelRequired]=true
+                                     [submitStatus]=submitStatus>
+                  </build-month-field>
+                </div>
+                <div *ngIf="forkNum<8 || i==1" class="pr-2" [ngClass]="{'col-md-3': forkNum!=8 && !e.value?.active[0], 'col-md-4': forkNum!=8 && e.value?.active[0], 'col-md-6': forkNum==8}">
+                  <!-- *ngIf="e.value?._id==null" -->
+                  <label for="email{{i}}" hidden></label>
+                  <build-modal-text-field [fieldType]=11
+                                          [itemTitle]="'Email'"
+                                          [controlName]="'email'"
+                                          [parentGroup]=e
+                                          [submitStatus]=submitStatus
+                                          (controlStatus)="controlStatusEmail(i)">
+                  </build-modal-text-field>
+                </div>
+                <div *ngIf="forkNum<8" class="col-md-auto">
+                  <!-- [disabled]="userId==e.value?._id" -->
+                  <button [disabled]="i<((forkNum==2 || forkNum==3) ? 2 : 1)" role="button" class="btn btn-link pl-2 pr-0 mb-2" (click)="deleteField(i)">
+                     <i class="fa fa-trash-o pl-0 pr-2" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+
+              <build-modal-text-field [hidden]="!e.value?.messageFlag[0]"
+                                      [fieldType]=2
+                                      [textAreaRows]=3
+                                      [itemTitle]="'Message'"
+                                      [controlName]="'message'"
+                                      [parentGroup]=e
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+
+              <div *ngIf="(i==0 && (forkNum==2 || forkNum==3)) || (i>1 && forkNum<8) || forkNum==8" class="d-flex flex-row bd-highlight mb-3">
+                <div *ngIf="(i!=1 && forkNum<8) || (i==0 && forkNum==8) || (forkNum==2 || forkNum==3)" class="pr-3">
+                  <build-modal-text-field [labelHide]=true
+                                          [fieldType]=7
+                                          [controlName]="'active'"
+                                          [parentGroup]=e
+                                          [itemArray]="['Active member']"
+                                          (controlStatus)="controlStatusActive(i)">
+                  </build-modal-text-field>
+                </div>
+                <div *ngIf="i>0"> <!-- && forkNum<8 -->
+                  <build-modal-text-field
+                                          [labelHide]=true
+                                          [fieldType]=7
+                                          [controlName]="'messageFlag'"
+                                          [parentGroup]=e
+                                          [itemArray]="['Personal message']">
+                  </build-modal-text-field>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </li>
+    </ul>
+
+    <div *ngIf="forkNum==8" class="card">
+      <div class="card-body">
+        <h3 class="card-title text-success"><b>Lab interview</b><i class="fa fa-comments ml-2" aria-hidden="true"></i></h3>
+        <hr>
+        <div class="checkbox-radios">
+          <div class="form-check">
+            <label class="form-check-label text-dark">
+              <!-- (change)="flagInterviewFunc()" -->
+              <input formControlName=interviewStatus class="form-check-input" type="checkbox">Yes, I want to conduct an interview!
+              <span class="form-check-sign"><span class="check"></span></span>
+            </label>
+          </div>
+          <p><b>
+          We offer you to conduct an interview with us, written or podcast style, as you may choose.
+          The interview will appear in your lab profile and in our daily newsletter called Academig Reading.
+          An interview can help your lab profile visitors to learn much more about your lab.
+          </b></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

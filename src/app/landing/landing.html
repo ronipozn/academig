@@ -1,0 +1,351 @@
+<!-- Are you looking for a biology<br>Ph.D. position in Berlin? -->
+<!-- Academig has inforamtion about <u>all</u> the biology research labs in Berlin. -->
+<!-- We actually <u>gurantee</u> that you won't have to look anywhere else. -->
+<!-- If you would find an opportunity we have missed, we will give you life-time subscription to Academig, and we also pay you back for
+each opportunity that we have missed. -->
+<!-- Create a high-quality professional website, with tools that are designed specifically for the academia. -->
+<!-- Building a professional academic website for your research lab and for yourself can be hard. Academig makes it easy. -->
+<!-- Change theme from building a website to increasing visibility of your research lab. -->
+<!-- Academic offers professional and powerful tools for your academic pursuits. -->
+
+<!-- Academig brings more research data than any other academic platform and makes it easy to
+find research labs information, open positions, service providers and optimize your scientific career. -->
+
+<!-- <b>Everything you need to know about your academic research field</b> -->
+<!-- Try it out by searching for labs in the search bar below and start comparing your favorite labs. -->
+
+<!-- High-quality, detailed and great research labs' profiles are waiting for you. -->
+<!-- <br>The days of tedious labs' search are gone! -->
+
+<div class="ais-InstantSearch">
+  <ais-instantsearch [config]="config_labs">
+    <div style="margin-top: 45px; background-image: linear-gradient(#283E73, #74B1CC);">
+      <div class="container py-4 text-white">
+
+        <h3>Uncover pioneering labs and the researchers behind them</h3>
+        <div class="mb-2">Apply one or more filters and click the search button:</div>
+
+        <div class="accordion" id="accordionSearch">
+
+        <div class="d-none d-md-block">
+          <div class="mb-3">
+            <button mat-raised-button (click)="filterToggle(0)" class="btn btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#countryCollapse">
+              <i class="fa fa-location-arrow mr-2" aria-hidden="true"></i> <b>Country</b> <i [ngClass]="{'fa-minus': filterFlag[0], 'fa-plus': !filterFlag[0]}" class="ml-2 fa fa-plus" aria-hidden="true"></i>
+            </button>
+            <button mat-raised-button (click)="filterToggle(1)" class="btn btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#universityCollapse">
+              <i class="fa fa-university mr-2" aria-hidden="true"></i> <b>University</b> <i [ngClass]="{'fa-minus': filterFlag[1], 'fa-plus': !filterFlag[1]}" class="ml-2 fa fa-plus" aria-hidden="true"></i>
+            </button>
+            <button mat-raised-button (click)="filterToggle(2)" class="btn btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#interestsCollapse">
+              <i class="fa fa-cog mr-2" aria-hidden="true"></i> <b>Discipline</b> <i [ngClass]="{'fa-minus': filterFlag[2], 'fa-plus': !filterFlag[2]}" class="ml-2 fa fa-plus" aria-hidden="true"></i>
+            </button>
+            <button mat-raised-button (click)="filterToggle(3)" class="btn btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#sizeCollapse">
+              <i class="fa fa-users mr-2" aria-hidden="true"></i> <b>Lab size</b> <i [ngClass]="{'fa-minus': filterFlag[3], 'fa-plus': !filterFlag[3]}" class="ml-2 fa fa-plus" aria-hidden="true"></i>
+            </button>
+            <!-- <button mat-raised-button (click)="filterToggle(4)" class="btn btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#positionsCollapse">
+              <i class="fa fa-briefcase mr-2" aria-hidden="true"></i> <b>Job Openings</b> <i [ngClass]="{'fa-minus': filterFlag[4], 'fa-plus': !filterFlag[4]}" class="ml-2 fa fa-plus" aria-hidden="true"></i>
+            </button> -->
+          </div>
+        </div>
+
+        <div class="d-md-none">
+          <button mat-raised-button class="btn btn-block btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#countryCollapse">
+            <i class="fa fa-location-arrow mr-2" aria-hidden="true"></i> <b>Country</b> <i class="ml-2 fa fa-plus" aria-hidden="true"></i>
+          </button>
+          <button mat-raised-button class="btn btn-block btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#universityCollapse">
+            <i class="fa fa-university mr-2" aria-hidden="true"></i> <b>University</b> <i class="ml-2 fa fa-plus" aria-hidden="true"></i>
+          </button>
+          <button mat-raised-button class="btn btn-block btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#interestsCollapse">
+            <i class="fa fa-cog mr-2" aria-hidden="true"></i> <b>Discipline</b> <i class="ml-2 fa fa-plus" aria-hidden="true"></i>
+          </button>
+          <button mat-raised-button class="btn btn-block btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#sizeCollapse">
+            <i class="fa fa-users mr-2" aria-hidden="true"></i> <b>Lab size</b> <i class="ml-2 fa fa-plus" aria-hidden="true"></i>
+          </button>
+          <!-- <button mat-raised-button class="btn btn-block btn-light-blue btn-round mr-2" data-toggle="collapse" data-target="#positionsCollapse">
+            <i class="fa fa-briefcase mr-2" aria-hidden="true"></i> <b>Job Openings</b> <i class="ml-2 fa fa-plus" aria-hidden="true"></i>
+          </button> -->
+        </div>
+
+        <!-- <ais-current-refinements></ais-current-refinements> -->
+        <landing-current-refinements></landing-current-refinements>
+
+        <div class="collapse" id="countryCollapse" data-parent="#accordionSearch">
+          <div class="mt-0 card card-body">
+            <h5 class="mt-0 mb-2"><b>Country</b></h5>
+            <landing-refinement-list [att]="'country'"></landing-refinement-list>
+          </div>
+        </div>
+
+        <div class="collapse" id="universityCollapse" data-parent="#accordionSearch">
+          <div class="mt-0 card card-body">
+            <h5 class="mt-0 mb-2"><b>University</b></h5>
+            <landing-refinement-list [att]="'groupIndex.university.name'"></landing-refinement-list>
+          </div>
+        </div>
+
+        <div class="collapse" id="interestsCollapse" data-parent="#accordionSearch">
+          <div class="mt-0 card card-body">
+            <h5 class="mt-0 mb-2"><b>Discipline</b></h5>
+            <landing-refinement-list [att]="'groupIndex.department.name'"></landing-refinement-list>
+          </div>
+        </div>
+
+        <div class="collapse" id="sizeCollapse" data-parent="#accordionSearch">
+          <div class="mt-0 card card-body">
+            <h5 class="mt-0 mb-2"><b>Lab Sizes</b></h5>
+            <landing-refinement-list [att]="'size'"></landing-refinement-list>
+          </div>
+        </div>
+
+        <div class="collapse" id="positionsCollapse" data-parent="#accordionSearch">
+          <div class="mt-0 card card-body">
+            <h5 class="mt-0 mb-2"><b>Open positions</b></h5>
+            <landing-refinement-list [att]="'positions.positionName'"></landing-refinement-list>
+          </div>
+        </div>
+
+        <button mat-raised-button class="btn btn-success mb-3" [routerLink]="['search']"><b>SEARCH FOR LABS</b></button>
+
+        <ng-container *ngIf="searches?.length>0">
+          <h4><u>Examples</u></h4>
+          <p *ngFor="let search of searches; let i=index" class="mb-1">
+            <a class="card-title text-white" [routerLink]="['/', 'search', 'labs']" [queryParams]="search.params">{{search.name}}</a>
+          </p>
+          <a [routerLink]="['./featured']" class="text-white">View all featured searches</a>
+        </ng-container>
+
+        <ais-hits [transformItems]="transformGroups">
+          <ng-template let-hits="hits" let-results="results">
+          </ng-template>
+        </ais-hits>
+
+        </div>
+
+      </div>
+    </div>
+  </ais-instantsearch>
+</div>
+
+<div class="container py-4">
+  <h3>Tailormade features for academics</h3>
+  <h4>Academig is a platform for finding and analyzing academic information world wide.</h4>
+  <!-- about research labs  -->
+  <div class="row mt-4 pt-4">
+    <div class="col-sm-6 col-lg-3">
+      <div class="img-card-top mb-3">
+        <img [height]="100" class="d-flex mx-auto" src="./assets/img/upgrade/search.svg" alt="academig_open_position">
+      </div>
+      <div class="card-body mb-3">
+        <h4 class="card-text mt-2"><b>Find Labs</b></h4>
+        <p class="card-text font-weight-light">Conduct extesnive academic research to find innovative labs, open positions, and research services.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="img-card-top mb-3">
+        <img [height]="100" class="d-flex mx-auto" src="./assets/img/upgrade/following.svg" alt="academig_open_position">
+      </div>
+      <div class="card-body mb-3">
+        <h4 class="card-text mt-2"><b>Explore Labs</b></h4>
+        <p class="card-text font-weight-light">Take a deep dive into your favorties labs in your target discipline.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="img-card-top mb-3">
+        <img [height]="100" class="d-flex mx-auto" src="./assets/img/pro/treasure.svg" alt="academig_open_position">
+      </div>
+      <div class="card-body mb-3">
+        <h4 class="card-text mt-2"><b>Compare Labs</b></h4>
+        <p class="card-text font-weight-light">Detailed comparison between labs help you make quick, comprehensive and well-informed assessments.</p>
+        <!-- Benchmark different labs, competition, collaboration or potential future labs with our statistics tools. -->
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="img-card-top mb-3">
+        <img [height]="100" class="d-flex mx-auto" src="./assets/img/upgrade/export.svg" alt="academig_open_position">
+      </div>
+      <div class="card-body mb-3">
+        <h4 class="card-text mt-2"><b>Monitor Labs</b></h4>
+        <p class="card-text font-weight-light">Monitor your favortie labs and get emails alerts constantly.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="img-card-top mb-3">
+        <img [height]="100" class="d-flex mx-auto" src="./assets/img/items/open_position.svg" alt="academig_open_position">
+      </div>
+      <div class="card-body mb-3">
+        <h4 class="card-text mt-2"><b>Job Apply</b></h4>
+        <p class="card-text font-weight-light">Apply to open positions and manage the entire application process.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="img-card-top mb-3">
+        <img [height]="100" class="d-flex mx-auto" src="./assets/img/items/services.svg" alt="academig_open_position">
+      </div>
+      <div class="card-body mb-3">
+        <h4 class="card-text mt-2"><b>Service Requests</b></h4>
+        <p class="card-text font-weight-light">Make requests for lab services and streamline the request process.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="img-card-top mb-3">
+        <img [height]="100" class="d-flex mx-auto" src="./assets/img/upgrade/save.svg" alt="academig_open_position">
+      </div>
+      <div class="card-body mb-3">
+        <h4 class="card-text mt-2"><b>Build Researcher Profile</b></h4>
+        <p class="card-text font-weight-light">Build a high-quality academic profile for yourself - like an online CV but much better.</p>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="img-card-top mb-3">
+        <img [height]="100" class="d-flex mx-auto" src="./assets/img/pro/team.svg" alt="academig_open_position">
+      </div>
+      <div class="card-body mb-3">
+        <h4 class="card-text mt-2"><b>Build Lab Profile</b></h4>
+        <p class="card-text font-weight-light">Build a professional profile for you and your lab members.</p>
+        <a [routerLink]="['for-labs']">Learn more</a>
+      </div>
+    </div>
+    <!-- Find emerging trends and analyze changes across industries -->
+  </div>
+  <div class="d-flex justify-content-center">
+    <button mat-raised-button class="btn btn-success" [routerLink]="['academig-pro']"><b>LEARN ABOUT ACADEMIG PRO</b></button>
+  </div>
+</div>
+<!-- <span style="color: #FBBE4D">find</span>, <span style="color: #D16EFF">explore</span>, <span style="color: #2CA7F0">compare</span> and <span style="color: #60BF8C">apply</span> -->
+
+<div *ngIf="1" class="bg-light py-4">
+
+  <!-- <p class="font-weight-light topH4 text-center py-4">Choose Discipline</p>
+  <div class="container d-flex justify-content-center my-4">
+    <button mat-raised-button class="btn p-4" [routerLink]="['/', 'search', 'labs']" [queryParams]="{'disciplines': 'Life Sciences'}" style="background-color: #e7e7e7; color: black; width: 10rem; height: 10rem;">
+      <p class="btn-label"><img width="40" class="mr-2" [src]="'./assets/img/units/life_sciences.svg'"></p>
+      Biology
+    </button>
+    <button mat-raised-button class="btn p-4" [routerLink]="['/', 'search', 'labs']" [queryParams]="{'disciplines': 'Chemistry'}" style="background-color: #e7e7e7; color: black; width: 10rem; height: 10rem;">
+      <p class="btn-label"><img width="40" class="mr-2" [src]="'./assets/img/units/chemistry.svg'"></p>
+      Chemistry
+    </button>
+    <button mat-raised-button class="btn p-4" [routerLink]="['/', 'search', 'labs']" [queryParams]="{'disciplines': 'Physics'}" style="background-color: #e7e7e7; color: black; width: 10rem; height: 10rem;">
+      <p class="btn-label"><img width="40" class="mr-2" [src]="'./assets/img/units/physics.svg'"></p>
+      Physics
+    </button>
+  </div> -->
+
+  <p class="font-weight-light topH4 text-center py-4">Top Universities</p>
+
+  <div class="container-fluid">
+
+    <div class="card mt-0">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-2 col-sm-4">
+            <ul class="nav nav-pills nav-pills-info nav-pills-icons flex-column mb-2" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#universities_regions" role="tablist">
+                  <i class="material-icons">layers</i> Regions
+                </a>
+              </li>
+              <!-- <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#universities_languages" role="tablist">
+                  <i class="material-icons">language</i> Languages
+                </a>
+              </li> -->
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#universities_social" role="tablist">
+                  <i class="material-icons">thumb_up_alt</i> Social Media
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#universities_countries" role="tablist">
+                  <i class="material-icons">map</i> Countries
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-10 col-sm-8">
+            <span class="d-block d-sm-none"><hr></span>
+            <div class="tab-content">
+              <div class="tab-pane active" id="universities_regions">
+                <h3 class="card-title">Universities by Region</h3>
+                <p class="mt-4"><a class="h5 card-title" [routerLink]="['/','search','institutes']" [queryParams]="{'ranking': 'times'}">Top 200 Universities in the World</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities in North America</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities in South America</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities in Europe</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities in Africa</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities in Asia</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities in Oceania</a></p>
+              </div>
+              <!-- <div class="tab-pane" id="universities_languages">
+                  <h3 class="card-title">Universities by Language</h3>
+                  <p><a class="h5" [routerLink]="['./top-english-speaking-universities']">Top English-speaking Universities</a></p>
+                  <p><a class="h5" [routerLink]="['./top-arabic-speaking-universities']">Top Arabic-speaking Universities</a></p>
+                  <p><a class="h5" [routerLink]="['./top-spanish-speaking-universities']">Top Spanish-speaking Universities</a></p>
+              </div> -->
+              <div class="tab-pane" id="universities_social">
+                <h3 class="card-title">Universities by Social Media</h3>
+                <p class="mt-4"><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities by Facebook</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities by Twitter</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities by Linkedin</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities by Instagram</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Top Universities by Youtube</a></p>
+              </div>
+              <div class="tab-pane" id="universities_countries">
+                <h3 class="card-title">Universities by Country</h3>
+                <p class="mt-4"><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in United States</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in United Kingdom</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in Canada</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in Australia</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in Ireland</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in Germany</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in France</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in India</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in China</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/','search','institutes']">Universities in Japan</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="my-0 px-4 pb-4 text-white" style="background-color: #7081A9">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <h3 class="mb-0"><b>Use Academig Pro to boost your research lab search efforts.</b></h3>
+        <!-- Intelligence analysis tools  -->
+        <b>Discover the right labs and opportunities using unlimited search filters, in-depth labs information, advanced comparison tools, and personalized lab alerts.</b>
+        <p>
+          <button mat-raised-button class="btn btn-success mt-4" (click)="login()">Start</button>
+          <br><b>Already have an account? <a style="cursor: pointer;" (click)="login()">Log in here</a></b>
+        </p>
+      </div>
+      <div>
+        <img src="./assets/img/action/landing_building.svg" class="mt-4 img-fluid" style="max-width: 20rem;" alt="academig_signup">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="support py-4">
+  <p class="font-weight-light topH4 text-center py-4" style="color:#ffffff;">
+    <i class="fa fa-life-ring" aria-hidden="true"></i> Getting Help
+  </p>
+  <p class="card-text text-center mb-4" style="color:#ffffff;">
+    Getting help is always just a quick chat, email or phone call away.
+  </p>
+  <div class="d-flex justify-content-center">
+    <button mat-raised-button class="btn btn-success" [routerLink]="['contact']"><b>SUPPORT</b></button>
+  </div>
+</div>
+
+<!-- <div class="bg-white py-4">
+  <p class="font-weight-light topH4 text-center py-4">Join Academig</p>
+  <div class="d-flex justify-content-center mb-4 pb-4">
+    <button mat-raised-button class="btn btn-success btn-round" (click)="login()">SIGN UP</button>
+  </div>
+</div> -->
+
+<info-footer></info-footer>

@@ -1,0 +1,72 @@
+<span class="superAdminPosition.length==0">Your institutional emails will be requested when you join or create a lab profile.</span>
+
+<ng-container *ngFor="let userPosition of userService.userPositions; let i=index, let l=last">
+  <ng-container *ngIf="userPosition.status>5 && userPosition.status<8">
+    {{userPosition.email.address}}<br>
+    <div class="text-muted mb-2">
+      Group: {{userPosition.group.group.name}}
+      <br>Department: {{userPosition.group.department.name}}
+      <br>University: {{userPosition.group.university.name}}
+      <br>Verified: {{ (userPosition.email.stage==2) ? "Yes" : "No" }}
+      <br>Updated at: {{userPosition.email.updated | date:'medium'}}
+    </div>
+
+    <button *ngIf="userPosition.email.stage==0" mat-raised-button class="btn btn-sm btn-light-blue mr-2" (click)="emailModal(i, 0)">
+      Resend verification email
+    </button>
+
+    <button mat-raised-button class="btn btn-sm btn-light-blue" (click)="emailModal(i, 1)">
+      Change email
+    </button>
+
+    <hr>
+  </ng-container>
+</ng-container>
+
+
+<!-- Email Modal -->
+<button id="toggleEmailModal" #toggleEmailModal [hidden]="true" data-toggle="modal" data-target="#emailModal"></button>
+
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModal" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          {{(btnMode==1) ? 'Change email' : 'Resend verification email'}}
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="groupIndex!=null" class="modal-body">
+
+        <p>
+          <span class="text-muted">Group:</span> {{userService.userPositions[groupIndex].group.group.name}}
+          <br><span class="text-muted">Department:</span> {{userService.userPositions[groupIndex].group.department.name}}
+          <br><span class="text-muted">University:</span> {{userService.userPositions[groupIndex].group.university.name}}
+        </p>
+
+        <div *ngIf="this.btnMode==0">
+          <!-- <label>Click Resend to send atea verification email to {{userService.userPositions[groupIndex].email.address}}</label> -->
+        </div>
+
+        <div *ngIf="this.btnMode==1">
+          <label for="EmailInput">New institute email:</label>
+          <input class="form-control mb-2" [(ngModel)]="email">
+          <span class="small text-muted">After you click the Change button, you will receive an email prompting you to verify your new email.</span>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+        <button [disabled]="(btnMode==1 && !email)" role="button" (click)="changeEmail()" mat-raised-button class="btn btn-sm btn-light-blue">
+          <div class="d-flex justify-content-start">
+            {{(btnMode==1) ? 'Change' : 'Resend'}} <div *ngIf="!streamRetrieved" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></div>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

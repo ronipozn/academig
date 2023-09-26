@@ -1,0 +1,112 @@
+<div *ngIf="!streamRetrieved" class="mt-4"><spinner></spinner></div>
+
+<div [hidden]="!streamRetrieved" style="background-image: linear-gradient(#283E73, #74B1CC);">
+  <div class="py-2 px-3 text-white" [ngClass]="{'container-fluid': !isMobile}">
+    <h3 class="d-flex align-items-center mt-2"><i class="material-icons mr-2">article</i> Publications</h3>
+    <!-- <ng-template #rt let-r="result">{{r.name}}</ng-template> -->
+    <div class="ais-SearchBox">
+      <form class="ais-SearchBox-form" novalidate>
+        <!-- [formControlName]=controlName -->
+         <input #input
+                type="text"
+                class="ais-SearchBox-input"
+                style="width: 100%; padding: 10px"
+                [placeholder]="'Type search query'">
+         <!-- *ngIf="missionService.query"  -->
+         <button class="ais-SearchBox-reset" (click)="clearOp()" style="margin-right: 45px; padding-bottom: 30px" type="reset" title="Clear the search query.">
+           <i style="font-size: 30px;" class="material-icons text-muted">clear</i>
+         </button>
+         <button class="ais-SearchBox-reset" (click)="keyUpOp(input.value)" style="margin-right: 15px; padding-bottom: 30px" type="submit" title="Submit the search query.">
+           <i style="font-size: 30px;" class="material-icons text-muted">search</i>
+         </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<mat-progress-bar *ngIf="searchFlag"
+                  style="margin: 0px 0px;"
+                  [color]="color"
+                  [mode]="mode">
+</mat-progress-bar>
+
+<div *ngIf="!searchFlag && publications?.length>0 && (userService.userId==null || userService.planNumber==0)" class="d-flex justify-content-center">
+  <google-feed-adsense></google-feed-adsense>
+</div>
+
+<div class="container-fluid" style="margin-bottom: 40px;">
+
+  <div class="row no-gutters mt-4">
+
+    <!-- <div [hidden]="!streamRetrieved" class="col-xs-12 col-md-4 col-lg-3 col-xs-2">
+      <div class="d-flex justify-content-start mb-2 mr-2">
+        <div class="flex-grow-1">
+          <div [hidden]="isMobile">
+            <div class="card mt-0 mb-3">
+              <div class="card-header">
+                <p class="mt-0 mb-3"><b>Years</b></p>
+                Any time<br>
+                Since 2020<br>
+                Since 2016<br>
+                Custom range...
+              </div>
+            </div>
+            <div class="card mt-0 mb-3">
+              <div class="card-header">
+                <p class="my-0"><b>Sort by relevance</b></p>
+                <p class="my-0"><b>Sort by date</b></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-none d-md-block mr-2"></div>
+      </div>
+    </div> -->
+
+    <!-- Select Subjects -->
+    <!-- Select Journals -->
+    <!-- Select Article Types -->
+    <!-- Select Countries -->
+
+    <div *ngIf="!searchFlag && publications?.length==0" class="card mt-0">
+      <div class="card-header">
+        <h5 *ngIf="!query" class="text-center mt-3">
+          Please enter a query in the search box above.
+        </h5>
+        <h5 *ngIf="query" class="text-center mb-4">
+          Looks like we did not find any results for {{query}}.<br>
+          Try to change your search, or explore our recommendation for you below.
+        </h5>
+        <img *ngIf="query" class="d-flex mx-auto" [height]="200" [src]="'./assets/img/empty.svg'">
+      </div>
+    </div>
+
+    <div *ngIf="streamRetrieved && publications?.length>0" class="col-xs-12 col-lg-10 offset-lg-1 col-xs-10 mb-4 pb-4">
+    <!-- <div class="col-xs-12 col-md-8 col-lg-9 col-xs-10 mb-3"> -->
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <publications-list [streamRetrieved]=true
+                             [publications]=publications
+                             [sourceType]=2
+                             [stream]=streamPublications
+                             [userId]=userService.userId
+                             [streamFolder]=streamPublicationsFolder>
+          </publications-list>
+        </div>
+      </div>
+
+      <!-- <app-pagination *ngIf="hits.length>0" class="mb-2"></app-pagination> -->
+
+    </div>
+
+  </div>
+
+  <div *ngIf="streamRetrieved && (userService.userId==null || userService.planNumber==0)" class="d-flex justify-content-center">
+    <google-feed-adsense></google-feed-adsense>
+  </div>
+  <p class="my-4"></p>
+
+</div>
+
+<!-- <info-footer></info-footer> -->

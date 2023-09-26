@@ -1,0 +1,116 @@
+ <!-- (keydown.escape)="onCancel()" -->
+<div class="side-form">
+
+  <h3 class="title text-center">{{newFlag ? 'Add' : 'Update'}} Deal Details</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemFirst]=true
+                              [labelRequired]=true
+                              [fieldType]=4
+                              [itemTitle]="'Deal type'"
+                              [controlName]="'type'"
+                              [parentGroup]=formModel
+                              [itemArray]=dealType
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'date'"
+                              [itemTitle]="'Start Date'"
+                              [controlName]="'dateStart'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <!-- Campaign dates:
+      <div class="row no-gutters">
+        <div class="col-6 pr-1">
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'date'"
+                                  [itemTitle]="'Start Date'"
+                                  [controlName]="'dateStart'"
+                                  [parentGroup]=formModel>
+          </build-modal-text-field>
+        </div>
+        <div class="col-6 pl-1">
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'date'"
+                                  [itemTitle]="'End Date'"
+                                  [controlName]="'dateEnd'"
+                                  [parentGroup]=formModel>
+          </build-modal-text-field>
+        </div>
+      </div> -->
+
+      <build-modal-text-field [labelRequired]=true
+                              [typeSelected]="'url'"
+                              [fieldType]=1
+                              [itemTitle]="'Webinar link'"
+                              [controlName]="'webinarLink'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Webinar date & time</mat-label>
+        <input matInput type="datetime-local" [formControlName]="'webinarDate'" [required]=true>
+      </mat-form-field>
+
+      <!-- <build-modal-text-field [labelRequired]=true
+                              [typeSelected]="'date'"
+                              [fieldType]=1
+                              [itemTitle]="'Webinar date & time'"
+                              [controlName]="'webinarDate'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field> -->
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Number of plans'"
+                              [controlName]="'plansTotal'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Number of available codes'"
+                              [controlName]="'codesTotal'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <b>Deal terms:</b>
+      <trumbowyg-ngx-editor id="editor"
+                            class="mt-0 pt-0"
+                            formControlName="terms">
+      </trumbowyg-ngx-editor>
+
+      <b>Features Included in All Plans:</b>
+      <trumbowyg-ngx-editor id="editor"
+                            class="mt-0 pt-0"
+                            formControlName="features">
+      </trumbowyg-ngx-editor>
+
+      <!-- <build-slide-select-members *ngIf="newFlag"
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Choose People'"
+                                  [labelRequired]=true
+                                  [minSelected]=1
+                                  [parentGroup]=formModel
+                                  [controlName]="'members'"
+                                  [submitStatus]=submitStatus
+                                  [preMembersInput]=[null]
+                                  (membersOutput)=membersFunc($event)>
+      </build-slide-select-members> -->
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button  class="btn btn-sm btn-fill btn-light-blue">Update</button>
+        <button type="button" mat-raised-button  class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

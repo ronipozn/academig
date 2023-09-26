@@ -1,0 +1,78 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">{{headline}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()">
+
+      <!-- <build-modal-text-field [itemSmall]=true
+                              [itemFirst]=true
+                              [iconTitle]="'clock-o'"
+                              [itemTitle]="'Status'"
+                              [controlName]="'status'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field> -->
+
+      <!-- <span class="small text-muted">Last update: {{ personalInfo.statusDate | date:'dd MMM y' }}, {{ personalInfo.statusDate | date:'dd MMM y' }}</span> -->
+
+      <build-modal-text-field [itemFirst]=true
+                              [iconTitle]="'phone'"
+                              [itemTitle]="'Private phone'"
+                              [controlName]="'phone'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [iconTitle]="'map-marker'"
+                              [itemTitle]="'Address'"
+                              [controlName]="'address'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'date'"
+                              [iconTitle]="'birthday-cake'"
+                              [itemTitle]="'Birthday'"
+                              [controlName]="'birthday'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-out [parentGroup]=formModel
+                 [controlName]="'out'"
+                 [vacations]=personalInfo.vacations
+                 [submitStatus]=submitStatus>
+      </build-out>
+
+      <!-- <p class="mb-0">
+        <b><i class="fa fa-child" aria-hidden="true"></i> My Kids:</b>
+      </p>
+      <div id="direct_upload">
+        <div class="card-columns">
+          <div *ngFor="let dummy of filesCount; let i=index" class="card">
+            <single-pic [centerFlag]=true
+                        [pic]="fileGroup ? fileGroup + 'nth/' + i + '/' : null"
+                        [thumbnailFlag]=true
+                        [type]=1>
+            </single-pic>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': fileGroup}">
+          <input type="hidden" id="fileGroup"
+                 name="fileGroup"
+                 data-images-only
+                 data-preview-step
+                 data-multiple
+                 data-crop="free, 16:9, 4:3, 5:4, 1:1"
+                 data-image-shrink="1024x1024"
+                 data-multiple-max=limit>
+         </div>
+      </div> -->
+      <!-- [queueLimit]="6-personalInfo.kids.length" -->
+
+      <div class="pull-left form-group">
+        <button role="button" class="btn btn-sm btn-light-blue">Update</button>
+        <button type="button" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

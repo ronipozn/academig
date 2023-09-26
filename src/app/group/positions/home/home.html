@@ -1,0 +1,167 @@
+<ng-container *ngIf="missionService.showPage">
+  <spinner *ngIf="!streamRetrieved[0] || !streamRetrieved[1]"></spinner>
+  <ng-container *ngIf="streamRetrieved[0] && streamRetrieved[1]">
+
+    <div *ngIf="missionService.showEditBtn" class="d-flex justify-content-center mb-4">
+      <button mat-raised-button class="btn btn-light-blue btn-round" [routerLink]="['..', 'post-job']">
+        <i class="material-icons">add_circle_outline</i> Post a job opening
+      </button>
+    </div>
+
+    <div class="row no-gutters mb-3">
+      <div [ngClass]="{'col-md-12': !(missionService.showEditBtn || items.whyJoin || items.diversity), 'col-md-8': (missionService.showEditBtn || items.whyJoin || items.diversity) }">
+
+        <!-- <div class="card mt-0">
+          <build-headline [showEditBtn]=missionService.showEditBtn [addButtonFlag]=false [headline]="'Latest Hires'"></build-headline>
+          <div *ngIf="streamRetrieved[1]" class="row">
+            <div class="col-6 offset-3">
+              <group-positions-hires></group-positions-hires>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- <div *ngIf="missionService.showEditBtn && positions[0]==null" class="card mt-0" #scrollAdd>
+          <div class="card-header">
+            <build-headline [showEditBtn]=missionService.showEditBtn
+                            [addButtonFlag]=true
+                            [headline]="missionService.groupType ? 'Open Positions' : 'Jobs'"
+                            [headlineStyle]=1
+                            (buttonAddClick)="positionAdd()">
+            </build-headline>
+            <build-modal-intro [headline]="'Looking for new ' + (missionService.groupType ? 'lab members?' : 'employees?')"
+                               [bodypic]="'exchange'"
+                               [bodytext]="'Start posting your ' +  (missionService.groupType ? 'lab\' open positions' : 'company jobs') + ' online.'">
+            </build-modal-intro>
+            <button mat-raised-button class="btn btn-light-blue btn-round my-2" (click)="resourceSlide(true, 0, true)">
+              <i class="material-icons">style</i> Post a job opening
+            </button>
+            <img src="./assets/img/items/open_position.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="350" alt="academig_open_position">
+          </div>
+        </div> -->
+
+        <div *ngIf="positions[0]==null" class="card mt-0">
+          <div class="card-header">
+            <ng-container *ngIf="missionService.showEditBtn">
+              <build-modal-intro [headline]="'Looking for new ' + (missionService.groupType ? 'lab members?' : 'employees?')"
+                                 [bodypic]="'exchange'"
+                                 [bodytext]="'Start posting your ' +  (missionService.groupType ? 'lab\' open positions' : 'company jobs') + ' online.'">
+              </build-modal-intro>
+            </ng-container>
+            <ng-container *ngIf="!missionService.showEditBtn">
+              <build-modal-intro [headline]="'There are no jobs posting yet.'"
+                                 [bodypic]="'style'">
+              </build-modal-intro>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- headline: string[] = ['The jobs list is still empty.',
+                              'Search for open positions.',
+                              '',
+                              'You have not applied to any position yet.',
+                              'You have not added any position to your wish list.'] -->
+
+        <positions-list [streamRetrieved]=streamRetrieved[1]
+                        [positions]=positions
+                        [sourceType]=0
+                        [stream]=streamPositions
+                        [streamFollow]=streamPositionsFollow
+                        [userStatus]=missionService.userStatus
+                        [showEditBtn]=missionService.showEditBtn
+                        [showHeadline]=missionService.showHeadline
+                        (animationDoneEvent)="streamFunc()">
+        </positions-list>
+        <!-- (buttonFollowClick)="positionFollow($event)" -->
+
+        <img src="./assets/img/items/open_position.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_open_position">
+
+      </div>
+
+      <div *ngIf="missionService.showEditBtn || items.whyJoin || items.diversity" class="col-md-4">
+
+        <div *ngIf="missionService.showEditBtn || items.whyJoin" #scrollWhyJoin>
+          <div class="d-flex justify-content-start">
+            <div class="d-none d-md-block ml-4"></div>
+            <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')" #scrollWhyJoin>
+              <div class="card-header">
+                <build-headline [showEditBtn]=missionService.showEditBtn
+                                [addButtonFlag]="items.whyJoin==null"
+                                [headline]="'Why Join ' + missionService.groupName"
+                                (buttonAddClick)="whyJoinOp(0, true, null)">
+                </build-headline>
+
+                <build-modal-intro *ngIf="items.whyJoin==null && missionService.showHeadline"
+                                   [headline]="'Who should join your research lab.'"
+                                   [bodypic]="'align-left'"
+                                   [bodytext]="'Write about the requirements and expectations of your ' + (missionService.groupType ? 'lab members.' : 'new employees')">
+                </build-modal-intro>
+
+                <div build-text
+                     [text]=items.whyJoin
+                     [showEditBtn]=missionService.showEditBtn
+                     [stream]=streamWhyJoin
+                     (animationDoneEvent)="whyJoinOp(3)"
+                     (buttonEditClick)="whyJoinOp(0, true, $event)"
+                     (buttonDeleteClick)="whyJoinOp(1, false, $event)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="missionService.groupType && (missionService.showEditBtn || items.diversity)" #scrollDiversity>
+          <div class="d-flex justify-content-start">
+            <div class="d-none d-md-block ml-4"></div>
+            <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+              <div class="card-header">
+                <build-headline [showEditBtn]=missionService.showEditBtn
+                                [addButtonFlag]="items.diversity==null"
+                                [headline]="'About Diversity'"
+                                (buttonAddClick)="diversityOp(0, true, null)">
+                </build-headline>
+
+                <build-modal-intro *ngIf="items.diversity==null && missionService.showHeadline"
+                                   [headline]="'Diversity Statement'"
+                                   [bodypic]="'align-left'"
+                                   [bodytext]="'Write your research lab equality and diversity policies.'">
+                </build-modal-intro>
+
+                <div build-text
+                     [text]=items.diversity
+                     [showEditBtn]=missionService.showEditBtn
+                     [stream]=streamDiversity
+                     (animationDoneEvent)="diversityOp(3)"
+                     (buttonEditClick)="diversityOp(0, true, $event)"
+                     (buttonDeleteClick)="diversityOp(1, false, $event)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text *ngIf=whyJoinBuildFlag
+                  (update)="whyJoinOp(2, false, $event)"
+                  (cancel)="whyJoinOp(0, false, $event)"
+                  [title]="'Why Join Our Lab'"
+                  [text]=items.whyJoin>
+</build-slide-text>
+
+<build-slide-text *ngIf=diversityBuildFlag
+                  (update)="diversityOp(2, false, $event)"
+                  (cancel)="diversityOp(0, false, $event)"
+                  [title]="'Diversity Statement'"
+                  [text]=items.diversity>
+</build-slide-text>

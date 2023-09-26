@@ -1,0 +1,159 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved">
+
+  <!-- <div *ngIf="!profile.email_verified" class="card text-white bg-warning mt-0">
+    <div class="card-body">
+      <b>Please confirm your email at {{profile.email}}.</b>
+    </div>
+  </div> -->
+
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card mt-0">
+        <div class="card-body mt-0">
+          <b>Account</b>
+          <hr class="mt-0 mb-3">
+          {{ userService.userName }}<br>
+          {{profile.email}}
+          <!-- <div class="text-muted mb-2"> -->
+            <!-- Verified: {{profile.email_verified ? "Yes" : "No"}} -->
+            <!-- <br>Primary Email -->
+            <!-- <br>Updated at: {{profile.updated_at | date:'medium'}} -->
+          <!-- </div> -->
+          <!-- <b>Country</b>  -->
+          <!-- <hr class="mt-0 mb-2"> -->
+          <mat-form-field class="mt-3">
+            <!-- <span *ngIf="!streamCountry" class="ml-1"><i class="fa fa-1x fa-spinner fa-spin"></i></span> -->
+            <mat-select placeholder="Select your country" (selectionChange)="updateCountry()" [(value)]="country_id" ariaLabel="'countries'">
+              <mat-option *ngFor="let country of countries" [value]="country.id">
+                {{ country.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <b>Your account data</b>
+          <hr class="mt-0 mb-3">
+          <p class="mb-2">
+            Your Academig account data belongs to you. Get an email with all your profile and labs data in one file.
+          </p>
+          <button *ngIf="!account?.data?.flag" role="button" role="button" mat-raised-button class="btn btn-light-blue" [disabled]=requestDisable (click)="requestData()">
+            Request data
+          </button>
+          <span *ngIf="account?.data?.flag" class="small">
+            We'll send you an email with the data you requested soon.<br>
+            Request date: {{account.data.date | date}}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-0">
+        <div class="card-body mt-0">
+          <b>Notification settings</b>
+          <hr class="mt-0 mb-3">
+          <settings-notifications></settings-notifications>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-0">
+        <div class="card-body mt-0">
+          <b>Institutional Emails</b>
+          <hr class="mt-0 mb-3">
+          <settings-institute></settings-institute>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-0">
+        <div class="card-body mt-0">
+          <b>Password</b>
+          <hr class="mt-0 mb-3">
+          <span *ngIf="oauthType=='facebook'" class="text-muted">
+            You are logged in using your Facebook account, and therefore don't have an Academig account password.
+            You can reset your Facebook password at the Facebook website.
+          </span>
+          <span *ngIf="oauthType=='google-oauth2'" class="text-muted">
+            You are logged in using your Google account, and therefore don't have an Academig account password.
+            You can reset your Google password at the Google website.
+          </span>
+          <button *ngIf="oauthType!='facebook' && oauthType!='google-oauth2'" role="button" mat-raised-button class="btn btn-light-blue" data-toggle="modal" data-target="#passwordModal">
+            Reset password
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <h5 class="mt-4">Languages</h5> -->
+  <!-- Suggested articles languages are automatically affected from the user profile languages (his CV languages) -->
+
+  <!-- <p class="lead mt-4 mb-0">Accessibility</p>
+  <hr class="mt-0">
+  <div class="form-check">
+    <label class="form-check-label">
+      <input class="form-check-input" type="checkbox"> Enable Color Blind Friendly Mode
+    </label>
+  </div> -->
+
+  <!-- <p class="lead mt-4 mb-0">Change your Time Zone</p>
+  <hr class="mt-0">
+  <form>
+    <div class="form-group">
+      <p><select class="custom-select">
+        <option selected>Europe/Erlangen</option>
+        <option value="1">Tel Aviv/Israel</option>
+        <option value="2">Kiev/Ukraine</option>
+        <option value="3">Vienne/Austria</option>
+      </select></p>
+    </div>
+  </form> -->
+
+  <!-- <p class="lead mt-4 mb-0">Where you're logged in</p>
+  <hr class="mt-0">
+  <p>
+    Erlangen, Bavaria, Germany <span class="small text-muted">(Approximate location)</span>
+    <br>131.188.203.15
+    <br>Chrome on MacOSX
+    <br><div class="text-muted">Current use</div>
+    <button role="button" class="btn btn-sm btn-outline-info mt-2">Log out</button>
+  </p>
+  <p>
+    Kiriat Mothzkin, Israel <span class="small text-muted">(Approximate location)</span>
+    <br>127.196.201.14
+    <br>Safari on MacOSX
+    <br><div class="text-muted">Last used: Less than an hour ago</div>
+    <button role="button" class="btn btn-sm btn-outline-info mt-2">Log out</button>
+  </p> -->
+
+  <!-- <p class="lead mt-4 mb-0">Advanced Security Settings</p>
+  <hr class="mt-0">
+  <button role="button" class="btn btn-outline-info" data-toggle="modal" data-target="#twoStepModal">Configure Two-Step Verification</button> -->
+
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - Password Modal  - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - -->
+
+<button id="togglePasswordModal" #togglePasswordModal [hidden]="true" data-toggle="modal" data-target="#passwordModal"></button>
+
+<div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="passwordModalLabel">Reset password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        After you click the Reset button, you will receive an email prompting you to change your password.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-light-blue" [disabled]=passwordModalDisable (click)="changePassword()">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,197 @@
+<!-- <p *ngIf="app.stars" class="mb-2">stars 4.3/5 <a>41 Reviews</a></p>
+<p *ngIf="app.description" class="mb-2">{{app.description}}</p>
+<p class="lead">
+  <span *ngIf="app.reduced_price" class="mr-2"><b>${{app.reduced_price}}</b></span>
+  <span *ngIf="app.full_price" class="text-muted"><b><s>${{app.full_price}}</s></b></span>
+</p>
+<span *ngFor="let category of app.categories" style="background-color: #DDE1F3" class="text-dark badge mr-1">
+  {{ category }}
+</span>
+<a [href]="app.website" target="_empty"><img mat-card-image [src]=app.pic [alt]=app.alt></a>  -->
+
+<div style="min-height: 86vh">
+  <div class="container-fluid">
+
+    <div *ngIf="streamRetrieved[0]" class="card mt-4">
+      <div class="card-body">
+        <div class="row">
+
+          <div class="col-lg-4 border-right">
+            <h3 class="text-dark mt-0">
+              <div class="d-flex align-items-center">
+                <span class="material-icons mr-1">home</span>
+                <b>About</b>
+              </div>
+            </h3>
+            <item-details [type]=missionService.type
+                          [showEditBtn]=missionService.showEditBtn
+                          [socialInfo]=missionService.socialInfo
+                          [publicInfo]=missionService.publicInfo
+                          [team]=missionService.team
+                          [items]=items
+                          [shortDescription]=shortDescription>
+            </item-details>
+          </div>
+
+          <div class="col-lg-4 border-right">
+            <h3 *ngIf="!missionService.socialInfo?.twitter" class="text-dark mt-0">
+              <div class="d-flex align-items-center">
+                <i class="fa fa-twitter mr-1" aria-hidden="true"></i>
+                <b>Twitter</b>
+                <button *ngIf="missionService.showEditBtn && !missionService.socialInfo?.twitter" (click)="twitterOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-sm btn-just-icon">
+                  <i class="material-icons">add_circle</i>
+                </button>
+              </div>
+            </h3>
+            <build-modal-intro *ngIf="!missionService.socialInfo?.twitter"
+                               [headline]="'No twitter feed.'">
+            </build-modal-intro>
+            <ngx-twitter-timeline *ngIf="missionService.socialInfo?.twitter"
+                                  [data]="{sourceType: 'url', url: 'https://twitter.com/'+missionService.socialInfo.twitter}"
+                                  [opts]="{tweetLimit: 2}">
+            </ngx-twitter-timeline>
+            <button *ngIf="missionService.showEditBtn && missionService.socialInfo?.twitter" (click)="twitterOp(0, true, null)" data-toggle="modal" role="button" class="btn btn-sm btn-link" aria-haspopup="true" aria-expanded="false">
+              Edit twitter link
+            </button>
+            <button *ngIf="missionService.showEditBtn && missionService.socialInfo?.twitter" (click)="twitterOp(2, false, {event: null})" data-toggle="modal" role="button" class="btn btn-sm btn-link" aria-haspopup="true" aria-expanded="false">
+              Delete twitter link
+            </button>
+          </div>
+
+          <div class="col-lg-4">
+            <h3 class="text-dark mt-0">
+              <div class="d-flex align-items-center">
+                <span class="material-icons mr-1">description</span>
+                <b>Recent News</b>
+              </div>
+            </h3>
+            <spinner *ngIf="!streamRetrieved[1]"></spinner>
+            <build-modal-intro *ngIf="streamRetrieved[1] && newses.length==0"
+                               [headline]="'The recent news feed is empty.'">
+            </build-modal-intro>
+            <a *ngIf="missionService.showEditBtn && streamRetrieved[1] && newses.length==0" mat-raised-button role="button" [routerLink]="['./news']" class="btn btn-light-blue">
+              <span class="material-icons">list</span> Add News
+            </a>
+            <div *ngIf="streamRetrieved[1] && newses[0]" class="mb-4">
+              <news-list [newses]=newses [userId]=missionService.userId [sourceType]=7></news-list>
+              <a role="button" class="card-title" [routerLink]="['./news']">
+                View All News
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="streamRetrieved[0]" class="row no-gutters">
+      <div class="col-md-8">
+
+        <div *ngIf="items.description || missionService.showEditBtn" class="card mt-0">
+          <div class="card-body">
+            <build-headline [showEditBtn]=missionService.showEditBtn
+                            [addButtonFlag]="!items.description"
+                            [headline]="'Description'"
+                            (buttonAddClick)="descriptionOp(0, true, true)">
+            </build-headline>
+            <div *ngIf="items.description"
+                 build-text
+                 [text]=items.description
+                 [stream]=streamDescription
+                 [showEditBtn]=missionService.showEditBtn
+                 (animationDoneEvent)="descriptionOp(3)"
+                 (buttonDeleteClick)="descriptionOp(1, false, null)"
+                 (buttonEditClick)="descriptionOp(0, true, null)">
+            </div>
+          </div>
+        </div>
+
+        <!-- List of people, labs, companies -->
+        <div *ngIf="0" class="card mt-0">
+          <div class="card-body">
+            <h3 class="text-dark mt-0">
+              <div class="d-flex align-items-center">
+                <ng-container *ngIf="missionService.type==1">
+                  <span class="material-icons mr-1">groups</span>
+                  <b>Guests</b>
+                </ng-container>
+                <ng-container *ngIf="missionService.type==2">
+                  <span class="material-icons mr-1">record_voice_over</span>
+                  <b>Speakers</b>
+                </ng-container>
+                <ng-container *ngIf="missionService.type==2">
+                  <span class="material-icons mr-1">monetization_on</span>
+                  <b>Sponsors</b>
+                </ng-container>
+                <ng-container *ngIf="missionService.type==2">
+                  <span class="material-icons mr-1">work</span>
+                  <b>Exhibitors</b>
+                </ng-container>
+                <ng-container *ngIf="missionService.type==3">
+                  <span class="material-icons mr-1">shopping_basket</span>
+                  <b>Customers</b>
+                </ng-container>
+                <button *ngIf="missionService.showEditBtn" (click)="twitterOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-just-icon">
+                  <i class="material-icons text-dark">edit</i>
+                </button>
+              </div>
+            </h3>
+            <hr class="mt-2">
+          </div>
+        </div>
+
+        <div class="d-block d-md-none col-12 mb-4">
+          <div class="text-center">
+            Share<br>
+            <!-- <share-buttons [show]="4" [theme]="material-light" [include]="['facebook','twitter','linkedin', 'email']"></share-buttons> -->
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-none d-md-block col-md-4">
+        <p class="text-center text-dark"><a (click)="imrpoveFunc()" style="cursor: pointer;"><b>Improve page content</b></a></p>
+        <!-- <div *ngIf="(userService.userId && userService.planNumber==0) || userService.userId==null" class="card mt-0" [@itemsAnimation]="('active')" style="height: 22rem;">
+          <div class="card-body">
+            <google-feed-adsense></google-feed-adsense>
+            <div *ngIf="userService.userId && userService.planNumber==0" style="position: absolute; bottom: 0;">
+              <button mat-raised-button type="button" class="btn btn-link p-0" (click)="planUpdate()">Upgrade to PRO to remove Ads</button>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-location *ngIf=locationBuildFlag
+                      (update)="locationOp(2, false, $event)"
+                      (cancel)="locationOp(0, false, null)"
+                      [country_id]=missionService.universityCountry
+                      [city]=missionService.universityCity
+                      [state]=missionService.universityState
+                      [name]=missionService.universityName
+                      [lat]=missionService.universityLocation[0]
+                      [lng]=missionService.universityLocation[1]>
+</build-slide-location>
+
+<build-slide-text *ngIf=descriptionBuildFlag
+                  [title]="'Description'"
+                  [text]=items.description
+                  (update)="descriptionOp(2, false, $event)"
+                  (cancel)="descriptionOp(0, false, $event)">
+</build-slide-text>
+
+<build-slide-text *ngIf=twitterBuildFlag
+                  (update)="twitterOp(2, false, $event)"
+                  (cancel)="twitterOp(0, false, null)"
+                  [title]="'Update Twitter Feed'"
+                  [fieldType]=0
+                  [text]="missionService.socialInfo?.twitter">
+</build-slide-text>

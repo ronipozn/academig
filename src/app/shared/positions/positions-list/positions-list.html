@@ -1,0 +1,52 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<ng-container *ngIf="streamRetrieved && positions.length!=0">
+
+  <ng-container *ngIf="sourceType!=2">
+    <ng-container *ngFor="let position of positions; let i=index; let l=last">
+      <div *ngIf="position.group?.university.link!='academig'" class="card mt-0 mb-3" [ngClass]="{'bg-success': position.standout>0}">
+        <div class="card-body pl-2 pt-2">
+          <!-- [itemAutofocus]="itemFocus==i" -->
+          <position-item [position]=position
+                         [sourceType]=sourceType
+                         [userStatus]=userStatus
+                         [showEditBtn]=showEditBtn
+                         [stream]=stream[i]
+                         [streamFollow]=streamFollow[i]
+                         [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                         (animationDoneEvent)="animationDone()"
+                         (buttonApplyClick)="buttonApplyFunc($event, i)"
+                         (buttonFollowClick)="buttonFollowFunc(i)"
+                         (buttonAcceptClick)="buttonAccpetFunc(i)"
+                         (buttonRejectClick)="buttonRejectFunc(i)">
+          </position-item>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <!-- style="overflow-x: scroll; width: 98%;" -->
+ <!-- class="d-flex flex-row" -->
+  <ng-container *ngIf="sourceType==2">
+    <ng-container *ngFor="let position of positions; let i=index; let l=last">
+      <div class="card mt-1 mx-1 mb-0" [ngClass]="{'bg-success': position.standout>0}"> <!-- style="width: 26rem; height: 8rem -->
+        <div class="card-body pl-2 pt-2">
+          <position-item [position]=position
+                         [groupIndex]=groupIndex
+                         [sourceType]=sourceType
+                         [userStatus]=userStatus
+                         [showEditBtn]=showEditBtn
+                         [stream]=stream[i]
+                         [streamFollow]=streamFollow[i]
+                         (animationDoneEvent)="animationDone()"
+                         (buttonApplyClick)="buttonApplyFunc($event, i)"
+                         (buttonFollowClick)="buttonFollowFunc(i)"
+                         (buttonAcceptClick)="buttonAccpetFunc(i)"
+                         (buttonRejectClick)="buttonRejectFunc(i)">
+          </position-item>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+</ng-container>

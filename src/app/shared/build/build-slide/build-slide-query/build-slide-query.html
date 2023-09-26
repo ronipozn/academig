@@ -1,0 +1,51 @@
+<div class="side-form">
+
+  <h3 class="title text-dark text-center">{{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- <build-modal-name-field [labelHide]=true
+                              [itemFirst]=true
+                              [iconTitle]="'newspaper-o'"
+                              [mode]=fieldType
+                              [controlName]="'text'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-name-field> -->
+
+      <!-- <build-modal-text-field [labelHide]=true
+                              [itemFirst]=true
+                              [fieldType]=fieldType
+                              [typeSelected]=typeSelected
+                              [controlName]="'text'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field> -->
+
+      <build-month-field *ngIf="typeSelected=='month'"
+                         [itemTitle]=title
+                         [controlName]="'text'"
+                         [parentGroup]=formModel
+                         [submitStatus]=submitStatus>
+      </build-month-field>
+
+      <mat-form-field *ngIf="typeSelected=='select'" class="mt-4">
+        <mat-select placeholder="Number of people" [formControlName]="'text'" ariaLabel="selectArray[0]">
+          <mat-option *ngFor="let select of selectArray" [value]="select.id">
+            {{ select.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <p *ngIf="itemExplain" class="text-muted small">{{itemExplain}}</p>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-light-blue">{{!text ? 'Add' : 'Update'}}</button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

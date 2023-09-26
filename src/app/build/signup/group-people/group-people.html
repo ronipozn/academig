@@ -1,0 +1,36 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <img src="./assets/img/build/users.svg" style="max-height: 15rem;" class="mx-auto d-block img-fluid" alt="academig_build_users"> -->
+
+  <h3 class="mb-3 text-center"><b>Lab People</b></h3>
+
+  <p class="mb-4 text-center text-muted">
+    <b>Add the names of your lab members, also those who are not on Academig yet.</b>
+  </p>
+
+  <!-- <b>Are theses people in your lab? Click on their names to add them to your lab</b> => List of suggestions based on Publications. Button: [+ Moshe] -->
+
+  <div class="row mb-3">
+    <div class="col-12 col-sm-11 col-md-8 mx-auto">
+      <build-tag-fetch-field [nonremovableItems]="(forkNum==2 || forkNum==3) ? 2 : 1"
+                             [labelRequired]=true
+                             [itemTitle]="'Members'"
+                             [itemPlaceholder]="'+ Member'"
+                             [controlName]="'preMembers'"
+                             [parentGroup]=parentGroup
+                             [submitStatus]=submitStatus
+                             (tags)=tagsUpdate($event)>
+      </build-tag-fetch-field>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

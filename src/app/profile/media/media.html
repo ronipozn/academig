@@ -1,0 +1,121 @@
+<ul class="d-flex justify-content-center nav nav-pills nav-pills-light-blue" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link" style="cursor: pointer;" [ngClass]="{'active': activeTab===0}" data-toggle="tab" data-target="#talks" role="tablist" (click)="mediaFunc(0)">
+      <i class="material-icons">keyboard_voice</i> Talks
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" style="cursor: pointer;" [ngClass]="{'active': activeTab===1}" data-toggle="tab" data-target="#posters" role="tablist" (click)="mediaFunc(1)">
+      <i class="material-icons">picture_in_picture</i> Posters
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" style="cursor: pointer;" [ngClass]="{'active': activeTab===2}" data-toggle="tab" data-target="#presses" role="tablist" (click)="mediaFunc(2)">
+      <i class="material-icons">format_align_left</i> Press Release
+    </a>
+  </li>
+</ul>
+
+<div *ngIf="missionService.meFlag" class="d-flex justify-content-center mt-4">
+  <button mat-raised-button class="btn btn-light-blue btn-round" (click)="mediaSlide(true, 0, true)">
+    <i class="material-icons">add_circle_outline</i> Add {{typeNames[activeTab]}}
+  </button>
+</div>
+
+<div class="card" [@itemsAnimation]="('active')">
+  <div class="card-body">
+    <div class="tab-content">
+
+      <div class="tab-pane" [ngClass]="{'active': activeTab===0}" id="talks" role="tabpanel" #scrollTalk>
+        <build-headline [headline]="'Talks'"></build-headline>
+        <build-modal-intro *ngIf="streamRetrieved[0] && talks.length==0 && !missionService.meFlag"
+                           [headline]="'The talks list is still empty.'">
+        </build-modal-intro>
+        <build-modal-intro *ngIf="streamRetrieved[0] && talks.length==0&& missionService.meFlag"
+                          [headline]="'Add your first talk'"
+                          [bodytext]="'Your talks list is still empty.'">
+        </build-modal-intro>
+        <media-talk-list [streamRetrieved]=streamRetrieved[0]
+                         [talks]=talks
+                         [sourceType]=1
+                         [showEditBtn]=missionService.meFlag
+                         [stream]=streamTalk
+                         [itemFocus]=itemFocus
+                         (animationDoneEvent)="mediaStreamFunc(0)"
+                         (buttonEditClick)="mediaSlide(true, $event, false)"
+                         (buttonDeleteClick)="mediaDelete($event)">
+        </media-talk-list>
+      </div>
+
+      <div class="tab-pane" [ngClass]="{'active': activeTab===1}" id="posters" role="tabpanel" #scrollPoster>
+        <build-headline [headline]="'Posters'"></build-headline>
+        <build-modal-intro *ngIf="streamRetrieved[1] && posters.length==0 && !missionService.meFlag"
+                           [headline]="'The posters list is still empty.'">
+        </build-modal-intro>
+        <build-modal-intro *ngIf="streamRetrieved[1] && posters.length==0&& missionService.meFlag"
+                          [headline]="'Add your first poster'"
+                          [bodytext]="'Your posters list is still empty.'">
+        </build-modal-intro>
+        <media-poster-list [streamRetrieved]=streamRetrieved[1]
+                           [posters]=posters
+                           [sourceType]=1
+                           [showEditBtn]=missionService.meFlag
+                           [itemFocus]=itemFocus
+                           [stream]=streamPoster
+                           (btnPDF)="pdfSlide(true,$event)"
+                           (animationDoneEvent)="mediaStreamFunc(1)"
+                           (buttonEditClick)="mediaSlide(true, $event, false)"
+                           (buttonDeleteClick)="mediaDelete($event)">
+        </media-poster-list>
+      </div>
+
+      <div class="tab-pane" [ngClass]="{'active': activeTab===2}" id="presses" role="tabpanel" #scrollPress>
+        <build-headline [headline]="'Press'"></build-headline>
+        <build-modal-intro *ngIf="streamRetrieved[2] && presses.length==0 && !missionService.meFlag"
+                           [headline]="'The press release is still empty.'">
+        </build-modal-intro>
+        <build-modal-intro *ngIf="streamRetrieved[2] && presses.length==0 && missionService.meFlag"
+                          [headline]="'Add your first press'"
+                          [bodytext]="'Your press release list is still empty.'">
+        </build-modal-intro>
+        <media-press-list [streamRetrieved]=streamRetrieved[2]
+                          [presses]=presses
+                          [sourceType]=1
+                          [showEditBtn]=missionService.meFlag
+                          [itemFocus]=itemFocus
+                          [stream]=streamPress
+                          (animationDoneEvent)="mediaStreamFunc(2)"
+                          (buttonEditClick)="mediaSlide(true, $event, false)"
+                          (buttonDeleteClick)="mediaDelete($event)">
+        </media-press-list>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide($event)"
+           [title]=fileTitle
+           [fileName]=fileName
+           [type]=1>
+</slide-pdf>
+
+<build-slide-media *ngIf=mediaBuildFlag
+                   (update)="mediaUpdate($event)"
+                   (cancel)="mediaSlide($event)"
+                   [activeTab]=activeTab
+                   [userId]=userId
+                   [itemId]=projId
+                   [newFlag]=mediaNewFlag
+                   [sourceFlag]=true
+                   [existFlag]=false
+                   [talk]=talks[mediaIndex]
+                   [poster]=posters[mediaIndex]
+                   [press]=presses[mediaIndex]>
+</build-slide-media>

@@ -1,0 +1,72 @@
+<div class="container-fluid pt-4">
+
+  <ul class="nav nav-pills nav-pills-warning" role="tablist">
+    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#link5" role="tablist">General</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#link3" role="tablist">Publications</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#link4" role="tablist">Universities</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#link2" role="tablist">Labs</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#link1" role="tablist">Researchers</a></li>
+    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#link7" role="tablist">Items</a></li>
+  </ul>
+
+  <div class="row mt-4">
+
+    <div class="col-md-3 col-lg-2">
+      <div class="card mt-0">
+        <div class="card-body">
+          <div class="tab-content tab-space">
+            <div class="tab-pane active" id="link5">
+              <ul class="nav nav-pills nav-pills-rose flex-column px-0" role="tablist">
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['analytics']" class="nav-link">Analytics</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['algolia']" class="nav-link">Algolia</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['logging']" class="nav-link">Logging</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['contacts']" class="nav-link">Contacts</a>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['reports']" class="nav-link">Reports</a></li>
+              </ul>
+            </div>
+            <div class="tab-pane" id="link1">
+              <ul class="nav nav-pills nav-pills-rose flex-column px-0" role="tablist">
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['people']" class="nav-link">Researchers</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['mentors']" class="nav-link text-muted">Mentors</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['data-request']" class="nav-link">Data Request</a></li>
+              </ul>
+            </div>
+            <div class="tab-pane" id="link2">
+              <ul class="nav nav-pills nav-pills-rose flex-column px-0" role="tablist">
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['labs']" class="nav-link">Labs</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['labs-contest']" class="nav-link">Contest</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['positions']" class="nav-link">Jobs</a></li>
+              </ul>
+            </div>
+            <div class="tab-pane" id="link3">
+              <ul class="nav nav-pills nav-pills-rose flex-column px-0" role="tablist">
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['publications']" class="nav-link">Publications</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['publications-automation']" class="nav-link">Automation</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['publications-claims']" class="nav-link">Claims</a></li>
+              </ul>
+            </div>
+            <div class="tab-pane" id="link4">
+              <ul class="nav nav-pills nav-pills-rose flex-column px-0" role="tablist">
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['universities']" class="nav-link">Academig</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['universities-query']" class="nav-link">Query</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['universities-csv']" class="nav-link">CSV</a></li>
+              </ul>
+            </div>
+            <div class="tab-pane" id="link7">
+              <ul class="nav nav-pills nav-pills-rose flex-column px-0" role="tablist">
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['item-submits']" class="nav-link text-muted">Submits</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['item-uploads']" class="nav-link text-muted">Uploads</a></li>
+                <li class="nav-item"><a [routerLinkActive]="['active']" [routerLink]="['item-deals']" class="nav-link text-muted">Deals</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9 col-lg-10">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
+</div>

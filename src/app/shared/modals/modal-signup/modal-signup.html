@@ -1,0 +1,26 @@
+<div class="modal-body text-center">
+
+  <img *ngIf="itemText=='publication'" style="width: 10rem; margin-top: -20%;" [src]="'./assets/img/action/claim.svg'" class="d-flex mx-auto img-fluid" alt="academig_pro">
+
+  <h3 class="my-4">Uncover pioneering labs and the researchers behind them.</h3>
+  <h5 class="mt-4">
+    To {{action}} this {{itemText}}, <!-- and to find out<br>much more, just -->
+    <a *ngIf="!userService.userId" style="cursor: pointer;" class="card-title" (click)="login()">sign up</a>
+    <a *ngIf="userService.userId && !userService.userEmailVerified" style="cursor: pointer;" class="card-title" [routerLink]="['/settings']">verify your email</a>.
+  </h5>
+
+  <button *ngIf="!userService.userId" class="btn btn-success mt-3" role="button" (click)="login()">
+    <span class="px-4">Sign Up</span>
+  </button>
+
+  <button *ngIf="userService.userId && !userService.userEmailVerified" class="btn btn-success mt-3" role="button" [routerLink]="['/settings']">
+    <span lass="px-4">Verify your email</span>
+  </button>
+
+  <div class="col-6 offset-3"><hr></div>
+
+  <p class="my-4 pb-4">
+    <a style="cursor:pointer;" data-dismiss="modal" aria-label="Close">Not Now</a>
+  </p>
+
+</div>

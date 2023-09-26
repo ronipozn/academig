@@ -1,0 +1,47 @@
+<div *ngFor="let userPosition of userPositions; let i=index" class="mt-2">
+  <button *ngIf="followStatus[i] && userPosition.status>=5 && userPosition.status<=7"
+          [disabled]="streamFollow[i]==3"
+          (click)="buttonFollowFunc(i)"
+          (mouseover)="changeText($event)"
+          (mouseout)="changeText($event)"
+          role="button"
+          class="btn btn-sm btn-info" aria-haspopup="true" aria-expanded="false"
+          [ngClass]="{'btn-link pl-0': linkFlag, 'btnFollowing': streamFollow[i]==0, 'btnUnfollow': streamFollow[i]==3}">
+
+    <p class="mb-0">
+      <i class="fa fa-bookmark mr-2" aria-hidden="true"></i>
+      <span *ngIf="streamFollow[i]==3">Unfollow from</span>
+      <span *ngIf="streamFollow[i]==0">{{folllowText}}</span>
+
+      <spinner-put *ngIf="streamFollow[i]==3"
+                   [stream]=streamFollow[i]>
+      </spinner-put>
+    </p>
+
+    <span class="small">{{userPosition.group.group.name}}</span>
+
+  </button>
+
+  <button *ngIf="!followStatus[i] && userPosition.status>=5 && userPosition.status<=7"
+          [disabled]="streamFollow[i]==3"
+          (click)="buttonFollowFunc(i)"
+          role="button"
+          class="btn btn-sm" aria-haspopup="true" aria-expanded="false"
+          [ngClass]="{'btn-link pl-0': linkFlag, 'btn-outline-info' : streamFollow[i]==0, 'btn-info' : streamFollow[i]==3}">
+
+          <!-- <button *ngIf="!publication.followStatus" role="button" class="pl-0 btn btn-sm btn-link" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-bookmark-o mr-1" aria-hidden="true"></i>Follow
+          </button> -->
+
+    <p class="mb-0">
+      <i class="fa fa-bookmark-o mr-2" aria-hidden="true"></i>Follow
+      <spinner-put *ngIf="streamFollow[i]==3"
+                   [stream]=streamFollow[i]>
+      </spinner-put>
+    </p>
+
+    <span class="small">as {{userPosition.group.group.name}}</span>
+
+  </button>
+
+</div>

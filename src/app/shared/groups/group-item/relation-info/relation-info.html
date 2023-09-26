@@ -1,0 +1,27 @@
+<ng-container *ngIf="relation">
+
+  <p *ngIf="relation.status>0 && stage>1" class="small mt-2 mb-0"><u>Relation</u></p>
+  <p *ngIf="relation.mode==0" class="small">Invited to join as {{titlesSelect[relation.text]}}</p>
+  <p *ngIf="relation.mode==4" class="small">Waiting for approval<br>to join as {{titlesSelect[relation.text]}}</p>
+
+  <span *ngIf="relation.status>1 && relation.mode==2">
+    <p *ngIf="stage>1" class="small">
+      <span *ngFor="let title of relation.text">{{titlesSelect[title]}}<br></span>
+      {{ relation.period.start | date:'MMM y' }} - {{(relation.period.mode==0) ? (relation.period.end | date:'MMM y') : "Present" }} <!-- {{ relation.text }} <br> -->
+    </p>
+    <p *ngIf="relation.status>=4 && stage!=null && stage!=2" class="mt-2 small">
+      <u>Status</u><br>
+      <span *ngIf="stage==-1">Academig is building the site</span>
+      <span *ngIf="stage==0">Not published</span>
+      <span *ngIf="stage==1">Under review</span>
+      <!-- <span *ngIf="stage==2">Site active</span> -->
+      <span *ngIf="stage==3">On hold</span>
+      <span *ngIf="stage==4">Recovery period.</span>
+    </p>
+    <p>
+      <span *ngIf="relation.status==5" class="badge badge-pill badge-warning">Admin</span>
+      <span *ngIf="relation.status>=6" class="badge badge-pill badge-danger">Super Admin</span>
+    </p>
+  </span>
+
+</ng-container>

@@ -1,0 +1,45 @@
+<ul class="mt-4 nav nav-pills nav-pills-light-blue nav-pills-icons justify-content-center" role="tablist">
+  <li class="nav-item" *ngFor="let tab of tabs; let i=index; let f=first">
+    <a class="nav-link" [ngClass]="{'active': f}" data-toggle="tab" href="#{{tab}}" (click)="showTabFunc(i)">{{tab}}</a>
+  </li>
+</ul>
+
+<div class="card">
+  <div class="card-header">
+
+    <div class="tab-content">
+
+      <p *ngIf="streamRetrieved[activeTab] && count[activeTab]" class="text-muted small">
+        {{count[activeTab]}}
+        <span *ngIf="count[activeTab]==1">result was found</span>
+        <span *ngIf="count[activeTab]>1">results were found</span>
+      </p>
+
+      <!-- id="{{tab}}"  -->
+      <div class="tab-pane active" role="tabpanel">
+        <people-list [streamRetrieved]="streamRetrieved[activeTab] || moreFlag"
+                     [sourceType]=9
+                     [peoples]=people[activeTab]
+                     [stream]=stream[activeTab]
+                     [streamFollow]=streamFollow[activeTab]
+                     [activeId]=userService.userId
+                     (btnMessageClick)="peopleMessage($event)"
+                     (btnFollowClick)="peopleFollow($event)">
+        </people-list>
+      </div>
+
+      <div *ngIf="moreFlag" class="d-flex justify-content-center">
+        <button role="button" [disabled]="!streamMore" class="btn btn-sm btn-outline-info" (click)="showMoreFunc()">
+          <i class="fa fa-arrow-down" aria-hidden="true"></i> Show more
+          <i *ngIf="!streamMore" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+        </button>
+      </div>
+
+      <div *ngIf="streamRetrieved[activeTab] && !count[activeTab]" class="text-center text-muted">
+        The researchers list is still empty.<br>
+      </div>
+
+    </div>
+
+  </div>
+</div>

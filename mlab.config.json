@@ -1,0 +1,9 @@
+{
+    "config" : {
+        "db_config": {
+          "host_url": "mongodb+srv://heroku_m6cwnlp2:qcwXndZdNAgfolyF@cluster-m6cwnlp2.vwb3q.mongodb.net/heroku_m6cwnlp2?retryWrites=true&w=majority"
+        },
+
+        "static_content": "../server/build/assets/"
+    }
+}

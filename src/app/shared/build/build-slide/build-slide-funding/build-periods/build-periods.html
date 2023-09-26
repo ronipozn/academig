@@ -1,0 +1,106 @@
+<b>{{itemTitle}}</b>
+
+<div [formGroup]="parentGroup">
+  <ul [formArrayName]=controlName class="list-unstyled">
+    <li *ngFor="let e of getControls(parentGroup); let i=index">
+
+      <div class="card">
+        <div class="card-body">
+          <div [formGroupName]="i">
+
+            <div *ngIf="e.get('start') && e.get('end')" class="row no-gutters">
+              <div class="col mr-1">
+
+                <build-month-field [itemTitle]="'Start Date'"
+                                   [controlName]="'start'"
+                                   [parentGroup]=e
+                                   [labelRequired]=true
+                                   [submitStatus]=submitStatus
+                                   [errorFlag]="!(e.get('start').errors && e.get('start').errors.range)">
+                </build-month-field>
+
+                <build-modal-text-field [itemFirst]=true
+                                        [labelHide]=true
+                                        [fieldType]=7
+                                        [controlName]="'single'"
+                                        (controlStatus)=controlStatusFunc(i,0)
+                                        [parentGroup]=e
+                                        [itemArray]="['Only start date']">
+                </build-modal-text-field>
+
+              </div>
+              <div class="col ml-1">
+
+                <build-month-field [itemTitle]="'End Date'"
+                                   [controlName]="'end'"
+                                   [parentGroup]=e
+                                   [labelRequired]="!e.controls['single'].value[0] && !e.controls['present'].value[0]"
+                                   [submitStatus]=submitStatus
+                                   [errorFlag]="!(e.get('end').errors && e.get('end').errors.range)">
+                </build-month-field>
+
+                <build-modal-text-field [itemFirst]=true
+                                        [labelHide]=true
+                                        [fieldType]=7
+                                        [controlName]="'present'"
+                                        (controlStatus)=controlStatusFunc(i,1)
+                                        [parentGroup]=e
+                                        [itemArray]="['Present']">
+                </build-modal-text-field>
+
+              </div>
+
+              <span *ngIf="formModel.get('start').errors?.range" class="mt-1 mb-0 small text-danger">
+                End date should be greater than start date
+              </span>
+
+            </div>
+
+            <div class="row no-gutters mt-2">
+              <div class="col-9 pr-1">
+                <!-- Amount -->
+                <build-modal-text-field [fieldType]=1
+                                        [typeSelected]="'number'"
+                                        [itemTitle]="'Amount'"
+                                        [controlName]="'amount'"
+                                        (controlStatus)=controlStatusFunc(i,2)
+                                        [parentGroup]=e>
+                </build-modal-text-field>
+              </div>
+
+              <div class="col-3 pl-1">
+                <build-modal-text-field [fieldType]=4
+                                        [itemTitle]="'Currency'"
+                                        [itemArray]=currencySelect
+                                        [controlName]="'currency'"
+                                        (controlStatus)=controlStatusFunc(i,2)
+                                        [parentGroup]=e>
+                </build-modal-text-field>
+              </div>
+            </div>
+
+            <button role="button" class="btn btn-link p-0 mt-2" (click)="deleteField(i)">
+               <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <button type="button" class="btn btn-sm btn-link p-0" (click)="addField(null)">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+    </button>
+
+  </ul>
+
+  <b *ngIf="periods">Total amount:</b>
+  <ul class="list-unstyled">
+    <li *ngFor="let totalAmount of totalAmounts; let i=index">
+      <span *ngIf="totalAmount" class="mb-1">
+        {{totalAmount | currency: currencySymbols[i]:'symbol'}}
+      </span>
+    </li>
+  </ul>
+
+</div>

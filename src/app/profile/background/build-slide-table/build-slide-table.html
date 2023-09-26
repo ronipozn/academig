@@ -1,0 +1,374 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">{{newString}} {{headline}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="(mode<=1 || mode==3) && !newFlag">
+        <p class="mt-3 mb-2">University: <span *ngIf="mode==0">{{position.group.university.name}}</span><span *ngIf="mode==1">{{education.group.university.name}}</span></p>
+        <p class="mb-2">Department: <span *ngIf="mode==0">{{position.group.department.name}}</span><span *ngIf="mode==1">{{education.group.department.name}}</span></p>
+        <p *ngIf="mode==0">Lab: {{position.group.group.name}}</p>
+        <p *ngIf="mode==1 && education.group.group.name">Lab: {{education.group.group.name}}</p>
+        <p *ngIf="mode==3">Company: {{company.group.group.name}}</p>
+      </div>
+
+      <div *ngIf="mode!=8 && mode!=7 && formModel.get('start') && formModel.get('end')" class="mb-3">
+
+        <div class="row no-gutters">
+          <div class="col mr-1">
+            <build-month-field [itemTitle]="'Start Date'"
+                               [controlName]="'start'"
+                               [parentGroup]="formModel"
+                               [labelRequired]=true
+                               [errorFlag]="!(formModel.get('start').errors && formModel.get('start').errors.range)"
+                               [submitStatus]=submitStatus>
+            </build-month-field>
+            <build-modal-text-field *ngIf="mode>1 && mode!=3"
+                                    [labelHide]=true
+                                    [itemFirst]=true
+                                    [fieldType]=7
+                                    [controlName]="'single'"
+                                    [parentGroup]=formModel
+                                    [itemArray]="['Only start date']"
+                                    [submitStatus]=submitStatus
+                                    (controlStatus)=controlStatusFunc($event,1)>
+            </build-modal-text-field>
+          </div>
+          <div class="col ml-1">
+            <build-month-field [itemTitle]="'End Date'"
+                               [controlName]="'end'"
+                               [parentGroup]="formModel"
+                               [labelRequired]="!formModel.controls['single'].value[0] && !formModel.controls['present'].value[0]"
+                               [errorFlag]="!(formModel.get('end').errors && formModel.get('end').errors.range)"
+                               [submitStatus]=submitStatus>
+            </build-month-field>
+            <build-modal-text-field [labelHide]=true
+                                    [itemFirst]=true
+                                    [fieldType]=7
+                                    [controlName]="'present'"
+                                    [parentGroup]=formModel
+                                    [itemArray]="['Present']"
+                                    [submitStatus]=submitStatus
+                                    (controlStatus)=controlStatusFunc($event,2)>
+            </build-modal-text-field>
+          </div>
+
+        </div>
+
+        <ng-container *ngIf="formModel.get('start').errors">
+          <div *ngIf="formModel.get('start').errors.range"  class="alert alert-warning border-warning alert-dismissible fade show my-2" role="alert">
+            End date should be greater than start date.
+          </div>
+        </ng-container>
+
+      </div>
+
+      <build-modal-text-field *ngIf="mode==0"
+                              [labelRequired]=true
+                              [fieldType]=3
+                              [itemTitle]="'Position'"
+                              [itemArray]=positionSelect
+                              [controlName]="'titles'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==3"
+                              [labelRequired]=true
+                              [fieldType]=0
+                              [itemTitle]="'Company Role'"
+                              [controlName]="'titles'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==1"
+                              [labelRequired]=true
+                              [fieldType]=3
+                              [itemTitle]="'Education'"
+                              [itemArray]="(this.newFlag) ? educationSelectNew : ((this.education.titles==300 || this.education.titles==301 || this.education.titles==303) ? educationSelectGroup : educationSelectNonGroup)"
+                              [controlName]="'titles'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus
+                              (controlStatus)=controlStatusFunc($event,0)>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==1"
+                              [itemTitle]="'Field'"
+                              [controlName]="'field'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-name-field *ngIf="mode<=1 && newFlag"
+                              [labelRequired]=true
+                              [iconTitle]="'university'"
+                              [mode]=13
+                              [itemTitle]="'University'"
+                              [placeholder]="'Choose your university'"
+                              [controlName]="'university'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus
+                              [itemExplain]="'Choose university from the drop down list.'"
+                              (controlStatus)="keyUp(0)">
+      </build-modal-name-field>
+
+      <div *ngIf="mode<=1 && newFlag" class="mt-3">
+        <!-- <build-modal-name-field [labelRequired]=true
+                                [iconTitle]="'building-o'"
+                                [universityId]=universityId
+                                [mode]=2
+                                [itemTitle]="'Department'"
+                                [placeholder]="'Choose your department'"
+                                [controlName]="'department'"
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus
+                                [itemExplain]="'Choose a department from the drop down list or add a new one if it does\'t exist. Keep name between 5-50 characters.'"
+                                (controlStatus)="keyUp(1)">
+        </build-modal-name-field> -->
+        <div class="input-group" autocomplete="nope">
+          <ng-template #rt let-r="result" let-t="term">
+            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+          </ng-template>
+          <mat-form-field appearance="outline" [ngClass]="{'has-success': formModel.get('department').valid, 'has-danger': (formModel.get('department').invalid && formModel.get('department').dirty)}">
+            <mat-label>Department</mat-label>
+            <input matInput
+                   (keyup)="keyUp(1)"
+                   type="text"
+                   [formControlName]="'department'"
+                   [placeholder]="'Choose your department'"
+                   [ngbTypeahead]="search"
+                   [resultTemplate]="rt"
+                   [inputFormatter]="formatter"
+                   [editable]='true'
+                   [required]=true>
+            <span class="form-control-feedback d-flex flex-row">
+              <i *ngIf="formModel.get('department').valid" class="material-icons">done</i>
+              <i *ngIf="formModel.get('department').invalid && formModel.get('department').dirty" class="material-icons">clear</i>
+            </span>
+            <mat-hint>Choose department from the drop down list or write your own.</mat-hint>
+          </mat-form-field>
+          <!-- {{parentGroup.get('country').value | json}} -->
+        </div>
+      </div>
+
+      <div *ngIf="mode==3 && newFlag" class="form-group mt-3">
+        Main company field:
+        <spinner *ngIf="!companyFlag"></spinner>
+        <mat-form-field *ngIf="companyFlag" >
+          <mat-select [placeholder]="'Choose main field'" formControlName=department (selectionChange)="companyField()">
+            <mat-option *ngFor="let item of companyItems; let i=index" [value]=i>{{item.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="(mode<=1 || mode==3) && newFlag" class="mt-4">
+        <build-modal-name-field [labelRequired]=true
+                                [iconTitle]="'users'"
+                                [universityId]=universityId
+                                [departmentId]=departmentId
+                                [mode]=7
+                                [itemTitle]="entityName + ' name'"
+                                [placeholder]="'Choose your ' + entityName"
+                                [controlName]="'group'"
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus
+                                [itemExplain]="existFlag ? '' : 'Choose a ' + entityName + ' from the drop down list or add a new one if it does\'t exist. Keep name between 5-50 characters.'"
+                                (controlStatus)="keyUp(2)">
+        </build-modal-name-field>
+      </div>
+
+      <p *ngIf="existFlag" id="groupExist" class="form-text small mb-0" style="color: red">
+        This {{entityName}} name was in {{this.formModel.get('university').value.name}}/{{formModel.get('department').value.name}} is already taken.
+        Please choose a different name.
+      </p>
+
+      <div *ngIf="mode==1" class="mt-4" [hidden]="formModel.get('titles').value!=300 && formModel.get('titles').value!=301">
+        <build-modal-text-field [fieldType]=1
+                                [itemTitle]="'Thesis title'"
+                                [controlName]="'thesisTitle'"
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+        <br>Thesis file:
+        <div id="direct_upload" class="mt-1">
+          <div class="d-flex justify-content-center">
+            <input type="hidden" id="file" name="thesisFile" data-input-accept-types=".pdf" data-tabs="file url gdrive dropbox skydrive">
+          </div>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="mode==1" class="row no-gutters">
+        <div class="col mr-1">
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'number'"
+                                  [itemTitle]="'Thesis grade'"
+                                  [controlName]="'thesisGrade'"
+                                  [parentGroup]=formModel>
+          </build-modal-text-field>
+        </div>
+        <div class="col ml-1">
+          <build-modal-text-field *ngIf="mode==1"
+                                  [fieldType]=1
+                                  [itemTitle]="'Honors'"
+                                  [controlName]="'honor'"
+                                  [parentGroup]=formModel>
+          </build-modal-text-field>
+        </div>
+      </div> -->
+
+      <build-modal-text-field *ngIf="mode==2"
+                              [fieldType]=2
+                              [labelRequired]=true
+                              [textAreaRows]=3
+                              [itemTitle]="'Honor Name'"
+                              [controlName]="'name'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <!-- <build-modal-text-field *ngIf="mode==3"
+                              [labelRequired]=true
+                              [itemTitle]="'Company Name'"
+                              [controlName]="'name'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==3"
+                              [itemTitle]="'Title'"
+                              [controlName]="'title'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==3"
+                              [fieldType]=2
+                              [textAreaRows]=3
+                              [itemTitle]="'Description'"
+                              [controlName]="'description'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field> -->
+
+      <build-modal-text-field *ngIf="mode==4"
+                              [labelRequired]=true
+                              [fieldType]=2
+                              [textAreaRows]=2
+                              [itemTitle]="'Outreach Name'"
+                              [controlName]="'name'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==4"
+                              [labelRequired]=true
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [itemTitle]="'Role Description'"
+                              [controlName]="'role'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-name-field *ngIf="mode==6"
+                              [userId]=userId
+                              [mode]=8
+                              [itemTitle]="'Journal'"
+                              [iconTitle]="'newspaper-o'"
+                              [controlName]="'journal'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-name-field>
+
+      <build-modal-text-field *ngIf="mode==6"
+                              [labelRequired]=true
+                              [fieldType]=5
+                              [itemTitle]="'Role'"
+                              [controlName]="'role'"
+                              [parentGroup]=formModel
+                              [itemArray]=boardsRoleRadio
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==7"
+                              [itemFirst]=true
+                              [labelRequired]=true
+                              [itemTitle]="'Name'"
+                              [controlName]="'name'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-name-field *ngIf="mode==8"
+                              [itemFirst]=true
+                              [iconTitle]="'language'"
+                              [labelRequired]=true
+                              [userId]=userId
+                              [mode]=4
+                              [itemTitle]="'Language'"
+                              [controlName]="'language'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-name-field>
+
+      <build-modal-text-field *ngIf="mode==8"
+                              [fieldType]=5
+                              [itemTitle]="'Level'"
+                              [controlName]="'level'"
+                              [parentGroup]=formModel
+                              [itemArray]=languageLevelRadio>
+      </build-modal-text-field>
+
+      <build-modal-name-field *ngIf="mode==9"
+                              [userId]=userId
+                              [labelRequired]=true
+                              [mode]=10
+                              [itemTitle]="'Funding Title'"
+                              [iconTitle]="'money'"
+                              [controlName]="'name'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus
+                              (controlStatus)=controlFundingFunc($event)>
+      </build-modal-name-field>
+
+      <div class="row no-gutters" *ngIf="mode==9">
+        <div class="col mr-1">
+          <build-modal-text-field [itemTitle]="'Abbrevation'"
+                                  [labelRequired]=true
+                                  [controlName]="'abbr'"
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col ml-1">
+          <build-modal-text-field [itemTitle]="'ID'"
+                                  [controlName]="'officalId'"
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-modal-text-field *ngIf="mode==9"
+                              [itemTitle]="'Link'"
+                              [controlName]="'link'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==9"
+                              [fieldType]=2
+                              [textAreaRows]=3
+                              [itemTitle]="'Short Description'"
+                              [controlName]="'description'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group mt-4">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue" [disabled]="uploadFlagFile || existFlag">{{newString}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+.table.table-sm {
+  border-bottom:0px !important;
+}
+
+.table.table-sm th, .table.table-sm td {
+  border: 1px !important;
+}
+
+.btn-link:focus,.btn-link:active {
+  box-shadow: none;
+}
+
+table td, table td * {
+    vertical-align: top;
+}

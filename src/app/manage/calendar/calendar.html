@@ -1,0 +1,57 @@
+<div class="offset-md-1 col-md-10 py-4 mb-4">
+
+  <spinner *ngIf="!streamTasksRetrieved || !streamApplicationsRetrieved"></spinner>
+
+  <ng-container *ngIf="streamTasksRetrieved && streamApplicationsRetrieved">
+
+    <mwl-calendar-header *ngIf="mode==0" [(view)]="view" [(viewDate)]="viewDate"></mwl-calendar-header>
+
+    <div *ngIf="mode==0" [ngSwitch]="view">
+      <mwl-calendar-month-view *ngSwitchCase="'month'"
+                               [viewDate]="viewDate"
+                               [events]="events"
+                               (eventClicked)="eventClicked($event)">
+      </mwl-calendar-month-view>
+      <!-- [activeDayIsOpen]="true" -->
+      <mwl-calendar-week-view *ngSwitchCase="'week'"
+                              [viewDate]="viewDate"
+                              [events]="events"
+                              (eventClicked)="eventClicked($event)">
+      </mwl-calendar-week-view>
+      <mwl-calendar-day-view *ngSwitchCase="'day'"
+                             [viewDate]="viewDate"
+                             [events]="events"
+                             (eventClicked)="eventClicked($event)">
+      </mwl-calendar-day-view>
+    </div>
+
+    <!-- mwlDroppable (drop)="externalDrop($event.dropData.event)" dragOverClass="drag-over" -->
+    <!-- <p *ngIf="events.length === 0"><em>No events added</em></p> -->
+    <!-- mwlDraggable [dropData]="{event: event}" dragActiveClass="drag-active" -->
+
+    <ng-container *ngIf="mode==1">
+      <ul>
+        <li *ngFor="let event of events" class="mb-4">
+          <a style="cursor: pointer;" (click)=listClicked(event)>
+            <span style='white-space:pre-wrap;' [innerHTML]="event.title | safeHtml"></span>
+            <!-- <span *ngIf="event.title">{{event.title}}</span> -->
+            <span *ngIf="event.start">{{event.start | date}}</span>
+            <span *ngIf="event.end">-{{event.end | date}}</span>
+          </a>
+           <!-- [style.color]="event.color.primary" -->
+        </li>
+        <li class="mb-4">
+          Mentor session: Moshe Moshe, 23.11.2020, 21:00
+        </li>
+      </ul>
+    </ng-container>
+
+    <!-- <mat-checkbox [(ngModel)]="mode" [labelPosition]="ListView">List view</mat-checkbox> -->
+
+    <button role="button" mat-raised-button (click)="mode=!mode" class="mt-2 btn btn-sm btn-light-blue">
+      Change to {{mode ? 'Calendar view' : "List view"}}
+    </button>
+
+  </ng-container>
+
+</div>

@@ -1,0 +1,146 @@
+<h3 class="card-title my-3"><b>Help your job posting stand out</b></h3>
+<!-- Choose your advert type, post your job on Academic Positions and start recieving quality applications from relevant candidates right away. -->
+
+<div class="row justify-content-center">
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card mt-2 mb-5 mb-lg-0" [ngClass]="{'border border-primary bg-color': mode==0}" style="cursor: pointer;" (click)="standoutFunc(0)">
+      <h4 *ngIf="mode==0" class="selected border border-primary text-center text-dark"><b>SELECTED</b></h4>
+      <div class="card-body">
+        <h4 class="text-center card-title text-muted"><b>STANDARD</b></h4>
+        <h3 class="mt-0 text-center card-price text-dark"><b>${{prices[0]}}</b></h3>
+        <hr>
+        <ul class="fa-ul">
+          <li *ngFor="let feature of featuresStandard; let i=index" class="text-dark">
+            <ng-container *ngIf="i!=3">
+              <span class="fa-li d-flex flex-row text-muted"><i class="fa" [ngClass]="{'text-success fa-check-circle': i<=1, 'text-muted fa-check-circle-o': i>1}"></i></span>
+              {{feature}}
+              <a *ngIf="i==3" href="https://academiclabscommunity.slack.com/" target="_empty"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </ng-container>
+          </li>
+        </ul>
+        <div class="card text-white bg-light text-dark my-0">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="card-body">
+              <h5 class="card-title text-dark">Pozner Lab</h5>
+              <p class="card-text mb-0"><b>PhD Student</b></p>
+              <p class="card-text">Full Time</p>
+            </div>
+            <div class="mr-3">
+              {{moment().format("MMM DD")}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-muted mt-2"></div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card mt-2 mb-5 mb-lg-0" [ngClass]="{'border border-primary bg-color': mode==1}" style="cursor: pointer;" (click)="standoutFunc(1)">
+      <h4 *ngIf="mode==1" class="selected border border-primary text-center text-dark"><b>SELECTED</b></h4>
+      <div class="card-body">
+        <h4 class="text-center card-title text-muted"><b>GOOD</b></h4>
+        <h3 class="mt-0 text-center card-price text-dark"><b>${{prices[1]}}</b></h3>
+        <hr>
+        <ul class="fa-ul">
+          <li *ngFor="let feature of featuresGood; let i=index" class="text-dark">
+            <ng-container *ngIf="i!=3">
+              <span class="fa-li d-flex align-items-center"><i class="fa" [ngClass]="{'text-success fa-check-circle': i<=4, 'text-muted fa-check-circle-o': i>4}"></i></span>
+              {{feature}}
+              <a *ngIf="i==3" href="https://academiclabscommunity.slack.com/" target="_empty"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </ng-container>
+          </li>
+        </ul>
+        <div class="card text-white bg-success my-0">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="card-body">
+              <h5 class="card-title">Pozner Lab</h5>
+              <p class="card-text mb-0"><b>PhD Student</b></p>
+              <p class="card-text">Full Time</p>
+            </div>
+            <div class="mr-3">
+              {{moment().format("MMM DD")}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-muted mt-2"><b>GETS 2X THE VISIBILITY</b></div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card mt-2 mb-5 mb-lg-0" [ngClass]="{'border border-primary bg-color': mode==2}" style="cursor: pointer;" (click)="standoutFunc(2)">
+      <h4 *ngIf="mode==2" class="selected border border-primary text-center text-dark"><b>SELECTED</b></h4>
+      <div class="card-body">
+        <h4 class="text-center card-title text-uppercase" style="color: #7FBA92"><b>BETTER</b></h4>
+        <h3 class="mt-0 text-center card-price text-dark"><b>${{prices[2]}}</b></h3>
+        <!-- <button *ngIf="plan==null" (click)="(source<3) ? login() : updatePlan(1)" type="button" class="mt-4 btn btn-block btn-success" style="background-color: #7FBA92; color: white;">Try Pro Free</button> -->
+        <hr>
+        <ul class="fa-ul">
+          <li *ngFor="let feature of featuresBetter; let i=index" class="text-dark">
+            <ng-container *ngIf="i!=3">
+              <span class="fa-li d-flex align-items-center"><i class="fa" [ngClass]="{'text-success fa-check-circle': i<=5, 'text-muted fa-check-circle-o': i>5}"></i></span>
+              {{feature}}
+              <a *ngIf="i==3" href="https://academiclabscommunity.slack.com/" target="_empty"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </ng-container>
+          </li>
+        </ul>
+        <div class="card text-white bg-success my-0">
+          <img style="position: absolute; margin-top: -4%; margin-left: -4%;" class="rounded-circle" [src]="'./assets/img/job/job_posting_logo.png'" [width]="30" [height]="30" alt="academig_job_posting_logo">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="card-body">
+              <h5 class="card-title">Pozner Lab</h5>
+              <p class="card-text mb-0">
+                <b>PhD Student</b>
+              </p>
+              <p class="card-text">Full Time</p>
+            </div>
+            <div class="mr-3">
+              {{moment().format("MMM DD")}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-muted mt-2"><b>GETS 4X THE VISIBILITY</b></div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card mt-2 mb-5 mb-lg-0" [ngClass]="{'border border-primary bg-color': mode==3}" style="cursor: pointer;" (click)="standoutFunc(3)">
+      <h4 *ngIf="mode==3" class="selected border border-primary text-center text-dark"><b>SELECTED</b></h4>
+      <div class="card-body">
+        <h4 class="text-center card-title text-uppercase" style="color: #E3B747"><b>BEST</b></h4>
+        <h3 class="mt-0 text-center card-price text-dark"><b>${{prices[3]}}</b></h3>
+        <!-- <button [disabled]=true type="button" class="mt-4 btn border-warning btn-block btn-success" style="background-color: #E3B747; color: white;">Under Development</button> -->
+        <hr>
+        <ul class="fa-ul">
+          <li *ngFor="let feature of featuresBest; let i=index" class="text-dark">
+            <ng-container *ngIf="i!=3">
+              <span class="fa-li d-flex align-items-center"><i class="fa" [ngClass]="{'text-success fa-check-circle': i<=7, 'text-muted fa-check-circle-o': i>7}"></i></span>
+              {{feature}}
+              <a *ngIf="i==3" href="https://academiclabscommunity.slack.com/" target="_empty"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </ng-container>
+          </li>
+        </ul>
+        <div class="card text-white bg-success my-0">
+          <img style="position: absolute; margin-top: -4%; margin-left: -4%;" class="rounded-circle" [src]="'./assets/img/job/job_posting_logo.png'" [width]="30" [height]="30" alt="academig_job_posting_logo">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="card-body">
+              <h5 class="card-title">Pozner Lab</h5>
+              <p class="card-text mb-0">
+                <b>PhD Student</b>
+              </p>
+              <p class="card-text">Full Time</p>
+            </div>
+            <div class="mr-3">
+              Featured
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center text-muted mt-2"><b>GETS 8X THE VISIBILITY</b></div>
+  </div>
+
+</div>

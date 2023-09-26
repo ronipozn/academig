@@ -1,0 +1,37 @@
+<nav class="breadcrumb small m-0 p-0" style="background-color: #EEEEEE">
+
+  <a class="breadcrumb-item card-title" [routerLink]="'/'">Home</a>
+
+  <!-- <span *ngIf="country && country!='-' && university.name!='company'" class="mr-2 flag">
+    <img [src]="'./assets/img/flags/' + (country | flag) + '.png'" height="13" [alt]="country">
+  </span> -->
+
+  <a *ngIf="country && country!='-' && university?.name!='company'" class="breadcrumb-item card-title" [routerLink]="['/countries']">Countries</a>
+
+  <a *ngIf="country && country!='-' && university?.name!='company'" class="breadcrumb-item card-title" [routerLink]="['/country', country | urlize]">{{country}}</a>
+
+  <a *ngIf="state && state!='-' && university?.name!='company'" class="breadcrumb-item card-title" [routerLink]="['/country', country | urlize, state | urlize]">{{state}}</a>
+
+  <a *ngIf="state && city && university?.name!='company'" class="breadcrumb-item card-title" [routerLink]="['/country', country | urlize, state | urlize, city | urlize]">{{city}}</a>
+  <a *ngIf="!state && city && university?.name!='company'" class="breadcrumb-item card-title" [routerLink]="['/country', country | urlize, city | urlize]">{{city}}</a>
+
+  <a *ngIf="mode>=0" class="breadcrumb-item card-title" [routerLink]="universityLink">{{(university?.name=='company') ? 'Service Categories' : university?.name}}</a>
+
+  <a *ngIf="mode>=1" class="breadcrumb-item card-title" [routerLink]="departmentLink">{{department.name}}</a>
+
+  <a *ngIf="mode==2" class="breadcrumb-item card-title" [routerLink]="groupLink">{{group.name}}</a>
+
+  <a *ngIf="page && page!='research'" class="breadcrumb-item card-title" [routerLink]="pageLink">
+    <span *ngIf="page!='faq'">{{page | capitalize}}</span>
+    <span *ngIf="page=='faq'">{{page | uppercase}}</span>
+  </a>
+
+  <span *ngIf="page && page=='research'" class="breadcrumb-item card-title">Research</span>
+
+  <a *ngIf="subPage && !detailsName && detailsStream==0" class="breadcrumb-item card-title" [routerLink]="subPageLink">{{subPage | capitalize}}</a>
+  <a *ngIf="subPage && detailsName && detailsStream==0" class="breadcrumb-item card-title" [routerLink]="subPageLink">{{detailsName | capitalize}}</a>
+  <!-- <a *ngIf="detailsName" class="breadcrumb-item card-title" [routerLink]="subPageLink"><span *ngIf="subSubPage">({{page.slice(0,-1) | capitalize}} Publication)</span> {{detailsName}}</a> -->
+
+  <a *ngIf="detailsStream==3" class="breadcrumb-item card-title"><i class="fa fa-spinner fa-spin fa-1x"></i></a>
+
+</nav>

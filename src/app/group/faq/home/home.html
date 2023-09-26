@@ -1,0 +1,87 @@
+<div *ngIf="streamRetrieved && missionService.showEditBtn" class="d-flex justify-content-center mb-4">
+  <button mat-raised-button class="btn btn-light-blue btn-round" (click)="faqSlide(true, 0, true)">
+    <i class="material-icons">add_circle_outline</i> Add FAQ
+  </button>
+</div>
+
+<div *ngIf="missionService.showPage" class="card mt-0">
+
+  <div class="card-header" [@itemsAnimation]="('active')" #scrollAdd>
+    <spinner *ngIf="!streamRetrieved"></spinner>
+    <build-headline [headline]="'Questions And Answers'"></build-headline>
+    <build-modal-intro *ngIf="streamRetrieved && faqs[0]==null && !missionService.showHeadline"
+                       [headline]="'The questions list is still empty.'"
+                       [bodypic]="'question'">
+    </build-modal-intro>
+    <ng-container *ngIf="streamRetrieved && faqs[0]==null && missionService.showHeadline">
+      <build-modal-intro [headline]="'Add your questions'"
+                         [bodypic]="'question'"
+                         [bodytext]="'Add your lab\' frequently asked questions to help visitor to your lab profile learn more about your lab.'">
+      </build-modal-intro>
+    </ng-container>
+    <ng-container *ngIf="streamRetrieved && faqs[0]">
+      <faq-list [faqs]=faqs
+                [itemFocus]=itemFocus
+                [stream]=streamFAQ
+                [showEditBtn]=missionService.showEditBtn
+                (animationDoneEvent)="faqStreamFunc()"
+                (buttonEditClick)="faqSlide(true, $event, false)"
+                (buttonDeleteClick)="faqDelete($event)">
+      </faq-list>
+    </ng-container>
+
+  </div>
+
+</div>
+
+<img *ngIf="missionService.showPage" src="./assets/img/items/faq.svg" class="mx-auto d-block img-fluid py-4 my-4" [width]="250" alt="academig_faq">
+
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+
+<build-slide-faq *ngIf=faqBuildFlag
+                 (update)="faqUpdate($event)"
+                 (cancel)="faqSlide($event)"
+                 [faq]=faqs[faqIndex]
+                 [newFlag]=faqNewFlag>
+</build-slide-faq>
+
+<!-- <div *ngIf="missionService.groupStage==2" class="card mt-0">
+  <build-headline [addButtonFlag]=false
+                  [headline]="'Pending Questions'">
+  </build-headline>
+  <p class="text-muted small">
+    <i class="fa fa-info-circle" aria-hidden="true"></i>
+    Only the principal investigator and the other group admins can see the pending questions.
+  </p>
+  <build-modal-intro *ngIf="streamRetrieved"
+                     [headline]="'Pending questions'"
+                     [bodytext]="'Pending questions from visitors will be shown here.'">
+  </build-modal-intro>
+</div> -->
+
+<!-- FAQ Modal -->
+<!-- <div class="modal fade" id="FAQModal" tabindex="-1" role="dialog" aria-labelledby="FAQModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="FAQModalLabel">Ask Us</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="Textarea">Ask us your question.</label>
+          <textarea class="form-control" id="AskQuestion" rows="6"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-info" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-sm btn-info">Ask</button>
+      </div>
+    </div>
+  </div>
+</div> -->

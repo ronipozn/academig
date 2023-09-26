@@ -1,0 +1,74 @@
+<div class="side-form">
+
+  <h3 class="title text-center">Contest configuration</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemTitle]="'Title'"
+                              [itemFirst]=true
+                              [fieldType]=0
+                              [controlName]="'title'"
+                              [parentGroup]="formModel"
+                              [labelRequired]=true
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Deadline'"
+                              [typeSelected]="'date'"
+                              [fieldType]=1
+                              [controlName]="'deadline'"
+                              [parentGroup]="formModel"
+                              [labelRequired]=true
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Amount of prizes'"
+                              [fieldType]=4
+                              [labelRequired]=true
+                              [itemArray]=[1,2,3]
+                              [controlName]="'amount'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Description'"
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [controlName]="'prizes'"
+                              [parentGroup]="formModel"
+                              [labelRequired]=true
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div *ngIf="contest==null" id="direct_upload">
+        <div class="card-columns">
+          <div *ngFor="let dummy of filesCount; let i=index" class="card">
+            <single-pic [centerFlag]=true
+                        [pic]="fileGroup + '/nth/' + i + '/'"
+                        [thumbnailFlag]=true
+                        [type]=1>
+            </single-pic>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': fileGroup}">
+          <input type="hidden" id="fileGroup"
+                 name="fileGroup"
+                 data-images-only
+                 data-preview-step
+                 data-multiple
+                 data-crop="free, 16:9, 4:3, 5:4, 1:1"
+                 data-image-shrink="1024x1024"
+                 data-multiple-max=limit>
+         </div>
+      </div>
+
+      <hr class="mt-2">
+      <div class="pull-left form-group">
+        <button type="submit" [disabled]=disableFlag mat-raised-button class="btn btn-sm btn-light-blue">{{contest ? 'Update' : 'Submit'}}</button>
+        <button type="button" [disabled]=disableFlag mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

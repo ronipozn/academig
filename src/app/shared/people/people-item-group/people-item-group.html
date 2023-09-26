@@ -1,0 +1,105 @@
+<div on-mouseover='buttonOver(true)' on-mouseleave='buttonOver(false)' class="pt-1" [ngClass]="{'build': (showEditBtn || people._id==activeId) && stream==0, 'pt-2': people.pic}">
+
+  <p class="mb-1">
+    <a *ngIf="people.pic" [routerLink]="['/people',people._id]">
+      <single-pic [pic]=people.pic [width]=80 [height]=80 [type]=0></single-pic>
+    </a>
+    <a *ngIf="!people.pic && people.name" [routerLink]="['/people',people._id]" [style.font-size]="3.0 + 'rem'" class="p-0 m-0 fa-stack fa-1x">
+      <i class="fa fa-circle fa-stack-2x p-0 m-0" style="color: #cdcdc1"></i>
+      <span class="fa fa-stack-1x fa-name fa-inverse">{{people.name | acronym}}</span>
+    </a>
+  </p>
+
+  <!-- [status]="people.positions[0]?.status" -->
+  <!-- class="btn-group" -->
+  <div class="d-flex justify-content-center">
+    <people-buttons *ngIf="activeId==people._id || showEditBtn || people.stage>0"
+                    [mode]="people.positions[0].mode"
+                    [positionsFlag]="people.positions.length ? 1 : 0"
+                    [email]=people.email
+                    [sourceType]=sourceType
+                    [stream]=stream
+                    [streamFollow]=streamFollow
+                    [followStatus]=people.followStatus
+                    [activeId]=activeId
+                    [peopleId]=people._id
+                    [peopleStage]=people.stage
+                    [showEditBtn]=showEditBtn
+                    [peopleProgress]=people.progress
+                    [groupFlag]=true
+                    (btnAcceptClick)="btnAcceptFunc()"
+                    (btnDeclineClick)="btnDeclineFunc()"
+                    (btnResendClick)="btnResendFunc()"
+                    (btnCancelClick)="btnCancelFunc()"
+                    (btnFollowClick)="btnFollowFunc()"
+                    (btnMessageClick)="btnMessageFunc()"
+                    (btnEmailClick)="btnEmailFunc()">
+    </people-buttons>
+  </div>
+  <!-- {{people.stage}} -->
+  <!-- || people.stage==null -->
+  <p *ngIf="people.stage==0" class="text-dark mt-2 mb-2"><b>Not confirmed yet</b></p>
+  <div *ngIf="people.positions[0].status>=5 && (showEditBtn || people._id==activeId)">
+    <span *ngIf="people.positions[0].status==5" class="badge badge-pill badge-warning">Admin</span>
+    <span *ngIf="people.positions[0].status>=6" class="badge badge-pill badge-danger">Super Admin</span>
+  </div>
+  <p class="lead card-title my-0">
+    <a *ngIf="people._id" name=people._id [routerLink]="['/people',people._id]"><b>{{ people.name }}</b></a>
+    <spinner-put *ngIf="stream>0" class="ml-1" [stream]=stream (animationDoneEvent)="animationDone()"></spinner-put>
+  </p>
+  <p *ngIf="!people._id" class="lead my-0"><b>{{ people.name }}</b></p>
+  <!-- <span *ngIf="people.stage>0"><a name=people._id [routerLink]="['/people',people._id]"><b>{{ people.name }}</b></a></span> -->
+  <!-- <span *ngIf="people.stage==0"><b>{{ people.name }}</b></span> -->
+  <p *ngIf="showEditBtn && people.email" class="lead my-1 text-muted">{{people.email}}</p>
+  <p *ngIf="people.positions[0].text" class="card-text small my-1">{{people.positions[0].text}}</p> <!-- {{people.positions[0].text | slice:0:100}} -->
+
+  <!-- Active or Alumni -->
+  <ng-container *ngIf="sourceType==0 || sourceType==3 || sourceType==12">
+    <div *ngFor="let position of people.positions; let i=index, let l=last" class="mb-0" [ngClass]="{'build mb-4': !l && (showEditBtn || people._id==activeId)}">
+      <p class="my-0">{{sourceType==12 ? position.titles[0] : titlesSelect[position.titles[0]]}}</p>
+      <p *ngIf="position.period.start" class="mb-1">{{ position.period.start | date:'MMM y' }} - {{(position.period.mode==0) ? (position.period.end | date:'MMM y') : "Present" }}</p>
+      <people-build-buttons *ngIf="showEditBtn || people._id==activeId"
+                            [showButton]="showButton && stream==0"
+                            [editFlag]=true
+                            [editText]="'Update'"
+                            [deleteFlag]=true
+                            [deleteText]="'Delete'"
+                            [endFlag]="position.period.mode!=0"
+                            [endText]="'to Alumni'"
+                            (buttonEditClick)="btnEditFunc(i)"
+                            (buttonDeleteClick)="btnDeleteFunc(i)"
+                            (buttonEndClick)="btnEndFunc(i)">
+      </people-build-buttons>
+    </div>
+  </ng-container>
+
+  <!-- Visits, Project Collaborator -->
+  <ng-container *ngIf="sourceType==2">
+    <p *ngFor="let position of people.positions; let l=last" class="mb-0">
+      <span *ngIf="position.period"><br>Visiting dates: {{ position.period.start | date:'MMM y' }} - {{(position.period.mode==0) ? (position.period.end | date:'MMM y') : "Present" }}</span>
+      <br>{{titlesSelect[position.titles[0]]}}
+      <span *ngIf="position.text && l"><br><i>{{ position.text }}</i></span>
+    </p>
+  </ng-container>
+
+  <!-- [0] because Adding a new member, Pending always appear in 0 -->
+  <!-- <div class="card-text">
+    <span *ngIf="(people.positions[0].mode==0 || people.positions[0].mode==4) && people._id!=activeId && !showEditBtn" class="badge badge-pill badge-warning">Pending</span>
+  </div> -->
+
+  <ng-container *ngIf="showEditBtn || people._id==activeId">
+    <people-build-buttons *ngIf="people.positions[0].status!=6"
+                          [showButton]="showButton && stream==0"
+                          [addFlag]=true
+                          [addText]="'Add Position'"
+                          (buttonAddClick)="btnAddFunc($event)">
+    </people-build-buttons>
+    <people-build-buttons [showButton]="showButton && stream==0"
+                          [editFlag]=true
+                          [editText]="'Update Details'"
+                          (buttonEditClick)="btnMainEditFunc($event)">
+    </people-build-buttons>
+  </ng-container>
+
+
+</div>

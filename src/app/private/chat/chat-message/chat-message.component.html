@@ -1,0 +1,38 @@
+<div class="d-flex"
+     [ngClass]="{'flex-row' : userId!=message.userId, 'flex-row-reverse mr-2' : userId==message.userId}">
+
+  <single-pic class="mt-1"
+              [pic]=pic
+              [width]=32
+              [height]=32
+              [type]=0>
+  </single-pic>
+
+  <div on-mouseover='buttonOver(true)'
+       on-mouseleave='buttonOver(false)'
+       class="d-flex flex-row-reverse p-0">
+
+    <div class="alert py-1" [ngClass]="{'alert-warning ml-2' : userId!=message.userId, 'alert-success mr-2' : userId==message.userId}" role="alert">
+      <p *ngIf="message.type==0" class="text-white mb-0">{{ message.text }}</p>
+      <p *ngIf="message.type==10" class="mb-0"><i><span class="text-white">Message deleted</span></i></p>
+      <img *ngIf="message.file" class="mx-auto d-block my-2 mx-0 rounded" height="83" [src]=message.file>
+      <span *ngIf="message.type==0" class="small text-white">{{message.date | momentPipe:''}}</span>
+    </div>
+
+    <img *ngIf="message.file"
+         class="mx-auto d-block mt-2 rounded"
+         src=""
+         imgPreview
+         [image]=file
+         [height]=100>
+
+    <build-buttons *ngIf="userId==message.userId && message.type!=10"
+                   [ngClass]="{'invisible': !showButton}"
+                   [showButton]=true
+                   [deleteFlag]=true
+                   (buttonDeleteClick)="buttonDeleteFunc($event)">
+    </build-buttons>
+
+  </div>
+
+</div>

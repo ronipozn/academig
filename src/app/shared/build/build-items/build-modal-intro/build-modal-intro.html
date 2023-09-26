@@ -1,0 +1,7 @@
+<h5 class="text-dark mb-0">{{headline}}</h5>
+<p *ngIf="bodytext" class="mt-2 mb-0">{{bodytext}}</p>
+<p *ngIf="addButtonFlag" class="mt-2 mb-1">
+  <button role="button" (click)="buttonClickFunc($event)" mat-raised-button class="btn btn-sm btn-fill btn-light-blue">
+    Add <span *ngIf="btntext">{{btntext}}</span>
+  </button>
+</p>

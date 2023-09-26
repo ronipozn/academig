@@ -1,0 +1,141 @@
+<div class="side-form">
+
+  <h3 *ngIf="!newFlag" class="title text-center">Update Teaching</h3>
+  <h3 *ngIf="modeNum==0 && newFlag" class="title text-center">Add Current Teaching</h3>
+  <h3 *ngIf="modeNum==1 && newFlag" class="title text-center">Add Past Teaching</h3>
+  <h3 *ngIf="modeNum==2 && newFlag" class="title text-center">Add Teaching</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="adminFlag && newFlag && groupId" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemFirst]=true
+                              [itemTitle]="'Title'"
+                              [controlName]="'title'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'ID'"
+                              [controlName]="'id'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Location'"
+                              [controlName]="'location'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-month-field *ngIf="modeNum==0"
+                         [itemTitle]="'Start Date'"
+                         [controlName]="'start'"
+                         [parentGroup]="formModel"
+                         [labelRequired]=true
+                         [submitStatus]=submitStatus>
+      </build-month-field>
+
+      <div *ngIf="modeNum==1 || modeNum==2" class="row no-gutters">
+
+        <div class="col mr-1 mb-3">
+          <build-month-field [itemTitle]="'Start Date'"
+                             [controlName]="'start'"
+                             [parentGroup]="formModel"
+                             [labelRequired]=true
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('start').errors && formModel.get('start').errors.range)">
+          </build-month-field>
+          <build-modal-text-field *ngIf="modeNum==2"
+                                  [labelHide]=true
+                                  [itemFirst]=true
+                                  [fieldType]=7
+                                  [controlName]="'active'"
+                                  (controlStatus)=controlStatusFunc($event)
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Active']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <!-- [labelRequired]=true -->
+
+        <div class="col ml-1">
+          <build-month-field [itemTitle]="'End Date'"
+                             [controlName]="'end'"
+                             [parentGroup]="formModel"
+                             [labelRequired]="!formModel.controls['active']?.value[0] || modeNum!=2"
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('end').errors && formModel.get('end').errors.range)">
+          </build-month-field>
+        </div>
+
+        <span *ngIf="formModel.get('start').errors?.range" class="mt-1 mb-0 small text-danger">
+          End date should be greater than start date
+        </span>
+
+      </div>
+
+      <build-modal-text-field [labelRequired]=true
+                              [fieldType]=5
+                              [itemTitle]="'Role'"
+                              [controlName]="'role'"
+                              [parentGroup]=formModel
+                              [itemArray]=teachingRoleRadio
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <p></p>
+
+      <build-modal-name-field *ngIf="modeNum==2"
+                              [userId]=userId
+                              [mode]=13
+                              [itemTitle]="'University'"
+                              [controlName]="'university'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-name-field>
+
+      <p></p>
+
+      <build-modal-text-field [fieldType]=2
+                              [textAreaRows]=5
+                              [itemTitle]="'Short Introduction'"
+                              [controlName]="'description'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <!-- <build-slide-select-members *ngIf="newFlag && groupId"
+                                  [labelRequired]=true
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Teaching Staff'"
+                                  [parentGroup]=formModel
+                                  [controlName]="'members'"
+                                  [submitStatus]=submitStatus
+                                  [minSelected]=1
+                                  [preMembersInput]=[null]
+                                  (membersOutput)=membersFunc($event)>
+      </build-slide-select-members> -->
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-light-blue">
+          <span *ngIf="newFlag">Add</span>
+          <span *ngIf="!newFlag">Update</span>
+        </button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

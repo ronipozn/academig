@@ -1,0 +1,85 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <button [disabled]="!streamRetrieved" role="button" class="btn btn-sm btn-light-blue mr-2" (click)="updateList()">
+      Reload
+    </button>
+  </div>
+</div>
+
+<div class="card mt-0">
+  <div class="card-body">
+    <p class="lead"><b>Deals</b></p>
+    <spinner *ngIf="!streamRetrieved" class="py-4"></spinner>
+    <ng-container *ngIf="streamRetrieved">
+      <b>Total deals:</b> {{deals.length}}<br>
+      <table class="table table-responsive table-sm">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Dates</th>
+            <th scope="col">Total plans</th>
+            <th scope="col">Total codes</th>
+            <th scope="col">Remaining codes</th>
+            <th scope="col">Purcahses</th>
+            <th scope="col">Actions</th>
+            <th scope="col">Emails</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let deal of deals; let i=index">
+            <th scope="row">{{i}}</th>
+            <th><a [routerLink]="['/','apps',deal.link]">{{deal.name}}</a></th>
+            <th>{{statusTypes[deal.status]}}</th>
+            <th>
+              {{moment(deal.dateStart).format("MMM DD YYYY")}} -
+              <ng-container *ngIf="deal.status>1">{{moment(deal.dateEnd).format("MMM DD YYYY")}}</ng-container>
+            </th>
+            <th>{{deal.plansTotal}}</th>
+            <th>{{deal.codesTotal}}</th>
+            <th>{{deal.codesRemain}}</th>
+            <th>-</th>
+            <th>
+              <button type="button" [disabled]="streamStatus==3 || deal.status>=1" class="btn btn-sm btn-light-blue" (click)="statusOp(1, i, null)">Activate Deal</button>
+              <button type="button" [disabled]="streamStatus==3 || deal.status==0 || deal.status==3" class="btn btn-sm btn-light-blue" (click)="extendOp(0, true, i, null)">Extend Deal</button>
+              <button type="button" [disabled]="streamStatus==3 || deal.status==0 || deal.status==3" class="btn btn-sm btn-light-blue" (click)="statusOp(3, i, null)">End Deal</button>
+            </th>
+            <th>
+              <!-- This just in / New tool alert -->
+              <button type="button" [disabled]="streamStatus==3 || deal.status==0 || deal.status==3" class="btn btn-sm btn-light-blue" (click)="emailOp(0, i)">
+                New Deal | {{deal.emails[0].date}}
+              </button>
+              <!-- Learn More -->
+              <button type="button" [disabled]="streamStatus==3 || deal.status==0 || deal.status==3" class="btn btn-sm btn-light-blue" (click)="emailOp(1, i)">
+                Explain Deal | {{deal.emails[1].date}}
+              </button>
+              <!-- Zoomin away / Time is running out -->
+              <button type="button" [disabled]="streamStatus==3 || deal.status==0 || deal.status==3" class="btn btn-sm btn-light-blue" (click)="emailOp(2, i)">
+                Bye Deal | {{deal.emails[2].date}}
+              </button>
+            </th>
+            <th>
+              <spinner *ngIf="streamStatus>0"></spinner>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text *ngIf=extendBuildFlag
+                  (update)="extendOp(2, false, itemIndex, $event)"
+                  (cancel)="extendOp(0, false, itemIndex, null)"
+                  [title]="'Set Final Deal Date'"
+                  [fieldType]=1
+                  [typeSelected]="'date'"
+                  [text]="">
+</build-slide-text>

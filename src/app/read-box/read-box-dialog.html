@@ -1,0 +1,25 @@
+  <!-- <button mat-button mat-dialog-close>Close</button> -->
+
+<h4 class="mat-dialog-title text-center"><b>2020 PapersMaster</b></h4>
+
+<!-- <img src="./assets/img/items/challenge.svg" class="mx-auto d-block mb-4" width="100px" alt="academig_challenge"> -->
+
+<p mat-dialog-content class="text-center">
+  Challenge yourself to read more research papers this year!
+</p>
+
+<p class="text-center">
+  My goal is to read
+  <span class="d-md-none"><br></span>
+  <input [(ngModel)]="challengeGoal" type="number" aria-describedby="challengeGoal">
+  <span class="d-md-none"><br></span>
+  research papers in 2020.
+</p>
+<!-- Goal should be less than 10000 -->
+
+<div mat-dialog-actions>
+  <!-- style="background-color: #6D69FB" -->
+  <button [disabled]="challengeGoal==null || challengeGoal<=0 || challengeGoal>=10000" mat-raised-button (click)="challengeFunc(true)" class="btn btn-success btn-block">
+    <i class="fa fa-rocket" aria-hidden="true"></i> Launch PapersMaster <i *ngIf="streamFlag" class="fa fa-1x fa-spinner fa-spin fa-fw"></i>
+  </button>
+</div>

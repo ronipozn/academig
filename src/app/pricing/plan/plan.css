@@ -1,0 +1,201 @@
+/* https://stackoverflow.com/questions/25874001/how-to-put-scrollbar-only-for-modal-body-in-bootstrap-modal-dialog */
+/* https://stackoverflow.com/questions/18432394/how-to-make-twitter-bootstrap-modal-full-screen */
+
+.modal-dialog-full {
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  margin: 85px 0px 0px 10px;
+  padding: 0;
+  overflow-y: initial !important
+}
+
+.modal-content-full {
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+}
+
+.modal-body-full {
+  /* height: 250px; */
+  overflow-y: auto;
+}
+
+.custom * {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.custom form {
+}
+
+#example5-paymentRequest {
+  max-width: 500px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.custom fieldset {
+  /* border: 1px solid #b5a4ed; */
+  /* padding: 15px; */
+  /* border-radius: 6px; */
+}
+
+.custom fieldset legend {
+  margin: 0 auto;
+  padding: 0 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  /* color: #cdd0f8; */
+  /* background-color: #9169d8; */
+}
+
+.custom fieldset legend + * {
+  clear: both;
+}
+
+.custom .card-only {
+  display: block;
+}
+.custom .payment-request-available {
+  display: none;
+}
+
+.custom .row {
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0 0 10px;
+}
+
+.custom .field {
+  position: relative;
+  width: 100%;
+}
+
+.custom .field + .field {
+  margin-left: 10px;
+}
+
+.custom label {
+  width: 100%;
+  color: #a3a3a3;
+  font-size: 13px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom .input {
+  width: 100%;
+  color: #a3a3a3;
+  background: transparent;
+  padding: 5px 0 6px 0;
+  border-bottom: 1px solid #a3a3a3;
+  transition: border-color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.custom .input::-webkit-input-placeholder {
+  color: #a3a3a3;
+}
+
+.custom .input::-moz-placeholder {
+  color: #a3a3a3;
+}
+
+.custom .input:-ms-input-placeholder {
+  color: #a3a3a3;
+}
+
+.custom .input.StripeElement--focus,
+.custom .input:focus {
+  border-color: #000;
+}
+.custom .input.StripeElement--invalid {
+  border-color: #ffc7ee;
+}
+
+.custom input:-webkit-autofill,
+.custom select:-webkit-autofill {
+  -webkit-text-fill-color: #a3a3a3;
+  /* -webkit-text-fill-color: #fce883; */
+  transition: background-color 100000000s;
+  -webkit-animation: 1ms void-animation-out;
+}
+
+.custom .StripeElement--webkit-autofill {
+  background: transparent !important;
+}
+
+.custom input,
+.custom button,
+.custom select {
+  -webkit-animation: 1ms void-animation-out;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  border-style: none;
+  border-radius: 0;
+}
+
+.custom select.input,
+.custom select:-webkit-autofill {
+  background-image: url('data:image/svg+xml;utf8,<svg width="10px" height="5px" viewBox="0 0 10 5" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#000" d="M5.35355339,4.64644661 L9.14644661,0.853553391 L9.14644661,0.853553391 C9.34170876,0.658291245 9.34170876,0.341708755 9.14644661,0.146446609 C9.05267842,0.0526784202 8.92550146,-2.43597394e-17 8.79289322,0 L1.20710678,0 L1.20710678,0 C0.930964406,5.07265313e-17 0.707106781,0.223857625 0.707106781,0.5 C0.707106781,0.632608245 0.759785201,0.759785201 0.853553391,0.853553391 L4.64644661,4.64644661 L4.64644661,4.64644661 C4.84170876,4.84170876 5.15829124,4.84170876 5.35355339,4.64644661 Z" id="shape"></path></svg>');
+  background-position: 100%;
+  background-size: 10px 5px;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 20px;
+}
+
+.custom button {
+  display: block;
+  width: 100%;
+  height: 40px;
+  margin: 20px 0 0;
+  background-color: #ca3f12;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.custom button:active {
+  background-color: #cdd0f8;
+}
+
+.custom .error svg .base {
+  fill: #a3a3a3;
+}
+
+/* .custom .error svg .glyph {
+  fill: #9169d8;
+} */
+
+.custom .error .message {
+  color: #a3a3a3;
+}
+
+.custom .success .icon .border {
+  stroke: #a3a3a3;
+}
+
+.custom .success .icon .checkmark {
+  stroke: #a3a3a3;
+}
+
+.custom .success .title {
+  color: #a3a3a3;
+}
+
+.custom .success .message {
+  color: #cdd0f8;
+}
+
+.custom .success .reset path {
+  fill: #a3a3a3;
+}

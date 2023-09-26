@@ -1,0 +1,77 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && fundings.length!=0">
+
+  <!-- <div *ngIf="sourceType==0; else items" [dragula]=bagName [(dragulaModel)]='fundings'>
+    <ng-container *ngTemplateOutlet="items"></ng-container>
+  </div>
+
+  <ng-template #items> -->
+    <ng-container>
+      <ul *ngFor="let funding of fundings; let i=index; let l=last" class="list-unstyled">
+        <funding-item [itemAutofocus]="itemFocus==i"
+                      [funding]=funding
+                      [groupStage]=groupStage
+                      [sourceType]=sourceType
+                      [showEditBtn]=showEditBtn
+                      [activeId]=activeId
+                      [stream]=stream[i]
+                      [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                      [streamRole]=streamRole[i]
+                      [userGroups]=userGroups
+
+                      (animationDoneEvent)="animationDone()"
+                      (buttonEditClick)="buttonEditFunc(i)"
+                      (buttonDeleteClick)="buttonDeleteFunc(i)"
+                      (buttonSuggestionClick)="buttonSuggestionFunc($event,i)"
+
+                      (buttonGroupAddClick)="buttonGroupAddFunc($event, i)"
+                      (buttonGroupDeleteClick)="buttonGroupDeleteFunc($event, i)"
+
+                      (buttonRoleAddClick)="buttonRoleAddFunc(i)"
+                      (buttonRoleApproveClick)="buttonRoleApproveFunc($event, i)"
+                      (buttonRoleDeclineClick)="buttonRoleDeclineFunc($event, i)"
+                      (buttonRoleEditClick)="buttonRoleEditFunc($event, i)"
+                      (buttonRoleLeaveClick)="buttonRoleLeaveFunc($event, i)">
+        </funding-item>
+        <hr *ngIf="!l && !sourceType">
+      </ul>
+    </ng-container>
+  <!-- </ng-template> -->
+
+</div>
+
+<!-- <div *ngIf="streamRetrieved && fundings.length!=0">
+  <div [dragula]=bagName [dragulaModel]='fundings'>
+
+    <ul *ngFor="let funding of fundings; let i=index; let l=last" class="list-unstyled">
+
+      <funding-item [itemAutofocus]="itemFocus==i"
+                    [funding]="funding"
+                    [sourceType]=sourceType
+                    [showEditBtn]=showEditBtn
+                    [activeId]=activeId
+                    [stream]=stream[i]
+                    [streamRole]=streamRole[i]
+                    [userGroups]=userGroups
+
+                    (animationDoneEvent)="animationDone()"
+                    (buttonEditClick)="buttonEditFunc($event, i)"
+                    (buttonDeleteClick)="buttonDeleteFunc($event, i)"
+
+                    (buttonGroupAddClick)="buttonGroupAddFunc($event, i)"
+                    (buttonGroupDeleteClick)="buttonGroupDeleteFunc($event, i)"
+
+                    (buttonRoleAddClick)="buttonRoleAddFunc($event, i)"
+                    (buttonRoleApproveClick)="buttonRoleApproveFunc($event, i)"
+                    (buttonRoleDeclineClick)="buttonRoleDeclineFunc($event, i)"
+                    (buttonRoleEditClick)="buttonRoleEditFunc($event, i)"
+                    (buttonRoleLeaveClick)="buttonRoleLeaveFunc($event, i)">
+      </funding-item>
+
+      <div *ngIf="!l && !sourceType" class="row mt-2 mb-4"><hr class="col-8 offset-2"></div>
+
+    </ul>
+
+  </div>
+</div> -->

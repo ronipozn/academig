@@ -1,0 +1,56 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">Edit Current Report Details</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()">
+
+      <build-slide-select-members *ngIf="!this.extendFlag"
+                                  [itemFirst]=true
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Who Will See'"
+                                  [parentGroup]=formModel
+                                  [controlName]="'whoSee'"
+                                  [preMembersInput]=preWhoSee
+                                  (membersOutput)=whoFunc($event)>
+      </build-slide-select-members>
+      <!-- option: everyone  -->
+
+      <build-slide-select-members *ngIf="!this.extendFlag"
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Participants'"
+                                  [parentGroup]=formModel
+                                  [controlName]="'participants'"
+                                  [preMembersInput]=preParticipants
+                                  (membersOutput)=participantsFunc($event)>
+      </build-slide-select-members>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'date'"
+                              [itemTitle]="'Submission date'"
+                              [labelRequired]=true
+                              [itemFirst]="this.extendFlag"
+                              [controlName]="'date'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'time'"
+                              [itemTitle]="'Submission time'"
+                              [labelRequired]=true
+                              [controlName]="'time'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">Update</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

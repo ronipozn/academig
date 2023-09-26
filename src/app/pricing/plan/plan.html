@@ -1,0 +1,197 @@
+<div *ngIf="!streamRetrieved || !streamRetrievedPlan" class="d-flex justify-content-center mt-2">
+  <div class="spinner-border text-secondary" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved && streamRetrievedPlan">
+
+  <div *ngIf="plan.subscriptions==null || (plan.subscriptions && plan.subscriptions[0]==null) || (mode==0 && plan.subscriptions && plan.subscriptions[0].plan==0)" class="card-group">
+    <div class="card small bg-light mr-3 p-3 mt-0 mb-3">
+      <div class="card-body">
+        <!-- <h5 class="card-title text-dark">{{modeName[mode]}} <b>{{planResearchers[plan.subscriptions[0].plan]}}</b></h5> -->
+        <h5 class="card-title text-dark">{{modeName[mode]}} <b>{{planResearchers[0]}}</b></h5>
+        <p class="card-text text-dark">
+          <span *ngIf="mode==0"><b>Your current plan</b>. Just the essentials for getting better academic information online.</span>
+          <span *ngIf="mode==1"><b>Your current lab plan</b>.</span>
+        </p>
+      </div>
+    </div>
+    <div class="card small text-dark p-3 mt-0 mb-3" style="background-color: #EBF3EE">
+      <div class="card-body">
+        <h5 class="card-title">More academic powers</h5>
+        <p class="card-text">
+          <span *ngIf="mode==0">Get unlimited search results, labs comparison capabilities, save and export search results, track your favorite labs and get personalized alerts, and more...</span>
+          <span *ngIf="mode==1">Get advanced lab management tools.</span>
+          <!-- Upgrade to Profile PRO and try it for free for 30 days, no credit card required. -->
+        </p>
+        <button (click)="pricingModal()" class="btn btn-sucess border-0" style="background: #7DBB91; color: white;">
+          See PRO Benefits
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="plan.subscriptions && plan.subscriptions[0]" class="card bg-light mt-3 p-3">
+    <div class="card-body">
+      <ng-container *ngFor="let sub of plan.subscriptions; let l=last">
+        <div *ngIf="sub.plan>=1">
+          <div class="row" [ngClass]="{'mb-4': !l}">
+            <div class="col-12 col-lg-4">
+              <p class="text-muted mb-0"><b>PLAN</b></p>
+              <span *ngIf="mode==0" class="text-dark"><b>{{modeName[mode]}} {{planResearchers[sub.plan]}}</b></span>
+              <span *ngIf="mode==1" class="text-dark"><b>{{modeName[mode]}} {{planLabs[sub.plan]}}</b></span>
+              <br>
+               <!-- && sub.plan==1 -->
+              <!-- <span *ngIf="sub.status=='trialing'" style="color: red"><b>Trial ends at {{sub.day | date:'mediumDate'}}.</b></span> -->
+              <span *ngIf="sub.status=='trialing'" style="color: red"><b>Trial ends at {{sub.end | date:'mediumDate'}}.</b></span>
+            </div>
+            <!-- <div class="col-12 col-lg-4">
+              <p class="text-muted mb-0"><b>BILLING</b></p>
+              <span class="text-dark">{{sub.nickname}}</span>
+            </div> -->
+            <div class="col-12 col-lg-4">
+              <p class="text-muted mb-0"><b>BILLED TO</b></p>
+              <card-brand *ngIf="plan.card" [card]=plan.card class="text-dark"></card-brand>
+              <span *ngIf="!plan.card" class="text-dark">N/A</span>
+            </div>
+            <div class="col-12 col-lg-4">
+              <p class="text-muted mb-0"><b>TOTAL</b></p>
+              <span class="text-dark">
+                <b>{{sub.amount/100}}$ {{sub.interval=='month' ? 'Billed monthly' : 'Billed yearly'}}</b><br>
+                 <!-- && sub.plan==1 -->
+                <span *ngIf="sub.status=='trialing'" style="color: red">
+                  <b>Billing will start at the end of the trial period.</b>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <p *ngIf="plan.subscriptions[0].status!='trialing' && plan.subscriptions[0].plan==1" class="text-muted mt-3 mb-0 pb-0">
+            <b>End of previous billing period:</b> {{(plan.period_end*1000)| date:'dd MMMM y'}}
+          </p>
+
+          <button *ngIf="mode>0 && sub.plan<3" (click)="planUpdate(1, 1, 1)" [disabled]="streamSubscribe>0" class="btn btn-light-blue mt-3 mb-0">
+            Change to yearly
+          </button>
+          <button *ngIf="mode>0 && sub.plan<3" (click)="planUpdate(0, 1, 1)" [disabled]="streamSubscribe>0" class="btn btn-light-blue mt-3 mb-0">
+            cancel plan
+          </button>
+
+          <!-- <hr> -->
+          <hr *ngIf="!l">
+        </div>
+      </ng-container>
+
+      <button *ngIf="mode==0" (click)="getPortal()" class="btn btn-sucess border-0 my-0" style="background: #7DBB91; color: white;">
+        Manage Subscription
+      </button>
+
+    </div>
+  </div>
+
+  <!-- <div *ngIf="plan.subscriptions[0]?.plan==1" class="card bg-light mb-4 px-3">
+    <div class="card-body">
+      <span class="text-muted mb-0 pb-0">
+        You are subscribed to the PRO plan because you are a member of a lab profile that is subscribed to Academig Lab PRO.
+      </span>
+    </div>
+  </div> -->
+
+  <!-- ------------------------ -->
+  <!-- ------------------------ -->
+  <!-- ------------------------ -->
+  <!-- ------------------------ -->
+
+  <div *ngIf="mode>0" class="card bg-light mt-3 p-3">
+    <div class="card-body">
+
+      <div class="row">
+
+        <div class="col-12 col-lg-4">
+          <p class="text-muted mb-0">CREDIT CARD</p>
+          <button *ngIf="!payment.card" role="button" class="btn btn-sm btn-link text-dark pl-0 py-0" (click)="sourceUpdate()">
+            Add Billing Information
+          </button>
+          <card-brand *ngIf="payment.card" [card]=payment.card class="text-dark"></card-brand>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <p class="text-muted mb-0">BILLING ADDRESS</p>
+          <span *ngIf="!payment.card" class="text-dark">N/A</span>
+          <div *ngIf="payment.card">
+            <span *ngIf="payment.card.address" class="text-dark">{{payment.card.address}}<br></span>
+            <span *ngIf="payment.card.city" class="text-dark">{{payment.card.city}}<br></span>
+            <span *ngIf="payment.card.country" class="text-dark"><span *ngIf="payment.card.state">{{payment.card.state}},</span> {{payment.card.country}}<br></span>
+            <span *ngIf="payment.card.zip" class="text-dark">{{payment.card.zip}}</span>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+          <p class="text-muted mb-0">BILLING TO</p>
+          <span *ngIf="!payment.card" class="text-dark">N/A</span>
+          <div *ngIf="payment.card">
+            <span class="text-dark">{{payment.card.email}}</span><br>
+            <span class="text-dark">{{payment.card.name}}</span><br>
+            <span *ngIf="payment.card.vat" class="text-dark">Tax Id: #{{payment.card.vat}}</span>
+          </div>
+        </div>
+
+      </div>
+
+      <button *ngIf="payment.card" role="button" [disabled]="streamSubscribe>0" class="btn btn-light-blue" (click)="sourceUpdate()">
+        Update card
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ------------------------ -->
+  <!-- ------------------------ -->
+  <!-- ------------------------ -->
+  <!-- ------------------------ -->
+
+  <div *ngIf="mode>0" class="card small bg-light mt-3 p-3">
+    <div class="card-body text-dark">
+      <h5 class="card-title text-dark">Payment history</h5>
+      <div class="card-text text-dark">
+        <span *ngIf="payment.invoices.length==0">No payments yet.</span>
+        <table *ngIf="payment.invoices.length>0" class="table table-hover mb-0 pb-0">
+          <tbody class="mb-0 pb-0">
+            <tr *ngFor="let invoice of payment.invoices; let i=index">
+              <td scope="row">{{(invoice.date*1000)| date:'MMMM y'}}</td>
+              <td>${{invoice.total/100}}</td>
+              <td *ngIf="invoice.paid" style="color: green">Paid</td>
+              <td *ngIf="!invoice.paid" style="color: red">Not paid</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="mode>0" class="text-muted small mb-4">
+    <i class="fa fa-lock mr-2"></i>All your transactions are secure and encrypted.
+  </div>
+
+</div>
+
+<!------------------------------------------------->
+<!-- - - - - - - - Pricing Info Modal - - - - - --->
+<!------------------------------------------------->
+<button id="togglePricingInfoModal" #togglePricingInfoModal [hidden]="true" data-toggle="modal" data-target="#pricingInfoModal"></button>
+
+<div class="modal fade" id="pricingInfoModal" tabindex="-1" role="dialog" aria-labelledby="pricingInfoModal" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog modal-dialog-full modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content modal-content-full p-0">
+      <div class="modal-body modal-body-full p-0">
+        <pricing *ngIf="streamRetrievedPlan"
+                 [source]=1
+                 [plan]="(plan.subscriptions && plan.subscriptions[0]) ? plan.subscriptions[0]?.plan : 0"
+                 [nickname]="(plan.subscriptions && plan.subscriptions[0]) ? plan.subscriptions[0].nickname : 0"
+                 [quantity]="(plan.subscriptions && plan.subscriptions[0]) ? plan.subscriptions[0].quantity : 0">
+        </pricing>
+      </div>
+    </div>
+  </div>
+</div>

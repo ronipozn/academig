@@ -1,0 +1,133 @@
+<ng-container *ngIf="streamContestsRetrieved">
+
+  <div class="card mt-0 mb-3">
+    <div class="card-body">
+      <h5 class="card-title">Contest configuration</h5>
+      <button *ngIf="contest==null" [disabled]="!streamContest" role="button" mat-raised-button class="btn btn-sm btn-light-blue mr-2" (click)="contestOp(0, true, null)">
+        Build Contest
+      </button>
+      <ng-container *ngIf="contest">
+
+        <b>ID:</b> {{contest._id}}<br>
+        <b>Title:</b> {{contest.title}}<br>
+        <b>Deadline:</b> {{contest.deadline | date}}<br>
+        <b>Amount of prizes:</b> {{contest.amount}}<br>
+        <b>Description:</b><br>
+        <span style='white-space:pre-wrap;' [innerHTML]="contest.prizes | safeHtml"></span><br>
+        <div class="card-columns">
+          <div *ngFor="let picObject of contest.pics; let j=index" class="card">
+            <div class="card-img-top" build-pic [pic]="picObject.pic" [type]=3 [fluidFlag]=true [showEditBtn]=true (buttonEditClick)="picsSlide(true, j, false)" (buttonDeleteClick)="picDelete(j)"></div>
+            <span class="ml-2 mb-2 card-text">{{picObject.name}}</span>
+          </div>
+        </div>
+
+        <hr>
+
+        <b>Status:</b> {{contest.status}}<br>
+
+        <hr>
+
+        <countdown [deadline]="contest.deadline"></countdown>
+
+        <hr>
+        <div class="d-flex flex-row">
+          <button role="button" mat-raised-button class="btn btn-sm btn-light-blue mr-2" (click)="contestOp(0, true, null)">
+            Update Details
+          </button>
+          <button [disabled]="!streamContest" role="button" mat-raised-button class="btn btn-sm btn-light-blue mr-2" (click)="contestAction(buttonsActions[contest.status])">
+            {{buttonsNames[contest.status]}}
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <spinner *ngIf="!streamGroupsRetrieved" class="my-4"></spinner>
+
+  <ng-container *ngIf="streamGroupsRetrieved">
+    <div *ngFor="let group of groups; let i=index;">
+      <div class="card mt-0 mb-3">
+        <div class="card-body">
+
+          <p><b>{{i+1}}. </b> <group-link [smallFlag]=false [groupIndex]=group.groupIndex></group-link></p>
+
+          <!-- <p>
+            <b>Registered: </b> {{group.dates[0] | date:'dd MMM y' }}, {{group.dates[0] | date:'HH:mm' }}.
+            <b>Submitted: </b> <span *ngIf="!group.dates[1]">-</span> <span *ngIf="group.dates[1]">{{group.dates[1] | date:'dd MMM y'}}, {{group.dates[1] | date:'HH:mm'}}</span>.
+            <b>Published: </b> <span *ngIf="!group.dates[2]">-</span> <span *ngIf="group.dates[2]">{{group.dates[2] | date:'dd MMM y'}}, {{group.dates[2] | date:'HH:mm'}}</span>.
+          </p> -->
+<!--
+          <p>
+            <b>Type: </b> {{onbehalf[group.onBehalf]}} ({{group.onBehalf}})
+            <b>Stage: </b> {{group.stage}}
+          </p> -->
+<!--
+          <p *ngIf="group.currentWebsite">
+            <b>Current Website:</b> <a *ngIf="group.currentWebsite" [href]="group.currentWebsite" target="_empty"><i class="fa fa-link" aria-hidden="true"></i></a>
+          </p>
+          <p *ngIf="group.emails">
+            <b>Emails:</b> <span *ngFor="let email of group.emails; let i=index" class="mb-0">{{i}}: To: {{email.to_email}}</span>
+          </p> -->
+
+          <!-- <p *ngFor="let task of tasks; let i=index" class="mb-0">{{task}}: {{group.progress[i]}}</p> -->
+
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="card mt-0">
+    <div class="card-body">
+      <h4 class="card-title">Archive</h4>
+      <div id="accordion" role="tablist" aria-multiselectable="true">
+        <div *ngFor="let archive of archives, let i=index" class="card-collapse mb-0">
+          <div class="card-header" role="tab" id="heading{{i}}">
+            <h5 class="mb-0">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{i}}">
+                 {{i+1}}. {{archive.title}} <i class="material-icons">keyboard_arrow_down</i>
+              </a>
+            </h5>
+          </div>
+          <div id="collapse{{i}}" class="collapse" role="tabpanel" aria-labelledby="heading">
+            <div class="card-body">
+              <b>ID:</b> {{archive._id}}<br>
+              <b>Deadline:</b> {{archive.deadline}}<br>
+              <b>Amount:</b> {{archive.amount}}<br>
+              <b>Description:</b> {{archive.prizes}}<br>
+              <b>Status:</b> {{archive.status}}
+              <div class="card-columns">
+                <div *ngFor="let picObject of archive.pics; let j=index" class="card">
+                  <div class="card-img-top" build-pic [pic]="picObject.pic" [type]=3 [fluidFlag]=true [showEditBtn]=true (buttonEditClick)="picsSlide(true, j, false)" (buttonDeleteClick)="picDelete(j)"></div>
+                  <span class="ml-2 mb-2 card-text">{{picObject.name}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-container>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<admin-contest-build *ngIf=contestFlag
+                     (update)="contestOp(1, false, $event)"
+                     (cancel)="contestOp(0, false, null)"
+                     [contest]=contest
+                     [action]=1>
+</admin-contest-build>
+
+<!-- picsAddFlag && !picsNewFlag -->
+<build-slide-text-pic *ngIf="0"
+                      [title]="'Update Picture'"
+                      [type]=2
+                      [nameRequired]=false
+                      [text]="contest.pics[picsIndex].name"
+                      [pic]="contest.pics[picsIndex].pic"
+                      (update)="galleryPicsUpdate($event)"
+                      (cancel)="picsSlide(false, null, null)">
+</build-slide-text-pic>

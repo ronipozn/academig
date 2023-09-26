@@ -1,0 +1,105 @@
+<!-- <p><b>Please note:</b> After you delete your account, you would be able to re-activate it for 30 days from here. After that period your account will be deleted permanently. Some information, such as messages you sent, may still be visible to others for a short period. <a>Learn more</a>.</p> -->
+
+<!-- <p>Note that you can view all your labs appearances in the <a [routerLink]="['/relations']">Groups Relations</a> page.</p> -->
+
+<div *ngIf="piFlag">As the Principal Investigator of
+  <span *ngFor="let userPosition of userService.userPositions; let l=last">
+    <span *ngIf="userPosition.status==6">
+      <a [routerLink]="['/', userPosition.group.university.link, userPosition.group.department.link, userPosition.group.group.link]">{{userPosition.group.group.name}}</a><span *ngIf="!l">, </span>
+    </span>
+  </span>
+  you must delete your lab site<span *ngIf="piFlag>1">s</span> before you can delete your account.
+  <!-- your site will also be deleted permanently and all your lab people will be removed from your site as well. -->
+</div>
+<!-- <hr> -->
+
+<p>Before you go, please <a target="_blank" [routerLink]="['/help/contact']">contact us</a> with any problem you have and we will do our best to help you solve it.</p>
+
+<!-- <p class="small">Please check the <a [routerLink]="['/legal/terms']">Privacy Settings</a>
+  and <a [routerLink]="['/legal/terms']">Notifications Settings</a>
+  to make sure your problem can't be resolved there or <a target="_blank" [routerLink]="['/help/contact']">contact us</a>
+  with any question you have.</p> -->
+
+<!-- <h6 class="mt-4">Consider the following before deleting:</h6>
+<p><button role="button" class="btn btn-outline-primary"><i class="fa fa-lock pr-2"></i> Put on hold</button></p> -->
+
+<span class="mt-4 mb-0"><b>Danger Zone</b></span>
+<hr class="my-0">
+
+<div class="card card-outline-danger">
+  <div class="card-body">
+    <blockquote class="card-blockquote">
+
+      <p class="text-danger">Warning! This can't be undone.<br>This will delete your account permanently.</p>
+
+      <button role="button" mat-raised-button class="btn btn-danger" [disabled]="piFlag>0" data-toggle="modal" data-target="#deleteAccountModal">
+        <i class="material-icons" data-notify="icon">delete</i> Delete my account
+      </button>
+
+    </blockquote>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - -->
+<!-- Delete Account Modal  -->
+<!-- - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - -->
+<button id="toggleDeleteModal" #toggleDeleteModal [hidden]="true" data-toggle="modal" data-target="#deleteAccountModal"></button>
+
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModal" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-backdrop="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <p class="lead modal-title" id="ModalLabel">Delete my account</p>
+        <button *ngIf="streamDelete" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body pb-0">
+        <div class="form-group">
+          <p>Your feedback matters. Why are you deleting your Academig user? (optional).</p>
+          <select for="categorySelect" [(ngModel)]="category" class="form-control" id="InputCategory">
+            <option [ngValue]="0">I have a privacy problem</option>
+            <option [ngValue]="1">I get too many emails / notifications</option>
+            <option [ngValue]="2">I don't understand how to use Academig</option>
+            <option [ngValue]="3">I don’t find Academig useful</option>
+            <option [ngValue]="4">I have another Academig account</option>
+            <option [ngValue]="5">I'll be back</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="AnythingElseInput">Anything else you would like us to know.</label>
+          <textarea class="col-11 form-control" id="AnythingElseTextarea" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="custom-control custom-checkbox">
+            <input id="radioStacked2" name="radio-stacked" type="checkbox" class="custom-control-input" checked>
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description">Unsubscribe me from receiving all future emails from Academig.</span>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button [disabled]="!streamDelete" role="button" mat-raised-button class="btn btn-link mr-2" data-dismiss="modal">Close</button>
+
+        <button role="button" mat-raised-button class="btn btn-danger" (click)="supporPut()" [disabled]="!streamDelete">
+          <div class="d-flex align-items-center">
+            <i class="fa fa-trash pr-2"></i> Delete my account
+            <div *ngIf="!streamDelete" class="ml-2">
+              <i class="fa fa-1x fa-spinner fa-spin"></i>
+            </div>
+          </div>
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>

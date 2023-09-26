@@ -1,0 +1,25 @@
+<ng-container *ngIf="userService.userChallenge==null || userService.userChallenge<=0">
+  Challenge yourself to read more research papers this year!
+  <br>My goal is to read <div class="form-group"><input [(ngModel)]="challengeGoal" type="number" aria-describedby="challengeGoal"></div> research papers in 2020.
+  <button [disabled]="challengeGoal==null || challengeGoal<=0 || challengeGoal>=10000" mat-raised-button (click)="challengeFunc(true)" class="pl-3 btn btn-light-blue btn-block"><i class="fa fa-rocket" aria-hidden="true"></i> Launch PapersMaster</button>
+</ng-container>
+
+<ng-container *ngIf="userService.userChallenge>0">
+  <p>You have read <b>{{userRead}}</b> of <b>{{userService.userChallenge}}</b> research papers.</p>
+  <div class="progress my-0" style="color: #6D69FB; height: 20px;">
+    <div class="progress-bar bg-info" role="progressbar" [style.width]="challengeScore+'%'" aria-valuenow="50" aria-valuemin="0" aria-valuemax=userService.userChallenge></div>
+  </div>
+  <div *ngIf="challengeEdit" class="mt-2">
+    <mat-form-field>
+      <mat-label>Edit goal</mat-label>
+      <input matInput type="number" [(ngModel)]="challengeGoal">
+      <button mat-button *ngIf="challengeGoal" matSuffix mat-icon-button aria-label="Clear" (click)="challengeGoal=''">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-hint>Goal should be less than 10000</mat-hint>
+    </mat-form-field>
+    <button [disabled]="challengeGoal==null || challengeGoal<=0 || challengeGoal>=10000" mat-raised-button (click)="challengeFunc(true)" class="pl-3 btn btn-sm btn-light-blue"><i class="fa fa-rocket" aria-hidden="true"></i> Update PapersMaster</button>
+  </div>
+  <p *ngIf="!challengeEdit" class="mt-2 mb-0"><a style="cursor: pointer;" (click)="challengeEdit=true" class="card-title">Edit Goal</a></p>
+  <p *ngIf="!challengeEdit" class="mt-1 mb-0"><a style="cursor: pointer;" (click)="challengeFunc(false)" class="card-title">Cancel PaperMaster</a></p>
+</ng-container>

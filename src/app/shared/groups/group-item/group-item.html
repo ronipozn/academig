@@ -1,0 +1,234 @@
+<div class="card card-product mt-0" [ngClass]="{'preview': previewStatus}" on-mouseover='buttonOver(true)' on-mouseleave='buttonOver(false)'>
+
+  <!-- <div *ngIf="group.pic" class="card-header card-header-image mx-0" data-header-animation="false">
+    <a *ngIf="group.groupIndex.group.link" [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]">
+      <img class="img" [src]=group.pic>
+    </a>
+    <img *ngIf="!group.groupIndex.group.link" class="img" [src]=group.pic>
+  </div> -->
+
+  <!-- <div *ngIf="!group.pic" class="card-header card-header-image mx-0" data-header-animation="false">
+    <a *ngIf="group.groupIndex.group.link" [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]">
+      <img class="img" [src]="'./assets/img/covers/lab-academig-1.png'">
+    </a>
+    <img *ngIf="!group.groupIndex.group.link" class="img" [src]="'./assets/img/covers/lab-academig-1.png'">
+  </div> -->
+
+  <div *ngIf="sourceType==8" class="card-header" data-header-animation="false">
+    <a [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]">
+      <img class="d-flex mx-auto rounded-circle" [width]=60 [height]=60 [src]="group.groupIndex?.university.pic">
+      <!-- imgPic -->
+    </a>
+    <!-- <img *ngIf="!group.groupIndex.group.link" class="img" [src]="'./assets/img/covers/lab-academig-1.png'"> -->
+  </div>
+
+  <div class="card-body">
+
+    <!-- <div class="card-actions text-center"> -->
+      <!-- <button mat-raised-button type="button" class="btn btn-danger btn-link fix-broken-card">
+        <i class="material-icons">build</i> Fix Header!
+      </button> -->
+      <!-- <button *ngIf="group.groupIndex.group.link" [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]" mat-raised-button type="button" class="btn btn-default btn-link" matTooltip="View" [matTooltipPosition]="'below'">
+        <i class="material-icons">art_track</i>
+      </button>
+      <button *ngIf="group.groupIndex" mat-raised-button type="button" class="btn btn-success btn-link" (click)="openShareModalFunc()" matTooltip="Share" [matTooltipPosition]="'below'">
+        <i class="material-icons">share</i>
+      </button>
+      <button *ngIf="group.groupIndex" mat-raised-button type="button" class="btn btn-warning btn-link" (click)="openReportModalFunc()" matTooltip="Report" [matTooltipPosition]="'below'">
+        <i class="material-icons">report</i>
+      </button> -->
+      <!-- <button *ngIf="group.groupIndex" mat-raised-button type="button" class="btn btn-danger btn-link" matTooltip="Embed" [matTooltipPosition]="'below'">
+        <i class="material-icons">close</i>
+      </button> -->
+    <!-- </div> -->
+
+    <h4 *ngIf="group.groupIndex" class="card-title">
+      <!-- ngIf for invited collaborations -->
+      <a *ngIf="group.groupIndex.group.link" [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]"><b>{{ group.groupIndex.group.name }}</b></a>
+      <a *ngIf="!group.groupIndex.group.link"><b>{{ group.groupIndex.group.name }}</b></a>
+    </h4>
+
+    <div *ngIf="group.groupIndex && companyFlag==false" class="card-description">{{ group.groupIndex.university.name }}<br>{{ group.groupIndex.department.name }}</div>
+    <div *ngIf="group.groupIndex && companyFlag==true" class="card-description">{{ group.groupIndex.department.name }}</div>
+    <div *ngIf="!group.groupIndex && (sourceType==1 || sourceType==4)" class="card-description">{{ group.collaboration.groupsIds[1] }}</div>
+
+    <div *ngIf="sourceType<=4" class="card-description">
+      <collaboration-info *ngIf="sourceType==1 || sourceType==3 || sourceType==4" [collaboration]=group.collaboration [stream]=stream (animationDoneEvent)="animationDone()"></collaboration-info>
+      <relation-info *ngIf="sourceType==2 || sourceType==0" [relation]="group.relation || relation" [stage]=group.stage></relation-info>
+    </div>
+
+    <!-- overflow-hidden -->
+    <!-- <p class="text-center overflow-auto mt-2 mb-0">
+      <span *ngFor="let interest of group.interests | slice:0:3" class="badge badge-light-blue mr-1">
+        {{ interest }}
+      </span>
+    </p> -->
+
+    <!-- No need to stream as Input because there is no New button for Groups -->
+    <!-- <ng-container *ngIf="group.groupIndex && group.groupIndex.group.link && sourceType!=3 && sourceType!=6">
+      <div class="card-description">
+        <follow-btn *ngIf="group.relation?.status<4 && relation?.status<4"
+                    [followStatus]="group.followStatus || followStatus"
+                    [streamFollow]=streamFollow
+                    [disabledFlag]="sourceType==5"
+                    (buttonFollowClick)="buttonFollowFunc($event)">
+        </follow-btn>
+      </div>
+      <div class="card-description">
+        <follow-btn *ngIf="compareFlag && companyFlag==false"
+                    [followStatus]=compareStatus
+                    [streamFollow]=streamCompare
+                    [type]=3
+                    (buttonFollowClick)="buttonCompareFunc($event)">
+        </follow-btn>
+      </div>
+    </ng-container> -->
+
+    <!-- sourceType>0 && -->
+    <!-- <div *ngIf="!this.adminFlag &&
+                group.groupIndex.group.link &&
+                group.relation?.status<4 && relation?.status<4 &&
+                group.groupIndex &&
+                companyFlag==false &&
+                userService.userId &&
+                sourceType!=3 && sourceType!=5 && sourceType!=6"
+         class="d-flex justify-content-center mb-1">
+      <follow-btn-admin [followStatus]="group.followAdminStatus || adminFollowStatus"
+                        [streamFollow]=streamAdminFollow
+                        [userPositions]=userService.userPositions
+                        (buttonFollowClick)="buttonAdminFollowFunc($event)">
+      </follow-btn-admin>
+    </div> -->
+
+    <div *ngIf="sourceType==3" class="d-flex justify-content-center mb-1">
+      <button mat-raised-button role="button" class="btn btn-sm btn-success mr-1" [disabled]="stream>0" (click)="buttonApproveFunc($event)">
+        <i class="fa fa-check fa-1x" aria-hidden="true"></i> Approve
+      </button>
+      <button mat-raised-button role="button" class="btn btn-sm btn-danger" [disabled]="stream>0" (click)="buttonDeclineFunc($event)">
+        <i class="fa fa-times fa-1x" aria-hidden="true"></i> Decline
+      </button>
+    </div>
+
+    <!-- <div *ngIf="group.relation.mode==4 && sourceType==2"
+         class="d-flex justify-content-center mb-1">
+      <button role="button" class="btn btn-sm btn-outline-info">
+        <i class="fa fa-paper-plane fa-1x" aria-hidden="true"></i> Resend Request
+      </button>
+    </div>
+
+    <div *ngIf="group.relation.mode==4 && sourceType==2"
+         class="d-flex justify-content-center mb-1">
+      <button role="button" class="btn btn-sm btn-outline-info">
+        <i class="fa fa-times fa-1x" aria-hidden="true"></i> Cancel Request
+      </button>
+    </div> -->
+
+  </div>
+
+  <div class="card-footer">
+    <!-- <div *ngIf="sourceType<2 && group.groupIndex && group.groupIndex.group.link && companyFlag==false" class="price">
+      <h6>{{ group.membersCount }} members</h6>
+    </div> -->
+    <!-- <p class="small card-title text-muted text-center">{{ group.membersCount }} members</p> -->
+    <div class="stats">
+      <p *ngIf="group.country" class="card-category pl-0 ml-0">
+        <span class="flag" [matTooltip]="group.city + ', ' + (group.state ? group.state + ', ' : '') + group.country" [matTooltipPosition]="'below'">
+          <img *ngIf="group.country && sourceType==8" [src]="'./assets/img/flags/' + (group.country | flag) + '.png'" alt="">
+          <img *ngIf="group.country && sourceType!=8" [src]="'./assets/img/flags/' + (group.country | country | flag) + '.png'" alt="">
+        </span>
+      </p>
+      <!-- <i class="material-icons">place</i> {{group.city}}, {{group.country}} {{group.country | flag}} -->
+    </div>
+     <!-- && sourceType!=6 -->
+    <div *ngIf="group.groupIndex && group.groupIndex.group.link && sourceType!=3">
+      <button *ngIf="group.relation?.status<4 && relation?.status<4" (click)="buttonFollowFunc()" mat-raised-button [matTooltip]="followStatus ? 'Unfollow' : 'Follow'" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm px-0 mr-3">
+        <i *ngIf="!streamFollow" class="text-muted fa fa-size-20" aria-hidden="true" [ngClass]="{'fa-bookmark': group.followStatus || followStatus, 'fa-bookmark-o' : !(group.followStatus || followStatus)}"></i>
+        <i *ngIf="streamFollow" class="fa fa-circle-o-notch fa-spin fa-size-20" style="color: gray"></i>
+      </button>
+      <button *ngIf="compareFlag && companyFlag==false" mat-raised-button matTooltip="Compare" [matTooltipPosition]="'below'" (click)="buttonCompareFunc()" type="button" class="btn btn-link btn-sm px-0">
+        <i [ngClass]="{'text-success': compareStatus, 'text-muted': !compareStatus}" class="fa fa-size-20 fa-clone" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="card flex-fill mb-3">
+  <div class="mb-3"
+       style="position:absolute; margin-top: 55px; margin-left: 50%; transform: translate(-50%,0%);">
+    <a *ngIf="group.groupIndex?.group.pic">
+      <img class="imgPic rounded-circle" [width]=60 [height]=60 [src]=group.groupIndex?.group.pic>
+    </a>
+    <span *ngIf="!group.groupIndex?.group.pic" class="fa-stack">
+      <i class="fa fa-circle fa-stack-2x" [style.color]="'#cdcdc1'"></i>
+      <span class="fa fa-stack-1x fa-inverse">{{acronym}}</span>
+    </span>
+  </div>
+  <div class="d-flex align-items-end flex-column mr-2">
+    <button [disabled]="!group.groupIndex.group.link" role="button" id="dropdownExtraButton" class="btn btn-sm btn-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownExtraButton">
+      <span *ngIf="(sourceType==1 || sourceType==4) && showEditBtn">
+        <a role="button" class="dropdown-item small pl-2" (click)="buttonEditCollaborationFunc(0)">
+          <span><i class="fa fa-fw fa-refresh mr-2" aria-hidden="true"></i> Edit Collaboration</span>
+        </a>
+        <a *ngIf="sourceType==1" role="button" class="dropdown-item small pl-2" (click)="buttonEndCollaborationFunc(0)">
+          <span><i class="fa fa-fw fa-hand-stop-o mr-2" aria-hidden="true"></i> End Collaboration</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a role="button" class="dropdown-item small pl-2" (click)="buttonDeleteCollaborationFunc(0)">
+          <span><i class="fa fa-fw fa-trash-o mr-2" aria-hidden="true"></i> Delete Collaboration</span>
+        </a>
+      </span>
+    </div>
+  </div>
+</div> -->
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Share Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" attr.data-target="#ShareModal{{group.groupIndex?.group._id}}"></button>
+
+<div *ngIf="group.groupIndex" class="modal fade" id="ShareModal{{group.groupIndex.group._id}}" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=0
+                   [itemId]=group.groupIndex.group._id
+                   [flag]=shareFlag
+                   (closeModal)="closeShareModalFunc()">
+      </modal-share>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Report Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<button id="toggleReportModal" #toggleReportModal [hidden]="true" data-toggle="modal" attr.data-target="#ReportModal{{group.groupIndex?.group._id}}"></button>
+
+<div *ngIf="group.groupIndex" class="modal fade" id="ReportModal{{group.groupIndex.group._id}}" data-target="#reportModalProjectDetails" tabindex="-1" role="dialog" aria-labelledby="ReportModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <modal-report [mode]=0
+                    [groupIndex]=group.groupIndex
+                    [userId]=userService.userId
+                    (closeModal)="closeReportModalFunc()">
+      </modal-report>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="'lab'"></modal-signup>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<ng-container *ngIf="streamRetrieved && projects.length!=0">
+
+  <ng-container *ngIf="sourceType!=2">
+    <div *ngFor="let project of projects; let i=index; let l=last" class="card mt-0 mb-3">
+      <div class="card-body pl-2 pt-2">
+        <project-item [itemAutofocus]="itemFocus==i"
+                      [project]=project
+                      [sourceType]=sourceType
+                      [showEditBtn]=showEditBtn
+                      [aiFlag]=aiFlag
+                      [followStatus]="follows ? follows[i] : null"
+                      [stream]=stream[i]
+                      [streamFollow]=streamFollow[i]
+                      [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                      (animationDoneEvent)="animationDone()"
+                      (buttonEditClick)="buttonEditFunc(i)"
+                      (buttonDeleteClick)="buttonDeleteFunc(i)"
+                      (buttonFollowClick)="buttonFollowFunc(i)"
+                      (buttonMoveClick)="buttonMoveFunc(i)"
+                      (buttonSuggestionClick)="buttonSuggestionFunc($event,i)">
+        </project-item>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="sourceType==2" class="d-flex flex-row" style="overflow-x: scroll; width: 98%;">
+    <div *ngFor="let project of projects; let i=index; let l=last">
+      <div class="card mt-1 mx-1" style="width: 26rem; height: 8rem">
+        <div class="card-body pl-2 pt-2">
+          <project-item [itemAutofocus]="itemFocus==i"
+                        [project]=project
+                        [sourceType]=sourceType
+                        [showEditBtn]=showEditBtn
+                        [aiFlag]=aiFlag
+                        [followStatus]="follows ? follows[i] : null"
+                        [stream]=stream[i]
+                        [streamFollow]=streamFollow[i]
+                        (animationDoneEvent)="animationDone()"
+                        (buttonEditClick)="buttonEditFunc($event, i)"
+                        (buttonDeleteClick)="buttonDeleteFunc($event, i)"
+                        (buttonFollowClick)="buttonFollowFunc($event, i)"
+                        (buttonMoveClick)="buttonMoveFunc($event, i)"
+                        (buttonAcceptClick)="buttonAccpetFunc($event,i)"
+                        (buttonRejectClick)="buttonRejectFunc($event,i)">
+          </project-item>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-container>

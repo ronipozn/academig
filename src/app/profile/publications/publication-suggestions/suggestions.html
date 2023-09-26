@@ -1,0 +1,75 @@
+<div class="text-center"><h3 class="mt-0">Publications Suggestions</h3></div>
+
+<p class="text-center mt-2 mb-0">
+  Suggestions are found based on your primary name: {{missionService.peopleName}}<span *ngIf="primaryNameInitial.length>1">, and its abbreviation {{primaryNameInitial}}</span>.
+</p>
+
+<ul class="nav nav-pills nav-pills-light-blue nav-pills-icons justify-content-center mt-3" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#suggestions" role="tablist">
+      <i class="d-none d-sm-block material-icons">thumb_up</i> {{publicationsSuggestions?.length}} Suggestions
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#rejected" role="tablist">
+      <i class="d-none d-sm-block material-icons">thumb_down</i> {{publicationsRejected?.length}} Rejected
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content" id="publicationTabContent">
+
+  <div class="tab-pane fade show active mt-3" id="suggestions" role="tabpanel" aria-labelledby="suggestions-tab">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        <div *ngIf="publicationsSuggestions?.length>0" class="card mt-0">
+          <div class="card-body">
+            <!-- <ng-container *ngIf="streamSuggestions==1 && (publicationsSuggestions || publicationsRejected)"> -->
+            <publications-list [streamRetrieved]=streamRetrieved[1]
+                               [publications]=publicationsSuggestions
+                               [sourceType]=2
+                               [userId]=userService.userId
+                               [stream]=streamPublicationsSuggestions
+                               [streamFolder]=streamPublicationsSuggestionsFolder
+                               [streamSuggestions]=streamPublicationsSuggestions
+                               [suggestFlag]=true
+                               (btnAccpet)="suggestionDecision($event,0)"
+                               (btnReject)="suggestionDecision($event,1)">
+            </publications-list>
+          </div>
+        </div>
+        <div *ngIf="publicationsSuggestions?.length==0" class="card mt-0">
+          <div class="card-body">
+            The publications suggestions list is empty.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane fade mt-3" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        <div *ngIf="publicationsRejected?.length>0" class="card mt-0">
+          <div class="card-body">
+            <publications-list [streamRetrieved]=streamRetrieved[2]
+                               [publications]=publicationsRejected
+                               [sourceType]=2
+                               [userId]=userService.userId
+                               [stream]=streamPublicationsRejected
+                               [streamFolder]=streamPublicationsRejectedFolder
+                               [rejectFlag]=true>
+                               <!-- (btnRefresh)="generateSuggestions()" -->
+            </publications-list>
+          </div>
+        </div>
+        <div *ngIf="publicationsRejected?.length==0" class="card mt-0">
+          <div class="card-body">
+            The publications rejection list is empty.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

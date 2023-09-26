@@ -1,0 +1,60 @@
+<div *ngIf="missionService.universityId" class="mt-4 row">
+
+  <div class="col-12" [ngClass]="{'col-md-7': missionService.socialInfo?.twitter}">
+
+    <div *ngIf="missionService.showEditBtn" class="card mt-0">
+      <div class="card-body">
+        <build-headline [showEditBtn]=true
+                        [addButtonFlag]="streamRetrieved || offset!=0"
+                        [headline]="'University News'"
+                        [headlineStyle]=1
+                        (buttonAddClick)="newsSlide(true, null, true)">
+        </build-headline>
+      </div>
+    </div>
+
+    <spinner *ngIf="!streamRetrieved && offset==0"></spinner>
+
+    <ng-container *ngIf="streamRetrieved || offset!=0">
+      <news-list [newses]=newses
+                 [userId]=missionService.userId
+                 [followings]=followings
+                 [sourceType]=2
+                 [streamRetrieved]=streamRetrieved
+                 (buttonEditNewsClick)="newsSlide(true, $event, false)"
+                 (buttonDeleteNewsClick)="newsDelete($event)"
+                 (buttonMoreNewsClick)="loadMore()">
+      </news-list>
+    </ng-container>
+  </div>
+
+  <div *ngIf="missionService.socialInfo?.twitter" class="col-md-5">
+    <div class="d-flex justify-content-start">
+      <div class="d-none d-md-block ml-4"></div>
+      <div class="card mt-0">
+        <div class="card-header">
+          <ngx-twitter-timeline *ngIf="missionService.socialInfo?.twitter"
+                                [data]="{sourceType: 'url', url: 'https://twitter.com/'+missionService.socialInfo.twitter}"
+                                [opts]="{tweetLimit: 2}">
+          </ngx-twitter-timeline>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+
+<build-slide-text-pic *ngIf=newsBuildFlag
+                      [title]="'Add University News'"
+                      [itemId]=missionService.universityId
+                      [text]="newsNewFlag ? null : newses[this.newsIndex].text"
+                      [pic]="newsNewFlag ? null : newses[this.newsIndex].pic"
+                      [aiFlag]=false
+                      (update)="newsUpdate($event)"
+                      (cancel)="newsSlide(false, 0, false)">
+</build-slide-text-pic>

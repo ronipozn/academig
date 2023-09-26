@@ -1,0 +1,83 @@
+<loading *ngIf="!streamRetrieved"></loading>
+
+<error-404 *ngIf="streamRetrieved && missionService.id==null" [source]=2></error-404>
+
+<div *ngIf="streamRetrieved && missionService.id" class="d-flex flex-column-reverse" style="padding-top: 0px;">
+
+   <div class="mt-4">
+      <site-footer [name]=missionService.name
+                   [pic]=missionService.pic
+                   [public]=missionService.publicInfo
+                   [social]=missionService.socialInfo
+                   [streamPublic]=streamPublicInfo
+                   [streamSocial]=streamSocialInfo
+                   [type]=3
+                   [btnEditFlag]=missionService.showEditBtn
+                   (buttonPublicClick)="infoBuildFlag=true"
+                   (buttonSocialClick)="socialBuildFlag=true"
+                   (animationEndPublic)="streamPublicInfo=0"
+                   (animationEndSocial)="streamSocialInfo=0">
+      </site-footer>
+      <!-- [groupIndex]=missionService.departmentIndex -->
+   </div>
+
+   <div style="min-height: 86vh">
+     <div class="container-fluid">
+        <!-- <breadcrumbs [mode]=1
+                     [country]="missionService.country | country"
+                     [state]=missionService.state
+                     [city]=missionService.city
+                     [university]=item.departmentIndex.university
+                     [department]=item.departmentIndex.department
+                     [page]=currentUrlSegments[3]?.path>
+        </breadcrumbs> -->
+        <router-outlet></router-outlet>
+      </div>
+   </div>
+
+   <item-navbar *ngIf="streamRetrieved && missionService.id"
+                [name]=item.name
+                [link]=item.link
+                [pic]=item.pic
+                [type]=missionService.type
+                [streamFollow]=streamFollow
+                [followStatus]=missionService.followStatus
+                [btnEditFlag]=missionService.showEditBtn
+                (buttonFollowClick)="itemFollow()">
+   </item-navbar>
+   <!-- [stage]=item.stage -->
+   <!-- (buttonCompareClick)="groupCompare()" -->
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-info *ngIf=infoBuildFlag
+                  (update)="publicInfoUpdate($event)"
+                  (cancel)="infoBuildFlag=false"
+                  [publicInfo]=missionService.publicInfo
+                  [mode]="4+missionService.type">
+</build-slide-info>
+
+<build-slide-social *ngIf=socialBuildFlag
+                    (update)="socialInfoUpdate($event)"
+                    (cancel)="socialBuildFlag=false"
+                    [socialInfo]=missionService.socialInfo
+                    [mode]="4+missionService.type">
+</build-slide-social>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="typesNames[missionService.type]"></modal-signup>
+    </div>
+  </div>
+</div>

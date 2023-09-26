@@ -1,0 +1,31 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && teachings.length>0">
+
+  <!-- <div *ngIf="sourceType==0; else items" [dragula]=bagName [(dragulaModel)]='teachings'>
+    <ng-container *ngTemplateOutlet="items"></ng-container>
+  </div> -->
+
+  <!-- <ng-template #items>
+    <ng-container> -->
+      <ul *ngFor="let teaching of teachings; let i=index; let l=last" class="list-unstyled" [ngClass]="{'mb-4': !l}">
+        <teaching-item [itemAutofocus]="itemFocus==i"
+                       [teaching]=teaching
+                       [sourceType]=sourceType
+                       [showEditBtn]=showEditBtn
+                       [stream]=stream[i]
+                       [streamFollow]=streamFollow[i]
+                       [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                       (animationDoneEvent)="animationDone()"
+                       (buttonEditClick)="buttonEditFunc(i)"
+                       (buttonDeleteClick)="buttonDeleteFunc(i)"
+                       (buttonSuggestionClick)="buttonSuggestionFunc($event,i)">
+        </teaching-item>
+        <!-- (buttonFollowClick)="buttonFollowFunc(i)" -->
+        <!-- (buttonMoveClick)="buttonMoveFunc(i)" -->
+
+      </ul>
+    <!-- </ng-container>
+  </ng-template> -->
+
+</div>

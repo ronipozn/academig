@@ -1,0 +1,151 @@
+<div *ngIf="!streamRetrieved" class="py-4">
+  <spinner></spinner>
+</div>
+
+<ng-container *ngIf="streamRetrieved">
+
+  <div class="card mt-0 mb-3">
+    <div class="card-body">
+
+      <div class="mt-2 mb-0" [ngClass]="{'text-dark': position.standout==0, 'text-white': position.standout>0}">
+        <div class="d-flex align-items-center">
+          <div *ngIf="position.standout<3 || position.standout==null" class="mr-auto"><b>POSTED {{moment(position.created_on).format("DD MMM YYYY HH:MM")}}</b></div>
+          <div *ngIf="position.standout==3" class="mr-auto"><b>FEATURED JOB</b></div>
+          <span *ngIf="!position.payment" class="badge badge-warning">Payment missing</span>
+          <span *ngIf="position.invite" class="badge badge-warning ml-2">Invite icomplete</span>
+          <div class="d-flex align-items-center">
+            <a *ngIf="position.stepsDates[0]" style="cursor:pointer" class="pl-0 ml-1" data-toggle="modal" attr.data-target="#PositionSteps{{position._id}}">
+              <i class="ml-0 fa fa-clock-o" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="position.title" class="card-title mt-0" [ngClass]="{'text-dark': position.standout==0, 'text-white': position.standout>0}">
+        <a class="h3 mt-2" [routerLink]="['/',position.group.groupIndex.university.link,position.group.groupIndex.department.link,position.group.groupIndex.group.link,'jobs',position._id]"><b>{{position.title}}</b></a>
+        <span *ngIf="position.feedback" class="card-title mt-0"><b>Feedback: {{feedbackSelect[position.feedback]}}</b></span>
+      </div>
+
+      <div class="media mb-0 pb-0">
+        <div class="media-body mb-0 pb-0">
+
+          <span *ngIf="position.country" class="small">
+            <br><span class="flag mr-2"><img [src]="'./assets/img/flags/' + (position.country | flag) + '.png'" alt=""></span> <span *ngIf="position.state">{{position.state}},</span> <span *ngIf="position.city">{{position.city}},</span> {{position.country}}
+          </span>
+
+          <div class="small d-flex align-items-center" [ngClass]="{'text-dark': sourceType!=2 || position.standout==0, 'text-white': position.standout>0}">
+            <span class="mr-4">{{titlesTypes[position.position]}}</span>
+            <span *ngIf="position.type!=null" class="mr-4">{{typeSelect[position.type]}}</span>
+            <span *ngIf="position.contractLength!=null" class="mr-4">{{position.contractLength}} {{lengthSelect[position.contractLengthType]}}</span>
+            <span *ngIf="position.spotsAvailable" class="mr-4">{{position.spotsAvailable}} Spots</span>
+            <span *ngIf="position.stepsDates && position.stepsDates[0]" class="mr-4">Deadline: {{ position.stepsDates[0] | date }}</span>
+            <span *ngIf="position.stepsDates && position.stepsDates[8]">Start date: {{ position.stepsDates[8] | date }}</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="position.group" class="card mt-0">
+    <div class="card-body">
+      <img *ngIf="position.group.groupIndex && position.group.groupIndex.university.pic" [height]=50 [src]=position.group.groupIndex.university.pic><br>
+      <group-link [groupIndex]=position.group.groupIndex [smallFlag]=false></group-link><br>
+      <b>Club: </b> {{position.group.club | json}}<br>
+      <b>Interview: </b> {{position.group.interview | json}}<br>
+      <!-- invitePending -->
+    </div>
+  </div>
+
+  <div class="card mt-0">
+    <div class="card-body">
+      <h4>Stats <small>(Views,Clicks,Apply)</small></h4>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th *ngFor="let channel of statsChannels" scope="col">{{channel}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let statRow of position.stats; let i=index;">
+              <th scope="row">{{moment(position.created_on).add((i+1)*2, 'weeks').format("DD MMM YYYY")}}</th>
+              <td *ngFor="let stat of statsChannels; let j=index">
+                {{statRow[j]}}
+                <button class="btn btn-sm btn-link p-0" (click)="statsUpdateOp([i, j], 0, true, null)">update</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button *ngIf="statAddFlag" class="btn btn-sm btn-primary" (click)="statsAddOp(0, true, null)">Add</button>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <button class="btn btn-sm" [disabled]="streamFilter" (click)="filterOp(0)">7</button>
+    <button class="btn btn-sm" [disabled]="streamFilter" (click)="filterOp(1)">14</button>
+    <button class="btn btn-sm" [disabled]="streamFilter" (click)="filterOp(2)">30</button>
+    <button class="btn btn-sm" [disabled]="streamFilter" (click)="filterOp(3)">60</button>
+  </div>
+
+  <div *ngFor="let apply of position.apply; let i=index;" class="card mt-0">
+    <div class="card-body">
+      <b>ID:</b> {{apply.id}}<br>
+      <b>MODE:</b> {{apply.mode}}<br>
+      <b>STAGE:</b> {{apply.stage}}<br>
+      <b>STATUS:</b> {{apply.status}}<br>
+      <b>DATE:</b> {{moment(apply.date[0]).format("DD MMM YYYY")}}<br>
+      <b>DURATION:</b> {{moment.duration(moment(apply.date[0]).diff(moment(position.created_on)),'days').asDays()}}<br>
+      <ng-container *ngIf="apply.status<11">
+        <b>FILTER NOTE:</b> {{apply.filter}}<br>
+        <button role="button" [disabled]="streamNote" mat-raised-button class="btn btn-sm btn-info" (click)="noteOp(i, true, 0)">Note <i *ngIf="streamNote" class="fa fa-1x fa-spinner fa-spin"></i></button>
+        <mat-form-field>
+          <mat-select [(value)]="apply.filterStatus" [disabled]="apply.status>9">
+            <mat-option *ngFor="let type of filterTypes; let i=index" [value]="i+11">{{ type }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button role="button" [disabled]="streamStatus" mat-raised-button class="btn btn-sm btn-info" (click)="statusOp(i)">Update Status <i *ngIf="streamStatus" class="fa fa-1x fa-spinner fa-spin"></i></button>
+      </ng-container>
+    </div>
+  </div>
+
+</ng-container>
+
+<stats-build *ngIf=statsFlag
+             [stat]="position.stats[statIndex[0]][statIndex[1]]"
+             [mode]=statMode
+             (add)="statsAddOp(2, false, $event)"
+             (update)="statsUpdateOp(null, 2, false, $event)"
+             (cancel)="statsUpdateOp(null, 0, false, null)">
+</stats-build>
+
+<!------------------------------------->
+<!-------------- Note Modal ----------->
+<!------------------------------------->
+<button id="toggleNoteModal" #toggleNoteModal [hidden]="true" data-toggle="modal" data-target="#noteModal"></button>
+
+<div *ngIf="streamRetrieved" class="modal fade" id="noteModal" data-target="#noteModal" tabindex="-1" role="dialog" aria-labelledby="PositionNote" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div *ngIf="noteFlag" class="modal-header">
+        <p class="lead modal-title" id="ModalLabel">{{position.apply[noteIndex].id}}</p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="noteOp(null, false, 1)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pb-0">
+        <div class="form-group">
+          <label for="noteTextarea">Notes</label>
+          <textarea class="form-control" id="NoteTextarea" rows="5" [(ngModel)]="note"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button role="button" mat-raised-button class="btn btn-sm btn-link" data-dismiss="modal" (click)="noteOp(null, false, 1)">Close</button>
+        <button role="button" mat-raised-button class="btn btn-sm btn-light-blue" data-dismiss="modal" (click)="noteOp(null, false, 2)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

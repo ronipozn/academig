@@ -1,0 +1,87 @@
+<div class="col-xl-10 offset-xl-1" style="padding-top: 23px">
+
+  <div class="card card-stats mb-3" [@itemsAnimation]="('active')">
+    <div class="mb-4 card-header card-header-light-blue card-header-icon">
+      <div class="card-icon p-0"><i class="material-icons">list_alt</i></div>
+      <h4 class="card-title"><b>Relations - {{ userService.userName }}</b></h4>
+    </div>
+  </div>
+
+  <!-- || !streamRetrieved[3] || !streamRetrieved[4] -->
+  <spinner *ngIf="!streamRetrieved[0] || !streamRetrieved[2]" class="py-4"></spinner>
+
+  <!-- && streamRetrieved[3] && streamRetrieved[4] && projects.length==0 && resources.length==0 -->
+  <div *ngIf="streamRetrieved[0] && streamRetrieved[2] && groupsActive.length==0 && groupsAlumnis.length==0" class="card mt-0">
+    <div class="card-body mt-2">
+      <build-modal-intro [headline]="'No Relations'" [bodytext]="'You have not joined or create any labs, projects or services yet.'"></build-modal-intro>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[0] && groupsActive.length>0" [@itemsAnimation]="('active')">
+    <h3 class="card-title mb-2">Active Labs</h3>
+    <groups-list [streamRetrieved]=streamRetrieved[0]
+                 [sourceType]=2
+                 [groupsPerRow]=3
+                 [groups]=groupsActive
+                 [compareStatuses]=compareStatusesActive
+                 [streamCompare]=streamFollowActive
+                 [streamFollow]=streamFollowActive
+                 [streamAdminFollow]=streamFollowActive
+                 (buttonFollowClick)="groupFollow($event,0)">
+    </groups-list>
+  </div>
+
+  <div *ngIf="streamRetrieved[2] && groupsAlumnis.length>0" [@itemsAnimation]="('active')">
+    <h3 class="card-title mb-2">Alumni Labs</h3>
+    <groups-list [streamRetrieved]=streamRetrieved[2]
+                 [sourceType]=2
+                 [groupsPerRow]=3
+                 [groups]=groupsAlumnis
+                 [compareStatuses]=compareStatusesAlumnis
+                 [streamCompare]=streamFollowAlumnis
+                 [streamFollow]=streamFollowAlumnis
+                 [streamAdminFollow]=streamFollowAlumnis
+                 (buttonFollowClick)="groupFollow($event,1)">
+    </groups-list>
+  </div>
+
+  <!-- <div *ngIf="streamRetrieved[3] && projects.length>0" [@itemsAnimation]="('active')">
+    <h3 class="card-title mb-2">Projects</h3>
+    <projects-list [streamRetrieved]=streamRetrieved[3]
+                   [projects]=projects
+                   [stream]=streamProjects
+                   [streamFollow]=streamProjects
+                   [sourceType]=4>
+    </projects-list>
+  </div>
+
+  <div *ngIf="streamRetrieved[4] && resources.length>0" [@itemsAnimation]="('active')">
+    <h3 class="card-title mb-2">Services</h3>
+    <resource-list [streamRetrieved]=streamRetrieved[4]
+                   [resources]=resources
+                   [stream]=streamResources
+                   [streamFollow]=streamResources
+                   [sourceType]=4>
+    </resource-list>
+  </div> -->
+
+  <!-- <build-headline [headline]="'Visiting Labs'"></build-headline>
+
+  <build-modal-intro *ngIf="streamRetrieved[2] && groupsVisits.length==0"
+                     [headline]="'Visiting Labs'"
+                     [bodypic]="'group'"
+                     [bodytext]="'Labs that you have visited or made a request to visit will appear here.'">
+  </build-modal-intro>
+
+  <div class="mx-4">
+    <groups-list [streamRetrieved]=streamRetrieved[1]
+                 [sourceType]=2
+                 [groupsPerRow]=3
+                 [groups]=groupsVisits
+                 [streamFollow]=streamFollowVisits
+                 [streamAdminFollow]=streamFollowVisits
+                 (buttonFollowClick)="groupFollow($event,2)">
+    </groups-list>
+  </div> -->
+
+</div>

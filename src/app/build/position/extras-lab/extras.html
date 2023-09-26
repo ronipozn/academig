@@ -1,0 +1,134 @@
+<div [formGroup]="parentGroup">
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title text-success"><b>Professional lab profile</b><i class="fa fa-rocket ml-2" aria-hidden="true"></i></h3>
+      <hr>
+      <div class="checkbox-radios">
+        <div class="form-check">
+          <label class="form-check-label text-dark">
+            <input formControlName=buildStatus class="form-check-input" type="checkbox">Yes, build my lab profile for only ${{prices[1]}}.
+            <span class="form-check-sign"><span class="check"></span></span>
+          </label>
+        </div>
+        <b>Let us build a beautiful and professional lab profile for you! The lab profile will complement your job posting beautifully. We will iterate with you or your staff until your complete satisfaction.</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title text-success"><b>Lab interview</b><i class="fa fa-comments ml-2" aria-hidden="true"></i></h3>
+      <hr>
+      <div class="checkbox-radios">
+        <div class="form-check">
+          <label class="form-check-label text-dark">
+            <input formControlName=interviewStatus class="form-check-input" type="checkbox" (change)="flagInterviewFunc()">Yes, I want to conduct an interview!
+            <span class="form-check-sign"><span class="check"></span></span>
+          </label>
+        </div>
+        <p><b>
+        We offer you to conduct an interview with us, written or podcast style, as you may choose.
+        The interview will appear in your lab profile and in our daily newsletter called Academig Reading.
+        An interview can help your lab profile visitors to learn much more about your lab.
+        </b></p>
+
+        <ng-container *ngIf="parentGroup.get('interviewStatus').value">
+          <div class="row">
+            <div class="col-lg-6">
+              <build-modal-text-field [fieldType]=1
+                                      [typeSelected]="'email'"
+                                      [labelRequired]=true
+                                      [itemTitle]="'Contact Email'"
+                                      [controlName]="'interviewEmail'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+              <div class="checkbox-radios">
+                <div class="form-check mt-0 pt-0">
+                  <label class="form-check-label text-dark">
+                    <input formControlName=interviewEmailSame class="form-check-input" type="checkbox" (change)="sameInterviewFunc()">Same as lab's contact email {{parentGroup.get('contactEmail').value}}
+                    <span class="form-check-sign"><span class="check"></span></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title text-success"><b>Academig cake club</b><i class="fa fa-birthday-cake ml-2" aria-hidden="true"></i></h3>
+      <hr>
+      <div class="checkbox-radios">
+        <div class="form-check">
+          <label class="form-check-label text-dark">
+            <input formControlName=clubStatus class="form-check-input" (change)="flagClubFunc()" type="checkbox">Yes, send us cake and other perks!
+            <span class="form-check-sign"><span class="check"></span></span>
+          </label>
+        </div>
+        <p><b>
+        What’s Academig Cake Club? Glad you asked.
+        We love cakes at Academig and thought it’d be nice if we could share that with the research labs we work with.
+        Academig Cake Club is our metaphorical way of accomplishing that.
+        Our goal is to help every lab that join Academig, and serve every single lab a cake and a cup of tea to one of your next lab meetings, along with other great perks along the way.
+        </b></p>
+
+        <ng-container *ngIf="parentGroup.get('clubStatus').value">
+          <div class="row">
+            <div class="col-lg-6">
+              <build-modal-text-field [fieldType]=1
+                                      [typeSelected]="'email'"
+                                      [labelRequired]=true
+                                      [itemTitle]="'Contact Email'"
+                                      [controlName]="'clubEmail'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+              <div class="checkbox-radios">
+                <div class="form-check mt-0 pt-0">
+                  <label class="form-check-label text-dark">
+                    <input formControlName=clubEmailSame class="form-check-input" type="checkbox" (change)="sameClubFunc()">Same as lab's contact email {{parentGroup.get('contactEmail').value}}
+                    <span class="form-check-sign"><span class="check"></span></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <build-modal-text-field [itemTitle]="'Contact Phone'"
+                                      [controlName]="'clubPhone'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-lg-6">
+              <build-modal-text-field [itemTitle]="'Lab Meeting Address'"
+                                      [controlName]="'clubAddress'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+            <div class="col-lg-6">
+              <build-modal-text-field [itemTitle]="'Typical day and time of your lab meetings'"
+                                      [controlName]="'clubTime'"
+                                      [parentGroup]=parentGroup
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+
+          <!-- Your favorite cake -->
+
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+
+</div>

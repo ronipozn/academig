@@ -1,0 +1,19 @@
+<h4><b>Submits</b></h4>
+
+<ng-container *ngFor="let s of streamRetrieved; let i=index">
+  <spinner *ngIf="!streamRetrieved[i]" class="py-4"></spinner>
+  <div class="card mt-0">
+    <div class="card-body mt-0">
+      <button [disabled]="!streamRetrieved" role="button" class="btn btn-sm btn-light-blue" (click)="updateList(i)">Reload</button>
+      <pre *ngIf="i==0 && streamRetrieved[i]">{{trends | json}}</pre>
+      <pre *ngIf="i==1 && streamRetrieved[i]">{{podcasts | json}}</pre>
+      <pre *ngIf="i==2 && streamRetrieved[i]">{{events | json}}</pre>
+      <pre *ngIf="i==3 && streamRetrieved[i]">{{apps | json}}</pre>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Journals -->
+<!-- Funding -->
+<!-- Courses -->
+<!-- Media -->

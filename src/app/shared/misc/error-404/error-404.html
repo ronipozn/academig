@@ -1,0 +1,41 @@
+<div style="margin-bottom: 100px;" class="container-fluid">
+
+  <div *ngIf="source!=1" class="d-flex justify-content-center">
+    <img src="./assets/img/error404.png"
+         [width]="150"
+         [height]="150">
+  </div>
+
+  <div *ngIf="source==1" class="d-flex justify-content-center">
+    <img src="./assets/img/microscope404.png"
+         [width]="150"
+         [height]="150">
+  </div>
+
+  <div class="d-flex justify-content-center text-center">
+    <!-- <h1 *ngIf="source==0" class="font-weight-light">This lab profile is not available</h1> -->
+    <h1 class="font-weight-light">Page not found</h1>
+    <!-- <h1 *ngIf="source==0" class="font-weight-light">Page not found</h1>
+    <h1 *ngIf="source==1" class="font-weight-light">Page not found</h1>
+    <h1 *ngIf="source==2" class="font-weight-light">This department profile is not available</h1>
+    <h1 *ngIf="source==3" class="font-weight-light">This university profile is not available</h1>
+    <h1 *ngIf="source==4" class="font-weight-light">This researcher profile is not available</h1> -->
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <blockquote class="blockquote">
+        Uh oh! we couldn't find the page you were looking for.
+        <br>Try to go back to the previous page or to your feed.
+        <br>Or see our <a [routerLink]="['/help']">Help Center</a> for more information.
+    </blockquote>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <button [routerLink]="['/']" role="button" mat-raised-button class="btn btn-success">Go to the home page</button>
+  </div>
+
+  <!-- <div class="d-flex justify-content-center mt-4">
+    <button [routerLink]="['/help']" role="button" class="text-success btn btn-link">Help Center</button>
+  </div> -->
+
+</div>

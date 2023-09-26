@@ -1,0 +1,33 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved" [formGroup]="formSubscribe">
+  <div class="form-group">
+    <ul class="list-unstyled mb-0 pb-0" [formArrayName]="'subscribe'">
+      <ng-container *ngFor="let topic of topics; let i=index; let l=last" class="mb-2">
+        <li class="d-flex align-items-center mb-0">
+          <div class="togglebutton">
+            <label for="customSwitch{{i}}">
+              <input [formControlName]="i" type="checkbox" id="customSwitch{{i}}" (change)="toogleNotification(i)">
+              <span class="toggle"></span>
+            </label>
+          </div>
+          <i class="fa fa-fw fa-1x fa-{{topicsIcon[i]}} mr-2" aria-hidden="true"></i> {{topic}}
+        </li>
+        <span class="text-muted">{{topicsExplain[i]}}</span>
+        <hr *ngIf="!l">
+      </ng-container>
+    </ul>
+  </div>
+</div>
+
+<!-- *ngIf="account.buildPro"  -->
+<!-- <div class="col-lg-6">
+  <div class="card mt-0">
+    <div class="card-body mt-0">
+      <p class="my-0"><b>Professional lab profile</b></p>
+      <hr class="mt-0 mb-1">
+      <i class="fa fa-check-circle" aria-hidden="true"></i>
+      We've built a professional lab profile for you! We constantly iterate with you or your staff until your complete satisfaction.
+    </div>
+  </div>
+</div> -->

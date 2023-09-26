@@ -1,0 +1,48 @@
+<div class="card">
+  <div class="card-body">
+
+    <build-headline [showEditBtn]=true
+                    [addButtonFlag]=true
+                    [headline]="'University slideshow'"
+                    (buttonAddClick)="picsSlide(true, 0, true)">
+    </build-headline>
+
+    <div class="card-columns">
+      <div *ngFor="let picObject of missionService.universityPics; let j=index" class="card">
+        <div class="card-img-top"
+             build-pic
+             [pic]="picObject.pic"
+             [type]=3
+             [fluidFlag]=true
+             [showEditBtn]=true
+             (buttonEditClick)="picsSlide(true, j, false)"
+             (buttonDeleteClick)="picDelete(j)">
+        </div>
+        <span class="ml-2 mb-2 card-text">{{picObject.name}}</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-pic-multi *ngIf="picsAddFlag && picsNewFlag"
+                       [itemId]=parentId
+                       (addMultiple)="galleryPicsUpdate($event)"
+                       (cancel)="picsSlide(false, null, null)"
+                       [title]="'Add Pictures'">
+</build-slide-pic-multi>
+
+<build-slide-text-pic *ngIf="picsAddFlag && !picsNewFlag"
+                      [title]="'Update Picture'"
+                      [type]=2
+                      [nameRequired]=false
+                      [text]="missionService.universityPics[this.picsIndex].name"
+                      [pic]="missionService.universityPics[this.picsIndex].pic"
+                      (update)="galleryPicsUpdate($event)"
+                      (cancel)="picsSlide(false, null, null)">
+</build-slide-text-pic>

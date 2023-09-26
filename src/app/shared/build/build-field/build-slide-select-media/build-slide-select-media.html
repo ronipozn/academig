@@ -1,0 +1,37 @@
+<div [formGroup]=parentGroup>
+
+  <!-- <label class="my-0" [ngClass]="{'pl-0 form-control-sm': itemSmall}"><b>{{title}}</b></label> -->
+
+  <div *ngIf="!streamRetrieved">
+    <i class="fa fa-circle-o-notch fa-spin fa-2x" style="color: gray"></i>
+  </div>
+  
+  <div *ngIf="streamRetrieved">
+
+    <div *ngIf="mediaMinis[0]!=null" class="d-flex flex-row flex-wrap" [formArrayName]=controlName>
+      <div *ngFor="let item of mediaMinis; let i=index" class="form-check">
+        <div on-mouseover="picHoverFunc(i)" on-mouseout="picHoverFunc(-1)">
+          <div class="mb-0 pb-0 px-0 form-check">
+
+            <label class="form-check-label" [ngClass]="{'small': itemSmall}">
+
+              <input class="form-check-input" type="checkbox" [formControlName]="i">
+
+              {{item.name}}
+
+            </label>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="mediaMinis[0]==null">
+      <span class="text-muted small">No {{title}}</span>
+    </div>
+
+    <span class="small text-muted">{{picHover}}&nbsp;</span>
+
+  </div>
+
+</div>

@@ -1,0 +1,131 @@
+<div class="container my-4">
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <h4 class="big mb-2 pb-2 text-center">Send Us a Message, We're Friendly</h4>
+          <div class="form-group">
+            <label for="InputName"><small><b>Your Name</b></small></label>
+            <input [(ngModel)]="name" type="text" class="form-control" id="InputName" aria-describedby="textHelp">
+          </div>
+          <div class="form-group">
+            <label for="InputEmail"><small><b>Your Email address</b></small></label>
+            <input [(ngModel)]="email" type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp">
+          </div>
+          <div class="row">
+            <div class="col-md-7 col-lg-5">
+              <div class="form-group">
+                <label for="categorySelect"><small><b>Category</b></small></label>
+                <select [(ngModel)]="category" class="form-control" id="InputCategory">
+                  <option [ngValue]="0">Help with Academig</option>
+                  <option [ngValue]="1">Billling question</option>
+                  <option [ngValue]="2">Report a bug</option>
+                  <option [ngValue]="3">Give feedback</option>
+                  <option [ngValue]="4">Suggest a feature</option>
+                  <option [ngValue]="5">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="InputSubject"><small><b>Subject</b></small></label>
+            <input [(ngModel)]="subject" type="text" class="form-control" id="InputSubject" aria-describedby="textSubject">
+          </div>
+          <div class="form-group">
+            <label for="messageleTextarea"><small><b>Message</b></small></label>
+            <textarea [(ngModel)]="message" class="form-control" id="MessageTextarea" rows="3"></textarea>
+            <small class="form-text text-muted">Please enter the details of your request. We will respond as soon as possible.</small>
+          </div>
+          <!-- <div class="form-group">
+            <label for="InputFile"><small><b>Attachments</b></small></label>
+            <input type="file" class="form-control-file" id="InputFile" aria-describedby="fileHelp">
+          </div> -->
+          <div class="d-flex flex-row-reverse">
+            <button [disabled]="submitFlag==1" role="button" class="d-flex btn btn-light-blue" aria-haspopup="true" aria-expanded="false" (click)="contactUpdate()">
+              Send
+              <div *ngIf="submitFlag>0" class="ml-2">
+                <i *ngIf="submitFlag==1" class="fa fa-1x fa-spinner fa-spin"></i>
+                <i *ngIf="submitFlag==2" class="fa fa-1x fa-check"></i>
+                <i *ngIf="submitFlag==3" class="fa fa-1x fa-times"></i>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+
+      <div class="row justify-content-center my-2">
+        <a [routerLink]="['/people/roni_pozner']" class="p-2">
+          <img src="./assets/img/Roni_Pozner.jpg" [width]="120" [height]="120" alt="Rony Pozner">
+        </a>
+        <a [routerLink]="['/people/tatipk86']" class="p-2">
+          <img src="./assets/img/Tatyana_pozner.jpeg" [width]="120" [height]="120" alt="Tatyana Pozner">
+        </a>
+      </div>
+
+      <hr>
+
+      <div class="row justify-content-center">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12 col-md-6">
+              <h4>Contact Us</h4>
+              <table class="table table-striped">
+                <tbody>
+                  <tr>
+                    <th scope="row">Phone</th>
+                    <td>
+                      <a href="tel:1-(866) 679-1723">
+                        <i class="fa fa-phone fa-1x mr-1" aria-hidden="true"></i>1-(866) 679-1723
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Support Email</th>
+                    <td>support@academig.com</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Support Hours</th>
+                    <td>We try to answer most support requests within 24 hours. We're usually much faster than that.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-xs-12 col-md-6">
+              <h4>Hear more from us</h4>
+              <table class="table table-striped">
+                <tbody>
+                  <tr>
+                    <th scope="row">Facebook</th>
+                    <td><a href="https://www.facebook.com/Academig-358527254603398/" target="empty">Academig's Facebook Page</a></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Twitter</th>
+                    <td><a href="https://twitter.com/academic_labs" target="empty">Academig's Twitter Page</a></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Linkedin</th>
+                    <td><a href="https://www.linkedin.com/company/academig/" target="empty">Academig's Linkedin Page</a></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Our Blog</th>
+                    <td><a [routerLink]="['/blog']">Academig Blog</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<info-footer></info-footer>

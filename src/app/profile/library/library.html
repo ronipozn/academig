@@ -1,0 +1,219 @@
+<div *ngIf="streamRetrieved && missionService.meFlag && publications?.length==0" class="d-flex justify-content-center mb-4">
+  <button mat-raised-button class="btn btn-light-blue btn-round" (click)="publicationSlide(0, true)">
+    <i class="material-icons">add_circle_outline</i> Add Paper
+  </button>
+</div>
+
+<spinner *ngIf="!streamRetrieved" class="mb-4"></spinner>
+
+<div class="card mt-0" *ngIf="streamRetrieved && publications?.length==0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Reading Library'"></build-headline>
+    <build-modal-intro *ngIf="!missionService.meFlag"
+                       [headline]="missionService.peopleName + '\' reading library is still empty.'"
+                       [bodypic]="'cubes'">
+    </build-modal-intro>
+    <build-modal-intro *ngIf="missionService.meFlag"
+                       [headline]="'Add to your reading library'"
+                       [bodypic]="'image'"
+                       [bodytext]="'Your reading library is still empty.'">
+    </build-modal-intro>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved && publications?.length>0" class="row my-4">
+
+  <div *ngIf="!expandFlag" class="col-md-4 mb-4">
+
+    <div *ngIf="missionService.meFlag" class="card mt-0">
+      <div class="card-body">
+        <p><b>Add a new paper to your reading library</b></p>
+        <button mat-raised-button class="btn btn-light-blue btn-block" color="accent" (click)="publicationSlide(0, true)">
+          <i class="fa fa-paperclip" aria-hidden="true"></i> Add
+        </button>
+      </div>
+    </div>
+
+    <mat-accordion *ngIf="missionService.meFlag" multi>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <i class="material-icons mr-1" style="color: #FEBB2C">emoji_events</i> 2020 PapersMaster
+        </mat-expansion-panel-header>
+        <library-challenge [userRead]=userRead></library-challenge>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <p *ngIf="missionService.meFlag" class="my-4"></p>
+
+    <mat-accordion multi>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Library Folders</mat-panel-title>
+          <!-- <mat-panel-description>Type your name and age</mat-panel-description> -->
+        </mat-expansion-panel-header>
+        <!-- [checked]="item.isRefined" -->
+        <!-- <mat-checkbox (change)="foldersFilterFunc('all',$event.checked)">All ({{publications.length}})</mat-checkbox><br> -->
+        <mat-checkbox (change)="foldersFilterFunc('read',$event.checked)" [checked]="folderQuery=='read'">Read ({{foldersCount['read'] || 0}})</mat-checkbox><br>
+        <mat-checkbox (change)="foldersFilterFunc('current',$event.checked)" [checked]="folderQuery=='current'">Currently Reading ({{foldersCount['current'] || 0}})</mat-checkbox><br>
+        <mat-checkbox (change)="foldersFilterFunc('want',$event.checked)" [checked]="folderQuery=='want'">Want to Read ({{foldersCount['want'] || 0}})</mat-checkbox><br>
+        <!-- <ng-container *ngIf="foldersCount.length>0"> -->
+        <mat-divider class="mb-2"></mat-divider>
+        <!-- https://stackoverflow.com/questions/35534959/access-key-and-value-of-object-using-ngfor -->
+        <div *ngFor="let folder of foldersCount | keyvalue">
+           <!-- && folder.value>0 -->
+          <span *ngIf="folder.key!='null' && folder.key!='read' && folder.key!='current' && folder.key!='want'" class="d-flex align-items-center">
+            <mat-checkbox (change)="foldersFilterFunc(folder.key,$event.checked)" [checked]="folderQuery==folder.key">
+              {{folder.key}} ({{folder.value}})
+            </mat-checkbox>
+            <a *ngIf="folder.value==0" style="cursor: pointer;" (click)="folderRemoveFunc(folder.key)"><i style="font-size: 18px;" class="material-icons mb-2 text-muted">clear</i></a>
+          </span>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <!-- <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>My Reading Activity</mat-panel-title>
+      </mat-expansion-panel-header>
+      <button mat-button class="btn btn-link pl-0">Reading Challenges</button><br>
+      <button mat-button class="btn btn-link pl-0">Reading Stats</button><br>
+      <button mat-button class="btn btn-link pl-0">Reading Story</button>
+    </mat-expansion-panel> -->
+
+    <!-- <mat-panel-title>Keywords</mat-panel-title> -->
+
+  </div>
+
+  <div [ngClass]="{'col-md-12': expandFlag, 'col-md-8': !expandFlag}">
+
+    <button class="d-none d-md-block" style="position: absolute; margin-left: -1rem; margin-top: -1rem; z-index: 100;" mat-mini-fab color="light" (click)="expandFlag=!expandFlag">
+      <i [ngClass]="{'fa-expand': !expandFlag, 'fa-compress': expandFlag}" class="fa fa-rotate-270" aria-hidden="true"></i>
+    </button>
+
+     <div class="card mt-0" [@itemsAnimation]="('active')">
+       <div class="card-body">
+
+         <build-headline *ngIf="publicationsDup.length==0"
+                         [headlineStyle]=1
+                         [headline]="'No papers match the selected filters'">
+         </build-headline>
+
+         <!-- <publications-buttons [streamRetrieved]=true
+                               [typesData]=typesData
+                               [typesCount]=typesCount
+                               [sourceType]=5
+                               (typesFlag)="typesFlagFunc($event)">
+         </publications-buttons> -->
+         <publications-list-table [streamRetrieved]=streamRetrieved
+                                  [publicationToggle]=publicationToggle
+                                  [foldersToggle]=foldersToggle
+                                  [publications]=publicationsDup
+                                  [sourceType]=5
+                                  [userId]=userService.userId
+                                  [typesFlag]=typesFlag
+                                  [stream]=streamPublications
+                                  [streamFolder]=streamPublicationsFolder
+                                  [streamDelete]=streamPublicationsDelete
+                                  [showEditBtn]=missionService.meFlag
+                                  (btnDelete)="publicationDelete($event)"
+                                  (btnFolder)="publicationFolder($event)"
+                                  (btnReadAdd)="readAddSlide($event, true)"
+                                  (btnReadEdit)="readEditSlide($event)"
+                                  (btnReadRemove)="readRemove($event)"
+                                  (btnPDF)="pdfSlide($event)"
+                                  (animationDoneEvent)="streamPublicationsFunc()">
+         </publications-list-table>
+
+         <!-- (types)="typesDataFunc($event)" -->
+       </div>
+      </div>
+
+      <!-- <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8"> -->
+
+        <!-- Position Column -->
+        <!-- <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+          <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+        </ng-container> -->
+
+        <!-- Name Column -->
+        <!-- <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.title}}
+            {{element.authors | json}}
+          </td>
+        </ng-container> -->
+
+        <!-- Citations Column -->
+        <!-- <ng-container matColumnDef="weight">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Citations </th>
+          <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+        </ng-container> -->
+
+        <!-- Folder Column -->
+        <!-- <ng-container matColumnDef="folders">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Folders </th>
+          <td mat-cell *matCellDef="let element"> {{element.folder}} </td>
+        </ng-container> -->
+
+        <!-- Date Added Column -->
+        <!-- <ng-container matColumnDef="read">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date read </th>
+          <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+        </ng-container> -->
+
+        <!-- Date Read Column -->
+        <!-- <ng-container matColumnDef="added">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date added </th>
+          <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+        </ng-container> -->
+
+        <!-- Published Year Column -->
+        <!-- <ng-container matColumnDef="symbol">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Published Year </th>
+          <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table> -->
+
+      <!-- <ol>
+        <li>Num of reads / views / followers</li>
+        <li>Average rating / My rating (stars)</li>
+        <li>Time spent on average / total</li>
+      </ol> -->
+
+  </div>
+
+</div>
+
+<img *ngIf="streamRetrieved" src="./assets/img/items/library.svg" class="mx-auto d-block img-fluid my-4 pb-4" [width]="250" alt="academig_library">
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-publications *ngIf=publicationBuildFlag
+                          (update)="publicationUpdate($event)"
+                          (cancel)="publicationSlide($event, false)"
+                          [newFlag]=true
+                          [userId]=userService.userId
+                          [publication]=publicationBuild
+                          [dois]=dois
+                          [sourceType]=1
+                          [userFolders]=userService.userFolders>
+</build-slide-publications>
+
+<build-slide-read *ngIf=readBuildFlag
+                  (add)="publicationFolder([publicationsDup[publicationIndex]._id, publicationIndex, $event])"
+                  (update)="readEditUpdate($event)"
+                  (cancel)="readAddSlide(null, false)"
+                  [mode]=readBuildMode
+                  [title]="publicationsDup[publicationIndex].title"
+                  [journal]="publicationsDup[publicationIndex].journal"
+                  [date]="publicationsDup[publicationIndex].date"
+                  [folder]="publicationsDup[publicationIndex].folders[folderIndex]">
+</build-slide-read>

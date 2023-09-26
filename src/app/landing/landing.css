@@ -1,0 +1,14 @@
+.topH4 {
+  font-size: 35px;
+  margin: auto
+}
+
+.support {
+  background:
+      linear-gradient(
+      rgba(48, 142, 193, 0.70),
+      rgba(48, 142, 193, 0.70)
+      ),
+      url(/assets/img/landing-support.jpg);
+  background-size:cover;
+}

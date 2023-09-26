@@ -1,0 +1,19 @@
+<div *ngIf="timeleft>0 && mode==0" class="timer d-flex justify-content-center">
+  <div class="text-center px-2"><span class="lead">{{counters[0]}}</span><br>DAYS</div>
+  <div class="text-center px-2"><span class="lead">{{counters[1]}}</span><br>HOURS</div>
+  <div class="text-center px-2"><span class="lead">{{counters[2]}}</span><br>MINUTES</div>
+  <div class="text-center px-2"><span class="lead">{{counters[3]}}</span><br>SECONDS</div>
+</div>
+
+<div *ngIf="timeleft<=0 && mode==0" class="d-flex justify-content-center">
+  <div class="text-center lead">CONTEST ENDED</div>
+</div>
+
+<h5 *ngIf="timeleft>0 && mode==1" class="timer">
+  {{counters[0]}} Days,
+  {{counters[1]}} Hours
+  {{counters[2]}} Minutes,
+  {{counters[3]}} Seconds
+</h5>
+
+<h5 *ngIf="timeleft<=0 && mode==1">CONTEST ENDED</h5>

@@ -1,0 +1,212 @@
+<div *ngIf="missionService.showPage">
+
+  <spinner *ngIf="!streamRetrieved[0]"></spinner>
+
+  <div *ngIf="streamRetrieved[0]">
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card mt-0">
+          <div class="card-body mt-0">
+            <b>{{missionService.groupTypeTitle}} overview</b>
+            <build-buttons [showButton]="streamGroup==0" [editFlag]=true (buttonEditClick)="groupOp(0, true, $event)"></build-buttons>
+            <hr class="mt-0 mb-3">
+            <img *ngIf="missionService.groupIndex.group.pic" class="mr-2" [height]=37 [width]=37 [src]=missionService.groupIndex.group.pic>
+            <div *ngIf="!missionService.groupIndex.group.pic" class="mr-1 fa-stack fa-lg fa-1x">
+              <i class="fa fa-square fa-stack-2x" [style.color]="'#cdcdc1'"></i>
+              <span class="fa fa-stack-1x fa-inverse">{{acronym}}</span>
+            </div>
+            {{missionService.groupName}}
+            <spinner-put [stream]=streamGroup (animationDoneEvent)="groupOp(3, false, null)"></spinner-put>
+
+            <p class="mt-3 mb-0"><b>Department</b></p>
+            <hr class="mt-0 mb-1">
+            <single-pic *ngIf="missionService.groupIndex.department.pic" class="mr-2" [pic]=missionService.groupIndex.department.pic [width]=37 [height]=37 [type]=1 [stackPic]="'department'"></single-pic>
+            <a style="color: #6C757D" [routerLink]="['/', missionService.groupIndex.university.link, missionService.groupIndex.department.link]">{{missionService.groupIndex.department.name}}</a>
+
+            <ng-container *ngIf="missionService.groupType">
+              <p class="mt-3 mb-0"><b>University</b></p>
+              <hr class="mt-0 mb-1">
+              <single-pic *ngIf="missionService.groupIndex.university.pic" class="mr-2" [pic]=missionService.groupIndex.university.pic [width]=37 [height]=37 [type]=1 [stackPic]="'university'"></single-pic>
+              <a style="color: #6C757D" [routerLink]="['/', missionService.groupIndex.university.link]">{{missionService.groupIndex.university.name}}</a>
+            </ng-container>
+
+            <p class="mt-3 mb-0"><b>Build dates</b></p>
+            <hr class="mt-0 mb-1">
+            Registered: {{account.dates[0] | date: 'short'}}<br>
+            <span *ngIf="account.dates[1]">Submitted: {{account.dates[1] | date: 'short'}}<br></span>
+            <span *ngIf="account.dates[2]">Published: {{account.dates[2] | date: 'short'}}</span>
+
+            <p class="mt-3 mb-0"><b>Research interests</b></p>
+            <hr class="mt-0 mb-1">
+            <div *ngIf="account.intrests && account.intrests[0]" build-badge [badges]=account.intrests [showEditBtn]=false></div>
+            <div *ngIf="account.intrests==null || !account.intrests[0]">
+              List is empty. You can edit the research interests in the <a [routerLink]="['../../']" class="card-title">home page</a>.
+            </div>
+
+            <p class="mt-3 mb-0"><b>Admins</b></p>
+            <hr class="mt-0 mb-1">
+            <i *ngIf="!streamRetrieved[1]" class="fa fa-spinner fa-spin fa-1x mb-4"></i>
+            <div *ngIf="streamRetrieved[1]">
+              <ul class="list-unstyled">
+                <li *ngFor="let people of actives" class="mb-3">
+                  <div class="d-flex align-items-center">
+                    <single-pic *ngIf="people.pic" class="mr-2" [pic]=people.pic [width]=37 [height]=37></single-pic> {{people.name}}
+                    <span *ngIf="people.positions[0].status==5" class="ml-2 badge badge-pill badge-warning">Admin</span>
+                    <span *ngIf="people.positions[0].status>=6" class="ml-2 badge badge-pill badge-danger">Super Admin</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card mt-0">
+          <div class="card-body mt-0">
+            <p class="mb-0 d-flex align-items-center">
+              <b>{{missionService.groupTypeTitle}} data</b>
+              <spinner-put [stream]=streamData (animationDoneEvent)="dataOp(3, false, null)"></spinner-put>
+              <build-buttons [showButton]="streamData==0" [editFlag]=true (buttonEditClick)="dataOp(0, true, $event)"></build-buttons>
+            </p>
+            <hr class="mt-0 mb-1">
+            <b>Main research topics: </b>
+            <span *ngFor="let topic of account.topic; let l=last">
+              <span *ngIf="topic" class="text-nowrap">{{ topic }}<span *ngIf="!l">, </span></span>
+            </span>
+            <span *ngIf="account.topic==null || account.topic?.length==0">-</span>
+            <br>
+            <b>Establish date:</b> {{(account.establish | date: 'MMM y') || 'Empty'}}<br>
+            <b>Size:</b> {{sizeRange || 'Empty'}}<br>
+            <b>People page</b>: {{account.membersCount}} member
+            <ng-container *ngIf="account.membersCount<sizeLow || account.membersCount>sizeHigh">
+              <br><i class="fa fa-bell-o" aria-hidden="true"></i> The members count in the people page and the indicated {{missionService.groupTypeTitle}} size are not consistent.
+            </ng-container>
+
+            <ng-container *ngIf="account.rank">
+              <p class="mt-3 mb-0">
+                {{missionService.groupTypeTitle}} social data
+                <span *ngIf="streamRank>0" class="spinner-border spinner-border-sm" role="status">
+                  <span class="sr-only">Loading...</span>
+                </span>
+                <build-buttons *ngIf="adminFlag" [showButton]="streamRank==0" [editFlag]=true (buttonEditClick)="rankOp(0, true, $event)"></build-buttons>
+              </p>
+              <hr class="mt-0 mb-1">
+              <p *ngIf="account.rank?.facebook"><b>Facebook Fans:</b> {{account.rank.facebook}} <i>(https://www.facebook.com/{{missionService.socialInfo.facebook}})</i></p>
+              <p *ngIf="account.rank?.twitter"><b>Twitter Followers:</b> {{account.rank.twitter}} <i>(http://www.twitter.com/{{missionService.socialInfo.twitter}})</i></p>
+              <p *ngIf="account.rank?.linkedin"><b>Linkedin Fans:</b> {{account.rank.linkedin}} <i>(http://www.linkedin.com/in/{{missionService.socialInfo.linkedin}})</i></p>
+              <p *ngIf="account.rank?.instagram"><b>Instagram Fans:</b> {{account.rank.instagram}} <i>(https://www.instagram.com/{{missionService.socialInfo.instagram}})</i></p>
+              <p *ngIf="account.rank?.youtube"><b>Youtube Fans:</b> {{account.rank.youtube}} <i>(https://youtube.com/{{missionService.socialInfo.youtube}})</i></p>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="card mt-0">
+          <div class="card-body mt-0">
+            <p class="mb-0 d-flex align-items-center"><b>Lab privacy</b></p>
+            <hr class="mt-0 mb-1">
+            <form class="form-group" [formGroup]="form" (ngSubmit)="privacyOp(0)" novalidate>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" value="0" formControlName="privacy"> The {{missionService.groupTypeTitle | lowercase}} profile is visible only to {{missionService.groupTypeTitle | lowercase}} members
+                  <span class="circle"><span class="check"></span></span>
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" value="1" formControlName="privacy"> The {{missionService.groupTypeTitle | lowercase}} profile is visible to everyone
+                  <span class="circle">
+                    <span class="check"></span>
+                  </span>
+                </label>
+              </div>
+              <button type="submit" mat-raised-button [disabled]="streamPrivacy[0]>0" class="btn btn-sm btn-light-blue">Update</button>
+              <spinner-put class="ml-1" [stream]=streamPrivacy[0] (animationDoneEvent)="streamPrivacy[0]=0"></spinner-put>
+            </form>
+          </div>
+        </div>
+
+        <div class="card mt-0">
+          <div class="card-body mt-0">
+            <b>Notification settings</b>
+            <hr class="mt-0 mb-3">
+            <settings-notifications></settings-notifications>
+          </div>
+        </div>
+
+        <div *ngIf="account.interview?.status" class="card mt-0">
+          <div class="card-body mt-0">
+            <p class="mb-0 d-flex align-items-center"><b>Interview</b></p>
+            <hr class="mt-0 mb-1">
+            <b>Contact email:</b> {{account.interview?.email}}<br>
+            <!-- Interview link -->
+          </div>
+        </div>
+
+        <div *ngIf="account.club?.status" class="card mt-0">
+          <div class="card-body mt-0">
+            <p class="mt-3 mb-0"><b>Cake Club</b></p>
+            <hr class="mt-0 mb-1">
+            <b>Contact email:</b> {{account.club?.email}}<br>
+            <b>Contact phone:</b> {{account.club?.phone}}<br>
+            <b>Lab address:</b> {{account.club?.address}}<br>
+            <b>Typical lab seminar day and time:</b> {{account.club?.time}}<br>
+            <!-- Past perks: -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!------------------------------------->
+<!------------------------------------->
+<!------------------------------------->
+<!------------------------------------->
+
+<ng-container *ngIf="streamRetrieved[0] && labFlag">
+  <p class="lead mt-0 mb-0">Lab Tools</p>
+  <hr class="mt-0">
+  <settings-tools [seminarsPrivacy]=account.seminarsPrivacy
+                  [kitPrivacy]=account.kitPrivacy>
+  </settings-tools>
+</ng-container>
+
+<build-slide-text-pic *ngIf=groupFlag
+                      [title]="'Update ' + missionService.groupName"
+                      [type]=1
+                      [text]=missionService.groupName
+                      [pic]=missionService.groupIndex.group.pic
+                      (update)="groupOp(2, false, $event)"
+                      (cancel)="groupOp(0, false, $event)">
+</build-slide-text-pic>
+
+<build-slide-data *ngIf=dataFlag
+                  [title]="'Update ' + missionService.groupTypeTitle + ' data'"
+                  [topic]="account.topic"
+                  [establish]="account.establish"
+                  [size]="account.size"
+                  [groupType]="missionService.groupType"
+                  (update)="dataOp(2, false, $event)"
+                  (cancel)="dataOp(0, false, $event)">
+</build-slide-data>
+
+<build-slide-rank *ngIf=rankFlag
+                  (update)="rankOp(1, false, $event)"
+                  (cancel)="rankOp(0, false, null)"
+                  [rank]=account.rank
+                  [mode]=1>
+</build-slide-rank>
+
+<!-- <h5 class="mt-4">Languages</h5> -->
+<!-- Multiple languages? -->
+
+<!-- <p class="lead mt-4 mb-0">Your site data</p>
+<hr class="mt-0">
+<p>Your Academig site data belongs to you.</p>
+<button role="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#twoStepModal">Get an archive of your site data</button>
+<p class="mt-3">This archive includes all the data that is stored in your Pozner Lab academic website. You’ll receive a link to download in approximately 24 hours. <a href="">Learn more</a></p> -->

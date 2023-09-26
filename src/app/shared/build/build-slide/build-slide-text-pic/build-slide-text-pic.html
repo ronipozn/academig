@@ -1,0 +1,93 @@
+<div class="side-form">
+
+  <h3 class="title text-dark text-center">{{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="adminFlag && aiFlag" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <trumbowyg-ngx-editor *ngIf="type==0"
+                            id="editor"
+                            formControlName="text">
+      </trumbowyg-ngx-editor>
+
+      <build-modal-text-field *ngIf="type>0"
+                              [itemTitle]="'Text'"
+                              [itemFirst]=true
+                              [fieldType]=type
+                              [controlName]="'text'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+      <!-- [itemValue]=text -->
+
+      <!-- {{file}} -->
+      <div id="direct_upload">
+        <single-pic *ngIf="file"
+                    [centerFlag]=true
+                    [pic]="file"
+                    [thumbnailFlag]=true
+                    [stackPic]=picValue
+                    [type]="(type==1) ? 1 : 2"
+                    [height]=112
+                    [widthE]=4>
+        </single-pic>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': file}">
+
+          <input *ngIf="type==0" type="hidden" id="file"
+                 name="file"
+                 data-images-only
+                 data-preview-step
+                 data-effects="crop,rotate,mirror,flip,blur,enhance,sharp,grayscale,invert"
+                 data-crop="free, 16:9, 4:3, 5:4, 1:1">
+
+          <input *ngIf="type==1" type="hidden" id="file"
+                 name="file"
+                 data-images-only
+                 data-preview-step
+                 data-effects="crop,rotate,mirror,flip,blur,enhance,sharp,grayscale,invert"
+                 data-crop="112x112 upscale">
+
+          <input *ngIf="type==2" type="hidden" id="file"
+                 name="file"
+                 data-images-only
+                 data-preview-step
+                 data-effects="crop,rotate,mirror,flip,blur,enhance,sharp,grayscale,invert"
+                 data-crop="240x100 upscale">
+
+        </div>
+      </div>
+
+      <build-modal-text-field *ngIf="captionFlag"
+                              [fieldType]=1
+                              [itemFirst]=true
+                              [itemTitle]="'Image caption'"
+                              [controlName]="'caption'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+      <!-- [itemValue]=caption -->
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]="uploadFlag || disableFlag" class="btn btn-sm btn-fill btn-light-blue">
+          <span *ngIf=!text>Add</span>
+          <span *ngIf=text>Update</span>
+        </button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

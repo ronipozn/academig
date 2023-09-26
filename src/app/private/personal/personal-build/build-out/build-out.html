@@ -1,0 +1,69 @@
+<label class="mb-0 mt-3 pl-0">
+  <i class="fa fa-ship" aria-hidden="true"></i> Out of office:
+</label>
+
+<div [formGroup]="parentGroup">
+  <ul [formArrayName]=controlName class="list-unstyled">
+    <li *ngFor="let e of getControls(parentGroup); let i=index" class="mb-1">
+
+      <div class="card">
+        <div class="card-body pt-1 pb-1">
+
+          <div [formGroupName]="i">
+
+            <!-- Period -->
+            <div class="row no-gutters">
+              <div class="col mr-1">
+                <build-modal-text-field [typeSelected]="'date'"
+                                        [labelRequired]=true
+                                        [fieldType]=1
+                                        [itemTitle]="'Start Date'"
+                                        [errorFlag]="!(e.get('start').errors && e.get('start').errors.range)"
+                                        [controlName]="'start'"
+                                        [parentGroup]=e
+                                        [submitStatus]=submitStatus>
+                </build-modal-text-field>
+              </div>
+              <div class="col ml-1">
+                <build-modal-text-field [typeSelected]="'date'"
+                                        [labelRequired]=true
+                                        [fieldType]=1
+                                        [itemTitle]="'End Date'"
+                                        [errorFlag]="!(e.get('end').errors && e.get('end').errors.range)"
+                                        [controlName]="'end'"
+                                        [parentGroup]=e
+                                        [submitStatus]=submitStatus>
+                </build-modal-text-field>
+              </div>
+            </div>
+
+            <span *ngIf="e.get('start').errors">
+              <span *ngIf="e.get('start').errors.range" class="mt-1 mb-0 small">
+                <span class="text-danger mb-0">End date should be greater than start date</span>
+              </span>
+            </span>
+
+            <!-- Where -->
+            <build-modal-text-field [fieldType]=1
+                                    [itemTitle]="'Where'"
+                                    [controlName]="'where'"
+                                    [parentGroup]=e>
+            </build-modal-text-field>
+
+            <button role="button" class="btn btn-link p-0 mt-2" (click)="deleteField($event)">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </li>
+
+    <button type="button" class="btn btn-sm btn-link p-0" (click)="addField(null)">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+    </button>
+
+  </ul>
+</div>

@@ -1,0 +1,218 @@
+<div *ngIf="shortDescription?.length>0">
+  <div build-text class="mb-4" [text]=shortDescription></div>
+  <!-- <span *ngIf="shortDescription.length<items.description.length">...</span> -->
+  <!-- <a *ngIf="shortDescription.length<items.description.length" style="cursor: pointer;" (click)="scrollFullDescription()">View full description</a> -->
+</div>
+
+<!-- <dl *ngIf="items.description" class="row">
+  <dt class="col-sm-4">Categories</dt>
+  <dd class="col-sm-8"><span *ngFor="let category of items.categories" style="background-color: #DDE1F3" class="text-dark badge mr-1">{{ category }}</span></dd>
+</dl> -->
+
+<!-- TREND -->
+<dl *ngIf="type==0" class="row">
+  <ng-container *ngIf="items.establish">
+    <dt class="col-sm-4">Release date</dt>
+    <dd class="col-sm-8">{{items.establish | date: 'dd MMM y'}}</dd>
+  </ng-container>
+</dl>
+
+<!-- PODCAST -->
+<dl *ngIf="type==1" class="row">
+  <ng-container *ngIf="items.establish">
+    <dt class="col-sm-4">Release year</dt>
+    <dd class="col-sm-8">{{items.establish | date: 'y'}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.website">
+    <dt class="col-sm-4">Podcast URL</dt>
+    <dd class="col-sm-8">
+      <a [href]="items.website" target="_empty">{{items.website}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+    </dd>
+      <!-- <a [href]="missionService.publicInfo.website" target="_empty">{{missionService.publicInfo.website}}</a> -->
+  </ng-container>
+  <ng-container *ngIf="items.type">
+    <dt class="col-sm-4">Podcast Type</dt>
+    <dd class="col-sm-8">{{podcastType[items.type]}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.total">
+    <dt class="col-sm-4">Num of Episodes</dt>
+    <dd class="col-sm-8">{{items.total}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.language">
+    <dt class="col-sm-4">Language</dt>
+    <dd class="col-sm-8">{{items.language}}</dd>
+  </ng-container>
+  <!-- <dt class="col-sm-4">Team</dt>
+  <dd class="col-sm-8"></dd> -->
+</dl>
+
+<!-- EVENT -->
+<dl *ngIf="type==2" class="row">
+  <ng-container *ngIf="items.start">
+    <dt class="col-sm-4">Start date</dt>
+    <dd class="col-sm-8">{{items.start | date: 'dd MMM y'}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.end">
+    <dt class="col-sm-4">End date</dt>
+    <dd class="col-sm-8">{{items.end | date: 'dd MMM y'}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.company">
+    <dt class="col-sm-4">Company</dt>
+    <dd class="col-sm-8">{{items.company}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.website">
+    <dt class="col-sm-4">Event URL</dt>
+    <dd class="col-sm-8">
+      <a [href]="items.website" target="_empty">{{items.website}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+    </dd>
+      <!-- <a [href]="missionService.publicInfo.website" target="_empty">{{missionService.publicInfo.website}}</a> -->
+  </ng-container>
+  <ng-container *ngIf="items.register">
+    <dt class="col-sm-4">Registration URL</dt>
+    <dd class="col-sm-8">
+      <a [href]="items.register" target="_empty">Click here to register <i class="fa fa-external-link" aria-hidden="true"></i></a>
+    </dd>
+      <!-- <a [href]="missionService.publicInfo.website" target="_empty">{{missionService.publicInfo.website}}</a> -->
+  </ng-container>
+  <ng-container *ngIf="items.type">
+    <dt class="col-sm-4">Event Type</dt>
+    <dd class="col-sm-8">{{eventType[items.type]}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.language">
+    <dt class="col-sm-4">Language</dt>
+    <dd class="col-sm-8">{{items.language}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.price">
+    <dt class="col-sm-4">Price</dt>
+    <dd class="col-sm-8">{{items.price}}$</dd>
+  </ng-container>
+  <ng-container *ngIf="items.speakers">
+    <dt class="col-sm-4">Number of Speakers</dt>
+    <dd class="col-sm-8">{{items.speakers.length}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.sponsors">
+    <dt class="col-sm-4">Number of Sponsors</dt>
+    <dd class="col-sm-8">{{items.sponsors.length}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.exhibitors">
+    <dt class="col-sm-4">Number of Exhibitors</dt>
+    <dd class="col-sm-8">{{items.exhibitors.length}}</dd>
+  </ng-container>
+  <!-- <dt class="col-sm-4">Organizers</dt>
+  <dd class="col-sm-8"></dd> -->
+</dl>
+
+<!-- APP -->
+<dl *ngIf="type==3" class="row">
+  <ng-container *ngIf="items.establish">
+    <dt class="col-sm-4">Release year</dt>
+    <dd class="col-sm-8">{{items.establish | date: 'y'}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.company">
+    <dt class="col-sm-4">Company</dt>
+    <dd class="col-sm-8">{{items.company}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.website">
+    <dt class="col-sm-4">App URL</dt>
+    <dd class="col-sm-8">
+      <a [href]="items.website" target="_empty">{{items.website}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+    </dd>
+      <!-- <a [href]="missionService.publicInfo.website" target="_empty">{{missionService.publicInfo.website}}</a> -->
+  </ng-container>
+  <ng-container *ngIf="items.type">
+    <dt class="col-sm-4">App Type</dt>
+    <dd class="col-sm-8">{{appType[items.type]}}</dd>
+  </ng-container>
+  <ng-container *ngIf="items.price">
+    <dt class="col-sm-4">Price</dt>
+    <dd class="col-sm-8">{{items.price}}$/yr</dd>
+  </ng-container>
+  <ng-container *ngIf="showEditBtn || team.length>0">
+    <dt class="col-sm-4">
+      App Team
+      <button *ngIf="showEditBtn && streamTeam==0" (click)="foundersOp(0,true,null)" mat-raised-button type="button" class="p-0 btn btn-link">
+        <i class="material-icons">{{team?.length>0 ? 'edit' : 'add_circle'}}</i>
+      </button>
+      <spinner-put *ngIf="showEditBtn" class="ml-1" [stream]=streamTeam (animationDoneEvent)="streamTeam=0"></spinner-put>
+    </dt>
+    <dd class="col-sm-8">
+      <div *ngFor="let founder of team; let l=last" class="d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+        <single-pic class="d-flex mr-2" [pic]=founder.pic [width]=32 [height]=32 [type]=0></single-pic>
+        <a [routerLink]="['/people',founder._id]" class="card-title">{{ founder.name }}</a>
+      </div>
+    </dd>
+  </ng-container>
+</dl>
+
+<ng-container *ngIf="socialInfo?.linkedin || socialInfo?.twitter || socialInfo?.researchgate || socialInfo?.facebook || socialInfo?.youtube || socialInfo?.pinterest || socialInfo?.instagram">
+  <hr class="mt-2">
+  <p>Social</p>
+  <dl class="row mb-0">
+    <ng-container *ngIf="socialInfo?.linkedin">
+      <dt class="col-sm-4">LinkedIn</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.linkedin.com/school/{{socialInfo.linkedin}}" target="_empty">View on LinkedIn <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.twitter">
+      <dt class="col-sm-4">Twitter</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.twitter.com/{{socialInfo.twitter}}" target="_empty">View on Twitter <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.researchgate">
+      <dt class="col-sm-4">ResearchGate</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.researchgate.net/profile/{{socialInfo.researchgate}}" target="_empty">View on ResearchGate <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.facebook">
+      <dt class="col-sm-4">Facebook</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.facebook.com/{{socialInfo.facebook}}" target="_empty">View on Facebook <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.youtube">
+      <dt class="col-sm-4">Youtube</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.youtube.com/{{socialInfo.youtube}}" target="_empty">View on YouTube <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.pinterest">
+      <dt class="col-sm-4">Pinterest</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.pinterest.com/{{socialInfo.pinterest}}" target="_empty">View on Pinterest <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.instagram">
+      <dt class="col-sm-4">Instagram</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.instagram.com/{{socialInfo.instagram}}" target="_empty">View on Instagram <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+  </dl>
+</ng-container>
+
+<ng-container *ngIf="publicInfo?.website || publicInfo?.address || publicInfo?.email || publicInfo?.phone">
+  <hr class="mt-2">
+  <p>Contact</p>
+  <dl class="row mb-0">
+    <ng-container *ngIf="publicInfo?.website">
+      <dt class="col-sm-4">Company Website</dt>
+      <dd class="col-sm-8 card-title"><a [href]="publicInfo?.website" target="_empty">{{publicInfo?.website}} <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="publicInfo?.address">
+      <dt class="col-sm-4">Address</dt>
+      <dd class="col-sm-8">{{publicInfo.address}}</dd>
+    </ng-container>
+    <ng-container *ngIf="publicInfo?.email">
+      <dt class="col-sm-4">Email</dt>
+      <dd class="col-sm-8">{{publicInfo.email}}</dd>
+    </ng-container>
+    <ng-container *ngIf="publicInfo?.phone">
+      <dt class="col-sm-4">Phone</dt>
+      <dd class="col-sm-8">{{publicInfo.phone}}</dd>
+    </ng-container>
+  </dl>
+</ng-container>
+
+<!-- -------------------------------------- -->
+<!-- -------------------------------------- -->
+<!-- -------------------------------------- -->
+<!-- -------------------------------------- -->
+
+<build-slide-object *ngIf=teamBuildFlag
+                    [itemSmall]=true
+                    [mode]=4
+                    [userId]=userId
+                    [title]="'Update Deal Founders'"
+                    [controlName]="'founders'"
+                    (update)="foundersOp(2, false, $event)"
+                    (cancel)="foundersOp(0, false, null)">
+</build-slide-object>

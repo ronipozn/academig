@@ -1,0 +1,75 @@
+<spinner *ngIf="!streamRetrieved[0]"></spinner>
+
+<ng-container *ngIf="streamRetrieved[0]">
+
+  <div class="row">
+
+    <div class="d-xl-none col-xl-3">
+      <div class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [addButtonFlag]=false [headline]="'Lab People'"></build-headline>
+          <ul class="ml-0 pl-0 nav nav-tabs" role="tablist">
+            <li class="nav-item" *ngFor="let people of actives; let f=first, let i=index">
+              <a style="cursor: pointer;" class="nav-link px-1" data-toggle="tab" (click)="changeId(i)" role="tab" [ngClass]="{'active': f}">
+                <single-pic [pic]=people.pic [width]=48 [height]=48></single-pic>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-9">
+      <private-personal-item [streamRetrieved]=streamRetrieved[1]
+                             [personalInfo]=personalInfo
+                             [profileName]=profileName
+                             [profileId]=profileId
+                             [userId]=userId
+                             [sourceType]=sourceType
+                             [streamInfo]=streamInfo
+                             (buttonMessageClick)="peopleMessage()"
+                             (buttonInfoClick)="infoOp(0, true)"
+                             (animationDoneEvent)="infoOp(2, false)">
+      </private-personal-item>
+      <!-- (buttonKidEditClick)="kidsOp(0, true, null, $event)"
+      (buttonKidDeleteClick)="kidsOp(1, false, null, $event)"
+      (animationKidDoneEvent)="kidsOp(3, false, $event)" -->
+      <!-- [streamKid]=streamKid -->
+    </div>
+
+    <div class="d-none d-xl-block col-xl-3">
+      <div class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [addButtonFlag]=false [headline]="'Lab People'"></build-headline>
+          <ul class="ml-0 pl-0 nav nav-tabs" role="tablist">
+            <li class="nav-item" *ngFor="let people of actives; let f=first, let i=index">
+              <a style="cursor: pointer;" class="nav-link px-1" data-toggle="tab" (click)="changeId(i)" role="tab" [ngClass]="{'active': f}">
+                <single-pic [pic]=people.pic [width]=48 [height]=48></single-pic>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</ng-container>
+
+<personal-build *ngIf=infoBuildFlag
+                (update)="infoOp(1,false,$event)"
+                (cancel)="infoOp(0,false)"
+                [headline]="'Personal Info'"
+                [personalInfo]=personalInfo
+                [userId]=userId>
+</personal-build>
+
+<!-- <build-slide-pic-multi *ngIf="kidUpdateFlag"
+                       (updateMultiple)="kidsOp(2, false, $event, galleryIndex)"
+                       (cancel)="kidsOp(0, false, $event, null)"
+                       [title]="'Update'"
+                       [multiple]=2
+                       [itemId]=userId
+                       [pic]="personalInfo.kids[kidIndex].pic"
+                       [name]="personalInfo.kids[kidIndex].name">
+</build-slide-pic-multi> -->

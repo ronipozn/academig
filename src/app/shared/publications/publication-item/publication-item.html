@@ -1,0 +1,127 @@
+<div [ngClass]="{'text-center': centerFlag}">
+
+  <span class="card-title">
+    <a *ngIf="publication._id && sourceType==0" [routerLink]="['publications',publication._id]">{{ publication.title }}</a>
+    <a *ngIf="publication._id && sourceType==1" [routerLink]="['publications',publication._id]">{{ publication.title }}</a>
+    <a *ngIf="publication._id && sourceType==2" [routerLink]="['/publications',publication._id]">{{ publication.title }}</a>
+    <span *ngIf="!publication._id">{{ publication.title }}</span>
+  </span>
+
+  <span class="ml-2 small text-muted nowrap"><i class="fa fa-paperclip mr-1" aria-hidden="true"></i>{{ typeName }}</span>
+  <spinner-put [stream]="(sourceType!=2) && (stream || (publication._id ? 0 : 3))" (animationDoneEvent)="animationDone($event)"></spinner-put>
+
+  <p *ngIf="generalName || generalNumbers || publication.date" class="card-title my-2 text-muted small">
+    <span *ngIf="generalName"><b>{{ generalName }}, </b></span>
+    <span *ngIf="generalNumbers"><b>{{ generalNumbers }}, </b></span>
+    <span *ngIf="publication.date"><b>{{ publication.date | date: 'MMM y' }}</b></span>
+  </p>
+
+  <!-- <p *ngIf="publication.citationsCount" class="card-title my-2 text-muted small">
+    <b>Citations: {{ publication.citationsCount }}</b>
+  </p> -->
+
+  <p *ngIf="publication.abstractPic" class="mt-2">
+    <single-pic [pic]=publication.abstractPic [type]=1 [height]="smallPicFlag ? 60 : 120"></single-pic>
+  </p>
+
+  <p *ngIf="publication.authors && publication.authors[0]" class="card-title py-1 mb-0">
+    <publication-authors [authors]=publication.authors [userId]=userId></publication-authors>
+  </p>
+
+  <!-- && sourceType>0 -->
+  <ng-container *ngIf="!suggestFlag && !rejectFlag">
+
+    <folders-btn [folders]=publication.folders
+                 [title]=publication.title
+                 [journal]=publication.journal
+                 [date]=publication.date
+                 [streamFolder]=streamFolder
+                 [stream]="publication._id ? 0 : 3"
+                 [userFolders]=userService.userFolders
+                 (buttonFolderClick)="btnFolderFunc($event)">
+    </folders-btn>
+
+    <a *ngIf="publication._id && publication.pdf" role="button" [href]=publication.pdf target="_empty" style="background-color: #DDE1F3" class="btn btn-sm btn-round btn-outline-light-blue py-1 px-2 ml-2" aria-haspopup="true" aria-expanded="false">
+      <span class="small"><i class="fa fa-download mr-1"  style="font-size: 12px;" aria-hidden="true"></i> Download</span>
+    </a>
+
+    <button *ngIf="publication.abstract" data-toggle="modal" attr.data-target="#AbstractModal{{publication._id}}" role="button" style="background-color: #DDE1F3" class="btn btn-sm btn-round btn-outline-light-blue py-1 px-2 ml-2" aria-haspopup="true" aria-expanded="false">
+      <span class="small"><i class="fa fa-align-justify mr-1" style="font-size: 12px;" aria-hidden="true"></i> Abstract</span>
+    </button>
+
+    <button [disabled]="publication._id==null" (click)="openShareModalFunc()" role="button" style="background-color: #DDE1F3" class="btn btn-sm btn-round btn-outline-light-blue py-1 px-2 ml-2" aria-haspopup="true" aria-expanded="false">
+      <span class="small"><i class="fa fa-share-alt mr-1" style="font-size: 12px;" aria-hidden="true"></i> Share</span>
+    </button>
+
+    <!-- <button data-toggle="modal" attr.data-target="#CiteModal{{publication._id}}" role="button" class="btn btn-sm btn-link" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-quote-left mr-1" aria-hidden="true"></i>Cite
+    </button> -->
+
+  </ng-container>
+
+  <div *ngIf="suggestFlag" class="mt-2">
+    <button *ngIf="streamSuggestion!=1 && streamSuggestion!=2" [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-success" mat-raised-button (click)="suggestionAcceptFunc()">Accept</button>
+    <button *ngIf="streamSuggestion!=1 && streamSuggestion!=2" [disabled]="streamSuggestion>0" role="button" class="ml-2 btn btn-sm btn-danger" mat-raised-button  (click)="suggestionRejectFunc()">Reject</button>
+
+    <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    <span *ngIf="streamSuggestion==1" class="badge badge-success">Accepted</span>
+    <span *ngIf="streamSuggestion==2" class="badge badge-danger">Rejected</span>
+
+  </div>
+
+</div>
+
+<!------------------------------>
+<!------------------------------>
+<!--          MODALS          -->
+<!------------------------------>
+<!------------------------------>
+
+<!-- Share Modal -->
+<button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" attr.data-target="#ShareModal{{publication._id}}"></button>
+
+<div class="modal fade" id="ShareModal{{publication._id}}" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=2 [itemId]=publication._id [flag]=shareFlag (closeModal)="closeShareModalFunc()"></modal-share>
+    </div>
+  </div>
+</div>
+
+<!-- Signup Modal -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="'user'"></modal-signup>
+    </div>
+  </div>
+</div>
+
+<!-- Cite Modal -->
+<div class="modal fade" id="CiteModal{{publication._id}}" tabindex="-1" role="dialog" aria-labelledby="CiteModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <modal-cite></modal-cite>
+  </div>
+</div>
+
+<!-- Abstract Modal -->
+<div class="modal fade" id="AbstractModal{{publication._id}}" tabindex="-1" role="dialog" aria-labelledby="AbstractModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="AbstractModalLabel">Abstract</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body small">
+        <span [innerHTML]="publication.abstract"></span>
+      </div>
+      <div class="modal-footer">
+        <button role="button" mat-raised-button class="btn btn-link" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

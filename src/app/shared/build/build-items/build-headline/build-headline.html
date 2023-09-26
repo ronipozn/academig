@@ -1,0 +1,31 @@
+<div class="d-flex align-items-center">
+  <h4 class="card-title"><b>{{headline}}</b></h4>
+  <button *ngIf="showEditBtn && addButtonFlag" (click)="btnAddFunc($event)" mat-raised-button type="button" [matTooltip]=tooltip [matTooltipPosition]="'above'" class="btn btn-link btn-sm btn-just-icon">
+    <i class="material-icons">{{icon}}</i>
+  </button>
+</div>
+<hr *ngIf="headlineStyle==0" class="mt-0">
+
+<!-- <button *ngIf="showEditBtn && addButtonFlag" (click)="btnAddFunc($event)" type="submit" mat-raised-button class="btn btn-sm btn-fill btn-rose my-2">Add</button> -->
+
+<!-- <button *ngIf="showEditBtn && addButtonFlag" (click)="btnAddFunc($event)" mat-raised-button mat-min-fab role="button" class="btn btn-sm btn-info btn-round btn-fab ml-2 mb-2">
+  <i class="material-icons">add</i>
+</button> -->
+
+<!-- <div class="d-flex justify-content-end">
+  <div class="mr-auto">
+    <span class="lead pull-left inline"><b>{{headline}}</b></span>
+  </div>
+  <div *ngIf=showEditBtn> -->
+    <!-- <button *ngIf=undoBtnFlag (click)="btnUndoFunc($event)" role="button" class="btn btn-sm btn-secondary" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-undo" aria-hidden="true"></i>
+    </button>
+    <button *ngIf=redoBtnFlag role="button" class="btn btn-sm btn-secondary" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-repeat" aria-hidden="true"></i>
+    </button> -->
+    <!-- <button *ngIf="addButtonFlag" (click)="btnAddFunc($event)" role="button" class="btn btn-sm btn-info" aria-haspopup="true" aria-expanded="false">
+      Add
+    </button>
+  </div>
+</div>
+<hr class="mt-1"> -->

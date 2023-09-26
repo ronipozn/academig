@@ -1,0 +1,15 @@
+.img-overlay-right {
+  position: absolute;
+  top:8px;
+  right:4px;
+}
+
+button.btnBuild {border: none;}
+button.btnBuild:hover span {display:none}
+button.btnBuild:hover:after {
+  padding-left: 4px;
+}
+
+button.btnPhoto:hover:after {
+  content:"Update Photo";
+}

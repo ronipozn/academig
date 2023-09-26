@@ -1,0 +1,91 @@
+<div *ngIf="stage==0" [@itemsAnimation]="('active')">
+  <h3 class="mb-4 text-center">Choose your lab type?</h3>
+
+  <div class="d-block d-sm-none">
+    <button type="button" (click)="onType(0)" class="btn btn-info btn-block text-center text-dark mb-3" style="padding: 50px;">
+      <i class="material-icons my-3" style="font-size: 48px;">supervised_user_circle</i>
+      <h5>Academic</h5><span class="text-muted">University, academic institute</span>
+    </button>
+    <div class="mx-4"></div>
+    <button type="button" (click)="onType(1)" class="btn btn-info btn-block text-center text-dark" style="padding: 50px;">
+      <i class="material-icons my-3" style="font-size: 48px;">store_mall_directory</i>
+      <h5>Company</h5><span class="text-muted">Scientific research companies</span>
+    </button>
+  </div>
+
+  <div class="d-none d-sm-block">
+    <div class="d-flex justify-content-center">
+      <button type="button" (click)="onType(0)" class="btn btn-info text-center text-dark" style="padding: 50px;">
+        <i class="material-icons my-3" style="font-size: 48px;">supervised_user_circle</i>
+        <h5>Academic</h5><span class="text-muted">University, academic institute</span>
+      </button>
+      <div class="mx-4"></div>
+      <button type="button" (click)="onType(1)" class="btn btn-info text-center text-dark" style="padding: 50px;">
+        <i class="material-icons my-3" style="font-size: 48px;">store_mall_directory</i>
+        <h5>Company</h5><span class="text-muted">Scientific research companies</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="stage==1" [@itemsAnimation]="('active')">
+
+  <img *ngIf="forkNum!=8 && labType==0" src="./assets/img/build/welcome.svg" style="max-width: 15rem;" class="mx-auto d-block mx-2 mt-4 img-fluid" alt="academig_welcome">
+  <!-- <i *ngIf="forkNum!=8 && labType==0" class="fa fa-graduation-cap fa-5x d-flex justify-content-center mb-4" aria-hidden="true"></i> -->
+  <i *ngIf="forkNum!=8 && labType==1" class="fa fa-building-o fa-5x d-flex justify-content-center mb-4" aria-hidden="true"></i>
+  <img *ngIf="forkNum==8" src="./assets/img/build/build_welcome.svg" style="max-width: 20rem;" class="mx-auto d-block mx-2 mt-4 img-fluid" alt="academig_welcome">
+
+  <h3 class="my-3 text-center">Hi, {{userName}}</h3>
+
+  <p *ngIf="forkNum<8" class="mb-4 text-center text-muted">
+    <span *ngIf="labType==0">Ready to start building your academic lab profile?</span>
+    <span *ngIf="labType==1">Ready to start building your company profile?</span>
+    <br>Let’s get your beautiful profile set up and ready to go...
+  </p>
+
+  <p *ngIf="forkNum==8" class="mb-4 text-center">
+    Let’s get your academic profile set up and ready to go...
+  </p>
+
+  <p *ngIf="labType==0 && forkNum!=1 && forkNum!=3 && forkNum!=8 && !marketingFromDepartmentFlag" class="mb-3 lead text-center text-muted">
+    Choose your role
+  </p>
+
+  <button *ngIf="forkNum!=1 && forkNum!=3 && forkNum!=5 && forkNum!=8 && !marketingFromDepartmentFlag" type="button" mat-raised-button class="d-flex mx-auto btn btn-light-blue mb-3" (click)="toStepPI($event)" aria-label="Principal Investigator">
+    <span *ngIf="labType==0">Principal Investigator</span>
+    <span *ngIf="labType==1">Start</span>
+  </button>
+
+  <button *ngIf="labType==0 && forkNum!=1 && forkNum!=3 && forkNum!=8 && !marketingFromDepartmentFlag" type="button" mat-raised-button class="d-flex mx-auto btn btn-light-blue mb-3" (click)="toStepMember($event)" aria-label="Lab Member">
+    Lab Member
+  </button>
+
+  <p *ngIf="labType==0 && marketingFromDepartmentFlag" class="mb-4 text-center text-muted">
+    University: {{ parentGroup.get('university').value.name }}<br>
+    Department: {{ parentGroup.get('department').value.name }}<br>
+  </p>
+
+  <p *ngIf="labType==1 && marketingFromDepartmentFlag" class="mb-4 text-center text-muted">
+    Company<br>
+    Field: {{ parentGroup.get('department').value.name }}<br>
+  </p>
+
+  <button *ngIf="forkNum<8 && adminFlag" type="button" mat-raised-button class="d-flex mx-auto btn btn-light-blue" (click)="toStepMarketing($event)" aria-label="Marketing">
+    Marketing
+  </button>
+
+  <p *ngIf="forkNum==1 || forkNum==3" class="mb-4 text-center text-muted">
+    University: {{ parentGroup.get('university').value }}<br>
+    Department: {{ parentGroup.get('department').value }}<br>
+    Group: {{ parentGroup.get('group').value }}<br>
+    Position: {{ titlesSelect[parentGroup.value.preMembers[0].position] }}
+    <span *ngIf="parentGroup.value.preMembers[0].startDate"><br>Start date: {{parentGroup.value.preMembers[0].startDate | date:'MMM y'}}</span>
+    <span *ngIf="parentGroup.value.preMembers[0].endDate"><br>End date: {{ parentGroup.value.preMembers[0].endDate | date:'MMM y'}}</span>
+  </p>
+
+  <button *ngIf="forkNum==1 || forkNum==3 || forkNum==5 || forkNum==8" type="button" mat-raised-button class="d-flex mx-auto btn btn-light-blue" (click)="toStepPosition(forkNum)" aria-label="Academic Profile">
+    Start
+  </button>
+
+</div>

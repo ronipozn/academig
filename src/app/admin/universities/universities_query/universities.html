@@ -1,0 +1,122 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <div class="form-container">
+      <form class="form-group" [formGroup]="formModel" (ngSubmit)="updateList()" novalidate>
+
+        <build-modal-text-field [itemTitle]="'Search'"
+                                [itemFirst]=true
+                                [controlName]="'text'"
+                                [parentGroup]="formModel">
+        </build-modal-text-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Country" [formControlName]="'country'" ariaLabel="countries[0]">
+            <mat-option *ngFor="let country of countries" [value]="country.id">
+              {{ country.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="form-group form-check mt-2">
+          <label class="form-check-label" for="added">
+            <input type="checkbox" formControlName="added" class="form-check-input" id="added">
+            Show added (institute details are set)
+            <span class="form-check-sign">
+              <span class="check"></span>
+            </span>
+          </label>
+        </div>
+
+        <button [disabled]="!streamRetrievedUniversities" type="submit" mat-raised-button class="btn btn-sm btn-light-blue mr-2">
+          Reload
+        </button>
+        <!-- (click)="updateList()" -->
+
+      </form>
+    </div>
+
+    <button [disabled]="!streamRetrievedUniversities" role="button" mat-raised-button class="btn btn-sm btn-light-blue" (click)="universitySlide(true, null)">
+      Add Missing University
+    </button>
+
+  </div>
+</div>
+
+<div *ngIf="!streamRetrievedUniversities" class="py-4">
+  <spinner [text]="'Page'"></spinner>
+</div>
+
+<div *ngIf="streamRetrievedUniversities" class="card">
+  <div class="card-body">
+
+    <p><b>Count:</b> {{count}}</p>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th class="text-nowrap">Details</th>
+            <th class="text-nowrap">Academig</th>
+            <th class="text-nowrap"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let university of universities; let i=index">
+
+            <th scope="row">{{i}}</th>
+
+            <td>
+              <b>Name:</b> {{university.name}}<br>
+              <b>URL:</b> {{university.url}}<br>
+              <b>Country:</b> {{university.country_id | country}}<br>
+              <span *ngIf="university.academigId"><b>Query ID:</b> {{university.academigId}}</span>
+            </td>
+
+            <td>
+              {{university.academigId ? 1 : 0}}
+            </td>
+
+            <td>
+              <div *ngIf="!university.academigId" class="btn-group btn-group-vertical" role="group" aria-label="Action buttons">
+                <button [disabled]="!streamRetrieved[0]" role="button" mat-raised-button class="mr-2 btn btn-sm btn-light-blue mb-3" (click)="universitySlide(true, i)">
+                  Add
+                </button>
+                <button [disabled]="!streamRetrieved[1]" role="button" mat-raised-button class="mr-2 btn btn-sm btn-danger" (click)="universityDelete(0, i)">
+                  Delete
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - Build - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<university-build *ngIf=universityBuildFlag
+                  [university]=newUniversity
+                  [country_id]="universities[universityIndex]?.country_id"
+                  (cancel)="universitySlide(false)"
+                  (update)="universityBuild($event)">
+</university-build>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Delete Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleDeleteModal" #toggleDeleteModal [hidden]="true" data-toggle="modal" data-target="#deleteModal"></button>
+
+<div class="modal fade" id="deleteModal" data-target="#deleteModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content p-3">
+      <button role="button" class="mr-2 btn btn-danger" (click)="universityDelete(1)">Delete</button>
+    </div>
+  </div>
+</div>

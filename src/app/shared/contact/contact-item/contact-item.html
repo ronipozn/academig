@@ -1,0 +1,54 @@
+<li>
+
+  <!-- <div [ngClass]="{'invisible': (!showEditBtn || !(showEditBtn && stream==0))}" class="handle"></div> -->
+  <div class="d-flex align-items-center">
+    <div>
+      <single-pic [ngClass]="{'mt-2 ml-2': (contact.mode==1) ? contact.member.pic : contact.pic}" [pic]="(contact.mode==1) ? contact.member.pic : contact.pic"
+                  [type]=0 [width]=40 [height]=40 [widthE]=1.5 [stack]=true [stackColor]="colorPallete[colorNum]" [stackPic]="'address-book'">
+      </single-pic>
+    </div>
+    <div class="mr-1 ml-3" [ngClass]="{'ml-2': (contact.mode==1) ? contact.member.pic : contact.pic}"><b>{{ titleSelect[contact.title] }}</b></div>
+    <spinner-put [stream]=stream (animationDoneEvent)="animationDone()"></spinner-put>
+    <build-buttons [showButton]="showEditBtn && stream==0" (buttonEditClick)="buttonEditFunc()" (buttonDeleteClick)="buttonDeleteFunc()"></build-buttons>
+  </div>
+
+  <p *ngIf="contact.mode==1" class="my-0">{{ contact.member.name }}</p>
+
+  <table class="table table-sm">
+    <tbody>
+      <tr *ngIf="contact.address">
+        <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-home fa-fw"></i> Address</td>
+        <td>{{ contact.address }}</td>
+      </tr>
+      <tr *ngIf="contact.phone">
+        <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-phone fa-fw"></i> Phone</td>
+        <td>{{ contact.phone }}</td>
+      </tr>
+      <tr *ngIf="contact.fax">
+        <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-fax fa-fw"></i> Fax</td>
+        <td>{{ contact.fax }}</td>
+      </tr>
+      <tr *ngIf="contact.email">
+        <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-envelope fa-fw"></i> Email</td>
+        <td>{{ contact.email }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="contact.mode==1 && contact.member._id!=userId" class="btn-group">
+    <button role="button" class="btn btn-sm btn-outline-info mr-2" [disabled]="!userId" (click)="buttonMessageFunc()">
+      <i class="fa fa-comment-o" aria-hidden="true"></i> Message
+    </button>
+  </div>
+
+  <div *ngIf="sourceType==1" class="mt-2">
+    <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+    <button [disabled]="streamSuggestion>0" role="button" class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+    <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+  </div>
+  <div *ngIf="sourceType==3" class="mt-2">
+    <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+    <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+  </div>
+
+</li>

@@ -1,0 +1,103 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">{{newString}} {{headline}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemFirst]=true
+                              [itemTitle]="'Name'"
+                              [labelRequired]=true
+                              [controlName]="'name'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div *ngIf="mode>=3" id="direct_upload">
+        <single-pic [centerFlag]=true
+                    [pic]="itemPic"
+                    [thumbnailFlag]=true
+                    [type]=2
+                    [height]=112>
+        </single-pic>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': itemPic}">
+          <input type="hidden" id="pic"
+                 name="itemPic"
+                 data-images-only
+                 data-preview-step
+                 data-crop="free, 16:9, 4:3, 5:4, 1:1">
+        </div>
+      </div>
+
+      <build-modal-text-field *ngIf="mode<=2"
+                              [itemTitle]="'Version'"
+                              [controlName]="'version'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode<=2"
+                              [typeSelected]="'date'"
+                              [fieldType]=1
+                              [itemTitle]="'Date'"
+                              [controlName]="'date'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=2
+                              [itemTitle]="'Short Description'"
+                              [controlName]="'description'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode>=3"
+                              [itemTitle]=vendorString
+                              [controlName]="'vendor'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode>=3"
+                              [itemTitle]="'Model'"
+                              [controlName]="'model'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode>=3"
+                              [itemTitle]="'Price'"
+                              [controlName]="'price'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==3"
+                              [itemTitle]="'Quantity'"
+                              [controlName]="'quantity'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="mode==1 || mode>=3"
+                              [fieldType]=13
+                              [typeSelected]="'url'"
+                              [itemTitle]="'Link'"
+                              [controlName]="'link'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <b>Attachments:</b>
+      <div id="direct_upload" class="mt-1">
+        <div class="d-flex justify-content-center">
+          <input type="hidden" id="files"
+                 name="itemFiles"
+                 data-multiple
+                 data-multiple-max=4
+                 data-tabs="file url gdrive dropbox skydrive">
+        </div>
+      </div>
+
+      <div class="pull-left form-group">
+        <button role="button" [disabled]="uploadFlagPic || uploadFlagFiles" class="btn btn-sm btn-light-blue">{{newString}}</button>
+        <button type="button" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

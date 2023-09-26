@@ -1,0 +1,59 @@
+<!-- <label *ngIf="numReferees>1" class="mb-2 pl-0"><b>{{numReferees}} referees are required.</b></label> -->
+<!-- <label *ngIf="numReferees==1" class="mb-2 pl-0"><b>{{numReferees}} referee is required.</b></label> -->
+
+<div [formGroup]="parentGroup">
+  <ul [formArrayName]=controlName class="list-unstyled mb-0">
+    <li *ngFor="let e of getControls(parentGroup); let i=index" class="mb-2">
+
+      <div class="card mt-1">
+        <div class="card-body pt-2 pb-0">
+          <div [formGroupName]="i">
+
+            <build-modal-text-field [labelRequired]=true
+                                    [fieldType]=1
+                                    [itemTitle]="'Referee ' + (i+1)"
+                                    [controlName]="'member'"
+                                    [parentGroup]=e
+                                    [submitStatus]=submitStatus>
+            </build-modal-text-field>
+
+            <!-- <build-modal-name-field [itemFirst]=true
+                                    [labelRequired]=true
+                                    [iconTitle]="'user'"
+                                    [mode]=11
+                                    [itemTitle]="'Referee ' + (i+1)"
+                                    [controlName]="'member'"
+                                    [parentGroup]=e
+                                    [submitStatus]=submitStatus
+                                    (controlStatus)=controlStatus($event,i)>
+            </build-modal-name-field> -->
+            <!-- [signUpFlag]=true -->
+            <!-- [groupId]=fundingId -->
+            <!-- [existIds]=existIdsFill -->
+
+            <build-modal-text-field [labelRequired]=true
+                                    [fieldType]=1
+                                    [typeSelected]="'email'"
+                                    [itemTitle]="'Contact email'"
+                                    [controlName]="'email'"
+                                    [parentGroup]=e
+                                    [submitStatus]=submitStatus>
+            </build-modal-text-field>
+
+            <!-- <p class="mb-2"><b>Name:</b> {{e.value.member.name}}</p> -->
+            <!-- <p class="mb-2"><b>Email:</b> {{e.value.member.privateInfo.email}}</p> -->
+
+            <build-modal-text-field [fieldType]=1
+                                    [textAreaRows]=2
+                                    [itemTitle]="'Referee relation'"
+                                    [controlName]="'description'"
+                                    [parentGroup]=e>
+            </build-modal-text-field>
+
+          </div>
+        </div>
+      </div>
+
+    </li>
+  </ul>
+</div>

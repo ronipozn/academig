@@ -1,0 +1,27 @@
+.table-double-striped tr:nth-child(6n+1),
+.table-double-striped tr:nth-child(6n+2),
+.table-double-striped tr:nth-child(6n+3) {
+  /* background: #EEEEEE; */
+  background: #E2E2E2;
+}
+
+.fa-circle {
+  font-size: 14px;
+}
+
+.fa-circle-size {
+  color: rgb(234, 234, 234);
+  font-size: 35px;
+}
+
+.preview {
+  border: 1px solid #69BA6D;
+}
+
+.rotate-90 {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}

@@ -1,0 +1,66 @@
+<div *ngIf="showEditBtn && peopleStage==0" class="btn-toolbar">
+  <button (click)="btnEmailFunc()" [disabled]="stream>0" role="button" mat-raised-button class="btn btn-sm btn-round btn-light-blue" aria-haspopup="true" aria-expanded="false">
+    <i class="fa fa-envelope-o fa-1x mr-2" style="font-size: 12px;" aria-hidden="true"></i> Invite
+  </button>
+</div>
+
+<div *ngIf="(mode==0 || mode==4) && (meFlag || showEditBtn) && peopleStage>0" class="btn-toolbar">
+  <button (click)="btnLeftFunc()" [disabled]="stream>0" role="button" mat-raised-button class="btn btn-sm btn-round btn-light-blue mr-2" aria-haspopup="true" aria-expanded="false">
+    <i *ngIf="mode==0" style="font-size: 12px;" class="fa fa-envelope-o fa-1x mr-2" aria-hidden="true"></i>
+    <i *ngIf="mode==4" style="font-size: 12px;" class="fa fa-paper-plane fa-1x mr-2" aria-hidden="true"></i>
+    {{btnsNames[0]}}
+  </button>
+  <button (click)="btnRightFunc()" [disabled]="stream>0" role="button" mat-raised-button class="btn btn-sm btn-round btn-light-blue" aria-haspopup="true" aria-expanded="false">
+    <i class="fa fa-times mr-2" style="font-size: 12px;" aria-hidden="true"></i> {{btnsNames[1]}}
+  </button>
+</div>
+
+<div *ngIf="!meFlag && mode==2 && peopleStage>0" [ngClass]="{'mt-1': !groupFlag}">
+  <!-- <follow-btn *ngIf="groupFlag"
+              [followStatus]=followStatus
+              [stream]=stream
+              [streamFollow]=streamFollow
+              (buttonFollowClick)="buttonFollowFunc()">
+  </follow-btn> -->
+  <ng-container>
+    <follow-btn [followStatus]=followStatus [smallFlag]=true [stream]=stream [streamFollow]=streamFollow (buttonFollowClick)="buttonFollowFunc()"></follow-btn>
+    <!-- py-1 px-2  -->
+    <button [disabled]="stream>0" role="button" mat-raised-button class="btn btn-sm btn-round btn-outline-light-blue ml-2" (click)="buttonMessageFunc()">
+      <span class="btn-label small"> <i class="material-icons mr-1" style="font-size: 12px;">chat_bubble_outline</i></span>Message
+    </button>
+    <!-- py-1 px-2  -->
+    <button [disabled]="stream>0" data-toggle="modal" (click)="openShareModalFunc()" role="button" mat-raised-button class="btn btn-round btn-sm btn-outline-light-blue ml-2" aria-haspopup="true" aria-expanded="false">
+      <span class="btn-label small"><i class="material-icons mr-1" style="font-size: 12px;">share</i></span>Share
+    </button>
+  </ng-container>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Share Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" attr.data-target="#ShareModal{{peopleId}}"></button>
+
+<div class="modal fade" id="ShareModal{{peopleId}}" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=1
+                   [itemId]=peopleId
+                   [flag]=shareFlag
+                   (closeModal)="closeShareModalFunc()">
+      </modal-share>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="'user'"></modal-signup>
+    </div>
+  </div>
+</div>

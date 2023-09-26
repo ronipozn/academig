@@ -1,0 +1,314 @@
+<div *ngIf="!streamRetrieved[1]" style="margin-top: 30px;">
+  <spinner></spinner>
+</div>
+
+<error-404 *ngIf="streamRetrieved[1] && !missionService.errorFlag && !missionService.showPage && missionService.groupStage!=-1" [source]=0></error-404>
+
+<!-- <group-build-progress *ngIf="missionService.showPage && missionService.userStatus>=6 && (missionService.groupStage==2 || contestItem)"
+                      [groupStage]=missionService.groupStage
+                      [groupProgress]=missionService.groupProgress
+                      [groupTypeTitle]=missionService.groupTypeTitle
+                      [contestItem]=contestItem>
+</group-build-progress> -->
+
+<ng-container *ngIf="streamRetrieved[1] && (missionService.showPage || buildForYouFlag)">
+  <group-navbar [showEditBtn]=missionService.showEditBtn
+                [userStatus]=missionService.userStatus
+                [followStatus]=missionService.followStatus
+                [streamFollow]=streamFollow
+                [compareFlag]=compareFlag
+                [groupStage]=missionService.groupStage
+                [tourFlag]=tourFlag
+                [activePath]=currentUrlSegments[3]?.path
+                [activeSubPath]=currentUrlSegments[4]?.path
+                [visibleFlag]=visibleLinkFlag
+                [labFlag]=labFlag
+                [previewStatus]=missionService.previewStatus
+                [groupIndex]=item.groupIndex
+                [topics]=missionService.topics
+                [groupProgress]=missionService.groupProgress
+                [coverPic]=missionService.groupCoverPic
+                [country]="missionService.country | country"
+                [state]=missionService.state
+                [city]=missionService.city
+                (buttonFollowClick)="groupFollow()"
+                (buttonCompareClick)="groupCompare()"
+                (buttonPicClick)="profilePicOp(0, true, null)"
+                (changeUserStatusDummy)="changeUserStatusDummyFunc()">
+  </group-navbar>
+</ng-container>
+
+<div *ngIf="streamRetrieved[1] && (missionService.showPage || buildForYouFlag)">
+  <!-- class="container-fluid mt-4 mb-2 py-0" -->
+  <group-build-alerts [previewStatus]=missionService.previewStatus
+                      [groupId]=missionService.groupId
+                      [groupStage]=missionService.groupStage
+                      [emailVerified]="[userService.userEmailVerified,missionService.instituteEmailVerified==2]"
+                      [userStatus]=missionService.userStatus
+                      [onBehalf]=missionService.onBehalf
+                      [showEditBtn]=missionService.showEditBtn
+                      [openDate]=item?.dates[0]
+                      [submitDate]=item?.dates[1]
+                      [approveStream]=streamRetrieved[3]
+                      [rejectStream]=streamRetrieved[4]
+                      [controlStream]=streamRetrieved[0]
+                      (controlClick)="toggleModalFunc(0)"
+                      (changeStage)="changeStageFunc($event)"
+                      (changeUserStatusDummy)="changeUserStatusDummyFunc()">
+  </group-build-alerts>
+</div>
+
+<div *ngIf="streamRetrieved[1]" class="d-flex flex-column-reverse" style="padding-top: 0px;">
+
+  <div #scrollFooter>
+    <site-footer *ngIf="missionService.showPage && streamRetrieved[1]"
+                 [name]=missionService.groupIndex.group.name
+                 [pic]=missionService.groupIndex.group.pic
+                 [public]=missionService.publicInfo
+                 [social]=missionService.socialInfo
+                 [streamPublic]=streamPublicInfo
+                 [streamSocial]=streamSocialInfo
+                 [groupIndex]=missionService.groupIndex
+                 [progress]=missionService.groupProgress
+                 [privateFlag]="missionService.userStatusMode==2 && ((missionService.userStatus>=4 && (missionService.planNumber==2 || missionService.planNumber==3)) || missionService.userStatus>=6)"
+                 [btnEditFlag]=missionService.showEditBtn
+                 (buttonPublicClick)="publicInfoSlide(true)"
+                 (buttonSocialClick)="socialInfoSlide(true)"
+                 (animationEndPublic)="publicInfoDone()"
+                 (animationEndSocial)="socialInfoDone()">
+    </site-footer>
+  </div>
+
+  <div style="min-height: 86vh">
+    <div class="container-fluid">
+    <!-- <div [ngClass]="{'minHeight': missionService.showPage}"> -->
+
+      <!-- <div *ngIf="missionService.userStatus==7 && (missionService.onBehalf==6 || missionService.onBehalf==7)" class="card bg-primary mt-3">
+        <div class="card-body">
+          <div *ngIf="missionService.groupStage==1" class="d-flex justify-content-center align-items-center">
+            <b>Pre Marketing</b> <button [routerLink]="['/', 'admin', 'labs']" type="button" class="btn btn-primary ml-3">Admin</button>
+          </div>
+          <div *ngIf="missionService.groupStage==2" class="d-flex justify-content-center align-items-center">
+            <b>Marketing. Counter: {{item.marketing.counter}}</b>
+            <button [disabled]="!streamRetrieved[5] || item.marketing.counter>=3" (click)="marketingSlide(true)" type="button" class="btn btn-primary ml-3">Send Notification</button>
+            <button [disabled]="!streamRetrieved[5] || item.marketing.counter>=3" type="button" class="btn btn-primary ml-3">Notes</button>
+            <i *ngIf="!streamRetrieved[5]" class="fa fa-1x fa-spinner fa-spin ml-2"></i>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div *ngIf="!domainClaim && !(missionService.onBehalf==4 || missionService.onBehalf==5 || missionService.onBehalf==7) && missionService.userStatus==6 && missionService.groupStage==2" class="alert card alert-with-icon" style="margin-bottom: 90px;" data-notify="container">
+        <i class="material-icons" data-notify="icon">notifications</i>
+        <button mat-button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <i class="material-icons">close</i>
+        </button>
+        <span data-notify="message" class="d-flex justify-content-center pb-3">
+          <button href="#domainModalGroup" data-toggle="modal" type="button" mat-raised-button class="btn btn-light-blue">
+            <i class="fa fa-globe mr-1" aria-hidden="true"></i> Add Your Domain
+          </button>
+        </span>
+      </div> -->
+
+      <router-outlet></router-outlet>
+
+      <ng-container *ngIf="buildForYouFlag && !missionService.showPage">
+        <img src="./assets/img/pro/data.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="450" alt="academig_suggestions">
+      </ng-container>
+
+      <!-- <div *ngIf="missionService.showPage && currentUrlSegments.length<5" class="pb-1">
+        <group-linksbar [activePath]=currentUrlSegments[3]?.path
+                        [progress]=missionService.groupProgress
+                        [userStatus]=missionService.userStatus
+                        [visibleFlag]=visibleLinkFlag
+                        [labFlag]=labFlag
+                        [topics]=missionService.topics>
+        </group-linksbar>
+      </div> -->
+
+    </div>
+  </div>
+
+  <div class="col-12 mb-2">
+    <div class="d-md-none" class="mt-2"></div>
+    <breadcrumbs *ngIf="missionService.showPage && missionService.groupStage==2"
+                 class="d-none d-md-block"
+                 [mode]=2
+                 [country]="missionService.country | country"
+                 [state]=missionService.state
+                 [city]=missionService.city
+                 [university]=missionService.groupIndex.university
+                 [department]=missionService.groupIndex.department
+                 [group]=missionService.groupIndex.group
+                 [page]=currentUrlSegments[3]?.path
+                 [subPage]=currentUrlSegments[4]?.path
+                 [subSubPage]=currentUrlSegments[5]?.path
+                 [detailsName]=missionService.breadDetailsName
+                 [detailsStream]=missionService.breadDetailsStream>
+     </breadcrumbs>
+   </div>
+
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Welcome Modal - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleWelcomeModal" #toggleWelcomeModal [hidden]="true" data-toggle="modal" data-target="#WelcomeModal"></button>
+
+<div class="modal fade" id="WelcomeModal" tabindex="-1" role="dialog" aria-labelledby="WelcomeModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="mr-2 mt-2 mb-0">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body" *ngIf="streamRetrieved[1] && (missionService.showPage || buildForYouFlag)">
+        <group-welcome-modal [groupStage]=missionService.groupStage
+                             [groupIndex]=missionService.groupIndex
+                             [onBehalf]=missionService.onBehalf
+                             [piOnBhelafFlag]="item.welcome==1 && missionService.onBehalf==1 && item.relation.status==6">
+        </group-welcome-modal>
+        <div class="d-flex justify-content-center">
+          <!-- <button role="button" class="btn btn-outline-info mr-2" (click)="changeWelcomeStageFunc(0)">LEARN MORE</button> -->
+          <button role="button" mat-raised-button class="btn btn-light-blue" (click)="changeWelcomeStageFunc(0)">
+            <span *ngIf="missionService.groupStage==-1">CLOSE</span>
+            <span *ngIf="missionService.groupStage>=1">GET STARTED</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - Take Control Modal - - - - - - -  -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleTakeControlModal" #toggleTakeControlModal [hidden]="true" data-toggle="modal" data-target="#TakeControlModal"></button>
+
+<div class="modal fade" id="TakeControlModal" tabindex="-1" role="dialog" aria-labelledby="TakeControlModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div *ngIf="streamRetrieved[1]" class="modal-body">
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+        <div class="mx-4 d-flex align-items-center justify-content-center">
+          <img src="./assets/img/perfect-feature.png" class="mb-4 my-3" [width]="80">
+        </div>
+
+        <div class="d-flex justify-content-center">
+          <p class="text-muted my-2">Take control for building the site from Academig.</p>
+        </div>
+
+        <div class="d-flex justify-content-center">
+          <p class="text-muted my-2">This action can not be reversed.</p>
+        </div>
+
+        <button role="button" class="d-flex mx-auto btn btn-warning my-2" (click)="changeStageFunc(0)">
+          Take Control <i *ngIf="!streamRetrieved[0]" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Domain Modal - - - - - - - - -  -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleDomainProfileModal" #toggleDomainProfileModal [hidden]="true" data-toggle="modal" data-target="#domainModalGroup"></button>
+
+<div class="modal fade" id="domainModalGroup" data-target="#domainModalGroup" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Coonect a domain name to your lab profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        We are still building this feature. Would you be interested to hear from us when it's ready?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+        <button [disabled]="!streamDomainRetrieved" role="button" (click)="btnDomainFunc()" mat-raised-button class="d-flex btn btn-success">
+          Yes <div *ngIf="!streamDomainRetrieved" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Compare Modal - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleCompareModal" #toggleCompareModal [hidden]="true" data-toggle="modal" data-target="#CompareModal"></button>
+
+<div class="modal fade" id="CompareModal" tabindex="-1" role="dialog" aria-labelledby="CompareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Compare labs</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Oops! You can only compare maximum of 3 research labs. Please remove one the labs before adding another one.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="labFlag ? 'lab' : 'company'"></modal-signup>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Report Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleReportModal" #toggleReportModal [hidden]="true" data-toggle="modal" data-target="#reportModalGroup"></button>
+
+<div *ngIf="missionService.groupIndex" class="modal fade" id="reportModalGroup" data-target="#reportModalGroup" tabindex="-1" role="dialog" aria-labelledby="ReportModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <modal-report [mode]=0 [groupIndex]=missionService.groupIndex [userId]=missionService.userId (closeModal)="closeGroupReport()"></modal-report>
+    </div>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-info *ngIf=infoBuildFlag
+                  (update)="publicInfoUpdate($event)"
+                  (cancel)="publicInfoSlide(false)"
+                  [publicInfo]=missionService.publicInfo
+                  [mode]=1>
+</build-slide-info>
+
+<build-slide-social *ngIf=socialBuildFlag
+                    (update)="socialInfoUpdate($event)"
+                    (cancel)="socialInfoSlide(false)"
+                    [socialInfo]=missionService.socialInfo
+                    [mode]=1>
+</build-slide-social>

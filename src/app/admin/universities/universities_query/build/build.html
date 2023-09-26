@@ -1,0 +1,93 @@
+<div class="side-form">
+
+  <h3 class="title text-center">Build University</h3>
+
+  <div class="form-container">
+
+    <p *ngIf="university._id" class="mb-0">ID: {{university._id}}</p>
+
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemTitle]="'Name'"
+                              [controlName]="'name'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemTitle]="'Abbreviation'"
+                              [controlName]="'link'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <button type="button" mat-raised-button class="btn btn-sm btn-light-blue mb-2" (click)="abbrGenerate()">Generate</button>
+
+      <build-modal-text-field [labelRequired]=true
+                              [typeSelected]="'url'"
+                              [fieldType]=1
+                              [itemTitle]="'URL'"
+                              [controlName]="'url'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <mat-form-field>
+        <mat-select placeholder="Country" [formControlName]="'country_id'" ariaLabel="countries[0]">
+          <mat-option *ngFor="let country of countries" [value]="country.id">
+            {{ country.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <build-modal-text-field [itemTitle]="'State'"
+                              [controlName]="'state'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemTitle]="'City'"
+                              [controlName]="'city'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=true
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [itemTitle]="'Description'"
+                              [controlName]="'description'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [typeSelected]="'url'"
+                              [fieldType]=1
+                              [itemTitle]="'Description source'"
+                              [controlName]="'source'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div>
+        <b>Logo:</b>
+        <div class="mt-1" id="direct_upload">
+          <single-pic *ngIf="file" [centerFlag]=true [pic]="file" [type]=2 [width]=112 [height]=112></single-pic>
+          <div class="d-flex justify-content-center" [ngClass]="{'mt-3': file}">
+            <input type="hidden" id="file" name="file" data-images-only data-preview-step>
+          </div>
+        </div>
+      </div>
+
+      <span *ngIf="universityId"><b>University Exist</b></span>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue" [disabled]="universityId">Add</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

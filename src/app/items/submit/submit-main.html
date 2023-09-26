@@ -1,0 +1,6 @@
+<div [ngSwitch]="currentItem">
+  <trend-submit *ngSwitchCase="'trends'"></trend-submit>
+  <podcast-submit *ngSwitchCase="'podcasts'"></podcast-submit>
+  <event-submit *ngSwitchCase="'events'"></event-submit>
+  <app-submit *ngSwitchCase="'apps'"></app-submit>
+</div>

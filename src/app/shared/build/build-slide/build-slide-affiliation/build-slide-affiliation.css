@@ -1,0 +1,23 @@
+.side-form {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  right: 0;
+  height: 100%;
+  overflow: auto;
+  background: #fff;
+  border-left: 1px solid #e0e0e0;
+  padding: 60px 15px 15px 15px;
+  box-shadow: -2px 0px 2px 1px #aaaaaa;
+}
+
+@media (max-width: 575px) {.side-form {width: 100%;}}
+@media (min-width: 576px) and (max-width: 767px) {.side-form {width: 60%;}}
+@media (min-width: 768px) {.side-form {width: 40%;}}
+
+#direct_upload { box-sizing: content-box; }
+#direct_upload { padding: 10px 20px; margin: 10px 0; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+#direct_upload h1 { margin: 0 0 15px 0; }
+#direct_upload { border: 4px dashed #ccc; }
+#direct_upload.dragover { border-color: #0c0; }
+#direct_upload.dragover-err { border-color: #c00; }

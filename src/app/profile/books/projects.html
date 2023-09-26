@@ -1,0 +1,23 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && (meFlag || projects.length!=0)" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+    <build-headline [showEditBtn]=false
+                    [addButtonFlag]=false
+                    [headline]="'Projects'">
+    </build-headline>
+    <projects-list [streamRetrieved]=streamRetrieved
+                   [showEditBtn]=false
+                   [projects]=projects
+                   [sourceType]=3
+                   [stream]=streamProjects
+                   [streamFollow]=streamProjectsFollow
+                   (buttonFollowClick)="projectFollow($event)">
+    </projects-list>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->

@@ -1,0 +1,198 @@
+<div *ngIf="userId==null" class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card mt-0 flex-grow-1">
+    <div class="card-body">
+      <span class="text-muted">
+        Start managing your academic and lab profile to gain more visibility and find new partners.
+        <button mat-raised-button class="btn btn-success btn-block mt-2" (click)="login()">
+          SIGN UP
+        </button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="d-none d-lg-block">
+  <div class="d-flex justify-content-start">
+    <div class="d-none d-sm-block ml-4"></div>
+    <div class="card mt-0 flex-grow-1">
+      <div class="card-body">
+        <build-headline [headline]="'SHARE THIS RESEARCHER'"></build-headline>
+        <share-buttons [show]="4"
+                       [include]="['facebook','twitter','linkedin', 'email']">
+        </share-buttons>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div *ngIf="missionService.meFlag" class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card mt-0 flex-grow-1">
+    <div class="card-body">
+      <build-headline [headline]="'Plan'"></build-headline>
+      <ng-container *ngIf="missionService.planNumber>0">
+        <button type="button" class="btn btn-success btn-block" [routerLink]="['/settings','profile-plan']" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-star" aria-hidden="true"><span class="ml-1">PRO</span></i>
+        </button>
+        <p *ngIf="missionService.planStatus=='trialing'" class="small mb-0">The Researcher PRO trial period ends at {{missionService.planTrialEnd | date:'mediumDate'}}.</p>
+      </ng-container>
+      <button *ngIf="missionService.planNumber==0" type="button" class="btn btn-success btn-block" [routerLink]="['/settings','profile-plan']" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-star-o" aria-hidden="true"><span class="ml-1">Basic</span></i>
+      </button>
+    </div>
+  </div>
+</div> -->
+
+<div *ngIf="((userService.userId && userService.planNumber==0) || userService.userId==null) && !missionService.meFlag" class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card flex-grow-1 mt-0" style="height: 22rem;">
+    <div class="card-body">
+      <google-adsense></google-adsense>
+      <div *ngIf="userService.userId && userService.planNumber==0" style="position: absolute; bottom: 0;">
+        <button *ngIf="userService.userId" mat-raised-button type="button" class="btn btn-link p-0" (click)="planUpdate()">Upgrade to PRO to remove Ads</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved[2] && (followersLength>0 || missionService.meFlag)" class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card mt-0 flex-grow-1">
+    <div class="card-body">
+      <build-headline [headline]="followersLength + ' Followers'"></build-headline>
+      <people-list [streamRetrieved]=streamRetrieved[2]
+                   [peoples]="peoplesFollowers.slice(0,3)"
+                   [sourceType]=8
+                   [stream]=streamPeopleFollowers
+                   [activeId]=userId
+                   [streamFollow]=streamPeopleFollowers>
+      </people-list>
+      <span *ngIf="streamRetrieved[2] && !peoplesFollowers[0]" class="text-muted">No Followers.</span>
+      <a *ngIf="streamRetrieved[2] && peoplesFollowers[0]" class="card-title" role="button" (click)="networkFunc(1)"  [routerLink]="['./network']">
+        View All Followers
+      </a>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved[1] && (followingLength>0 || missionService.meFlag)" class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card mt-0 flex-grow-1">
+    <div class="card-body">
+      <build-headline *ngIf="streamRetrieved[1]" [headline]="followingLength + ' Following'"></build-headline>
+      <people-list [streamRetrieved]=streamRetrieved[1]
+                   [peoples]="peoplesFollowing.slice(0,3)"
+                   [sourceType]=8
+                   [stream]=streamPeopleFollowing
+                   [activeId]=userId
+                   [streamFollow]=streamPeopleFollowing>
+      </people-list>
+      <span *ngIf="streamRetrieved[1] && !peoplesFollowing[0]" class="text-muted">No Following.</span>
+      <a *ngIf="streamRetrieved[1] && peoplesFollowing[0]" class="card-title" role="button" (click)="networkFunc(0)" [routerLink]="['./network']">
+        View All Following
+      </a>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved[5] && (groupsFollowing?.length>0 || missionService.meFlag)" class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card mt-0 flex-grow-1">
+    <div class="card-body my-0">
+      <h4 *ngIf="streamRetrieved[5]" class="card-title"><b>{{groupsFollowing?.length}} Labs Following</b></h4>
+      <hr *ngIf="streamRetrieved[5]" class="my-0">
+      <!-- <build-headline *ngIf="streamRetrieved[5]" [headline]="groupsFollowing?.length + ' Labs Following'"></build-headline> -->
+      <groups-list class="px-2"
+                   [streamRetrieved]=streamRetrieved[5]
+                   [sourceType]=6
+                   [groupsPerRow]=12
+                   [groups]="groupsFollowing.slice(0,3)"
+                   [compareFlag]=true
+                   [compareStatuses]=compareFollowingStatuses
+                   [streamCompare]=streamGroupFollowingCompare
+                   [streamFollow]=streamGroupFollowing
+                   [streamAdminFollow]=streamGroupAdminFollowing
+                   (buttonFollowClick)="groupFollow($event,0)"
+                   (buttonAdminFollowClick)="groupAdminFollow($event,0)"
+                   (buttonCompareClick)="itemCompare($event,0)">
+      </groups-list>
+      <span *ngIf="streamRetrieved[5] && !groupsFollowing[0]" class="text-muted">No Lab Following.</span>
+      <a *ngIf="streamRetrieved[5] && groupsFollowing[0]" class="card-title" role="button" (click)="networkFunc(0)" [routerLink]="['./network']">
+        View All Lab Following
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- *ngIf="streamRetrieved[3] && ((coauthorsLength+dummyCoauthorsLength>0) || missionService.meFlag)" -->
+<div class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card mt-0 flex-grow-1">
+    <div class="card-body">
+      <build-headline *ngIf="streamRetrieved[3] && streamRetrieved[4]" [headline]="coauthorsLength + dummyCoauthorsLength + ' Co-authors'"></build-headline>
+      <build-headline *ngIf="!streamRetrieved[3] || !streamRetrieved[4]" [headline]="'Co-authors'"></build-headline>
+      <people-list [streamRetrieved]=streamRetrieved[3]
+                   [peoples]="peoplesCoauthors.slice(0,3)"
+                   [sourceType]=8
+                   [stream]=streamPeopleCoauthors
+                   [activeId]=userId
+                   [streamFollow]=streamPeopleCoauthors>
+      </people-list>
+      <people-list *ngIf="streamRetrieved[3]"
+                   [streamRetrieved]=streamRetrieved[4]
+                   [peoples]="peoplesDummyCoauthors.slice(0,3)"
+                   [sourceType]=8
+                   [stream]=streamPeopleDummyCoauthors
+                   [activeId]=userId
+                   [streamFollow]=streamPeopleDummyCoauthors>
+      </people-list>
+      <span *ngIf="streamRetrieved[3] && streamRetrieved[4] && !peoplesCoauthors[0] && !peoplesDummyCoauthors[0]" class="text-muted">No Co-authors.</span>
+      <a *ngIf="streamRetrieved[3] && streamRetrieved[4] && (peoplesCoauthors[0] || peoplesDummyCoauthors[0])" class="card-title" role="button" (click)="networkFunc(2)" [routerLink]="['./network']">
+        View All Co-authors
+      </a>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="missionService.socialInfo?.twitter || missionService.meFlag" class="d-flex justify-content-start">
+  <div class="d-none d-md-block ml-4"></div>
+  <div class="card mt-0 flex-grow-1">
+    <div class="card-body">
+      <h3 class="text-dark mt-0">
+        <div class="d-flex align-items-center">
+          <i class="fa fa-twitter mr-1" aria-hidden="true"></i>
+          <b>Twitter</b>
+          <button *ngIf="missionService.meFlag && !missionService.socialInfo?.twitter" (click)="twitterOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-sm btn-just-icon">
+            <i class="material-icons">add_circle</i>
+          </button>
+        </div>
+      </h3>
+      <span *ngIf="missionService.meFlag && !missionService.socialInfo?.twitter">Embed your twitter feed</span>
+      <p *ngIf="!missionService.meFlag && !missionService.socialInfo?.twitter" class="mb-3">The twitter feed is empty.</p>
+      <ngx-twitter-timeline *ngIf="missionService.socialInfo?.twitter"
+                            [data]="{sourceType: 'url', url: 'https://twitter.com/'+missionService.socialInfo.twitter}"
+                            [opts]="{tweetLimit: 2}">
+      </ngx-twitter-timeline>
+      <button *ngIf="missionService.meFlag && missionService.socialInfo?.twitter" (click)="twitterOp(0, true, null)" data-toggle="modal" role="button" class="btn btn-sm btn-link" aria-haspopup="true" aria-expanded="false">
+        Edit twitter link
+      </button>
+      <button *ngIf="missionService.meFlag && missionService.socialInfo?.twitter" (click)="twitterOp(2, false, {event: null})" data-toggle="modal" role="button" class="btn btn-sm btn-link mb-3" aria-haspopup="true" aria-expanded="false">
+        Delete twitter link
+      </button>
+    </div>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text *ngIf=twitterBuildFlag
+                  (update)="twitterOp(2, false, $event)"
+                  (cancel)="twitterOp(0, false, null)"
+                  [title]="'Update Twitter Feed'"
+                  [fieldType]=0
+                  [text]="missionService.socialInfo?.twitter">
+</build-slide-text>

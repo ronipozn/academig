@@ -1,0 +1,24 @@
+.fa-circle {
+  font-size: 14px;
+}
+
+.profile {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.circle {
+  position: absolute;
+  top: 2.3rem;
+  left: 3.3rem;
+  // border: 1px solid black;
+  // border-radius: 50%;
+}
+
+@media (min-width: 1200px) {
+  .my-custom-class {
+    max-width: 960px;
+    /*max-width: 1140px;*/
+  }
+}

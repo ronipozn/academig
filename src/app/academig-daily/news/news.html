@@ -1,0 +1,82 @@
+<div *ngIf="!streamRetrieved" class="d-flex justify-content-center mt-4">
+  <div class="spinner-border text-secondary" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="card card-plain">
+    <div class="card-body">
+
+      <div [hidden]="!streamRetrieved" class="ais-InstantSearch">
+        <ais-instantsearch [config]="config_morning">
+
+          <app-loading-indicator></app-loading-indicator>
+
+          <div class="container" style="margin-bottom: 40px;">
+
+            <ais-search-box placeholder="Search"></ais-search-box>
+            <ais-configure [searchParameters]="{ hitsPerPage: 20 }"></ais-configure>
+
+            <div class="mb-3 mt-1 d-flex">
+              <div class="mr-auto"><ais-stats></ais-stats></div>
+              <div><img [height]="20" [src]="'./assets/img/algolia.png'"></div>
+            </div>
+
+            <mat-accordion multi>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>Categories</mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-refinement-list [att]="'category'"></app-refinement-list>
+              </mat-expansion-panel>
+            </mat-accordion>
+
+            <ais-hits [transformItems]="transformNews">
+              <ng-template let-hits="hits" let-results="results">
+                <div class="row mt-4">
+                  <ng-container *ngFor="let news of hits; let i=index">
+                    <div class="col-md-6 col-lg-4 mb-4">
+                      <!-- <div *ngIf="i==adNum" class="col-md-6 col-lg-4 col-xl-4 mb-2">
+                        <mat-card class="m-0 p-0">
+                          <google-adsense></google-adsense>
+                        </mat-card>
+                      </div> -->
+                      <mat-card>
+                        <img mat-card-image [src]="news.pic" [alt]="news.alt">
+                        <mat-card-content>
+                          <span class="text-success small"><b>{{news.category | uppercase}}</b></span>
+                          <h5><a class="card-title" [href]=news.link target="empty"><b>{{news.topic}}</b></a></h5>
+                          <p>{{news.description}}</p>
+                          <footer class="blockquote-footer">
+                            <a class="card-title" [href]=news.author.link target="empty"><i>{{news.author.name}}</i></a><br>
+                            <a class="card-title" [href]=news.website target="empty"><i>{{news.source}}</i></a>
+                          </footer>
+                          <span class="text-muted small">{{news.date | date}}</span>
+                        </mat-card-content>
+                      </mat-card>
+                    </div>
+                  </ng-container>
+                </div>
+                <p class="my-4"></p>
+                <app-pagination *ngIf="hits.length>0" class="mb-2"></app-pagination>
+              </ng-template>
+            </ais-hits>
+
+          </div>
+
+        </ais-instantsearch>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<info-footer [hidden]="!streamRetrieved"></info-footer>
+
+<!-- <a href="/daily/stories/2020/09/04/half-young-adults-us-live-parent"><div class='card h-100 story-card'>
+<a href="/daily/stories/2020/09/04/half-young-adults-us-live-parent"><figure class='story-card-image'>
+<img onerror="this.error=null;this.src=&quot;https://morningbrew-oslo.s3.us-west-2.amazonaws.com/1569597117.jpg&quot;;" class="card-img-top rounded-top" max_width="500" sizes="(max-width: 770px) 100vw, (max-width: 995px) 300px, (max-width: 1201px) 280px, 350px" src="https://media.giphy.com/media/3og0IKinzBYyoia9eE/giphy.gif" />
+<div class='inset-box-shadow'></div>
+</figure>
+</a> -->

@@ -1,0 +1,172 @@
+<div style="min-height: 86vh;">
+
+  <div *ngIf="!streamRetrieved" class="d-flex justify-content-center mt-4">
+    <div class="spinner-border text-secondary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div [hidden]="!streamRetrieved" class="ais-InstantSearch">
+    <ais-instantsearch [config]="config_morning">
+      <ais-hits [transformItems]="transformNews">
+        <ng-template let-hits="hits" let-results="results">
+
+          <div class="container-fluid">
+            <div class="card card-plain">
+              <div class="card-body">
+
+                <div class="row justify-content-center">
+                  <!-- <div class="col-12 d-md-none">
+                    <mat-card>
+                      <img mat-card-image src="https://dlp31coh2a67q.cloudfront.net/eyJrZXkiOiJ1cGxvYWRzL21lZGl1bS9hc3NldC8yMzE5L2Nsb3NlZF90aGVhdGVyLmpwZyIsImJ1Y2tldCI6Im9zbG8tcHJvZHVjdGlvbiIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTAwMCwiaGVpZ2h0IjpudWxsfX19" alt="Photo of a Shiba Inu">
+                      <mat-card-content>
+                        In the latest issue of Academig Morning:
+                        <h4>The Coronavirus Pandemic: Not an Equal Opportunity Unemployer</h4>
+                        <a [routerLink]="['/morning','latest']" class="text-success"><b>Read now</b> <i class="ml-1 fa fa-arrow-circle-right" aria-hidden="true"></i></a><br>
+                        <span style="background-color: #DDE1F3" class="mt-2 mb-0 text-dark badge">September 7, 2020</span>
+                        <p class="mt-3"><a [routerLink]="['/morning','archive']" class="card-title">View archive of all <b>Academig Morning</b> issues</a></p>
+                      </mat-card-content>
+                    </mat-card>
+                    <mat-card class="my-3">
+                      <mat-card-content><b>Sign up for <b>Academig Morning</b> and read news that's actually enjoyable.</b></mat-card-content>
+                      <iframe width="350" height="300" frameBorder="0" src="https://cdn.forms-content.sg-form.com/db0a52f3-f6ac-11ea-8873-e63b73c2e3f1"></iframe>
+                    </mat-card>
+                  </div> -->
+                  <!-- <div class="col-md-4 col-lg-2">
+                    <mat-card>
+                      <img mat-card-image src="https://media.giphy.com/media/CzbiCJTYOzHTW/giphy.gif" alt="Photo of a Shiba Inu">
+                      <mat-card-content>
+                        <h4>How to Cold Email Your Way into Your Dream Academic Position</h4>
+                        <span class="text-muted">June 30, 2020</span>
+                      </mat-card-content>
+                    </mat-card>
+                    <mat-card class="example-card mt-4">
+                      <img mat-card-image src="https://dlp31coh2a67q.cloudfront.net/eyJrZXkiOiJ1cGxvYWRzL21lZGl1bS9hc3NldC8xNTU0L2hhbGZ0aW1lLmpwZyIsImJ1Y2tldCI6Im9zbG8tcHJvZHVjdGlvbiIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6NjQwLCJoZWlnaHQiOm51bGx9fX0=" alt="Photo of a Shiba Inu">
+                      <mat-card-content>
+                        <h4>Recapping the Historic Academic First Half of 2020</h4>
+                        <span class="text-muted">July 15, 2020</span>
+                      </mat-card-content>
+                    </mat-card>
+                  </div> -->
+                  <!-- <div class="d-none d-lg-block col-md-8 col-lg-5">
+                    <mat-card>
+                      <img mat-card-image src="https://dlp31coh2a67q.cloudfront.net/eyJrZXkiOiJ1cGxvYWRzL21lZGl1bS9hc3NldC8yMzE5L2Nsb3NlZF90aGVhdGVyLmpwZyIsImJ1Y2tldCI6Im9zbG8tcHJvZHVjdGlvbiIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6MTAwMCwiaGVpZ2h0IjpudWxsfX19" alt="Photo of a Shiba Inu">
+                      <mat-card-content>
+                        In the latest issue of Academig Morning:
+                        <h4>The Coronavirus Pandemic: Not an Equal Opportunity Unemployer</h4>
+                        <a [routerLink]="['/morning','latest']" class="text-success"><b>Read now</b> <i class="ml-1 fa fa-arrow-circle-right" aria-hidden="true"></i></a><br>
+                        <span style="background-color: #DDE1F3" class="mt-2 mb-0 text-dark badge">September 7, 2020</span>
+                        <p class="mt-3"><a [routerLink]="['/morning','archive']" class="card-title">View archive of all <b>Academig Morning</b> issues</a></p>
+                      </mat-card-content>
+                    </mat-card>
+                    <mat-card class="my-3">
+                      <mat-card-content><b>Sign up for <b>Academig Morning</b> and read news that's actually enjoyable.</b></mat-card-content>
+                      <iframe width="700" height="300" frameBorder="0" src="https://cdn.forms-content.sg-form.com/db0a52f3-f6ac-11ea-8873-e63b73c2e3f1"></iframe>
+                    </mat-card>
+                  </div> -->
+                  <!-- <div class="col-lg-2">
+                    <h3 class="mt-0"><b>TRENDING</b></h3>
+                    <mat-card-content>
+                      <h4><b>The Brew’s Weekly News Quiz: September 4</b></h4>
+                      <footer class="blockquote-footer small">Jamie Wilde</footer>
+                      <span style="background-color: #DDE1F3" class="mt-2 mb-0 text-dark badge">4 days ago</span>
+                    </mat-card-content>
+                    <hr>
+                    <mat-card-content>
+                      <h4><b>The Essentials, Issue #63: To the playa</b></h4>
+                      <footer class="blockquote-footer small">Neal Freyman</footer>
+                      <span style="background-color: #DDE1F3" class="mt-2 mb-0 text-dark badge">26 minutes ago</span>
+                    </mat-card-content>
+                    <hr>
+                    <mat-card-content>
+                      <h4><b>Spotify’s Exclusive Agreement with Joe Rogan Begins September 1</b></h4>
+                      <footer class="blockquote-footer small">Toby Howell</footer>
+                      <span style="background-color: #DDE1F3" class="mt-2 mb-0 text-dark badge">7 days ago</span>
+                    </mat-card-content>
+                    <hr>
+                    <mat-card-content>
+                      <h4><b>The Brew Crossword: August 31, 2020</b></h4>
+                      <footer class="blockquote-footer small">Alex Hickey</footer>
+                      <span style="background-color: #DDE1F3" class="mt-2 mb-0 text-dark badge">2 hours ago</span>
+                    </mat-card-content> -->
+                    <!-- <hr> -->
+                    <!-- <mat-card-content>
+                      <h4><b>German Officials Threaten to Freeze Natural Gas Pipeline Project</b></h4>
+                      <footer class="blockquote-footer small">Toby Howell</footer>
+                      <span style="background-color: #DDE1F3" class="mt-2 mb-0 text-dark badge">7 days ago</span>
+                    </mat-card-content> -->
+                  <!-- </div> -->
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card card-plain mt-0">
+              <div class="card-body">
+
+                <div class="row justify-content-center mb-4">
+                  <div class="col-md-9">
+                    <hr class="mt-0">
+                    <h3 class="mt-0"><b>RECENT STORIES</b></h3>
+                  </div>
+                </div>
+
+                <ais-hits [transformItems]="transformNews">
+                  <ng-template let-hits="hits" let-results="results">
+                    <div class="row justify-content-center">
+                      <div class="col-md-9">
+                        <div class="row">
+                        <ng-container *ngFor="let news of hits; let i=index">
+                          <div *ngIf="i<3" class="col-md-6 col-lg-4 mb-4">
+                            <mat-card>
+                              <img mat-card-image [src]="news.pic" [alt]="news.alt">
+                              <mat-card-content>
+                                <span class="text-success small"><b>{{news.category | uppercase}}</b></span>
+                                <h5><a [routerLink]="[news.date, news.topic]" class="card-title"><b>{{news.topic}}</b></a></h5>
+                                <i>{{news.author}}</i><br>
+                                <span class="text-muted small">{{news.date}}</span>
+                              </mat-card-content>
+                            </mat-card>
+                          </div>
+                          <div *ngIf="i>=3" class="col-6 col-lg-3 mb-4">
+                            <mat-card-content>
+                              <span class="text-success small"><b>{{news.category | uppercase}}</b></span>
+                              <h5><a [routerLink]="[news.date, news.topic]" class="card-title"><b>{{news.topic}}</b></a></h5>
+                              <i>{{news.author}}</i><br>
+                              <span class="text-muted small">{{news.date}}</span>
+                            </mat-card-content>
+                          </div>
+                        </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ais-hits>
+
+              </div>
+            </div>
+          </div>
+
+        </ng-template>
+      </ais-hits>
+    </ais-instantsearch>
+  </div>
+
+  <div [hidden]="!streamRetrieved" class="card text-white bg-success py-4 mb-0 mt-4" style="border: 0">
+    <div class="card-body">
+      <div class="lead text-center">
+        <a [routerLink]="['all']" class="card-title">View all <b>Academig Morning</b> stories</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<info-footer></info-footer>
+
+<!-- <a href="/daily/stories/2020/09/04/half-young-adults-us-live-parent"><div class='card h-100 story-card'>
+<a href="/daily/stories/2020/09/04/half-young-adults-us-live-parent"><figure class='story-card-image'>
+<img onerror="this.error=null;this.src=&quot;https://morningbrew-oslo.s3.us-west-2.amazonaws.com/1569597117.jpg&quot;;" class="card-img-top rounded-top" max_width="500" sizes="(max-width: 770px) 100vw, (max-width: 995px) 300px, (max-width: 1201px) 280px, 350px" src="https://media.giphy.com/media/3og0IKinzBYyoia9eE/giphy.gif" />
+<div class='inset-box-shadow'></div>
+</figure>
+</a> -->

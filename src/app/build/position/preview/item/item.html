@@ -1,0 +1,168 @@
+<!-- <img style="position: absolute; margin-top: 13px; margin-left: -10px;" [width]="25" [height]="25" src="https://s3.amazonaws.com/cdn.designcrowd.com/blog/2017/April/35-Famous-Circle-Logos/19_400.png" alt="academig"> -->
+<div class="table-responsive">
+  <table class="table table-striped pb-0">
+
+    <thead>
+      <tr>
+        <th class="text-center">
+          <div class="dropdown">
+            <a data-toggle="dropdown" style="cursor: pointer;">
+              <div class="form-check" style="margin-top: 10px;">
+                <label class="form-check-label">
+                  <span class="form-check-sign"><span class="check"><i class="fa fa-caret-down"></i></span></span>
+                </label>
+              </div>
+            </a>
+            <span class="small dropdown-menu" aria-labelledby="dropdownTitle">
+              <a role="button" style="cursor: pointer;" class="dropdown-item small pl-2">Select all labs</a>
+              <div class="dropdown-divider"></div>
+              <a role="button" style="cursor: pointer;" class="dropdown-item small pl-2">Deselect all labs</a>
+            </span>
+          </div>
+        </th>
+        <ng-container *ngFor="let row of tableData.headerRow; let i=index; let f=first; let l=last">
+          <th *ngIf="!f && !l && tableData.headerVisible[i]">
+            <div class="d-flex flex-row">
+              <span [matTooltip]="tableData.headerTooltip[i]" [matTooltipPosition]="'above'" class="text-nowrap">{{ row }}</span>
+            </div>
+          </th>
+        </ng-container>
+        <th>
+        </th>
+      </tr>
+    </thead>
+
+    <!-- [ngClass]="{'text-white bg-success': firstFormGroup.controls['standout'].value>0}" -->
+    <tbody>
+
+      <tr>
+
+        <td>
+          <div class="form-check" style="margin-top: 10px;">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox">
+              <span class="form-check-sign"><span class="check"></span></span>
+            </label>
+          </div>
+        </td>
+
+        <td class="text-nowrap d-flex align-items-center mt-1">
+          <span class="mr-2">1.</span>
+          <ng-container *ngIf="firstFormGroup.controls['standout'].value>1">
+            <!-- [thumbnailFlag]=true -->
+            <single-pic *ngIf="secondFormGroup.controls['logo'].value" class="mr-2" [centerFlag]=true [pic]="secondFormGroup.controls['logo'].value" [stackPic]="'cubes'" [type]=0 [width]=32 [height]=32></single-pic>
+            <span *ngIf="!secondFormGroup.controls['logo'].value" class="fa-stack fa-1x mx-2">
+              <i class="fa fa-circle fa-circle-size fa-stack-2x" style="color: #cdcdc1; margin-top: -7px; margin-left: -6px;"></i>
+              <span class="fa fa-stack-1x fa-inverse" style="font-size: 18px; margin-top: -1px; margin-left: -2px;">{{ secondFormGroup.controls['group'].value | acronym }}</span>
+            </span>
+          </ng-container>
+          <b>{{ secondFormGroup.controls['group'].value }}</b>
+        </td>
+
+        <td>
+          <span class="text-nowrap">
+            <!-- <img [height]="20" class="mr-2" [src]="secondFormGroup.controls['university'].value"> -->
+            <span class="text-nowrap">{{ secondFormGroup.controls['university'].value | name }}</span>
+          </span>
+          /
+          <span class="text-nowrap">{{ secondFormGroup.controls['department'].value.name ? (secondFormGroup.controls['department'].value.name | name) : (secondFormGroup.controls['department'].value | name) }}</span>
+        </td>
+
+        <td class="text-nowrap">
+          <span *ngIf="country" class="flag mr-1">
+            <!-- <img [src]="'./assets/img/flags/' + (country | flag) + '.png'" alt=""> -->
+          </span>
+          {{city ? city + ',' : ''}}
+          {{state ? state + ', ' : ''}}
+          <span *ngIf="country=='United States of America'">USA</span>
+          <span *ngIf="country!='United States of America'">{{country}}</span>
+        </td>
+
+        <td class="text-nowrap">
+          <span *ngIf="secondFormGroup.get('position').value<200">{{secondFormGroup.controls['firstName'].value}} {{secondFormGroup.controls['lastName'].value}}</span>
+          <span *ngIf="secondFormGroup.get('position').value>199">{{secondFormGroup.controls['secondFirstName'].value}} {{secondFormGroup.controls['secondLastName'].value}}</span>
+        </td>
+
+        <td class="text-nowrap">
+          <span [matTooltip]="topicsSelectedMerge" [matTooltipPosition]="'below'">
+            <span>{{ topicsSelected[0] }}</span>
+            <span *ngIf="topicsSelected.length>1"> ...</span>
+          </span>
+        </td>
+
+        <td class="text-nowrap">
+          {{secondFormGroup.controls['group_size'].value | labsize}}
+        </td>
+
+        <td class="text-nowrap">
+          <span>{{(secondFormGroup.controls['establishDate'].value | date:'MMM yyyy') || '-'}}</span>
+        </td>
+
+        <td class="text-right text-nowrap">
+          <!-- <button mat-raised-button type="button" class="btn btn-link btn-sm">
+            <i class="material-icons rotate-90">arrow_forward_ios</i>
+          </button> -->
+          <button mat-raised-button [matTooltip]="'Follow'" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm px-0 mr-3">
+            <i class="fa fa-size-20 fa-bookmark-o" aria-hidden="true"></i>
+          </button>
+          <button mat-raised-button matTooltip="Compare" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm px-0">
+            <i class="fa fa-size-20 fa-clone" aria-hidden="true"></i>
+          </button>
+        </td>
+
+      </tr>
+
+      <tr [ngClass]="{'text-dark bg-standard': firstFormGroup.controls['standout'].value==0, 'text-white bg-success': firstFormGroup.controls['standout'].value>0}">
+        <td colspan="10">
+          <div class="card mt-0 mb-0" [ngClass]="{'text-dark bg-standard': firstFormGroup.controls['standout'].value==0, 'bg-success': firstFormGroup.controls['standout'].value>0}">
+            <div class="card-body">
+              <div class="mt-0 mb-0">
+                <span *ngIf="firstFormGroup.controls['standout'].value<3"><b>POSTED </b> {{ date | momentPipe:'':1 | uppercase }}</span>
+                <span *ngIf="firstFormGroup.controls['standout'].value==3"><b>FEATURED</b></span>
+              </div>
+              <div *ngIf="firstFormGroup.get('title').value" class="card-title mt-0">
+                <a style="cursor: pointer"><h3 class="mt-2" [ngClass]="{'text-dark': firstFormGroup.controls['standout'].value==0, 'text-white': firstFormGroup.controls['standout'].value>0}"><b>{{firstFormGroup.get('title').value}}</b></h3></a>
+              </div>
+              <div class="media mb-0 pb-0">
+                <div class="media-body mb-2 pb-0">
+                  <div class="small">
+                    <span class="mr-2">{{titlesTypes[firstFormGroup.get('job').value]}}</span>
+                    <span *ngIf="firstFormGroup.get('type').value!=null" class="mx-2">{{typeSelect[firstFormGroup.get('type').value]}}</span>
+                    <span *ngIf="firstFormGroup.get('contract.lengthType').value!=null" class="mx-2">{{firstFormGroup.get('contract.length').value}} {{lengthSelect[firstFormGroup.get('contract.lengthType').value]}}</span>
+                    <span *ngIf="firstFormGroup.get('spotsAvailable').value!=null" class="mx-2">{{firstFormGroup.get('spotsAvailable').value}} Spots Available</span>
+                    <span *ngIf="firstFormGroup.get('jobEndDate').value!=null" class="mx-2">Submission deadline: {{ firstFormGroup.get('jobEndDate').value | date }}</span>
+                    <span *ngIf="firstFormGroup.get('jobStartDate').value!=null" class="mx-2">Start date: {{ firstFormGroup.get('jobStartDate').value | date }}</span>
+                    <button *ngIf="firstFormGroup.get('jobEndDate').value!=null" class="btn btn-link p-0 m-0" data-toggle="modal" data-target="#PositionSteps">
+                      <span class="material-icons" [ngClass]="{'text-dark': firstFormGroup.controls['standout'].value==0, 'text-white': firstFormGroup.controls['standout'].value>0}">update</span>
+                      <!-- <i [ngClass]="{'text-dark': firstFormGroup.controls['standout'].value==0, 'text-white': firstFormGroup.controls['standout'].value>0}" class="p-0 m-0 fa fa-clock-o" aria-hidden="true"></i> -->
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!------------------------------------->
+<!------ Application Steps Modal ------>
+<!------------------------------------->
+<div class="modal fade" id="PositionSteps" tabindex="-1" role="dialog" aria-labelledby="PositionStepsLabel" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content pb-4">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">Application Steps</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <position-steps [stepsDates]="[firstFormGroup.get('jobEndDate').value, null, null, null, null, null, null, firstFormGroup.get('jobDescisionDate').value, firstFormGroup.get('jobStartDate').value]"
+                      [activeStep]=0>
+      </position-steps>
+    </div>
+  </div>
+</div>

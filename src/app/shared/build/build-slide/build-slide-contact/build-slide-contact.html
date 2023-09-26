@@ -1,0 +1,156 @@
+<div class="side-form">
+
+  <h3 class="title text-center">
+    <span *ngIf=newFlag>New Contact</span>
+    <span *ngIf=!newFlag>Update Contact</span>
+  </h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="adminFlag && newFlag && groupMode" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <ul *ngIf="groupMode" class="small mt-4 mb-2 nav nav-pills nav-pills-light-blue justify-content-center">
+        <li class="nav-item">
+          <a role="button" class="nav-link" [ngClass]="{'active': mode==0, disabled: mode==1 && !this.newFlag}" (click)="changeMode(0)">
+            <b>Custom Contact</b>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a role="button" class="nav-link" [ngClass]="{'active': mode==1, disabled: mode==0 && !this.newFlag}" (click)="changeMode(1)">
+            <b>Member Contact</b>
+          </a>
+        </li>
+      </ul>
+
+      <build-modal-text-field [fieldType]=4
+                              [itemFirst]=true
+                              [itemTitle]="'Title'"
+                              [labelRequired]=true
+                              [itemArray]=titleSelect
+                              [controlName]="'title'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-slide-select-members *ngIf="groupMode"
+                                  [hidden]="mode==0"
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [single]=true
+                                  [title]="'Choose contact'"
+                                  [labelRequired]=true
+                                  [submitStatus]=submitStatus
+                                  [parentGroup]=formModel
+                                  [controlName]="'member'"
+                                  [preMembersInput]=preMembers
+                                  (membersOutput)=membersFunc($event)>
+      </build-slide-select-members>
+
+      <div [hidden]="mode==1" id="direct_upload">
+        <single-pic *ngIf="file || contact?.pic"
+                    [centerFlag]=true
+                    [pic]="file ? file : contact.pic"
+                    [thumbnailFlag]=true
+                    [stackPic]="'address-book'"
+                    [type]=1
+                    [width]=112
+                    [height]=112
+                    [widthE]=4>
+        </single-pic>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': file || contact?.pic}">
+          <input type="hidden" id="file"
+                 name="file"
+                 data-images-only
+                 data-preview-step
+                 data-crop="112x112 upscale">
+        </div>
+      </div>
+
+      <!-- <div *ngIf="mode==0" class="row no-gutters">
+        <div class="col mr-1">
+          <build-modal-text-field [iconTitle]="'home'"
+                                  [itemTitle]="'Building'"
+                                  [controlName]="'building'"
+                                  [parentGroup]="formModel"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col ml-1">
+          <build-modal-text-field [iconTitle]="'sign-in'"
+                                  [itemTitle]="'Room'"
+                                  [controlName]="'room'"
+                                  [parentGroup]="formModel"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div> -->
+
+      <build-modal-text-field *ngIf="mode==0"
+                              [iconTitle]="'home'"
+                              [itemTitle]="'Address'"
+                              [itemFirst]=true
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [controlName]="'address'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div *ngIf="mode==0" class="row no-gutters">
+        <div class="col mr-1">
+          <build-modal-text-field [iconTitle]="'phone'"
+                                  [itemTitle]="'Phone'"
+                                  [controlName]="'phone'"
+                                  [parentGroup]="formModel"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col ml-1">
+          <build-modal-text-field [iconTitle]="'fax'"
+                                  [itemTitle]="'Fax'"
+                                  [controlName]="'fax'"
+                                  [parentGroup]="formModel"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-modal-text-field *ngIf="mode==0"
+                              [fieldType]=1
+                              [typeSelected]="'email'"
+                              [iconTitle]="'envelope'"
+                              [itemTitle]="'Email'"
+                              [controlName]="'email'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button type="submit" [disabled]="uploadFlag || disableFlag" mat-raised-button class="btn btn-sm btn-fill btn-light-blue">
+          <span *ngIf=newFlag>Add</span>
+          <span *ngIf=!newFlag>Update</span>
+        </button>
+        <button type="button" [disabled]=disableFlag mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+      <div class="pull-left">
+        <p *ngIf="mode==1" class="mt-2 text-muted">
+          The contact details of the chosen contact are set by the member you choose.
+          The contact details are updated when the member changes his or her personal info.
+        </p>
+      </div>
+
+    </form>
+  </div>
+</div>

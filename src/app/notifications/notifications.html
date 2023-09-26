@@ -1,0 +1,46 @@
+<div class="offset-md-1 col-md-10 py-4">
+  <div class="card">
+
+    <div class="card-header card-header-info card-header-icon">
+      <div class="card-icon">
+        <i class="material-icons" data-notify="icon">notifications</i>
+      </div>
+      <h4 class="card-title">Notifications</h4>
+    </div>
+
+    <div class="card-body">
+
+      <div *ngIf="!streamNotificationsRetrieved && offset==0" class="d-flex justify-content-center mt-2">
+        <div class="spinner-border text-secondary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+
+      <div *ngIf="streamNotificationsRetrieved && notifications.length==0" class="d-flex align-self-center justify-content-center">You don't have notifications.</div>
+
+      <ng-container *ngIf="notifications.length>0 && (streamNotificationsRetrieved || offset!=0)">
+        <ng-container *ngFor="let notification of notifications; let i=index">
+          <notification-item [actor]=notification.actor
+                             [verb]=notification.verb
+                             [object]=notification.object
+                             [target]=notification.target
+                             [members]=notification.members
+                             [time]=notification.updated_at
+                             [text]=notification.text
+                             [link]=notification.link
+                             [pic]=notification.pic
+                             [is_read]=notification.is_read
+                             [is_seen]=notification.is_seen>
+          </notification-item>
+        </ng-container>
+        <!-- [text]=notification.activities[0].text [link]=notification.activities[0].link [pic]=notification.activities[0].pic -->
+        <div *ngIf="notifications.length>9" class="px-2">
+          <button class="btn btn-sm btn-light-blue btn-block" [disabled]="!streamNotificationsRetrieved" (click)="loadMoreNotifications()">
+            <div class="d-flex justify-content-center">View More <span *ngIf="!streamNotificationsRetrieved" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></span></div>
+          </button>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+</div>

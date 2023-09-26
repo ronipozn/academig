@@ -1,0 +1,131 @@
+<ng-container *ngIf="missionService.showPage">
+  <spinner *ngIf="!streamRetrieved[0] || !streamRetrieved[1]" class="mb-2"></spinner>
+  <ng-container *ngIf="streamRetrieved[0] && streamRetrieved[1]">
+
+    <div *ngIf="missionService.showEditBtn" class="d-flex justify-content-center mb-4">
+      <button mat-raised-button class="btn btn-light-blue btn-round" [routerLink]="['..', 'post-service']">
+        <i class="material-icons">add_circle_outline</i> Post a service
+      </button>
+    </div>
+
+    <div class="row no-gutters mb-3">
+      <div [ngClass]="{ 'col-md-12': !(missionService.showEditBtn || items.background), 'col-md-8': (missionService.showEditBtn || items.background) }" [@itemsAnimation]="('active')">
+
+        <div #scrollAdd></div>
+        <div *ngIf="resources[0]==null && items.categories.length==1" class="card mt-0">
+          <div class="card-header">
+            <ng-container *ngIf="missionService.showEditBtn">
+              <build-modal-intro [headline]="'Add your lab\' services'"
+                                 [bodypic]="'wrench'"
+                                 [bodytext]="'Start posting your lab\' services online.'">
+              </build-modal-intro>
+            </ng-container>
+            <build-modal-intro *ngIf="!missionService.showEditBtn"
+                               [headline]="'The services page is still empty.'"
+                               [bodypic]="'wrench'">
+            </build-modal-intro>
+          </div>
+        </div>
+
+         <!-- || items.categories[0] -->
+        <ng-container *ngIf="streamRetrieved[1] && resources.length>0">
+            <!-- <div [dragula]='categories-bag' [(dragulaModel)]='items.categories'> -->
+          <ng-container *ngFor="let category of items.categories; let i=index">
+            <!-- <h5 *ngIf="i>0" class="ml-2 mt-3 mb-1" on-mouseover='buttonOver(true,i)' on-mouseleave='buttonOver(false,i)'>
+              {{ category.title }} <spinner-put [stream]=streamCategories[i] (animationDoneEvent)="streamCategoriesFunc()"> </spinner-put>
+              <build-buttons *ngIf="missionService.showEditBtn && streamCategories[i]==0"
+                             [showButton]=showButton[i]
+                             [editFlag]="category.countIds!=0"
+                             (buttonEditClick)="categorySlide(true, i, false)"
+                             (buttonDeleteClick)="categoryDelete(i)">
+              </build-buttons>
+            </h5> -->
+            <resource-list [streamRetrieved]=streamRetrieved[1]
+                           [bagName]="'resources-bag'+i"
+                           [resources]="resources.slice(counterPointer[i], counterPointer[i]+category.countIds)"
+                           [sourceType]=0
+                           [itemFocus]=itemFocus
+                           [stream]="streamResources.slice(counterPointer[i], counterPointer[i]+category.countIds)"
+                           [streamFollow]="streamResourcesFollow.slice(counterPointer[i], counterPointer[i]+category.countIds)"
+                           [showEditBtn]=missionService.showEditBtn
+                           [planNumber]=missionService.planNumber
+                           (buttonFollowClick)="resourceFollow(i, $event)">
+            </resource-list>
+            <!-- (animationDoneEvent)="streamResourcesFunc()"
+            (buttonEditClick)="resourceSlide(true, $event, false, i)"
+            (buttonDeleteClick)="resourceDelete(i, $event)" -->
+          </ng-container>
+        </ng-container>
+
+        <img src="./assets/img/items/services.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="350" alt="academig_services">
+
+      </div>
+
+      <div *ngIf="missionService.showEditBtn || items.background" class="col-md-4">
+        <div class="d-flex justify-content-start">
+          <div class="d-none d-md-block ml-4"></div>
+          <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+            <div class="card-header">
+              <div #scrollBackground></div>
+              <build-headline [showEditBtn]=missionService.showEditBtn
+                              [addButtonFlag]="items.background==null"
+                              [headline]="'Background'"
+                              (buttonAddClick)="backgroundOp(0, true, null)">
+              </build-headline>
+              <build-modal-intro *ngIf="items.background==null && missionService.showHeadline"
+                                 [headline]="'Introduce your services'"
+                                 [bodypic]="'align-left'"
+                                 [bodytext]="'Give an introduction to the lab service\'s offers.'">
+              </build-modal-intro>
+              <div build-text
+                   [text]=items.background
+                   [showEditBtn]=missionService.showEditBtn
+                   [stream]=streamBackground
+                   (animationDoneEvent)="backgroundOp(3)"
+                   (buttonEditClick)="backgroundOp(0, true, $event)"
+                   (buttonDeleteClick)="backgroundOp(1, false, $event)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </ng-container>
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text *ngIf=backgroundBuildFlag
+                  (update)="backgroundOp(2, false, $event)"
+                  (cancel)="backgroundOp(0, false, $event)"
+                  [title]="'Services Background'"
+                  [text]=items.background>
+</build-slide-text>
+
+<!-- <div class="d-flex justify-content-justify mt-2">
+  <div>
+    <h4>Services</h4>
+  </div>
+  <div *ngIf="missionService.showEditBtn" class="dropdown">
+    <button role="button" class="btn btn-sm btn-link ml-2 p-0" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="fa-stack">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-plus fa-stack-1x fa-inverse" style="color: #8f9599"></i>
+      </span>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" style="cursor:pointer" (click)="categorySlide(true, 0, true)">Add Category</a>
+      <a class="dropdown-item" style="cursor:pointer" (click)="resourceSlide(true, 0, true)">Add Service</a>
+    </div>
+  </div>
+</div>
+<hr class="mt-0 mb-4"> -->
+
+<!-- <p *ngIf="missionService.showHeadline && items.categories.length>1" class="text-muted small mt-4 mb-0">
+  <i class="fa fa-info-circle mr-1" aria-hidden="true"></i>Only empty categories can be deleted.
+</p> -->

@@ -1,0 +1,23 @@
+<td>{{ report.date | date:'dd MMM y' }} </td>
+<td>
+  <span *ngIf="report.submitStatus==0" class="text-muted">Not submitted</span>
+  <span *ngIf="report.submitStatus==1">
+    <b>Title:</b> {{people.title}}<br>
+    <b>What did you work on this week:</b><br>{{people.current}}<br>
+    <b>What will you work on next week:</b><br>{{people.next}}<br>
+    <b>What might delay your planned work:</b><br>{{people.delay}}
+  </span>
+  <span *ngIf="report.submitStatus==2">Skipped submission</span>
+</td>
+<td class="text-right">
+  <!-- class="btn-group" -->
+  <div role="group">
+
+    <a *ngIf="report.submitStatus==1" [href]="report.file" target="_empty" class="btn btn-sm btn-outline-success mr-1" download target="_blank">Download</a>
+
+    <button role="button" class="btn btn-sm btn-outline-success" (click)="buttonFunc()">
+      <i class="fa fa-trash-o" aria-hidden="true"></i>
+    </button>
+
+  </div>
+</td>

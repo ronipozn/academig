@@ -1,0 +1,13 @@
+<!-- https://stackoverflow.com/questions/47966188/routerlink-inside-mat-tab-angular-material -->
+<nav *ngIf="missionService.activeLink!='./saved'" mat-tab-nav-bar animationDuration="0ms" mat-align-tabs="center" [backgroundColor]="background">
+  <a mat-tab-link *ngFor="let navLink of navLinks"
+     class="text-dark nav-link"
+     (click)="navRoute(navLink.link)"
+     [active]="missionService.activeLink==navLink.link">
+    <mat-icon class="mr-1">{{navLink.icon}}</mat-icon> {{navLink.label}}
+  </a>
+</nav>
+
+<router-outlet></router-outlet>
+
+<!-- <i class="material-icons">ballot</i> Projects -->

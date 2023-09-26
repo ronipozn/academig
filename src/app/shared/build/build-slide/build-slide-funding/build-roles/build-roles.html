@@ -1,0 +1,86 @@
+<div *ngIf="newFlag!=2"><b>{{itemTitle}}</b></div>
+
+<div *ngIf="groupStage<2" class="mb-4 alert alert-info alert-with-icon" data-notify="container">
+  <i class="material-icons" data-notify="icon">notifications</i>
+  <button mat-button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <i class="material-icons">close</i>
+  </button>
+  <span data-notify="icon" class="now-ui-icons ui-1_bell-53"></span>
+  <span data-notify="message">You can add new roles only after your lab profile is approved. We usually approve new profiles in less than 24 hours.</span>
+</div>
+
+<div *ngIf="groupStage==2" [formGroup]="parentGroup">
+  <ul [formArrayName]=controlName class="list-unstyled mb-0">
+    <li *ngFor="let e of getControls(parentGroup); let i=index" class="mb-1">
+
+      <div class="card">
+        <div class="card-body py-1">
+          <div [formGroupName]="i">
+
+            <!-- Member -->
+            <build-modal-name-field *ngIf="newFlag!=2"
+                                    [signUpFlag]=true
+                                    [itemFirst]=true
+                                    [labelRequired]=true
+                                    [iconTitle]="'user'"
+                                    [groupId]=fundingId
+                                    [existIds]=existIdsFill
+                                    [mode]=11
+                                    [itemTitle]="'Name'"
+                                    [controlName]="'member'"
+                                    [parentGroup]=e
+                                    [submitStatus]=submitStatus
+                                    (controlStatus)=controlStatus($event,i)>
+            </build-modal-name-field>
+            <!-- [userId]=fundingId: in order to filter existing roles -->
+
+            <!-- Institute Email -->
+            <!-- <build-modal-text-field *ngIf="newFlag!=2"
+                                    [labelRequired]=true
+                                    [fieldType]=1
+                                    [itemTitle]="'Institute Email'"
+                                    [itemArray]=rolesSelect
+                                    [controlName]="'email'"
+                                    [parentGroup]=e
+                                    [submitStatus]=submitStatus>
+            </build-modal-text-field> -->
+            <!-- [fieldType]=11 -->
+
+            <p *ngIf="newFlag==2" class="my-3"><b>Name:</b> {{e.value.member.name}}</p>
+            <!-- <p class="mb-2"><b>Email:</b> {{e.value.member.privateInfo.email}}</p> -->
+
+            <!-- Role Type -->
+            <build-modal-text-field [labelRequired]=true
+                                    [fieldType]=4
+                                    [itemTitle]="'Role'"
+                                    [itemArray]=rolesSelect
+                                    [controlName]="'type'"
+                                    [parentGroup]=e
+                                    [submitStatus]=submitStatus>
+            </build-modal-text-field>
+
+            <!-- Role Description -->
+            <build-modal-text-field [fieldType]=2
+                                    [textAreaRows]=3
+                                    [itemTitle]="'Role description'"
+                                    [controlName]="'description'"
+                                    [parentGroup]=e>
+            </build-modal-text-field>
+
+            <button *ngIf="newFlag==1" role="button" class="btn btn-link p-0 mt-2" (click)="deleteField(i)">
+               <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </li>
+
+    <button *ngIf="newFlag==1" type="button" class="btn btn-sm btn-link p-0" (click)="addField(null)">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+    </button>
+
+  </ul>
+</div>

@@ -1,0 +1,311 @@
+<ng-container *ngIf="missionService.showPage">
+
+  <div *ngIf="(missionService.showEditBtn || this.adminFlag)" class="d-flex justify-content-center mt-0 mb-3">
+    <button role="button" mat-raised-button class="btn btn-light-blue btn-round" (click)="publicationSlide(0, true)">
+      <i class="material-icons">add_circle_outline</i> Add Manually
+    </button>
+    <button role="button" mat-raised-button class="btn btn-light-blue btn-round ml-2" (click)="toggleSuggestionModal()">
+      <i class="material-icons">engineering</i> Find Automatically
+    </button>
+  </div>
+
+  <div *ngIf="statsAllFlag">
+    <div class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+        <button type="button" class="close" (click)="statsAllFlag=false" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <publications-stats-all *ngIf="streamRetrieved[0]" [yearUniqs]=yearUniqs></publications-stats-all>
+      </div>
+    </div>
+  </div>
+
+  <div class="row no-gutters">
+    <div class="col-12" [ngClass]="{'col-md-8': !streamRetrieved[0] || (streamRetrieved[0] && publications.length>0), 'col-md-12': (streamRetrieved[0] && publications.length==0)}">
+
+      <div class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+
+          <ng-container *ngIf="streamRetrieved[0] && publications[0]==null && missionService.showHeadline">
+            <build-modal-intro [headline]="'Publications'" [bodytext]="'Choose the publications you want to showcase on your lab profile.'"></build-modal-intro>
+          </ng-container>
+
+          <!-- <publications-search [streamRetrieved]=streamRetrieved[1]
+                                    [typesDataSum]=typesDataSum
+                                    [sourceType]=0>
+          </publications-search> -->
+
+          <publications-buttons *ngIf="streamRetrieved[0] && publications.length>0" class="ml-2"
+                                [streamRetrieved]=streamRetrieved[0]
+                                [typesData]=typesData
+                                [typesCount]=typesCount
+                                [sourceType]=0
+                                (typesFlag)="typesFlagFunc($event)">
+          </publications-buttons>
+
+          <!-- <app-data-table-cmp [publications]=publications></app-data-table-cmp> -->
+
+          <!-- <div [ngClass]="{'pt-2': typesData!=null}"> -->
+          <publications-list-table [streamRetrieved]=streamRetrieved[0]
+                                   [publicationToggle]=publicationToggle
+                                   [publications]=publications
+                                   [sourceType]=0
+                                   [showEditBtn]=missionService.showEditBtn
+                                   [showHeadline]=missionService.showHeadline
+                                   [userId]=missionService.userId
+                                   [typesFlag]=typesFlag
+                                   [stream]=streamPublications
+                                   [streamDelete]=streamDelete
+                                   [streamFolder]=streamPublicationsFolder
+                                   (types)="typesDataFunc($event)"
+                                   (btnPDF)="pdfSlide($event)"
+                                   (btnDelete)="publicationDelete($event)"
+                                   (btnFolder)="publicationFolder($event)"
+                                   (animationDoneEvent)="streamFunc(0)">
+         </publications-list-table>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+
+      <div *ngIf="!streamRetrieved[0] || publications?.length>0" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card flex-grow-1 mt-0" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <div class="d-flex justify-content-end">
+              <div class="mr-auto"><h4 class="card-title"><b>Publications Stats</b></h4></div>
+              <div><a *ngIf="streamRetrieved[0]" style="cursor: pointer;" (click)="statsAllFlag=true">View all</a></div>
+            </div>
+            <hr class="mt-0">
+            <spinner *ngIf="!streamRetrieved[0]"></spinner>
+            <publications-stats *ngIf="streamRetrieved[0]" [mode]=0 [yearUniqs]=yearUniqs></publications-stats>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="!streamRetrieved[0] || publications?.length>0" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card flex-grow-1 mt-0" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <build-headline [headline]="'Citations'"></build-headline>
+            <publications-stats [mode]=1 ></publications-stats>
+          </div>
+        </div>
+      </div> -->
+
+      <div *ngIf="tags.length>0 && tags[0]" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1 mt-0" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <build-headline [headline]="'Keywords'"></build-headline>
+            <div *ngIf="tags[0]" build-badge [mode]=1 [badges]=tags></div>
+            <!-- (buttonTagClick)="tagClickOp($event)" -->
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="((userService.userId && userService.planNumber==0) || userService.userId==null) && publications?.length>0" class="d-flex justify-content-start">
+        <div class="d-none d-md-block ml-4"></div>
+        <div class="card flex-grow-1 mt-0" style="height: 22rem;">
+          <div class="card-body">
+            <google-adsense></google-adsense>
+            <div *ngIf="userService.userId && userService.planNumber==0" style="position: absolute; bottom: 0;">
+              <button mat-raised-button type="button" class="btn btn-link" (click)="planUpdate()">Upgrade to PRO to remove Ads</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- *ngIf="streamRetrieved[3] && (coauthorsLength>0 || dummyCoauthorsLength>0 || missionService.showEditBtn)" -->
+      <div *ngIf="publications?.length>0" class="d-flex justify-content-start">
+        <div class="d-none d-md-block ml-4"></div>
+        <div class="card flex-grow-1 mt-0">
+          <div class="card-body">
+            <build-headline *ngIf="streamRetrieved[3] && streamRetrieved[4]" [headline]="coauthorsLength + dummyCoauthorsLength + ' Co-authors'"></build-headline>
+            <build-headline *ngIf="!streamRetrieved[3] || !streamRetrieved[4]" [headline]="'Co-authors'"></build-headline>
+            <people-list [streamRetrieved]=streamRetrieved[3]
+                         [peoples]="peoplesCoauthors.slice(0,5)"
+                         [sourceType]=8
+                         [stream]=streamPeopleCoauthors
+                         [activeId]=userId
+                         [streamFollow]=streamPeopleCoauthors>
+            </people-list>
+            <people-list *ngIf="streamRetrieved[3]"
+                         [streamRetrieved]=streamRetrieved[4]
+                         [peoples]="peoplesDummyCoauthors.slice(0,5)"
+                         [sourceType]=8
+                         [stream]=streamPeopleDummyCoauthors
+                         [activeId]=userId
+                         [streamFollow]=streamPeopleDummyCoauthors>
+            </people-list>
+            <span *ngIf="streamRetrieved[3] && streamRetrieved[4] && !peoplesCoauthors[0] && !peoplesDummyCoauthors[0]" class="text-muted">No Co-authors.</span>
+            <a *ngIf="streamRetrieved[3] && streamRetrieved[4] && (peoplesCoauthors[0] || peoplesDummyCoauthors[0])" class="card-title" role="button" (click)="networkFunc(2)" [routerLink]="['./network']">
+              View All Co-authors
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <img src="./assets/img/items/publications.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="200" alt="academig_publications">
+
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-publications *ngIf=publicationBuildFlag
+                          (update)="publicationUpdate($event)"
+                          (cancel)="publicationSlide($event, false)"
+                          [newFlag]=true
+                          [groupId]=missionService.groupId
+                          [userId]=userService.userId
+                          [publication]=publicationBuild
+                          [dois]=dois>
+</build-slide-publications>
+
+<build-slide-tags *ngIf=namesBuildFlag
+                  [tags]=missionService.piNames
+                  [headline]="'Alternative names'"
+                  [key]="'name'"
+                  [max]=8
+                  (update)="namesOp(2, false, $event)"
+                  (cancel)="namesOp(0, false, null)">
+</build-slide-tags>
+
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide(false, null)"
+           [title]=pdfTitle
+           [fileName]=pdfFileName
+           [type]=1>
+</slide-pdf>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - -  Suggestion Summary Modal - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="suggestionsSummaryModal" #suggestionsSummaryModal [hidden]="true" data-toggle="modal" data-target="#summaryModal"></button>
+
+<div *ngIf="streamRetrieved[0] && streamRetrieved[1]" class="modal fade" style="max-height: calc(100vh - 25px);" id="summaryModal" data-target="#summaryModal" tabindex="-1" role="dialog" aria-labelledby="summaryModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div *ngIf="streamSuggestions!=1" class="card my-0">
+        <div class="card-body">
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+
+          <!-- <img *ngIf="publicationsSuggestions?.length==0" class="card-img" src="./assets/img/items/publications_suggestions.svg" style="position: absolute;" class="img-fluid" [width]="70" alt="Publications Suggestions"> -->
+
+          <div class="text-center"><h3 class="mt-0">Publications Suggestions</h3></div>
+
+          <p class="text-center mt-2 mb-0">
+            Suggestions are found based on the Principal investigator name <b>{{missionService.piName}}</b><span *ngIf="primaryNameInitial && primaryNameInitial.length>1">, and its abbreviation <b>{{primaryNameInitial}}</b></span>.
+            <br>Add additional authoring names.
+          </p>
+
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <build-modal-text-field [fieldType]=8
+                                      [itemPlaceholder]="'+ Name'"
+                                      [itemSecondaryPlaceholder]="'Enter name'"
+                                      [itemExplain]="'Choose up to 4 names.'"
+                                      [maxItems]=4
+                                      [itemValues]=parentGroup.value.names
+                                      [controlName]="'names'"
+                                      [parentGroup]=parentGroup
+                                      (controlStatus)="namesOp(2, false, null)">
+              </build-modal-text-field>
+            </div>
+          </div>
+
+          <button [disabled]="streamSuggestions==3" role="button" (click)="generateSuggestions()" mat-raised-button class="d-flex mx-auto btn btn-light-blue mt-4">
+            Get my publications suggestions
+          </button>
+
+        </div>
+      </div>
+
+      <mat-progress-bar *ngIf="streamSuggestions==3"
+                        style="margin: 0px 0px;"
+                        [color]="'primary'"
+                        [mode]="'indeterminate'">
+      </mat-progress-bar>
+
+      <div *ngIf="streamSuggestions==1 && (publicationsSuggestions || publicationsRejected)" class="modal-body">
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+        <ul class="nav nav-pills nav-pills-light-blue nav-pills-icons justify-content-center" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#suggestions" role="tablist">
+              <i class="d-none d-sm-block material-icons">thumb_up</i> {{publicationsSuggestions?.length}} Suggestions
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#rejected" role="tablist">
+              <i class="d-none d-sm-block material-icons">thumb_down</i> {{publicationsRejected?.length}} Rejected
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="publicationTabContent">
+
+          <div class="tab-pane fade show active mt-3" id="suggestions" role="tabpanel" aria-labelledby="suggestions-tab">
+
+            <span class="small text-muted">
+              {{publicationsSuggestions?.length}} suggestions are waiting for your approval.<br>
+              Authoring names: {{missionService.piNames}}
+            </span>
+
+            <div *ngIf="publicationsSuggestions?.length>0" class="card mt-0">
+              <div class="card-body">
+                <publications-list [streamRetrieved]=streamRetrieved[1]
+                                   [publications]=publicationsSuggestions
+                                   [sourceType]=2
+                                   [userId]=missionService.userId
+                                   [stream]=streamPublicationsSuggestions
+                                   [streamFolder]=streamPublicationsSuggestionsFolder
+                                   [streamSuggestions]=streamPublicationsSuggestions
+                                   [suggestFlag]=true
+                                   (btnAccpet)="suggestionDecision($event,0)"
+                                   (btnReject)="suggestionDecision($event,1)">
+                </publications-list>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="tab-pane fade mt-3" id="rejected" role="tabpanel" aria-labelledby="rejected-tab">
+
+            <div *ngIf="publicationsRejected?.length>0" class="card mt-0">
+              <div class="card-body">
+                <publications-list [streamRetrieved]=streamRetrieved[2]
+                                   [publications]=publicationsRejected
+                                   [sourceType]=2
+                                   [userId]=missionService.userId
+                                   [stream]=streamPublicationsRejected
+                                   [streamFolder]=streamPublicationsRejectedFolder
+                                   [rejectFlag]=true>
+                </publications-list>
+              </div>
+            </div>
+
+          </div>
+
+      </div>
+      <!-- (btnRefresh)="generateSuggestions()" -->
+       <!-- <h5>Rejected Publications</h5> -->
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+/* @media (min-width: 1200px) {
+  .navbar {
+    display: inline-block;
+    padding-left: 3%;
+    padding-right: 3%;
+    width: 100%;
+  }
+} */
+ /*to make sure .navbar accepts width*/

@@ -1,0 +1,33 @@
+<div class="card">
+  <div class="card-header">
+
+    <build-headline [headline]="'Services'"></build-headline>
+
+    <p *ngIf="streamRetrieved && count" class="text-muted small">
+      {{count}}
+      <span *ngIf="count==1">result was found</span>
+      <span *ngIf="count>1">results were found</span>
+    </p>
+
+    <resource-list [streamRetrieved]="streamRetrieved || moreFlag"
+                   [sourceType]=6
+                   [resources]=resources
+                   [stream]=stream
+                   [streamFollow]=streamFollow
+                   (buttonFollowClick)="resourceFollow($event)">
+    </resource-list>
+    <!-- [sourceType]=0 -->
+
+    <div *ngIf="moreFlag" class="d-flex justify-content-center">
+      <button role="button" [disabled]="!streamMore" class="btn btn-sm btn-outline-info" (click)="showMoreFunc()">
+        <i class="fa fa-arrow-down" aria-hidden="true"></i> Show more
+        <i *ngIf="!streamMore" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+      </button>
+    </div>
+
+    <div *ngIf="streamRetrieved && !count" class="text-center text-muted">
+      The services list is still empty.<br>
+    </div>
+
+  </div>
+</div>

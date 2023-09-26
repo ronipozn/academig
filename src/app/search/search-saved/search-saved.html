@@ -1,0 +1,55 @@
+<div class="col-xl-10 offset-xl-1" style="padding-top: 23px">
+
+  <div class="card card-stats mb-3" [@itemsAnimation]="('active')">
+    <div class="mb-4 card-header card-header-light-blue card-header-icon">
+      <div class="card-icon p-0">
+        <i class="material-icons">check_box</i>
+      </div>
+      <h4 class="card-title">Saved Searches</h4>
+      <p *ngIf="streamRetrieved && searches.length>0" class="card-title d-flex justify-content-end">
+        {{searches.length}} Searches
+      </p>
+    </div>
+  </div>
+
+  <spinner *ngIf="!streamRetrieved"></spinner>
+
+  <div *ngIf="streamRetrieved && searches.length==0" class="card mt-0">
+    <div class="card-body mt-2">
+      <build-modal-intro [headline]="'Saved Searches'" [bodytext]="'You do not have any saved search.'"></build-modal-intro>
+    </div>
+  </div>
+
+  <div *ngFor="let search of searches; let i=index" class="card mt-0 mb-3">
+    <div class="card-body">
+      <h4 class="strong">
+        <a href="javascript:void(0)" class="card-title" (click)="searchOp(i)">{{i+1}}. {{search.title}}</a>
+        <build-buttons [deleteFlag]=true [showButton]="streamSearches[i]==0" (buttonDeleteClick)="btnDeleteFunc(i)"></build-buttons>
+        <i *ngIf="streamSearches[i]==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+      </h4>
+      <span *ngIf="search.query">Query: {{ search.query }}<br></span>
+      <span *ngIf="search.refinements.search_type?.length>0">Search Type: <span *ngFor="let refinement of search.refinements.search_type; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.type?.length>0">Type: <span *ngFor="let refinement of search.refinements.type; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.countries.length>0">Countries: <span *ngFor="let refinement of search.refinements.countries; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.states.length>0">States: <span *ngFor="let refinement of search.refinements.states; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.cities.length>0">Cities: <span *ngFor="let refinement of search.refinements.cities; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.universities.length>0">Universities: <span *ngFor="let refinement of search.refinements.universities; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.disciplines.length>0">Disciplines: <span *ngFor="let refinement of search.refinements.disciplines; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.interests.length>0">Interests: <span *ngFor="let refinement of search.refinements.interests; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.positions.length>0">Positions: <span *ngFor="let refinement of search.refinements.positions; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.size?.length>0">Lab size: <span *ngFor="let size of search.refinements.size; let l=last;">{{ groupSize[size].name }}<span *ngIf="!l">, </span></span></span>
+      <span *ngIf="search.refinements.head?.length>0">Lab head: <span *ngFor="let refinement of search.refinements.head; let l=last;">{{ refinement }}<span *ngIf="!l">, </span></span><br></span>
+      <span *ngIf="search.refinements.establish?.length>0">Years of establishment: {{search.refinements.establish[0]}}-{{search.refinements.establish[1]}}</span>
+      <span *ngIf="search.refinements.times?.length>0">Times Higher Education: {{search.refinements.times[0]}}-{{search.refinements.times[1]}}</span>
+      <span *ngIf="search.refinements.shanghai?.length>0">Shanghai Jiao Tong University: {{search.refinements.shanghai[0]}}-{{search.refinements.shanghai[1]}}</span>
+      <span *ngIf="search.refinements.top?.length>0">TopUniversities: {{search.refinements.top[0]}}-{{search.refinements.top[1]}}</span>
+      <span *ngIf="search.refinements.usnews?.length>0">U.S. News & World Report: {{search.refinements.usnews[0]}}-{{search.refinements.usnews[1]}}</span>
+      <span *ngIf="search.refinements.facebook?.length>0">Facebook fans: {{search.refinements.facebook[0]}}-{{search.refinements.facebook[1]}}</span>
+      <span *ngIf="search.refinements.twitter?.length>0">Twitter followers: {{search.refinements.twitter[0]}}-{{search.refinements.twitter[1]}}</span>
+      <span *ngIf="search.refinements.linkedin?.length>0">LinkedIn fans: {{search.refinements.linkedin[0]}}-{{search.refinements.linkedin[1]}}</span>
+      <span *ngIf="search.refinements.instagram?.length>0">Instagram fans: {{search.refinements.instagram[0]}}-{{search.refinements.instagram[1]}}</span>
+      <span *ngIf="search.refinements.youtube?.length>0">YouTube fans: {{search.refinements.youtube[0]}}-{{search.refinements.youtube[1]}}</span>
+    </div>
+  </div>
+
+</div>

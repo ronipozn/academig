@@ -1,0 +1,76 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-dark text-center">Update University Ranks</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()">
+
+      <div [hidden]="mode==1">
+        <h5>Official ranks</h5>
+
+        <build-modal-text-field [itemFirst]=true
+                                [iconTitle]="'World'"
+                                [itemTitle]="'Times Higher Education Ranking'"
+                                [controlName]="'times'"
+                                [parentGroup]=formModel>
+        </build-modal-text-field>
+
+        <build-modal-text-field [iconTitle]="'World'"
+                                [itemTitle]="'Shanghai Jiao Tong University Ranking'"
+                                [controlName]="'shanghai'"
+                                [parentGroup]=formModel>
+        </build-modal-text-field>
+
+        <build-modal-text-field [iconTitle]="'World'"
+                                [itemTitle]="'TopUniversities Ranking'"
+                                [controlName]="'top'"
+                                [parentGroup]=formModel>
+        </build-modal-text-field>
+
+        <build-modal-text-field [iconTitle]="'World'"
+                                [itemTitle]="'U.S. News & World Report Ranking'"
+                                [controlName]="'usnews'"
+                                [parentGroup]=formModel>
+        </build-modal-text-field>
+      </div>
+
+      <h5 class="mt-4">Social ranks</h5>
+
+      <build-modal-text-field [iconTitle]="'envelope'"
+                              [itemTitle]="'Facebook fans'"
+                              [controlName]="'facebook'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [iconTitle]="'envelope'"
+                              [itemTitle]="'Twitter followers'"
+                              [controlName]="'twitter'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [iconTitle]="'envelope'"
+                              [itemTitle]="'Linkedin fans'"
+                              [controlName]="'linkedin'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [iconTitle]="'envelope'"
+                              [itemTitle]="'Instagram fans'"
+                              [controlName]="'instagram'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [iconTitle]="'envelope'"
+                              [itemTitle]="'Youtube fans'"
+                              [controlName]="'youtube'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button role="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-light-blue">Update</button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

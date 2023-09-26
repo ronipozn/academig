@@ -1,0 +1,466 @@
+<spinner *ngIf="!streamRetrieved[0]"></spinner>
+
+<ng-container *ngIf="streamRetrieved[0] && profile">
+
+  <!-- https://stackoverflow.com/questions/47242702/force-bootstrap-dropdown-menu-to-always-display-at-the-bottom-and-allow-it-go-of/47248773 -->
+  <div *ngIf="missionService.meFlag" class="mt-0 mb-4">
+    <div class="dropdown">
+      <button class="btn btn-light-blue dropdown-toggle" type="button" id="dropdownMenuButton" data-flip="false" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Add new information
+        <!-- <i class="material-icons">add_circle_outline</i> -->
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="backgroundOp(0, true, true)">About Me</a>
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tagsOp(0, 0, true, true)">Research Interests</a>
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="quoteOp(0, true, null)">Favorite Quote</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tableSlide(0, true, {headline: 'Positions', index: 0, _id: null})">Positions</a>
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tableSlide(1, true, {headline: 'Education', index: 0, _id: null})">Education</a>
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tableSlide(3, true, {headline: 'Industry', index: 0, _id: null})">Industry</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tableSlide(2, true, {headline: 'Honors, Awards and Fellowships', index: 0, _id: null})">Honors, Awards and Fellowships</a>
+        <!-- <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tableSlide(4, true, {headline: 'Outreach', index: 0, _id: null})">Outreach</a> -->
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tableSlide(6, true, {headline: 'Editorial Boards, Service and Committees', index: 0, _id: null})">Editorial Boards, Service and Committees</a>
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tableSlide(7, true, {headline: 'Societies and Organizations', index: 0, _id: null})">Societies and Organizations</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tableSlide(8, true, {headline: 'Languages', index: 0, _id: null})">Languages</a>
+        <a class="dropdown-item py-1" style="cursor:pointer;" (click)="tagsOp(1, 0, true, true)">Recreational Interests</a>
+        <!-- <div class="dropdown-divider"></div> -->
+        <!-- twitter -->
+        <!-- public info -->
+        <!-- social info -->
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-0">
+    <div class="card-body">
+      <div class="row">
+
+        <div class="col-lg-4 border-right">
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <span class="material-icons mr-1">home</span>
+              <b>About</b>
+            </div>
+          </h3>
+
+          <div class="d-md-none text-center mb-3">
+            <img *ngIf="missionService.meFlag" [width]=120 [height]=120 [src]=profile.pic style="cursor: pointer;" (click)="profilePicOp(0, true, null)">
+            <img *ngIf="!missionService.meFlag && profile.pic" [width]=120 [height]=120 [src]=profile.pic class="rounded-circle img-thumbnail mb-2">
+            <span *ngIf="!missionService.meFlag && !profile.pic" [style.font-size]="6 + 'rem'" class="mt-0 pt-0 fa-stack fa-1x mb-2">
+              <i class="fa fa-circle fa-stack-2x py-0 my-0" style="color: #cdcdc1;"></i>
+              <span class="fa fa-stack-1x fa-name fa-inverse">{{profile.name | acronym}}</span>
+            </span>
+          </div>
+
+          <p *ngIf="shortBackground?.length>0">
+            {{shortBackground}}<br>
+            <!-- <a *ngIf="shortBackground.length<profile.background.length" class="text-muted" style="cursor: pointer;" (click)="scrollFullBackground()"><b>View full background</b></a> -->
+          </p>
+
+          <profile-about [profile]=profile
+                         [readings]=readings
+                         [publicInfo]=missionService.publicInfo
+                         [socialInfo]=missionService.socialInfo
+                         [streamInfo]=streamInfo
+                         [streamQuote]=streamQuote
+                         [streamCoverPic]=streamCoverPic
+                         [streamTags]=streamTags[0]
+                         [meFlag]=missionService.meFlag
+                         [followingLength]=missionService.followingLength
+                         [followersLength]=missionService.followersLength
+                         [coauthorsLength]=missionService.coauthorsLength
+                         [dummyCoauthorsLength]=missionService.dummyCoauthorsLength
+                         [userId]=userService.userId
+                         [currentFolder]=currentFolder
+                         [userEmailVerified]=userService.userEmailVerified
+                         (buildLabProfileClick)="buildLabProfileFunc($event)"
+                         (tagsOpClick)="tagsOp(0, $event, $event==0, null)"
+                         (quoteOpClick)="quoteOp($event, $event==0, null)">
+          </profile-about>
+          <!-- (coverPicEditClick)="coverPicOp(0, true, null)" -->
+          <!-- (coverPicDeleteClick)="coverPicOp(1, false, null)" -->
+
+        </div>
+
+        <div class="col-lg-4 border-right">
+
+          <ng-container *ngIf="profile.counts.publications>0">
+            <h3 class="text-dark mt-0">
+              <div class="d-flex align-items-center">
+                <span class="material-icons mr-1">equalizer</span>
+                <b>Publications Stats</b>
+              </div>
+            </h3>
+            <spinner *ngIf="!streamRetrieved[6]"></spinner>
+            <publications-stats-all *ngIf="streamRetrieved[6]" [yearUniqs]=yearUniqs></publications-stats-all>
+          </ng-container>
+
+          <ng-container *ngIf="missionService.peopleId!='academig' && streamRetrieved[5]">
+            <h3 class="text-dark mt-0">
+              <div class="d-flex align-items-center">
+                <span class="material-icons mr-1">list_alt</span>
+                <b>Recent News</b>
+              </div>
+            </h3>
+            <spinner *ngIf="!streamRetrieved[5]"></spinner>
+            <div class="mb-4">
+              <news-list [newses]=newses [userId]=userService.userId [sourceType]=7></news-list>
+              <a *ngIf="newses?.length>0" role="button" class="card-title" [routerLink]="['./news']"><b>View All News...</b></a>
+            </div>
+          </ng-container>
+
+        </div>
+
+        <div class="col-lg-4">
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <span class="material-icons mr-1">description</span>
+              <b>Recent Publications</b>
+            </div>
+          </h3>
+          <ng-container *ngIf="streamRetrieved[6] && publications.length!=0">
+            <a role="button" class="card-title" [routerLink]="['./publications']">
+              <b>View All {{profile.counts.publications}} Publications...</b>
+            </a>
+            <hr class="mt-1">
+            <publications-list [streamRetrieved]=streamRetrieved[6]
+                               [smallPicFlag]=true
+                               [publications]=publications
+                               [sourceType]=0
+                               [userId]=userService.userId
+                               [stream]=streamPublications
+                               [streamFolder]=streamPublicationsFolder
+                               (btnPDF)="pdfSlide($event)"
+                               (btnFolder)="publicationFolder($event)">
+            </publications-list>
+          </ng-container>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row no-gutters mb-4">
+    <div class="col-12 col-md-8">
+
+      <!-- BACKGROUND -->
+       <!-- || missionService.meFlag -->
+      <div #scrollAbout></div>
+      <div *ngIf="profile.background || meetClipConvert" class="card mt-0">
+        <div class="card-body">
+          <build-headline [showEditBtn]=missionService.meFlag
+                          [addButtonFlag]="!profile.background"
+                          [headline]="'About Me'"
+                          (buttonAddClick)="backgroundOp(0, true, true)">
+          </build-headline>
+          <!-- [textMax]=500 -->
+          <div *ngIf="profile.background"
+               build-text-pic
+               [mode]=true
+               [text]=profile.background
+               [stream]=streamBackground
+               [showEditBtn]=missionService.meFlag
+               [titleText]="'Background'"
+               [bodyText]="'Add a background and introduction clip about yourself.'"
+               [pic]=meetClipConvert
+               [imgCenter]=true
+               (animationDoneEvent)="backgroundOp(3)"
+               (buttonDeleteClick)="backgroundOp(1, false, null)"
+               (buttonEditClick)="backgroundOp(0, true, null)">
+          </div>
+        </div>
+      </div>
+
+      <!-- POSITIONS -->
+      <div #scrollPositions></div>
+      <background-table [sourceType]=sourceType
+                        [meFlag]=missionService.meFlag
+                        [tableMode]=0
+                        [tableToggle]=tableToggle
+                        [positions]=positions
+                        [stream]=streamTable[0]
+                        (animationDoneEvent)="streamFunc(0)"
+                        (buildLabProfileClick)="buildLabProfileFunc($event)"
+                        (buildFlag)="tableSlide(0, true, $event)"
+                        (buttonEditClick)="tableEdit(0, true, $event)"
+                        (buttonDeleteClick)="tableDelete($event, 0)">
+      </background-table>
+
+      <!-- EDUCATIONS -->
+      <background-table [sourceType]=sourceType
+                        [meFlag]=missionService.meFlag
+                        [tableMode]=1
+                        [tableToggle]=tableToggle
+                        [educations]=educations
+                        [stream]=streamTable[1]
+                        (animationDoneEvent)="streamFunc(2)"
+                        (buildLabProfileClick)="buildLabProfileFunc($event)"
+                        (buildFlag)="tableSlide(1, true, $event)"
+                        (buttonEditClick)="tableEdit(1, true, $event)"
+                        (buttonDeleteClick)="tableDelete($event, 1)"
+                        (pdfClick)=pdfSlide(true,$event)>
+      </background-table>
+
+      <!-- COMPANIES -->
+      <background-table [sourceType]=sourceType
+                        [meFlag]=missionService.meFlag
+                        [tableMode]=3
+                        [tableToggle]=tableToggle
+                        [positions]=companies
+                        [stream]=streamTable[3]
+                        (animationDoneEvent)="streamFunc(3)"
+                        (buildLabProfileClick)="buildLabProfileFunc($event)"
+                        (buildFlag)="tableSlide(3, true, $event)"
+                        (buttonEditClick)="tableEdit(3, true, $event)"
+                        (buttonDeleteClick)="tableDelete($event, 3)">
+      </background-table>
+
+      <!-- HONORS -->
+      <background-table [sourceType]=sourceType
+                        [meFlag]=missionService.meFlag
+                        [tableMode]=2
+                        [tableToggle]=tableToggle
+                        [profile]=profile
+                        [stream]=streamTable[2]
+                        (animationDoneEvent)="streamFunc(2)"
+                        (buildFlag)="tableSlide(2, true, $event)"
+                        (buttonEditClick)="tableEdit(2, true, $event)"
+                        (buttonDeleteClick)="tableDelete($event, 2)">
+      </background-table>
+
+      <!-- OUTREACH -->
+      <background-table [sourceType]=sourceType
+                        [meFlag]=missionService.meFlag
+                        [tableMode]=4
+                        [tableToggle]=tableToggle
+                        [profile]=profile
+                        [stream]=streamTable[4]
+                        (animationDoneEvent)="streamFunc(4)"
+                        (buildFlag)="tableSlide(4, true, $event)"
+                        (buttonEditClick)="tableEdit(4, true, $event)"
+                        (buttonDeleteClick)="tableDelete($event, 4)">
+      </background-table>
+
+      <!-- SERVICES -->
+      <background-table [sourceType]=sourceType
+                        [meFlag]=missionService.meFlag
+                        [tableMode]=6
+                        [tableToggle]=tableToggle
+                        [profile]=profile
+                        [stream]=streamTable[6]
+                        (animationDoneEvent)="streamFunc(6)"
+                        (buildFlag)="tableSlide(6, true, $event)"
+                        (buttonEditClick)="tableEdit(6, true, $event)"
+                        (buttonDeleteClick)="tableDelete($event, 6)">
+      </background-table>
+
+      <!-- SOCIETIES -->
+      <background-table [sourceType]=sourceType
+                        [meFlag]=missionService.meFlag
+                        [tableMode]=7
+                        [profile]=profile
+                        [stream]=streamTable[7]
+                        (animationDoneEvent)="streamFunc(7)"
+                        (buildFlag)="tableSlide(7, true, $event)"
+                        (buttonEditClick)="tableEdit(7, true, $event)"
+                        (buttonDeleteClick)="tableDelete($event, 7)">
+      </background-table>
+
+      <!-- LANGUAGES -->
+      <background-table [sourceType]=sourceType
+                        [meFlag]=missionService.meFlag
+                        [tableMode]=8
+                        [profile]=profile
+                        [stream]=streamTable[8]
+                        (animationDoneEvent)="streamFunc(8)"
+                        (buildFlag)="tableSlide(8, true, $event)"
+                        (buttonEditClick)="tableEdit(8, true, $event)"
+                        (buttonDeleteClick)="tableDelete($event, 8)">
+      </background-table>
+
+      <!-- RECREATIONAL INTERESTS -->
+       <!-- || missionService.meFlag -->
+      <div *ngIf="profile.recreationalInterests.length!=0" class="card mt-0">
+        <div class="card-body pb-0">
+          <build-headline [showEditBtn]=missionService.meFlag
+                          [addButtonFlag]="profile.recreationalInterests[0]==null"
+                          [headline]="'Recreational Interests'"
+                          (buttonAddClick)="tagsOp(1, 0, true, true)">
+          </build-headline>
+          <div *ngIf="profile.recreationalInterests[0]" class="mb-2">
+            <div build-badge
+                 [badges]=profile.recreationalInterests
+                 [showEditBtn]=missionService.meFlag
+                 [stream]=streamTags[1]
+                 [mode]=1
+                 (animationDoneEvent)="tagsOp(1, 3)"
+                 (buttonDeleteClick)="tagsOp(1, 1, false, null)"
+                 (buttonEditClick)="tagsOp(1, 0, true, null)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="streamRetrieved[0]" class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="'Reading Folders'"></build-headline>
+          <ul class="list-inline">
+            <li *ngFor="let folder of profile.folders; let i=index; let l=last" class="list-inline-item">
+              <a role="button" class="card-title" [routerLink]="['./library']">{{folder.folder}} ({{folder.count}})</a> <span *ngIf="!l" class="ml-2">&middot;</span>
+            </li>
+          </ul>
+          <hr>
+          <a role="button" class="card-title" [routerLink]="['./library']">
+            More of {{profile.name}}'s reading folders…
+          </a>
+        </div>
+      </div>
+
+      <div *ngIf="streamRetrieved[7] && readings.length!=0" class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="profile.name+'\'s Currently Reading'"></build-headline>
+          <publications-list [streamRetrieved]=true
+                             [publications]=readings
+                             [sourceType]=0
+                             [userId]=userService.userId
+                             [stream]=streamReadings
+                             [streamFolder]=streamReadingsFolder
+                             (btnPDF)="pdfSlide($event)"
+                             (btnFolder)="readingsFolder($event)">
+          </publications-list>
+          <a role="button" class="card-title" [routerLink]="['./library']">
+            More of {{profile.name}}'s reading library…
+          </a>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="col-12 col-md-4">
+      <profile-sidebar [userId]=userService.userId
+                       [profile]=profile>
+      </profile-sidebar>
+    </div>
+
+  </div>
+
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide($event)"
+           [title]=fileTitle
+           [fileName]=fileName
+           [type]=1>
+</slide-pdf>
+
+<!-- <build-slide-add *ngIf=addInfoBuildFlag
+                 (update)="addInfoFunc($event)"
+                 (cancel)="addInfoFunc(false)">
+</build-slide-add> -->
+
+<!-- <build-slide-pic *ngIf=coverPicBuildFlag
+                 (update)="coverPicOp(2, false, $event)"
+                 (cancel)="coverPicOp(0, false, $event)"
+                 [title]="'Profile Cover Photo'"
+                 [itemId]=missionService.groupId
+                 [width]=380
+                 [height]=126
+                 [type]=3
+                 [pic]=profile.coverPic>
+</build-slide-pic> -->
+
+<build-slide-pic *ngIf=profilePicBuildFlag
+                 (update)="profilePicOp(2, false, $event)"
+                 (cancel)="profilePicOp(0, false, $event)"
+                 [title]="'Profile Picture'"
+                 [itemId]=userService.userId
+                 [pic]=profile.pic
+                 [width]=128
+                 [height]=128
+                 [type]=0>
+</build-slide-pic>
+
+<build-slide-quote *ngIf=quoteBuildFlag
+                   (update)="quoteOp(2, false, $event)"
+                   (cancel)="quoteOp(0, false, $event)"
+                   [text]=profile.quote.text
+                   [name]=profile.quote.name
+                   [pic]=profile.quote.pic>
+</build-slide-quote>
+
+<build-slide-text-clip *ngIf=backgroundBuildFlag
+                       [text]=profile.background
+                       [clip]=profile.meetClip
+                       (update)="backgroundOp(2, false, $event)"
+                       (cancel)="backgroundOp(0, false, $event)">
+</build-slide-text-clip>
+
+<build-slide-tags *ngIf=researchInterestsBuildFlag
+                  [tags]=profile.researchInterests
+                  [headline]="'Research Interests'"
+                  (update)="tagsOp(0, 2, false, $event)"
+                  (cancel)="tagsOp(0, 0, false, $event)">
+</build-slide-tags>
+
+<build-slide-tags *ngIf=recreationalInterestsBuildFlag
+                  [tags]=profile.recreationalInterests
+                  [headline]="'Recreational Interests'"
+                  (update)="tagsOp(1, 2, false, $event)"
+                  (cancel)="tagsOp(1, 0, false, $event)">
+</build-slide-tags>
+
+<build-slide-table *ngIf=tableBuildFlag
+                   (update)="tableUpdate($event)"
+                   (cancel)="tableCancel()"
+                   [headline]=tableHeadline
+                   [newFlag]=tableNewFlag
+                   [mode]=tableMode
+                   [userId]=userService.userId
+                   [position]="positions[tableIndex]"
+                   [education]="educations[tableIndex]"
+                   [company]="companies[tableIndex]"
+                   [honor]="profile.honors[tableIndex]"
+                   [outreach]="profile.outreach[tableIndex]"
+                   [service]="profile.services[tableIndex]"
+                   [society]="profile.societies[tableIndex]"
+                   [language]="profile.languages[tableIndex]">
+</build-slide-table>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="'user'"></modal-signup>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Lab Build Modal - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleLabBuildModal" #toggleLabBuildModal [hidden]="true" data-toggle="modal" data-target="#labBuildModal"></button>
+
+<div *ngIf="positionBuild || educationBuild" class="modal fade" id="labBuildModal" data-target="#labBuildModal" tabindex="-1" role="dialog" aria-labelledby="LabBuildModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <!-- modal-dialog-centered modal-lg -->
+    <div class="modal-content">
+      <modal-build-lab [positionBuild]=positionBuild
+                       [educationBuild]=educationBuild
+                       [mode]=modalBuildMode
+                       (buildWebsiteClick)="buildLabProfilePopupFunc($event)">
+      </modal-build-lab>
+    </div>
+  </div>
+</div>

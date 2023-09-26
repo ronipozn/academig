@@ -1,0 +1,56 @@
+<!-- <div [dragula]=bagName [(dragulaModel)]='items'> -->
+  <span *ngFor="let item of items; let i=index">
+
+    <div *ngIf="item!=null"
+       on-mouseover='buttonOver(true,i)'
+       on-mouseleave='buttonOver(false,i)'
+       class="mb-4"
+       [ngClass]="{'build': showEditBtn && stream[i]==0}">
+
+      <div class="d-flex justify-content-start">
+
+        <div [ngClass]="{'invisible': (!showEditBtn || !(showButton[i] && stream[i]==0))}" class="handle"></div>
+
+        <a *ngIf="item.link" class="ml-1 mr-2" href="{{ item.link }}" target="_empty">{{ item.name }}</a>
+        <span *ngIf="!item.link" class="ml-1 mr-2">{{ item.name }}</span>
+
+        <spinner-put [stream]=stream[i]
+                     (animationDoneEvent)="animationDone($event,i)">
+        </spinner-put>
+
+        <build-buttons [showButton]="showButton[i] && stream[i]==0"
+                       (buttonEditClick)="buttonEditFunc($event, i)"
+                       (buttonDeleteClick)="buttonDeleteFunc($event, i)">
+        </build-buttons>
+
+      </div>
+
+      <p *ngIf="item.period.start" class="ml-2">
+        {{ item.period.start | date: 'MMM y' }}
+        <span *ngIf="item.period.end"> - {{item.period.end | date: 'MMM y' }}</span>
+        <span *ngIf="item.period.mode==2"> - Present</span>
+      </p>
+
+      <p *ngIf="item.projects[0]" class="ml-2">
+        Related Projects:
+
+        <span *ngFor="let project of item.projects; let f=first; let l=last"
+             class="d-flex justify-content-start align-items-center"
+             [ngClass]="{'mb-3': !l, 'mt-1': f}">
+          <single-pic class="mr-2"
+                      [pic]=project.pic
+                      [width]=29
+                      [height]=29
+                      [widthE]=1
+                      [type]=true
+                      [stack]=true
+                      [stackPic]="'cubes'">
+          </single-pic>
+          <a [routerLink]="['../projects/',project._id]">{{ project.name }}</a>
+        </span>
+      </p>
+
+    </div>
+
+  </span>
+<!-- </div> -->

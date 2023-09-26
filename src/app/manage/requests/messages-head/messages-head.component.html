@@ -1,0 +1,36 @@
+<div class="d-flex">
+  <div class="mr-auto">
+    <div class="media">
+      <single-pic class="mr-2" [pic]="resource.pic" [width]=48 [height]=48 [widthE]=1.6 [type]=1 [stack]=true [stackColor]="'5E5770'" [stackPic]="'wrench'"></single-pic>
+      <div class="media-body">
+        <a class="h5 card-title" [routerLink]="['/services',resource._id]">{{ resource.name }}</a>
+        <p *ngIf="resource.categoryId>0" class="mb-2">
+          <span class="text-muted">Category:</span> {{ serviceSelect[resource.categoryId] }}
+        </p>
+        <p *ngIf="resource.price && resource.price.request" class="mt-0 mb-2">
+          <span class="text-muted">Price:</span>
+          <span *ngIf="resource.price.mode==0 && !resource.price.range"> {{resource.price.price[0] | currency: currencySymbols[resource.price.currency]:'symbol'}}</span>
+          <span *ngIf="resource.price.mode==0 && resource.price.range"> {{resource.price.price[0] | currency: currencySymbols[resource.price.currency]:'symbol'}} - {{resource.price.price[1] | currency: currencySymbols[resource.price.currency]:'symbol'}}</span>
+          <span *ngIf="resource.price.mode==1"> Shown by request</span>
+        </p>
+        <!-- <p class="small text-muted">
+          <i class="fa fa-clock-o" aria-hidden="true"></i> Resource created on {{ resource.created_on | date: 'mediumDate' }}
+        </p> -->
+        <div *ngIf="mode==1 && resource.channels[channelSelected]" class="mt-0 d-flex align-items-center justify-content-start mb-2">
+          <span class="text-dark mr-2">Contact people:</span>
+          <div *ngFor="let member of resource.channels[channelSelected].users; let i=index" class="mr-2">
+            <a [routerLink]="['/people',member._id]">
+              <single-pic class="profile" [pic]=member.pic [width]=28 [height]=28 [type]=0></single-pic>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="position: relative mr-2">
+    <i *ngIf="presence" class="fa fa-circle" style="color:#44b449"></i>
+    <i *ngIf="!presence" class="fa fa-circle" style="color:red"></i>
+</div> -->
+<!-- [matTooltip]="member.name" [matTooltipPosition]="'below'" (click)="buttonDeleteFunc()"> -->

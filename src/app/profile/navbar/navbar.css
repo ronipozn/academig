@@ -1,0 +1,34 @@
+
+.fa-20 {
+  font-size: 20px;
+}
+
+.active {
+  color: #000 !important;
+  background-color: transparent !important;
+  text-decoration: none;
+  /* font-weight: bold; */
+  border-radius:0px;
+  border-bottom-width: 4px;
+  border-bottom-style: solid;
+  border-bottom-color: #03A9F4;
+  padding-bottom: 12px;
+}
+
+/* .nav-pills > .active > a:hover */
+.nav-pills > li > a:hover {
+  color: #000 !important;
+  background-color: transparent !important;
+  text-decoration: none;
+  /* font-weight: bold; */
+  border-radius:0px;
+  border-bottom-width: 4px;
+  border-bottom-style: solid;
+  border-bottom-color: #C7C7C7;
+  padding-bottom: 12px;
+}
+
+.nav-pills > li > a{
+  border-radius:0px;
+  color: #000 !important;
+}

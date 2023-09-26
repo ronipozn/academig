@@ -1,0 +1,77 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">Mentoring Details</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Price/hour</mat-label> <!-- [labelRequired]=true -->
+        <mat-select formControlName=price placeholder="Session price/hour"> <!-- ariaLabel="lettersSelect[0]" -->
+          <mat-option *ngFor="let duration of pricesSelect" [value]="duration.value">
+            {{ duration.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Session duration</mat-label> <!-- [labelRequired]=true -->
+        <mat-select multiple formControlName=durations placeholder="Session duration"> <!-- ariaLabel="lettersSelect[0]" -->
+          <mat-option *ngFor="let duration of durationsSelect" [value]="duration.value">
+            {{ duration.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Session times available</mat-label> <!-- [labelRequired]=true -->
+        <mat-select multiple formControlName=times placeholder="Session times"> <!-- ariaLabel="lettersSelect[0]" -->
+          <mat-option *ngFor="let duration of timesSelect" [value]="duration.value">
+            {{ duration.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Session days available</mat-label> <!-- [labelRequired]=true -->
+        <mat-select multiple formControlName=days placeholder="Session days"> <!-- ariaLabel="lettersSelect[0]" -->
+          <mat-option *ngFor="let day of daysSelect" [value]="day.value">
+            {{ day.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Availability</mat-label> <!-- [labelRequired]=true -->
+        <mat-select multiple formControlName=availability placeholder="Availability"> <!-- ariaLabel="lettersSelect[0]" -->
+          <mat-option *ngFor="let availability of availabilitySelect" [value]="availability.value">
+            {{ availability.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Communications tools</mat-label> <!-- [labelRequired]=true -->
+        <mat-select multiple formControlName=tools placeholder="Communications tools"> <!-- ariaLabel="lettersSelect[0]" -->
+          <mat-option *ngFor="let tool of toolsSelect" [value]="tool.value">
+            {{ tool.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- <build-modal-text-field [fieldType]=7
+                              [itemTitle]="'Mentoring sessions languages'"
+                              [controlName]="'tools'"
+                              [parentGroup]="formModel"
+                              [itemArray]="['English', 'German','Hebrew']"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field> -->
+
+      <div class="pull-left form-group">
+        <button role="button" class="btn btn-sm btn-light-blue">Update</button>
+        <button type="button" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

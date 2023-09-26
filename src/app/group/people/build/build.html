@@ -1,0 +1,230 @@
+<div class="side-form">
+
+  <h3 class="title text-center">{{headline}}</h3>
+
+  <div class="form-container">
+
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()"  autocomplete="nope">
+
+      <!-- <div *ngIf="adminFlag" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div> -->
+
+      <build-modal-name-field *ngIf="typeFlag==0"
+                              [signUpFlag]=true
+                              [itemFirst]=true
+                              [labelRequired]=true
+                              [iconTitle]="'user'"
+                              [groupId]=groupId
+                              [mode]=0
+                              [itemTitle]="'Full name'"
+                              [controlName]="'member'"
+                              (controlStatus)=controlStatusFunc($event,2)
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-name-field>
+
+      <p *ngIf="typeFlag==1 || typeFlag==4 || typeFlag==6 || typeFlag==7 || typeFlag==8 || typeFlag==9" class="mb-3">
+        <b>Name:</b> {{people.name}}
+      </p>
+
+      <build-modal-text-field *ngIf="typeFlag==0 || typeFlag==9"
+                              [fieldType]=11
+                              [itemTitle]="'Email'"
+                              [controlName]="'email'"
+                              [parentGroup]=formModel
+                              [labelRequired]="typeFlag==9"
+                              [submitStatus]=submitStatus
+                              [itemExplain]=emailExplainText>
+      </build-modal-text-field>
+
+      <ng-container *ngIf="(typeFlag==0 || typeFlag==2 || typeFlag==3 || typeFlag==6 || typeFlag==7) && (activeTab==0 || activeTab==2)">
+        <build-modal-text-field *ngIf="labFlag"
+                                [labelRequired]=true
+                                [itemFirst]="typeFlag==2 || typeFlag==3"
+                                [fieldType]=3
+                                [itemTitle]="'Positions and Degrees'"
+                                [itemArray]=titleSelect
+                                [controlName]="'titles'"
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus
+                                (controlStatus)=controlStatusFunc($event,0)>
+        </build-modal-text-field>
+        <build-modal-text-field *ngIf="!labFlag"
+                                [labelRequired]=true
+                                [itemFirst]="typeFlag==2 || typeFlag==3"
+                                [fieldType]=1
+                                [itemTitle]="'Current position'"
+                                [controlName]="'titles'"
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus
+                                (controlStatus)=controlStatusFunc($event,0)>
+        </build-modal-text-field>
+      </ng-container>
+
+      <div *ngIf="formModel.get('start') && (typeFlag==0 || typeFlag==2 || typeFlag==3 || typeFlag==6 || typeFlag==7 || typeFlag==8)" class="row no-gutters">
+
+        <div class="col" [ngClass]="{'mr-1': activeTab>0 && typeFlag<2}">
+          <build-month-field [itemTitle]="'Start Date'"
+                             [controlName]="'start'"
+                             [parentGroup]=formModel
+                             [labelRequired]=false
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('start').errors && formModel.get('start').errors.range)">
+          </build-month-field>
+        </div>
+
+        <div *ngIf="((typeFlag==0 || typeFlag==2 || typeFlag==3) && activeTab>0) || typeFlag==6 || (typeFlag==7 && people.positions[positionIndex].period.mode==0)" class="col ml-1">
+          <build-month-field *ngIf="typeFlag==6 || typeFlag==8"
+                             [itemTitle]="'End Date'"
+                             [controlName]="'end'"
+                             [parentGroup]=formModel
+                             [labelRequired]=true
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('end').errors && formModel.get('end').errors.range)">
+          </build-month-field>
+          <build-modal-text-field *ngIf="typeFlag!=7 && typeFlag!=2 && typeFlag!=0"
+                                  [itemFirst]=true
+                                  [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'present'"
+                                  (controlStatus)=controlStatusFunc($event,1)
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Present']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+
+        <span *ngIf="formModel.get('start').errors">
+          <span *ngIf="formModel.get('start').errors.range" class="mt-1 mb-0 small">
+            <span class="text-danger mb-0">End date should be greater than start date</span>
+          </span>
+        </span>
+
+      </div>
+
+      <build-modal-text-field *ngIf="typeFlag==0 || typeFlag==1"
+                              [fieldType]=2
+                              [textAreaRows]=4
+                              [itemTitle]="'Short background'"
+                              [controlName]="'text'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+      <!-- [itemExplain]="'Keep introduction up to 200 characters.'" -->
+
+      <ng-container *ngIf="typeFlag==4 || typeFlag==8">
+
+        <span *ngIf="people.positions[positionIndex].status==6 && positionIndex==0" class="text-muted">
+          As the {{labFlag ? 'Principal Investigator' : 'Super Admin'}},
+          you can't remove yourself from the group.
+          You can put your lab on hold or close it in the <a [routerLink]="['../settings']">Lab Settings</a> page.
+        </span>
+
+        <ng-container *ngIf="people.positions[positionIndex].status!=6 || positionIndex!=0">
+
+          <p class="mt-0 mb-3"><b>Start date:</b> {{people.positions[positionIndex].period.start | date:'MMM y'}}</p>
+          <p *ngIf="people.positions[positionIndex].period.mode==0" class="mb-3"><b>End date:</b> {{people.positions[positionIndex].period.end | date:'MMM y'}}</p>
+          <p>{{endRelationText}}</p>
+
+          <build-month-field *ngIf="typeFlag==8"
+                             [itemTitle]="'End Date'"
+                             [controlName]="'end'"
+                             [parentGroup]=formModel
+                             [labelRequired]=true
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('end').errors && formModel.get('end').errors.end)">
+          </build-month-field>
+
+          <p *ngIf="typeFlag==8 && formModel.get('end').errors">
+            <span *ngIf="formModel.get('end').errors.end" class="mt-1 mb-0 small form-check has-warning">
+              <span class="invalid-feedback mb-0">End date should be greater than start date</span>
+            </span>
+          </p>
+
+          <p *ngIf="endRelationTextMore" class="text-muted mt-0">
+            <i class="fa fa-info-circle" aria-hidden="true"></i> {{endRelationTextMore}}
+          </p>
+
+        </ng-container>
+      </ng-container>
+<!--
+      <ng-container *ngIf="labFlag && (
+           ((typeFlag==2 || typeFlag==3) && activeTab>0) ||
+           typeFlag==6 ||
+           typeFlag==8 && people.positions[positionIndex].status<6 ||
+           (typeFlag==7 && people.positions[positionIndex].period.mode==0)
+         )">
+        <build-modal-text-field [fieldType]=1
+                                [itemTitle]="'Thesis title'"
+                                [controlName]="'thesisTitle'"
+                                [parentGroup]=formModel>
+        </build-modal-text-field>
+        Thesis file:
+        <div id="direct_upload" class="mt-1">
+          <div class="d-flex justify-content-center">
+            <input type="hidden" id="file" name="thesisFile" data-input-accept-types=".pdf" data-tabs="file url gdrive dropbox skydrive">
+          </div>
+        </div>
+      </ng-container> -->
+
+      <ng-container *ngIf="typeFlag==0 ||( typeFlag==1 && !people.stage)">
+        <span class="form-control-sm text-dark"><b>Member picture:</b></span>
+        <div id="direct_upload" class="mt-1">
+          <single-pic *ngIf="picFile || fieldPic || people?.pic"
+                      [centerFlag]=true
+                      [pic]="picFile ? picFile : (fieldPic ? fieldPic : people.pic)"
+                      [thumbnailFlag]=true
+                      [stackPic]="'cubes'"
+                      [type]=0
+                      [width]=112
+                      [height]=112
+                      [widthE]=4>
+          </single-pic>
+          <div class="d-flex justify-content-center" [ngClass]="{'mt-3': picFile || fieldPic || people?.pic}">
+            <input type="hidden" id="picFile" [disabled]=picFlag name="picFile" data-images-only data-preview-step data-crop="112x112 upscale">
+          </div>
+        </div>
+      </ng-container>
+
+      <div *ngIf="(typeFlag==0 || typeFlag==1) && activeTab==0 && privilageFlag" class="mb-4">
+        <build-modal-text-field [labelRequired]=true
+                                [fieldType]=5
+                                [itemTitle]="'Privilage'"
+                                [itemExplain]="'Admins can edit all the lab pages, but they don\'t have access to the group settings page.'"
+                                [itemArray]=privilageRadio
+                                [controlName]="'privilage'"
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+
+      <div class="form-group">
+        <button *ngIf="typeFlag!=4 && typeFlag!=8" type="submit" mat-raised-button class="btn btn-sm btn-light-blue" [disabled]="uploadFlagFile">
+          <span *ngIf="typeFlag==0">Add</span>
+          <span *ngIf="typeFlag==9">Invite</span>
+          <span *ngIf="typeFlag==1 || typeFlag==7">Update</span>
+          <span *ngIf="typeFlag==2">Request to Join</span>
+          <span *ngIf="typeFlag==3">Request to Rejoin</span>
+          <span *ngIf="typeFlag==5">Cancel Request</span>
+          <span *ngIf="typeFlag==6">Add</span>
+        </button>
+        <button *ngIf="(typeFlag==4 || typeFlag==8) && (people.positions[positionIndex].status!=6 || positionIndex!=0)" type="submit" mat-raised-button class="btn btn-sm btn-light-blue" [disabled]="uploadFlagFile">
+          <span *ngIf="typeFlag==4">Delete</span>
+          <span *ngIf="typeFlag==8">Move</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+        <!-- You can also send a one time reminder to the group leader and admins. -->
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+/* https://stackoverflow.com/questions/46933953/angular-material-stepper-disable-header-navigation */
+::ng-deep .mat-horizontal-stepper-header{
+    pointer-events: none !important;
+}
+
+.bg-color {
+  background-color: #EEEEEE;
+}
+
+@media (min-width: 1200px) {
+  .navbar {
+    display: inline-block;  /*to make sure .navbar accepts width*/
+    padding-left: 4%;
+    padding-right: 4%;
+    width: 100%;
+  }
+}
+
+svg{
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+  display:inline-block;
+}
+
+.btn-info {
+  background-color: white;
+  border-color: #E8F0EB;
+}
+
+.btn-info:hover, .btn-info:focus, .btn-info:active:focus .btn-info:active, .btn-info.active, .open>.dropdown-toggle.btn-info {
+  background-color: #E8F0EB;
+  border-color: #CED5D0;
+}

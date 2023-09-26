@@ -1,0 +1,50 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">
+    <span *ngIf=!newFlag>Update</span>
+    <span *ngIf=newFlag>New</span>
+    Question
+  </h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="adminFlag && newFlag" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-modal-text-field [itemFirst]=true
+                              [labelRequired]=true
+                              [itemTitle]="'Question'"
+                              [controlName]="'question'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=true
+                              [fieldType]=12
+                              [itemTitle]="'Answer'"
+                              [controlName]="'answer'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button type="submit" [disabled]="disableFlag" mat-raised-button class="btn btn-sm btn-fill btn-light-blue">
+          <span *ngIf=newFlag>Add</span>
+          <span *ngIf=!newFlag>Update</span>
+        </button>
+        <button type="button" [disabled]="disableFlag" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

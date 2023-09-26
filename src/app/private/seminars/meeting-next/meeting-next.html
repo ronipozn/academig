@@ -1,0 +1,84 @@
+<h4 class="my-0 d-flex justify-content-start align-items-center">
+  <b>Next Seminar</b>
+  <spinner-put [stream]=stream></spinner-put>
+</h4>
+<hr class="mt-0">
+
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && !meeting" class="mr-auto">
+  <p class="lead">Empty</p>
+</div>
+
+<div *ngIf="streamRetrieved && meeting" class="mr-auto">
+
+  <tbody>
+    <tr *ngIf="meeting.activeFlag">
+      <td class="text-nowrap text-left text-muted pr-2"><i class="fa fa-map-marker fa-fw"></i> Location</td>
+      <td>{{ meeting.location }}</td>
+    </tr>
+    <tr>
+      <td class="pt-2 text-nowrap text-left text-muted pr-2"><i class="fa fa-clock-o fa-fw"></i> Time</td>
+      <td class="pt-2">{{ meeting.date | date:'fullDate' }}, {{ meeting.date | date:'HH:mm' }}</td>
+    </tr>
+    <tr *ngIf="meeting.activeFlag==true">
+      <td class="pt-2 text-nowrap text-left text-muted pr-2"><i class="fa fa-user fa-fw"></i> Presenter</td>
+      <td>
+        <div class="pt-2 d-flex justify-content-start align-items-center">
+          <single-pic class="mr-2" [pic]=meeting.presenter.pic [width]=32 [height]=32></single-pic>
+          <a [routerLink]="['../../people',meeting.presenter._id]" class="card-title">{{ meeting.presenter.name }}</a>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+
+  <p *ngIf="meeting.activeFlag && meeting.topic" class="card-text mt-3"><b>Topic:</b> {{ meeting.topic }}</p>
+  <p *ngIf="!meeting.activeFlag" class="card-text text-muted mt-3"><b>No seminar</b></p>
+
+  <p *ngIf="meeting.activeFlag==false || !meeting.files" class="text-muted mt-3">
+    <!-- <i class="fa fa-file-pdf-o mr-1" aria-hidden="true"></i>Presentation -->
+    The presentation has not been uploaded yet.
+  </p>
+
+  <div *ngIf="meeting.activeFlag==true && meeting.files" class="card-text ml-1 mt-3">
+    <p *ngFor="let file of createRange(meeting.files); let i=index">
+
+      <button *ngIf="createFile(meeting.files,i) && isPDF(createFile(meeting.files,i))" role="button" class="btn btn-link p-0 m-0" (click)="pdfSlide(true,meeting.name,createFile(meeting.files,i))">
+        <i class="fa fa-file-pdf-o mr-1" aria-hidden="true"></i> File {{i+1}}
+      </button>
+
+      <a *ngIf="createFile(meeting.files,i) && !isPDF(createFile(meeting.files,i))" [href]="createFile(meeting.files,i)" download target="_empty">
+        <i class="fa fa-{{createFile(meeting.files,i) | extension}} mr-1" aria-hidden="true"></i> File {{i+1}}
+      </a>
+
+    </p>
+  </div>
+
+  <!-- <p *ngIf="meeting.activeFlag==true && meeting.files">
+    <button *ngIf="isPDF(meeting.files)" role="button" class="btn btn-link p-0 m-0" (click)="pdfSlide(meeting.topic,meeting.files)">
+      <i class="fa fa-file-pdf-o mr-1" aria-hidden="true"></i>Presentation
+    </button>
+    <a *ngIf="!isPDF(meeting.files)" [href]="baseRaw + meeting.files" download>
+      <i class="fa fa-{{meeting.files | extension}} mr-1" aria-hidden="true"></i>Presentation
+    </a>
+  </p> -->
+
+  <ng-container *ngIf="userStatus==6 || meFlag || buttonType==2">
+    <hr>
+    <div class="btn-group">
+      <button [disabled]="stream>0" role="button" mat-raised-button class="btn btn-light-blue btn-sm mr-2" (click)="buttonFunc(12)">
+        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+      </button>
+      <button *ngIf="meeting.activeFlag" [disabled]="stream>0" mat-raised-button class="btn btn-light-blue btn-sm mr-2" (click)="buttonFunc(1)">
+        <i class="fa fa-times" aria-hidden="true"></i> Cancel
+      </button>
+      <button *ngIf="!meeting.activeFlag" [disabled]="stream>0" mat-raised-button class="btn btn-light-blue btn-sm mr-2" (click)="buttonFunc(11)">
+        <i class="fa fa-repeat" aria-hidden="true"></i> Resume
+      </button>
+    </div>
+    <button [disabled]="stream>0" role="button" mat-raised-button class="btn btn-light-blue btn-sm" (click)="buttonFunc(3)">
+      <i class="fa fa-pencil" aria-hidden="true"></i> Edit Details
+    </button>
+  </ng-container>
+
+</div>

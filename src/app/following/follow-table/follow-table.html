@@ -1,0 +1,442 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && dataKits.length==0" class="row justify-content-center">
+  <div class="col-3 card">
+    <div class="card-body mt-2">
+      <build-modal-intro [headline]="'No Following'" [bodytext]="'Your following list is empty.'"></build-modal-intro>
+    </div>
+  </div>
+</div>
+
+<mat-menu #appMenu="matMenu">
+  <ng-template matMenuContent let-index="index" let-last="last">
+    <button mat-menu-item (click)="columnRemove(index)"><i class="fa fa-1x fa-close fa-fw mr-1 py-0" aria-hidden="true"></i> Remove column</button>
+    <div class="dropdown-divider py-0"></div>
+    <button mat-menu-item [disabled]="index==1" (click)="columnMove(index,-1)"><i class="fa fa-1x fa-angle-left fa-fw mr-1" aria-hidden="true"></i> Move Left</button>
+    <button mat-menu-item [disabled]="last" (click)="columnMove(index,1)"><i class="fa fa-1x fa-angle-right fa-fw mr-1" aria-hidden="true"></i> Move Right</button>
+    <button mat-menu-item [disabled]="index==1" (click)="columnMove(index,-2)"><i class="fa fa-1x fa-angle-double-left fa-fw mr-1" aria-hidden="true"></i> Move To Start</button>
+    <button mat-menu-item [disabled]="last" (click)="columnMove(index,2)"><i class="fa fa-1x fa-angle-double-right fa-fw mr-1" aria-hidden="true"></i> Move To End</button>
+  </ng-template>
+</mat-menu>
+
+<h3 *ngIf="dataKits?.length>0 && streamRetrieved">{{searchTypeName | titlecase}} Following</h3>
+
+<div *ngIf="dataKits?.length>0 && streamRetrieved" class="table-container mat-elevation-z8">
+  <div style="overflow: auto">
+    <!-- <table matSort> (matSortChange)="sortData($event)" -->
+    <table mat-table [dataSource]="dataSource" cdkDropList cdkDropListOrientation="horizontal">
+
+      <ng-container matColumnDef="name" [sticky]="!isMobile">
+        <th style="max-width: 20rem; border-right: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-header-cell *matHeaderCellDef>
+          <div class="text-dark h5 my-0 ml-4">Name</div>
+        </th>
+        <td style="max-width: 20rem; border-right: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-cell *matCellDef="let row; let i = index">
+          <div class="d-flex align-items-center my-2">
+            <button mat-raised-button [matTooltip]="row.followStatus ? 'Unfollow' : 'Follow'" [matTooltipPosition]="'below'" (click)="buttonFollowFunc(i)" type="button" class="btn btn-link btn-sm mr-2 px-0">
+              <i *ngIf="!row.followStream" class="text-dark fa fa-size-20" aria-hidden="true" [ngClass]="{'fa-bookmark': row.followStatus, 'fa-bookmark-o': !row.followStatus}"></i>
+              <i *ngIf="row.followStream" class="fa fa-circle-o-notch fa-spin fa-size-20" style="color: gray"></i>
+            </button>
+            <button *ngIf="sourceType==2" mat-raised-button matTooltip="Compare" [matTooltipPosition]="'below'" (click)="buttonCompareFunc(i)" type="button" class="btn btn-link btn-sm mr-2 px-0">
+              <i [ngClass]="{'text-success': row.compareStatus, 'text-dark': !row.compareStatus}" class="fa fa-size-20 fa-clone" aria-hidden="true"></i>
+            </button>
+            <div class="mx-2">
+              <b>{{1 + i}}.</b>
+            </div>
+            <div *ngIf="row.pic">
+              <a [href]=row.website target="empty" class="mr-3"><img height="40px" [src]=row.pic [alt]=row.name></a>
+            </div>
+            <div *ngIf="sourceType==0">
+              <a [routerLink]="['/',row.link]" class="card-title"><b>{{row.name}}</b></a>
+            </div>
+            <div *ngIf="sourceType==2">
+              <a *ngIf="row.groupIndex.group.link" [routerLink]="['/',row.groupIndex.university.link,row.groupIndex.department.link,row.groupIndex.group.link]" class="card-title"><b>{{row.name}}</b></a>
+              <a *ngIf="!row.groupIndex.group.link"><b>{{row.name}}</b></a>
+            </div>
+            <div *ngIf="sourceType==3"><b>{{row.name}}</b></div>
+            <div *ngIf="sourceType==4"><a [routerLink]="['/','people',row.id]" class="card-title"><b>{{row.name}}</b></a></div>
+            <div *ngIf="sourceType>=5 && sourceType<=7"><a [routerLink]="['/',searchTypeName.toLowerCase(),row.link]" class="card-title"><b>{{row.name}}</b></a></div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="location">
+        <th style="max-width: 20rem; border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Location</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('location'), last: columnLast('location')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="max-width: 20rem; padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            <span *ngIf="row.country" class="flag mr-1">
+              <img [width]="20" [src]="'./assets/img/flags/' + (row.country | country | flag) + '.png'" alt="">
+            </span>
+            <!-- <span *ngIf="row.country">{{(row.country=='United States of America') ? 'United States' : row.country}}</span> -->
+            <span *ngIf="row.country">{{row.country | country}}</span>
+            <span *ngIf="row.state">, {{row.state}}</span>
+            <span *ngIf="row.city">, {{row.city}}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="institute">
+        <th style="border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Institute</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('institute'), last: columnLast('institute')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div *ngIf="row.groupIndex" class="my-2 mr-2">
+            <img *ngIf="row.groupIndex.university.pic" [height]="20" class="mr-2" [src]="row.groupIndex.university.pic">
+            <a *ngIf="row.groupIndex.university.link" [routerLink]="['/',row.groupIndex.university.link]" class="card-title">{{ row.groupIndex.university.name }}</a>
+            <ng-container *ngIf="row.groupIndex.university.link && row.groupIndex.department.link">
+              <br><a [routerLink]="['/',row.groupIndex.university.link, row.groupIndex.department.link]" class="card-title">{{ row.groupIndex.department.name }}</a>
+            </ng-container>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th style="border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Description</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('description'), last: columnLast('description')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div *ngIf="row.description" style="word-wrap: break-word" class="my-2 mr-2">
+            <small>
+              <span [innerHTML]="row.description | slice:0:100 | safeHtml"></span>
+              <!-- ... -->
+            </small>
+          </div>
+          <span *ngIf="row.description==null">-</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="mentor">
+        <th style="max-width: 20rem; border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Mentor</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('mentor'), last: columnLast('mentor')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="max-width: 20rem; padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{ row.mentor }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th style="max-width: 20rem; border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Type</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('type'), last: columnLast('type')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="max-width: 20rem; padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{ row.type }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="website">
+        <th style="max-width: 20rem; border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">URL</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('website'), last: columnLast('website')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="max-width: 20rem; padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            <a [href]=row.website class="card-title small">{{row.website}}</a>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="size">
+        <th style="border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Size</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('size'), last: columnLast('size')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{row.size }}
+            <!-- {{row.size | labSize}} -->
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="categories">
+        <th style="max-width: 20rem; border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">{{(sourceType==4) ? 'Research Interests' : 'Categories'}}</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('categories'), last: columnLast('categories')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="max-width: 20rem; padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            <span *ngFor="let category of row.categories; let i=index">
+              <span *ngIf="i==3"><br></span>
+              <span  style="background-color: #DDE1F3" class="text-dark badge mr-1">{{ category }}</span>
+            </span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="field">
+        <th style="max-width: 20rem; border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Field</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('field'), last: columnLast('field')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="max-width: 20rem; padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{row.field}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="language">
+        <th style="border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Language</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('language'), last: columnLast('language')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{row.language}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="year">
+        <th style="border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Founded Year</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('year'), last: columnLast('year')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{row.year || '-'}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th style="border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Price</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('price'), last: columnLast('price')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{row.price ? (row.price | number:'1.0':'en-US') + '$' : '-'}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="company">
+        <th style="border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Company</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('company'), last: columnLast('company')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{row.company}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="start">
+        <th style="border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">Start Date</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('start'), last: columnLast('start')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{row.start | date:'dd MMM y'}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="end">
+        <th style="border-right: 1px solid #e0e0e0; padding-left: 8px;" cdkDrag mat-header-cell *matHeaderCellDef>
+          <div class="d-flex align-items-center">
+            <div class="text-dark h5 my-0">End Date</div>
+            <div>
+              <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{index: columnIndex('end'), last: columnLast('end')}">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <!-- <mat-icon>more_vert</mat-icon> -->
+               </button>
+            </div>
+          </div>
+        </th>
+        <td style="padding-left: 8px;" mat-cell *matCellDef="let row">
+          <div class="my-2 mr-2">
+            {{row.end | date:'dd MMM y'}}
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- stickyEnd -->
+      <ng-container matColumnDef="comments">
+        <th style="border-left: 2px solid #00A9F4; padding-left: 8px; padding-right: 8px;" mat-header-cell *matHeaderCellDef>
+          <div class="text-dark h5 my-0">Comments</div>
+        </th>
+        <td style="border-left: 2px solid #00A9F4; padding-left: 8px; padding-right: 8px;" mat-cell *matCellDef="let row">
+          <a mat-raised-button (click)="columnsOp()">Add</a> <!-- <mat-icon>more_vert</mat-icon> -->
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="pros">
+        <th style="border-left: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-header-cell *matHeaderCellDef>
+          <div class="text-dark h5 my-0">Pros</div>
+        </th>
+        <td style="border-left: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-cell *matCellDef="let row">
+          <a mat-raised-button (click)="columnsOp()">Add</a> <!-- <mat-icon>more_vert</mat-icon> -->
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cons">
+        <th style="border-left: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-header-cell *matHeaderCellDef>
+          <div class="text-dark h5 my-0">Cons</div>
+        </th>
+        <td style="border-left: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-cell *matCellDef="let row">
+          <a mat-raised-button (click)="columnsOp()">Add</a> <!-- <mat-icon>more_vert</mat-icon> -->
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="score">
+        <th style="border-left: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-header-cell *matHeaderCellDef>
+          <div class="text-dark h5 my-0">My Score</div> <!-- 1-10 -->
+        </th>
+        <td style="border-left: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-cell *matCellDef="let row">
+          <a mat-raised-button (click)="columnsOp()">Add</a> <!-- <mat-icon>more_vert</mat-icon> -->
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th style="border-left: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-header-cell *matHeaderCellDef>
+          <div class="text-dark h5 my-0">Action</div>
+          <!-- Email Sent / Response Received / Next Action? -->
+        </th>
+        <td style="border-left: 1px solid #e0e0e0; padding-left: 8px; padding-right: 8px;" mat-cell *matCellDef="let row">
+          <a mat-raised-button (click)="columnsOp()">Add</a> <!-- <mat-icon>more_vert</mat-icon> -->
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsCodes;"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsCodes" class="example-element-row"></tr>
+      <!-- https://stackoverflow.com/questions/58424894/angular-material-how-to-select-table-row-by-clicking-only-the-checkbox -->
+      <!-- clicking the checkbox and any other space outside the checkbox:
+      (click)="selection.toggle(row)" -->
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- <groups-list *ngIf="sourceType==2 && streamRetrieved && groups.length>0"
+             [streamRetrieved]=streamRetrieved
+             [sourceType]=7
+             [groupsPerRow]=3
+             [groups]=groups
+             [compareFlag]=true
+             [compareStatuses]=compareStatuses
+             [streamCompare]=streamCompare
+             [streamFollow]=streamFollow
+             [streamAdminFollow]=streamAdminFollow
+             (buttonFollowClick)="groupFollow($event)"
+             (buttonAdminFollowClick)="groupAdminFollow($event)"
+             (buttonCompareClick)="itemCompare($event)">
+</groups-list> -->
+
+<!-- <people-list *ngIf="sourceType==4"
+             [streamRetrieved]="streamRetrieved"
+             [peoples]=peoples
+             [sourceType]=4
+             [stream]=streamPeople
+             [activeId]=userService.userId
+             [streamFollow]=streamPeopleFollow
+             (btnMessageClick)="peopleMessage($event)"
+             (btnFollowClick)="peopleFollow($event)">
+</people-list> -->
+
+<!-- <projects-list [streamRetrieved]="streamRetrieved[2]"
+               [projects]=projects
+               [sourceType]=1
+               [stream]=streamProjects
+               [streamFollow]=streamProjectsFollow
+               (buttonFollowClick)="projectFollow($event)">
+</projects-list> -->

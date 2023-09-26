@@ -1,0 +1,17 @@
+<ng-container *ngFor="let author of (authorsFlag ? authors : authorsShort); let i=index; let l=last">
+
+  <a *ngIf="!authorsFlag && l && authors.length>authorsShort.length" style="cursor:pointer;" class="mx-1" (click)="toggleAuthors()">&middot;&middot;&middot;</a>
+
+  <img *ngIf="author.pic" [style.width]="'22px'" [style.height]="'22px'" class="rounded-circle mr-1 mb-2" [src]=author.pic>
+
+  <i *ngIf="!author.pic" class="card-title fa fb-btn fa-user-circle-o mr-1 mb-2" [style.font-size]="'1.3rem'"></i>
+
+  <a *ngIf="author._id" [routerLink]="['/people',author._id]" class="card-title">{{ author.name }}</a>
+
+  <span *ngIf="!author._id">{{ author.name }}</span>
+
+  <span *ngIf="!l && ((authorsFlag || authors.length<=authorsShort.length) ? 1 : i!=(authorsShort.length-2))" class="mx-1">&middot;</span>
+
+</ng-container>
+
+<button *ngIf="authors.length>authorsShort.length" class="btn btn-sm btn-link pl-1 pr-0" (click)="toggleAuthors()">Show {{authorsFlag ? 'Less' : 'More'}}</button>

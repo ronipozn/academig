@@ -1,0 +1,26 @@
+<div class="side-form">
+
+  <h3 class="title text-center">{{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemFirst]=true
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [itemTitle]="'Report reply'"
+                              [controlName]="'text'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <hr class="mt-2">
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">{{title}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

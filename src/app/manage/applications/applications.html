@@ -1,0 +1,72 @@
+<div class="offset-md-1 col-md-10 pt-4 mb-4">
+
+  <ul *ngIf="streamRetrieved" class="nav nav-pills nav-pills-light-blue nav-pills-icons justify-content-center mb-4" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#applications" role="tablist" (click)="tabClick(0)">
+        <i class="material-icons">format_align_left</i> Applications
+        <span class="notification">({{applications[0].length}})</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#watching" role="tablist" (click)="tabClick(1)">
+        <i class="material-icons">watch_later</i> Watching
+        <span class="notification">({{applications[1].length}})</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#archive" role="tablist" (click)="tabClick(2)">
+        <i class="material-icons">archive</i> Archive
+        <span class="notification">({{applications[2].length}})</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="applications" role="tabpanel">
+      <div *ngIf="streamRetrieved && applications[0].length==0" class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="'Jobs Posting Applications'"></build-headline>
+          <build-modal-intro [headline]="'You don\'t have any applications.'"></build-modal-intro>
+        </div>
+      </div>
+      <positions-list [streamRetrieved]=streamRetrieved
+                      [sourceType]=3
+                      [positions]=applications[0]
+                      [stream]=streamPositions
+                      [streamFollow]=streamPositionsFollow
+                      (buttonFollowClick)="positionFollow($event,2)">
+      </positions-list>
+    </div>
+    <div class="tab-pane" id="watching" role="tabpanel">
+      <div *ngIf="streamRetrieved && applications[1].length==0" class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="'Jobs Posting Watchlist'"></build-headline>
+          <build-modal-intro [headline]="'You don\'t have any items in your watch list.'"></build-modal-intro>
+        </div>
+      </div>
+      <positions-list [streamRetrieved]=streamRetrieved
+                      [sourceType]=3
+                      [positions]=applications[1]
+                      [stream]=streamPositions
+                      [streamFollow]=streamPositionsFollow
+                      (buttonFollowClick)="positionFollow($event,2)">
+      </positions-list>
+    </div>
+    <div class="tab-pane" id="archive" role="tabpanel">
+      <div *ngIf="streamRetrieved && applications[2].length==0" class="card mt-0">
+        <div class="card-body">
+          <build-headline [headline]="'Jobs Posting Archive'"></build-headline>
+          <build-modal-intro [headline]="'You don\'t have any items in your archive.'"></build-modal-intro>
+        </div>
+      </div>
+      <positions-list [streamRetrieved]=streamRetrieved
+                      [sourceType]=3
+                      [positions]=applications[2]
+                      [stream]=streamPositions
+                      [streamFollow]=streamPositionsFollow
+                      (buttonFollowClick)="positionFollow($event,2)">
+      </positions-list>
+    </div>
+  </div>
+
+</div>

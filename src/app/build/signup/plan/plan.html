@@ -1,0 +1,33 @@
+<div [formGroup]="parentGroup">
+
+  <h3 class="mb-3 text-center">Choose your lab plan</h3>
+
+  <!-- <pricing [source]=3
+           [mode]=labType
+           [plan]=null
+           (btnPlanClick)="planUpdate($event)">
+  </pricing> -->
+
+  <!-- <div style="height: 65vh; overflow-y: scroll;"> -->
+  <!-- <div style="overflow-y: scroll;"> -->
+  <!-- <button type="button" class="d-flex mx-auto btn btn-info" (click)="switchSlide()">slides</button> -->
+
+  <!--
+  <p class="mb-4 text-center text-muted">
+  Your lab members can try the PRO plan for free for 30 days.<br>No credit card required
+  At the end of the period, you can choose<br>to continue with PRO or change to a different plan.
+  At the end of the period, your Principal Investigator can choose<br>to continue with PRO or change plans.
+  <a [routerLink]="['/pricing']" target="_empty">Learn more</a>
+  </p>
+  -->
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <!-- <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div> -->
+  </div>
+
+</div>

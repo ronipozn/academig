@@ -1,0 +1,95 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<ng-container *ngIf="streamRetrieved && groups.length>0">
+
+<!-- https://stackoverflow.com/questions/35868756/how-to-make-bootstrap-4-cards-the-same-height-in-card-columns -->
+<div *ngIf="sourceType!=0 && sourceType!=7" class="row my-0 py-0">
+  <ng-container *ngFor="let group of groups; let i=index">
+    <!-- col-12 col-sm-6 -->
+    <div class="col-{{groupsPerRow}} d-flex"
+         group-item
+         [sourceType]=sourceType
+         [showEditBtn]=showEditBtn
+
+         [group]=group
+         [stream]=stream[i]
+
+         [followStatus]="follows ? follows[i] : null"
+         [adminFollowStatus]="adminFollows ? adminFollows[i] : null"
+
+         [streamFollow]=streamFollow[i]
+         [streamAdminFollow]=streamAdminFollow[i]
+
+         [streamCompare]=streamCompare[i]
+         [compareStatus]=compareStatuses[i]
+         [compareFlag]=compareFlag
+
+         [previewStatus]=previewStatuses[i]
+         [companyFlag]=companyFlag
+
+         (buttonEditCollaborationClick)="buttonEditCollaborationFunc(i)"
+         (buttonEndCollaborationClick)="buttonEndCollaborationEditFunc(i)"
+         (buttonDeleteCollaborationClick)="buttonDeleteCollaborationFunc(i)"
+         (buttonFollowClick)="buttonFollowFunc(i)"
+         (buttonCompareClick)="buttonCompareFunc(i)"
+         (buttonPreviewClick)="buttonPreviewFunc($event, i)"
+         (buttonAdminFollowClick)="buttonAdminFollowFunc($event, i)"
+         (buttonApproveClick)="buttonApproveFunc(i)"
+         (buttonDeclineClick)="buttonDeclineFunc(i)"
+         (animationDoneEvent)="animationDone()">
+    </div>
+    <div *ngIf="sourceType==0 && previewStatuses[i]" style="position: relative; top: -1rem;" class="col-12">
+      <group-preview [group]=group
+                     (buttonCloseClick)="buttonPreviewFunc(false, i)"
+                     (buttonInterestsClick)="buttonInterestsFunc($event, i)">
+      </group-preview>
+    </div>
+  </ng-container>
+</div>
+
+<div *ngIf="sourceType==0 || sourceType==7" class="card mt-0">
+  <div class="card-body p-2 my-0">
+    <div class="table-responsive my-0">
+      <table class="table table-bordered pb-0 my-0">
+        <thead>
+          <tr>
+            <ng-container *ngFor="let row of tableData.headerRow; let i=index; let f=first; let l=last">
+              <th *ngIf="!f && !l && tableData.headerVisible[i]" class="mt-0 pt-0">
+                <div class="d-flex flex-row">
+                  <span class="text-nowrap"><b>{{ row }}</b></span>
+                </div>
+              </th>
+            </ng-container>
+            <!-- <th style="width: 20% !important;">{{ tableData.headerRow[6] }}</th> -->
+            <th>
+              <!-- {{ tableData.headerRow[9] }} -->
+            </th>
+          </tr>
+        </thead>
+        <tbody [ngClass]="{'table-double-striped': sourceType==0}">
+          <ng-container *ngFor="let group of groups; let i=index">
+            <tr>
+              <ng-container *ngFor="let visible of tableData.headerVisible; let h=index; let l=last">
+                <td *ngIf="visible && h>0 && !l" [ngClass]="{'text-nowrap': h==1}">
+                  <!-- <span *ngIf="h==1" class="mr-2">{{i+1+missionService.currentPage*20}}.</span> -->
+                  <group-columns [mode]="tableData.headerPlacement[h]" [group]=group [sourceType]=sourceType></group-columns>
+                </td>
+              </ng-container>
+              <td class="text-right text-nowrap">
+                <button mat-raised-button [matTooltip]="followStatus ? 'Unfollow' : 'Follow'" [matTooltipPosition]="'below'" (click)="buttonFollowFunc(i)" type="button" class="btn btn-link btn-sm px-0 mr-3">
+                  <i *ngIf="!streamFollow[i]" class="text-dark fa fa-size-20" aria-hidden="true" [ngClass]="{'fa-bookmark': group.followStatus, 'fa-bookmark-o': !group.followStatus}"></i>
+                  <i *ngIf="streamFollow[i]" class="fa fa-circle-o-notch fa-spin fa-size-20" style="color: gray"></i>
+                </button>
+                <button mat-raised-button matTooltip="Compare" [matTooltipPosition]="'below'" (click)="buttonCompareFunc(i)" type="button" class="btn btn-link btn-sm px-0">
+                  <i [ngClass]="{'text-success': compareStatuses[i], 'text-dark': !compareStatuses[i]}" class="fa fa-size-20 fa-clone" aria-hidden="true"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</ng-container>

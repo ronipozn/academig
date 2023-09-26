@@ -1,0 +1,66 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<build-modal-intro *ngIf="streamRetrieved && modalFlag && items[0]==null"
+                   [headline]="title + ' Analytics'"
+                   [bodypic]="'pie-chart'"
+                   [bodytext]="'There are no ' + title + ' in your site.'">
+</build-modal-intro>
+
+<div *ngIf="streamRetrieved && items[0]" class="card mt-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-end mb-0 pb-0">
+      <h5 class="mr-auto pt-2">{{ title }}</h5>
+      <span class="mb-1">
+        <select class="small custom-select" (change)="changeTimeInerval($event.target.value)">
+          <option selected value="0">Yesterday</option>
+          <option value="1">Last 7 Days</option>
+          <option value="2">Last 30 Days</option>
+          <option value="3">Last 12 Months</option>
+          <option value="4">All time</option>
+        </select>
+      </span>
+    </div>
+    <hr class="mt-0 mb-4">
+
+    <table class="table small">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="text-right">Visits</th>
+          <th *ngIf="downloadsFlag" class="text-right">Downloads</th>
+          <th *ngIf="appliedFlag" class="text-right">Applied</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items; let l=last">
+
+          <td *ngIf="!l || notListedFlag==false">
+            <div *ngIf="groupFlag==false">
+              <a *ngIf="type==0" [routerLink]="['../../publications/',item._id]">{{item.title}}</a>
+              <a *ngIf="type==1" [routerLink]="['../../resources/',item._id]">{{item.title}}</a>
+              <a *ngIf="type==2" [routerLink]="['../../projects/',item._id]">{{item.name}}</a>
+              <a *ngIf="type==3" [routerLink]="['../../jobs/',item._id]">{{item.title}}</a>
+            </div>
+            <div *ngIf="groupFlag==true" class="d-flex justify-content-start align-items-center">
+              <single-pic class="mr-2"
+                          [pic]=item.groupComplex.group.pic
+                          [width]=2
+                          [type]=true>
+              </single-pic>
+              <a [routerLink]="['/', item.groupComplex.university.link , item.groupComplex.department.link, item.groupComplex.group.link]">{{ item.groupComplex.group.name }}</a>
+            </div>
+          </td>
+
+          <td *ngIf="l && notListedFlag">Not listed <i class="fa fa-question-circle-o" aria-hidden="true"></i></td>
+
+          <td class="text-right">{{item.views[activeInterval]}}</td>
+
+          <td *ngIf="downloadsFlag" class="text-right">{{item.downloads[activeInterval]}}</td>
+          <td *ngIf="appliedFlag" class="text-right">{{item.applied[activeInterval]}}</td>
+
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>

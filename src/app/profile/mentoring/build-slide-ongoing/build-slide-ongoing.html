@@ -1,0 +1,40 @@
+  <!-- 3. details (, , availability,) -->
+
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">On-Going Coaching Details</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Monthly coaching price'"
+                              [controlName]="'price'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Monthly coaching hours'"
+                              [controlName]="'hours'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=12
+                              [itemTitle]="'Coaching details'"
+                              [controlName]="'details'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button role="button" class="btn btn-sm btn-light-blue">Update</button>
+        <button type="button" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

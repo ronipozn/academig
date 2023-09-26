@@ -1,0 +1,90 @@
+<div *ngIf="streamRetrieved[0] && streamRetrieved[1] && missionService.meFlag" class="d-flex justify-content-center mb-4">
+  <button mat-raised-button class="btn btn-light-blue btn-round" (click)="projectSlide(true, 0, true)">
+    <i class="material-icons">add_circle_outline</i> Add Project
+  </button>
+</div>
+
+<div class="card mt-0" *ngIf="!missionService.meFlag && streamRetrieved[0] && streamRetrieved[1] && profileProjects.length==0 && projects.length==0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Projects'"></build-headline>
+    <build-modal-intro [headline]="'The projects list is still empty.'" [bodypic]="'microphone'"></build-modal-intro>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved[1] && streamRetrieved[0] && profileProjects.length==0 && projects.length==0" class="card mt-0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Projects'"></build-headline>
+    <build-modal-intro *ngIf="!missionService.meFlag"
+                       [headline]="'The projects list is still empty.'">
+    </build-modal-intro>
+    <build-modal-intro *ngIf="missionService.meFlag"
+                       [headline]="'Add your projects.'"
+                       [bodytext]="'Add your research projects and update their details over time.'">
+    </build-modal-intro>
+  </div>
+</div>
+
+<projects-list [streamRetrieved]=streamRetrieved[1]
+               [projects]=profileProjects
+               [sourceType]=5
+               [stream]=streamProfileProjects
+               [streamFollow]=streamProfileProjectsFollow
+               [itemFocus]=itemFocus
+
+               [showEditBtn]=missionService.meFlag
+               [planNumber]=missionService.planNumber
+
+               (animationDoneEvent)="streamFunc(0)"
+               (buttonEditClick)="projectSlide(true, $event, false)"
+               (buttonDeleteClick)="projectDelete($event)"
+               (buttonFollowClick)="projectFollow($event, 1)">
+</projects-list>
+
+<projects-list [streamRetrieved]=streamRetrieved[0]
+               [projects]=projects
+               [sourceType]=5
+               [stream]=streamProjects
+               [showEditBtn]=false
+               [planNumber]=0
+               [streamFollow]=streamProjectsFollow
+               (buttonFollowClick)="projectFollow($event, 0)">
+</projects-list>
+
+<!-- <div *ngIf="streamRetrieved[0] && projects.length>0" class="card mt-0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-headline [showEditBtn]=false
+                    [addButtonFlag]=false
+                    [headline]="'Labs Projects'">
+    </build-headline>
+    <build-modal-intro *ngIf="streamRetrieved[0] && projects.length==0"
+                       [headline]="'No groups projects.'"
+                       [bodypic]="'cubes'">
+    </build-modal-intro>
+    <projects-list [streamRetrieved]=streamRetrieved[0]
+                   [projects]=projects
+                   [sourceType]=5
+                   [stream]=streamProjects
+                   [showEditBtn]=false
+                   [planNumber]=0
+                   [streamFollow]=streamProjectsFollow
+                   (buttonFollowClick)="projectFollow($event, 0)">
+    </projects-list>
+  </div>
+</div> -->
+
+<img *ngIf="streamRetrieved[0] && streamRetrieved[1]" src="./assets/img/items/projects.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_projects">
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-project *ngIf=profileProjectBuildFlag
+                     (update)="projectUpdate($event)"
+                     (cancel)="projectSlide($event)"
+                     [modeNum]=2
+                     [newFlag]=profileProjectNewFlag
+                     [groupId]=null
+                     [userId]=missionService.userId
+                     [project]=profileProjectBuild>
+</build-slide-project>

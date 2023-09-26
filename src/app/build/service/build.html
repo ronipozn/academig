@@ -1,0 +1,240 @@
+<div *ngIf="!streamRetrieved" class="mt-4"><spinner></spinner></div>
+
+<div *ngIf="labFlag && userService.buildGroupJob?.userStatus<4" class="card">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-modal-intro [headline]="'You don\'t have access to this page.'" [bodypic]="'ban'"></build-modal-intro>
+  </div>
+</div>
+
+<!-- <div *ngIf="streamRetrieved && ((labFlag && userService.buildGroupJob?.userStatus>=4) || !labFlag)" [ngClass]="{'form-container': labFlag==false}" class="mb-4">
+  <div [ngClass]="{'container': labFlag==false}" [@screenAnimation]="('appear')"> -->
+
+<div *ngIf="((labFlag && userService.buildGroupJob?.userStatus>=4) || !labFlag) && streamRetrieved" class="container mb-4">
+  <div class="container" [@screenAnimation]="('appear')">
+
+    <!-- [ngStyle]="{ 'background-image': 'url(' + './assets/img/job/noun_Diploma_975006.png' + ')'}" -->
+
+    <div class="d-none d-sm-block text-center display-4 my-4 py-4">
+      Reach the largest research labs community on the web and start advertising your lab services online.
+    </div>
+
+    <div class="d-block d-sm-none text-center lead mt-4 py-4">
+      Reach the largest research labs community on the web and start advertising your lab services online.
+    </div>
+
+    <ng-container *ngIf="stage==0 && labFlag==false">
+      <h3 class="mb-4 text-success text-center"><b>Choose your organization type</b></h3>
+      <div class="d-block d-sm-none">
+        <button type="button" (click)="onLabType(0)" class="btn btn-info btn-block text-center text-dark mb-3" style="padding: 20px;">
+          <i class="material-icons my-3" style="font-size: 48px;">supervised_user_circle</i>
+          <h5>Research Lab</h5><span class="text-muted">University, Academic Institute</span>
+        </button>
+        <div class="mx-4"></div>
+        <button type="button" (click)="onLabType(1)" class="btn btn-info btn-block text-center text-dark" style="padding: 20px;">
+          <i class="material-icons my-3" style="font-size: 48px;">store_mall_directory</i>
+          <h5>Company</h5><span class="text-muted">Scientific research companies</span>
+        </button>
+      </div>
+      <div class="d-none d-sm-block">
+        <div class="d-flex justify-content-center">
+          <button type="button" (click)="onLabType(0)" class="btn btn-info text-center text-dark" style="padding: 20px;">
+            <i class="material-icons my-3" style="font-size: 48px;">supervised_user_circle</i>
+            <h5>Academic</h5><span class="text-muted">University, academic institute</span>
+          </button>
+          <div class="mx-4"></div>
+          <button type="button" (click)="onLabType(1)" class="btn btn-info text-center text-dark" style="padding: 20px;">
+            <i class="material-icons my-3" style="font-size: 48px;">store_mall_directory</i>
+            <h5>Company</h5><span class="text-muted">Scientific research companies</span>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="stage==1 || labFlag">
+
+    <ng-template #stepOne>
+      <form [formGroup]="firstFormGroup">
+
+        <service-info [parentGroup]=firstFormGroup
+                      [submitStatus]="submitStatus[1]"
+                      [invalid]=firstInvalid
+                      [labFlag]=labFlag
+                      [groupId]="userService.buildGroupJob ? userService.buildGroupJob._id : null"
+                      [userId]=userService.userId
+                      (membersOutput)="members=$event">
+        </service-info>
+        <stand-out [parentGroup]=firstFormGroup [prices]=standoutPrices></stand-out>
+        <div *ngIf="labFlag==false" class="card">
+          <div class="card-body pb-0">
+            <build-modal-text-field [fieldType]=4
+                                    [itemTitle]="'How did you hear about us?'"
+                                    [itemArray]=feedbackSelect
+                                    [controlName]="'feedback'"
+                                    [parentGroup]=firstFormGroup
+                                    [submitStatus]=submitStatus[1]>
+            </build-modal-text-field>
+          </div>
+        </div>
+      </form>
+    </ng-template>
+
+    <ng-template #stepTwo>
+      <form [formGroup]="secondFormGroup">
+        <group-info *ngIf="labInfoVisible" [parentGroup]=secondFormGroup [invalid]=secondInvalid [submitStatus]="submitStatus[2]"></group-info>
+        <user-info [parentGroup]=secondFormGroup [userId]=userService.userId [submitStatus]="submitStatus[2]"></user-info>
+        <pi-info *ngIf="secondFormGroup.get('position').value>199" [parentGroup]=secondFormGroup [submitStatus]="submitStatus[2]"></pi-info>
+        <extras-lab [parentGroup]=secondFormGroup [prices]=extraPrices></extras-lab>
+      </form>
+    </ng-template>
+
+    <ng-template #stepThree>
+      <form [formGroup]="thirdFormGroup">
+        <preview [firstFormGroup]=firstFormGroup [secondFormGroup]=secondFormGroup></preview>
+         <!-- [detailsPreview]=detailsPreview -->
+      </form>
+    </ng-template>
+
+    <ng-template #stepFour>
+      <!-- <p class="mb-4 text-center text-muted">We are always around and happy to answer any question.<br>
+        Tweet <a href="https://twitter.com/academic_labs" target="_empty">@academig_</a>, get in touch at <a [routerLink]="['/contact']" target="_empty">academig.com/contact</a><br>
+      </p> -->
+
+      <div class="card">
+        <div class="card-body">
+          <h3 class="mt-0"><b>Your total is: <span class="text-success">${{standoutPrices[firstFormGroup.controls['standout'].value] + (secondFormGroup.controls['buildStatus'].value ? extraPrices[1] : 0)}}</span></b></h3>
+
+          <p>You’ll be charged <b>${{standoutPrices[firstFormGroup.controls['standout'].value] + (secondFormGroup.controls['buildStatus'].value ? extraPrices[1] : 0)}}</b> for this service.
+          After payment, your service will appear on the search results until the service is cancelled.</p>
+
+          <p *ngIf="firstFormGroup.controls['standout'].value==2">The service will be place on the top of the feed for 30 days.</p>
+
+          <!-- Subscription can be cancelled anytime through the receipt emailed after purchase or through your lab profile. -->
+
+          <p>By clicking “Post service, you confirm that you have read and agree to the terms and conditions and advertising policy.</p>
+          <!-- and you understand that when your trial period ends, be required to provide billing information if you wish to continue using this service. -->
+
+          <!-- https://codepen.io/nikhil8krishnan/pen/rVoXJa -->
+          <!-- https://github.com/SamHerbert/SVG-Loaders -->
+          <div *ngIf="submitFlag" class="d-flex justify-content-center">
+            <svg version="1.1" id="L1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+                <circle fill="none" stroke="#50AE55" stroke-width="6" stroke-miterlimit="15" stroke-dasharray="14.2472,14.2472" cx="50" cy="50" r="47" >
+                  <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="5s" from="0 50 50" to="360 50 50" repeatCount="indefinite" />
+              </circle>
+              <circle fill="none" stroke="#50AE55" stroke-width="1" stroke-miterlimit="10" stroke-dasharray="10,10" cx="50" cy="50" r="39">
+                  <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="5s" from="0 50 50" to="-360 50 50" repeatCount="indefinite" />
+              </circle>
+              <g fill="#50AE55">
+              <rect x="30" y="35" width="5" height="30">
+                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.1"/>
+              </rect>
+              <rect x="40" y="35" width="5" height="30">
+                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.2"/>
+              </rect>
+              <rect x="50" y="35" width="5" height="30">
+                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.3"/>
+              </rect>
+              <rect x="60" y="35" width="5" height="30">
+                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.4"/>
+              </rect>
+              <rect x="70" y="35" width="5" height="30">
+                <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.5"/>
+              </rect>
+              </g>
+            </svg>
+          </div>
+          <div *ngIf="submitFlag" class="d-flex justify-content-center">
+            <!-- <h4 *ngIf="!streamPosition"><b>Building lab profile...</b></h4> -->
+            <!-- <h4 *ngIf="streamPosition"><b>Building service...</b></h4> -->
+            <h4><b>Building service...</b></h4>
+          </div>
+        </div>
+        <mat-progress-bar *ngIf="submitFlag"
+                          class="mt-3"
+                          [color]="color"
+                          [mode]="mode"
+                          [value]="progress"
+                          [bufferValue]="bufferValue">
+        </mat-progress-bar>
+      </div>
+    </ng-template>
+
+    <ng-template [ngIf]="smallScreen" [ngIfElse]="bigScreen">
+      <mat-vertical-stepper #stepper labelPosition="bottom" [linear]="true" class="bg-color" (selectionChange)="selectionChange($event)">
+        <mat-step [stepControl]="firstFormGroup">
+          <ng-template matStepLabel><b>Post a service</b></ng-template>
+          <ng-container *ngTemplateOutlet="stepOne"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <div class="col-lg-6"><button mat-button matStepperNext class="btn btn-success" (click)="onContinue(1)">{{labFlag ? 'Continue to preview service' : 'Continue to lab info'}}</button></div>
+            <div class="col-lg-6"><div class="pull-right"><h3><b>Your total is: <span class="text-success">${{standoutPrices[firstFormGroup.controls['standout'].value] + (secondFormGroup.controls['buildStatus'].value ? extraPrices[1] : 0)}}</span></b></h3></div></div>
+          </div>
+        </mat-step>
+        <mat-step *ngIf="labFlag==false" [stepControl]="secondFormGroup">
+          <ng-template matStepLabel>About your lab</ng-template>
+          <ng-container *ngTemplateOutlet="stepTwo"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <div class="col-lg-6">
+              <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(2)">Continue to preview service</button>
+              <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+            </div>
+            <div class="col-lg-6"><div class="pull-right"><h3><b>Your total is: <span class="text-success">${{standoutPrices[firstFormGroup.controls['standout'].value] + (secondFormGroup.controls['buildStatus'].value ? extraPrices[1] : 0)}}</span></b></h3></div></div>
+          </div>
+        </mat-step>
+        <mat-step [stepControl]="thirdFormGroup">
+          <ng-template matStepLabel>Preview your service</ng-template>
+          <ng-container *ngTemplateOutlet="stepThree"></ng-container>
+          <button mat-button matStepperNext class="btn btn-success">Continue to payment</button>
+          <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Purchase</ng-template>
+          <ng-container *ngTemplateOutlet="stepFour"></ng-container>
+          <!-- [disabled]="submitFlag || !firstFormGroup.get('rightsCheckbox').value" -->
+          <button mat-button (click)="onSubmit()" [disabled]="submitFlag" class="btn btn-success">Post service and place your order</button>
+          <button mat-button matStepperPrevious [disabled]="submitFlag">Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+          <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+        </mat-step>
+      </mat-vertical-stepper>
+    </ng-template>
+
+    <ng-template #bigScreen>
+      <mat-horizontal-stepper #stepper labelPosition="bottom" [linear]="true" class="bg-color" (selectionChange)="selectionChange($event)">
+        <mat-step [stepControl]="firstFormGroup">
+          <ng-template matStepLabel><b>Post a service</b></ng-template>
+          <ng-container *ngTemplateOutlet="stepOne"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <div class="col-lg-6"><button mat-button matStepperNext class="btn btn-success" (click)="onContinue(1)">{{labFlag ? 'Continue to preview service' : 'Continue to lab info'}}</button></div>
+            <div class="col-lg-6"><div class="pull-right"><h3><b>Your total is: <span class="text-success">${{standoutPrices[firstFormGroup.controls['standout'].value] + (secondFormGroup.controls['buildStatus'].value ? extraPrices[1] : 0)}}</span></b></h3></div></div>
+          </div>
+        </mat-step>
+        <mat-step *ngIf="labFlag==false" [stepControl]="secondFormGroup">
+          <ng-template matStepLabel>About your lab</ng-template>
+          <ng-container *ngTemplateOutlet="stepTwo"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <div class="col-lg-6">
+              <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(2)">Continue to preview service</button>
+              <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+            </div>
+            <div class="col-lg-6"><div class="pull-right"><h3><b>Your total is: <span class="text-success">${{standoutPrices[firstFormGroup.controls['standout'].value] + (secondFormGroup.controls['buildStatus'].value ? extraPrices[1] : 0)}}</span></b></h3></div></div>
+          </div>
+        </mat-step>
+        <mat-step [stepControl]="thirdFormGroup">
+          <ng-template matStepLabel>Preview your service</ng-template>
+          <ng-container *ngTemplateOutlet="stepThree"></ng-container>
+          <button mat-button matStepperNext class="btn btn-success">Continue to payment</button>
+          <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Purchase</ng-template>
+          <ng-container *ngTemplateOutlet="stepFour"></ng-container>
+          <!-- [disabled]="submitFlag || !firstFormGroup.get('rightsCheckbox').value" -->
+          <button mat-button (click)="onSubmit()" [disabled]="submitFlag" class="btn btn-success">Post service and place your order</button>
+          <button mat-button matStepperPrevious [disabled]="submitFlag">Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+          <!-- <button mat-button (click)="stepper.reset()">Reset</button> -->
+        </mat-step>
+      </mat-horizontal-stepper>
+    </ng-template>
+
+    </ng-container>
+
+  </div>
+</div>

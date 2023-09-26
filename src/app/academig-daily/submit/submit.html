@@ -1,0 +1,515 @@
+<!-- <div *ngIf="!streamRetrieved" class="py-4">
+  <spinner [text]="'Page'"></spinner>
+</div> -->
+
+<div class="container">
+<div class="form-container">
+
+  <div class="ais-InstantSearch">
+
+  <ng-template #stepNews>
+    <form [formGroup]="newsFormGroup">
+      <!-- 1.	Academic News -->
+      <b>Algolia</b>
+      <div formArrayName="news">
+        <div class="card mt-0" *ngFor="let e of newsFormGroup.get('news').controls; let i=index">
+          <form [formGroup]="e">
+          <div class="card-body">
+            <h4>{{i+1}}.</h4>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Topic</mat-label>
+              <input matInput formControlName="topic" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Link</mat-label>
+              <input matInput formControlName="link" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Pic</mat-label>
+              <input matInput formControlName="pic" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Date</mat-label>
+              <input matInput [matDatepicker]="picker" (click)="picker.open()" formControlName="date" required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Source Website</mat-label>
+              <input matInput formControlName="website" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Source Name</mat-label>
+              <input matInput formControlName="source" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Author Name</mat-label>
+              <input matInput formControlName="authorName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Author Link</mat-label>
+              <input matInput formControlName="authorLink" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" [rows]=4 required></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Categories: (Comma between)</mat-label>
+              <input matInput formControlName="categories" required>
+            </mat-form-field>
+          </div>
+          </form>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #stepLists>
+    <form [formGroup]="listsFormGroup">
+      <!-- 2. Academig Pro: Searches and Lists -->
+      <b>Algolia</b>
+      <div formArrayName="lists">
+        <div class="card mt-0" *ngFor="let e of listsFormGroup.get('lists').controls; let i=index">
+          <form [formGroup]="e">
+          <div class="card-body">
+            <h4>{{i+1}}.</h4>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>List Name</mat-label>
+              <input matInput formControlName="name" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="my-2">
+              <mat-label>List Params</mat-label>
+              <input matInput formControlName="params" required>
+              <mat-hint>https://www.academig.com/search/params</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>List Type</mat-label>
+              <input matInput formControlName="type" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>List Entries</mat-label>
+              <input matInput formControlName="entries" required>
+            </mat-form-field>
+          </div>
+          </form>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #stepLabs>
+    <form [formGroup]="labsFormGroup">
+      <!-- 3. Featured Research Labs -->
+      <div formArrayName="labs">
+        <div class="card mt-0" *ngFor="let e of labsFormGroup.get('labs').controls; let i=index">
+          <form [formGroup]="e">
+          <div class="card-body">
+            <h4>{{i+1}}.</h4>
+            <ais-instantsearch [config]="config_labs">
+              <ais-hits>
+                <ng-template let-hits="hits" let-results="results">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Lab</mat-label>
+                    <mat-select name="lab" (selectionChange)="selectionChange('lab', i, $event)">
+                      <mat-option *ngFor="let hit of hits" [value]="hit">
+                        {{hit.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </ais-hits>
+            </ais-instantsearch>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Lab Link</mat-label>
+              <input matInput formControlName="link" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Lab Name</mat-label>
+              <input matInput formControlName="lab" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Discipline</mat-label>
+              <input matInput formControlName="discipline" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>University</mat-label>
+              <input matInput formControlName="university" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Country</mat-label>
+              <input matInput formControlName="country" required>
+            </mat-form-field>
+          </div>
+          </form>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #stepTrends>
+    <form [formGroup]="trendsFormGroup">
+      <!-- 4. Featured Research Trends -->
+      <b>Algolia</b>
+      <div formArrayName="trends">
+        <div class="card mt-0" *ngFor="let e of trendsFormGroup.get('trends').controls; let i=index">
+          <form [formGroup]="e">
+          <div class="card-body">
+            <h4>{{i+1}}.</h4>
+            <ais-instantsearch [config]="config_trends">
+              <ais-hits>
+                <ng-template let-hits="hits" let-results="results">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Trend</mat-label>
+                    <mat-select name="trend" (selectionChange)="selectionChange('trend', i, $event)">
+                      <mat-option *ngFor="let hit of hits" [value]="hit">
+                        {{hit.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </ais-hits>
+            </ais-instantsearch>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Topic</mat-label>
+              <input matInput formControlName="topic" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Pic (GIF)</mat-label>
+              <input matInput formControlName="pic" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Source</mat-label>
+              <input matInput formControlName="source" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Types []</mat-label>
+              <input matInput formControlName="types" required>
+              <mat-hint>Publications, ...</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Clips</mat-label>
+              <input matInput formControlName="clips" required>
+              <mat-hint>commna between YouTube</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" [rows]=4 required></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Sub Fields []</mat-label>
+              <input matInput formControlName="subs" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Categories []</mat-label>
+              <input matInput formControlName="categories" required>
+            </mat-form-field>
+          </div>
+          </form>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #stepApps>
+    <form [formGroup]="appsFormGroup">
+      <!-- 5. Featured Academic Apps -->
+      <div formArrayName="apps">
+        <div class="card mt-0" *ngFor="let e of appsFormGroup.get('apps').controls; let i=index">
+          <form [formGroup]="e">
+          <div class="card-body">
+            <h4>{{i+1}}.</h4>
+            <ais-instantsearch [config]="config_apps">
+              <ais-hits>
+                <ng-template let-hits="hits" let-results="results">
+                  <mat-form-field appearance="fill">
+                    <mat-label>App</mat-label>
+                    <mat-select name="app" (selectionChange)="selectionChange('app', i, $event)">
+                      <mat-option *ngFor="let hit of hits" [value]="hit">
+                        {{hit.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </ais-hits>
+            </ais-instantsearch>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Company Name</mat-label>
+              <input matInput formControlName="companyName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>App Name</mat-label>
+              <input matInput formControlName="appName" required>
+            </mat-form-field>
+            <!-- <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>App Link</mat-label>
+              <input matInput formControlName="link" required>
+            </mat-form-field> -->
+            <!-- <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Logo</mat-label>
+              <input matInput formControlName="pic" required>
+            </mat-form-field> -->
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Category</mat-label>
+              <input matInput formControlName="category" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" [rows]=4 required></textarea>
+            </mat-form-field>
+          </div>
+          </form>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #stepPodcasts>
+    <form [formGroup]="podcastsFormGroup">
+      <!-- 6. Featured Academic Podcasts -->
+      <div formArrayName="podcasts">
+        <div class="card mt-0" *ngFor="let e of podcastsFormGroup.get('podcasts').controls; let i=index">
+          <form [formGroup]="e">
+          <div class="card-body">
+            <h4>{{i+1}}.</h4>
+            <ais-instantsearch [config]="config_podcasts">
+              <ais-hits>
+                <ng-template let-hits="hits" let-results="results">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Podcast</mat-label>
+                    <mat-select name="podcast" (selectionChange)="selectionChange('podcast', i, $event)">
+                      <mat-option *ngFor="let hit of hits" [value]="hit">
+                        {{hit.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </ais-hits>
+            </ais-instantsearch>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Podcast Name</mat-label>
+              <input matInput formControlName="podcastName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Episode Name</mat-label>
+              <input matInput formControlName="episodeName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Episode Link</mat-label>
+              <input matInput formControlName="episodeLink" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Category</mat-label>
+              <input matInput formControlName="category" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" [rows]=4 required></textarea>
+            </mat-form-field>
+
+          </div>
+          </form>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #stepEvents>
+    <form [formGroup]="eventsFormGroup">
+      <!-- 7. Featured Academic Virtual Events -->
+      <div formArrayName="events">
+        <div class="card mt-0" *ngFor="let e of eventsFormGroup.get('events').controls; let i=index">
+          <form [formGroup]="e">
+          <div class="card-body">
+            <h4>{{i+1}}.</h4>
+            <ais-instantsearch [config]="config_events">
+              <ais-hits>
+                <ng-template let-hits="hits" let-results="results">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Event</mat-label>
+                    <mat-select name="event" (selectionChange)="selectionChange('event', i, $event)">
+                      <mat-option *ngFor="let hit of hits" [value]="hit">
+                        {{hit.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </ais-hits>
+            </ais-instantsearch>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Event Name</mat-label>
+              <input matInput formControlName="name" required>
+            </mat-form-field>
+            <!-- <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Event Link</mat-label>
+              <input matInput formControlName="link" required>
+            </mat-form-field> -->
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Start Date</mat-label>
+              <input matInput [matDatepicker]="pickerStart" (click)="pickerStart.open()" formControlName="startDate" required>
+              <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+              <mat-datepicker #pickerStart></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>End Date</mat-label>
+              <input matInput [matDatepicker]="pickerEnd" (click)="pickerEnd.open()" formControlName="endDate" required>
+              <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+              <mat-datepicker #pickerEnd></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Category</mat-label>
+              <input matInput formControlName="category" required>
+            </mat-form-field>
+            <!-- <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Language</mat-label>
+              <input matInput formControlName="language" required>
+            </mat-form-field> -->
+            <!-- <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" [rows]=4 required></textarea>
+            </mat-form-field> -->
+          </div>
+          </form>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #stepQuotes>
+    <form [formGroup]="quotesFormGroup">
+      <!-- 8. Academic Quote -->
+      <b>Algolia</b>
+      <div formArrayName="quotes">
+        <div class="card mt-0" *ngFor="let e of quotesFormGroup.get('quotes').controls; let i=index">
+          <form [formGroup]="e">
+          <div class="card-body">
+            <h4>{{i+1}}.</h4>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Quote</mat-label>
+              <input matInput formControlName="quote" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Author Name</mat-label>
+              <input matInput formControlName="authorName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Author Pic</mat-label>
+              <input matInput formControlName="authorPic" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Tags []</mat-label>
+              <input matInput formControlName="tags" required>
+            </mat-form-field>
+          </div>
+          </form>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #stepSubmit>
+    <form [formGroup]="submitFormGroup">
+      <div class="card">
+        <div class="card-body">
+          <h4>Submit Academig Daily</h4>
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Sub Title</mat-label>
+            <input matInput formControlName="sub_title" required>
+          </mat-form-field>
+          <!-- news:<br><pre>{{this.newsFormGroup.value.news | json}}</pre><br>
+          lists:<br><pre>{{this.listsFormGroup.value.lists | json}}</pre><br>
+          labs:<br><pre>{{this.labsFormGroup.value.labs | json}}</pre><br>
+          trends:<br><pre>{{this.trendsFormGroup.value.trends | json}}</pre><br>
+          apps:<br><pre>{{this.appsFormGroup.value.apps | json}}</pre><br>
+          podcasts:<br><pre>{{this.podcastsFormGroup.value.podcasts | json}}</pre><br>
+          events:<br><pre>{{this.eventsFormGroup.value.events | json}}</pre><br>
+          quotes:<br><pre>{{this.quotesFormGroup.value.quotes | json}}</pre> -->
+        </div>
+      </div>
+    </form>
+    <h4 *ngIf="submitCompleted">Academig Daily Submission Successful</h4>
+  </ng-template>
+
+
+  </div>
+  <!-- <ng-template #bigScreen> -->
+   <!-- (selectionChange)="selectionChange($event)" -->
+   <!-- [linear]="true"  -->
+    <mat-horizontal-stepper #stepper labelPosition="bottom" class="bg-color">
+
+      <ng-template matStepperIcon="news"><mat-icon>category</mat-icon></ng-template>
+      <ng-template matStepperIcon="lists"><mat-icon>category</mat-icon></ng-template>
+      <ng-template matStepperIcon="labs"><mat-icon>category</mat-icon></ng-template>
+      <ng-template matStepperIcon="trends"><mat-icon>category</mat-icon></ng-template>
+      <ng-template matStepperIcon="apps"><mat-icon>category</mat-icon></ng-template>
+      <ng-template matStepperIcon="podcasts"><mat-icon>category</mat-icon></ng-template>
+      <ng-template matStepperIcon="events"><mat-icon>category</mat-icon></ng-template>
+      <ng-template matStepperIcon="quotes"><mat-icon>category</mat-icon></ng-template>
+      <ng-template matStepperIcon="submit"><mat-icon>check_circle_outline</mat-icon></ng-template>
+
+      <mat-step [stepControl]="newsFormGroup" state="news">
+        <ng-template matStepLabel>News</ng-template>
+        <ng-container *ngTemplateOutlet="stepNews"></ng-container>
+        <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(1)">Continue to Lists</button>
+      </mat-step>
+      <mat-step [stepControl]="listsFormGroup" state="lists">
+        <ng-template matStepLabel>Lists</ng-template>
+        <ng-container *ngTemplateOutlet="stepLists"></ng-container>
+        <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(2)">Continue to Labs</button>
+        <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+      </mat-step>
+      <mat-step [stepControl]="labsFormGroup" state="labs">
+        <ng-template matStepLabel>Labs</ng-template>
+        <ng-container *ngTemplateOutlet="stepLabs"></ng-container>
+        <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(3)">Continue to Trends</button>
+        <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+      </mat-step>
+      <mat-step [stepControl]="trendsFormGroup" state="trends">
+        <ng-template matStepLabel>Trends</ng-template>
+        <ng-container *ngTemplateOutlet="stepTrends"></ng-container>
+        <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(4)">Continue to Podcasts</button>
+        <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+      </mat-step>
+      <mat-step [stepControl]="podcastsFormGroup" state="podcasts">
+        <ng-template matStepLabel>Podcasts</ng-template>
+        <ng-container *ngTemplateOutlet="stepPodcasts"></ng-container>
+        <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(6)">Continue to Events</button>
+        <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+      </mat-step>
+      <mat-step [stepControl]="eventsFormGroup" state="events">
+        <ng-template matStepLabel>Events</ng-template>
+        <ng-container *ngTemplateOutlet="stepEvents"></ng-container>
+        <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(8)">Continue to Apps</button>
+        <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+      </mat-step>
+      <mat-step [stepControl]="appsFormGroup" state="apps">
+        <ng-template matStepLabel>Apps</ng-template>
+        <ng-container *ngTemplateOutlet="stepApps"></ng-container>
+        <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(5)">Continue to Quotes</button>
+        <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+      </mat-step>
+      <mat-step [stepControl]="quotesFormGroup" state="quotes">
+        <ng-template matStepLabel>Quotes</ng-template>
+        <ng-container *ngTemplateOutlet="stepQuotes"></ng-container>
+        <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(7)">Continue to Submit</button>
+        <button mat-button matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+      </mat-step>
+      <mat-step [stepControl]="submitFormGroup" state="submit">
+        <ng-template matStepLabel>Submit</ng-template>
+        <ng-container *ngTemplateOutlet="stepSubmit"></ng-container>
+        <!-- *ngIf="!submitCompleted"  -->
+        <button mat-button [disabled]="submitFlag" matStepperNext class="btn btn-success" (click)="onSubmit()">
+          Submit <i *ngIf="submitFlag" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+        </button>
+        <!-- *ngIf="!submitCompleted"  -->
+        <button mat-button [disabled]="submitFlag" matStepperPrevious>Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+      </mat-step>
+    </mat-horizontal-stepper>
+  <!-- </ng-template> -->
+
+</div>
+</div>

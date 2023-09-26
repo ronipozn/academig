@@ -1,0 +1,23 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && contacts.length!=0">
+  <!-- <div [dragula]=bagName [(dragulaModel)]='contacts'> -->
+  <ul *ngFor="let contact of contacts; let i=index; let l=last" class="list-unstyled" [ngClass]="{'mb-2': !l}">
+    <contact-item [itemAutofocus]="itemFocus==i"
+                  [itemNew]="itemFocus==i"
+                  [stream]=stream[i]
+                  [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                  [contact]=contact
+                  [userId]=userId
+                  [showEditBtn]=showEditBtn
+                  [sourceType]=sourceType
+                  (animationDoneEvent)="animationDone()"
+                  (buttonEditClick)="buttonEditFunc(i)"
+                  (buttonDeleteClick)="buttonDeleteFunc(i)"
+                  (buttonMessageClick)="buttonMessageFunc(i)"
+                  (buttonSuggestionClick)="buttonSuggestionFunc($event,i)">
+    </contact-item>
+    <div *ngIf="!l" class="row"><div class="col-8 offset-2"><hr></div></div>
+  </ul>
+  <!-- </div> -->
+</div>

@@ -1,0 +1,659 @@
+<spinner *ngIf="missionService.showPage && !streamRetrieved[0]"></spinner>
+
+<div *ngIf="streamRetrieved[0]" class="card mt-0">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-4 border-right">
+        <h3 class="text-dark mt-0">
+          <div class="d-flex align-items-center">
+            <span class="material-icons mr-1">home</span>
+            <b>About</b>
+          </div>
+        </h3>
+
+        <ng-container *ngIf="shortBackground?.length>0">
+          <div build-text [text]=shortBackground></div>
+          <!-- <a *ngIf="shortBackground.length<items.background.length" style="cursor: pointer;" (click)="scrollFullBackground()"><b>View full background</b></a> -->
+        </ng-container>
+
+        <dl class="row mb-0">
+
+          <ng-container *ngIf="missionService.country">
+            <dt class="col-sm-5">
+              <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">language</i> {{labFlag ? 'Lab location' : 'Location'}}</div>
+            </dt>
+            <dd class="col-sm-7">
+              <a *ngIf="missionService.state && missionService.city" [routerLink]="['/country', missionService.country | country | urlize, missionService.state | urlize, missionService.city | urlize]" class="card-title">{{missionService.city}}</a>
+              <a *ngIf="!missionService.state && missionService.city" [routerLink]="['/country', missionService.country | country | urlize, missionService.city | urlize]" class="card-title">{{missionService.city}}</a>
+              <ng-container *ngIf="missionService.state && missionService.state!='-'">
+                / <a [routerLink]="['/country', missionService.country | country | urlize, missionService.state | urlize]" class="card-title">{{missionService.state}}</a>
+              </ng-container>
+              <ng-container *ngIf="missionService.country && missionService.country!='-'">
+                / <a [routerLink]="['/country', missionService.country | country | urlize]" class="card-title">{{missionService.country | country}}</a>
+              </ng-container>
+            </dd>
+          </ng-container>
+
+          <dt class="col-sm-5">
+            <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">account_balance</i> {{companyFlag ? 'Field' : 'Institute'}}</div>
+          </dt>
+          <dd class="col-sm-7">
+            <span *ngIf="!companyFlag"><a [routerLink]="['/', missionService.groupIndex.university.link]" class="card-title">{{missionService.groupIndex.university.name}}</a> / </span>
+            <a [routerLink]="['/', missionService.groupIndex.university.link, missionService.groupIndex.department.link]" class="card-title">{{missionService.groupIndex.department.name}}</a>
+          </dd>
+
+          <ng-container *ngIf="sizeRange">
+            <dt class="col-sm-5">
+              <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">groups</i> {{labFlag ? 'Num of people' : 'Number of employees'}}</div>
+            </dt>
+            <dd class="col-sm-7">{{sizeRange}}</dd>
+            <!-- (2 Msc, 5 Phd, 3 Postdoc) -->
+          </ng-container>
+
+          <ng-container *ngIf="missionService.piName">
+            <dt class="col-sm-5">
+              <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">person</i> {{labFlag ? 'Lab head' : 'CEO / Founder'}}</div>
+            </dt>
+            <dd class="col-sm-7"><a [routerLink]="['./people']" class="card-title">{{missionService.piName}}</a></dd>
+          </ng-container>
+
+          <ng-container *ngIf="!companyFlag">
+            <dt *ngIf="missionService.piTitle" class="col-sm-5">
+              <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">school</i> Title</div>
+            </dt>
+            <dd *ngIf="missionService.piTitle" class="col-sm-7">{{titlesSelect[missionService.piTitle]}}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="missionService.publicInfo?.website">
+            <dt class="col-sm-5"><i class="material-icons mr-2" style="font-size: 16px;">public</i> Lab website</dt>
+            <dd class="col-sm-7 card-title"><a [href]="missionService.publicInfo.website" target="_empty">{{missionService.publicInfo.website}} <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+          </ng-container>
+
+          <!-- <ng-container *ngIf="1">
+            <dt class="col-sm-5"><i class="material-icons mr-2" style="font-size: 16px;">assessment</i> Academig rank</dt>
+            <dd class="col-sm-7 card-title"><i class="fa fa-bar-chart" aria-hidden="true"></i> 15.43</dd>
+          </ng-container> -->
+
+          <div #scrollInterests></div>
+          <ng-container *ngIf="streamRetrieved[0] && ((items.intrests && items.intrests[0]) || missionService.showHeadline)">
+            <dt class="col-sm-5">
+              <div class="d-flex align-items-center">
+                <i class="material-icons mr-2" style="font-size: 16px;">label</i> {{labFlag ? 'Research interests' : 'Expertise'}}
+                <button *ngIf="missionService.showEditBtn && (items.intrests==null || items.intrests?.length==0 || (items.intrests && items.intrests[0]==null))" (click)="tagsOp(0, true, null)" mat-raised-button type="button" [matTooltip]=tooltip [matTooltipPosition]="'above'" class="btn btn-link btn-sm btn-just-icon">
+                  <i class="material-icons">add_circle</i>
+                </button>
+              </div>
+            </dt>
+            <dd class="col-sm-7">
+              <div *ngIf="(items.intrests==null || items.intrests=='' || (items.intrests && (items.intrests.length==0 || items.intrests[0]==null))) && missionService.showHeadline">
+                Choose the keywords that best match your lab.
+              </div>
+              <!-- [headline]="'Choose your lab research interests'" -->
+              <div *ngIf="items.intrests && items.intrests[0]"
+                   build-badge
+                   [badges]=items.intrests
+                   [showEditBtn]=missionService.showEditBtn
+                   [stream]=streamTags
+                   (animationDoneEvent)="tagsOp(3)"
+                   (buttonDeleteClick)="tagsOp(1, false, null)"
+                   (buttonEditClick)="tagsOp(0, true, null)"
+                   (buttonTagClick)="tagClickOp($event)">
+              </div>
+            </dd>
+          </ng-container>
+
+          <div #scrollQuote></div>
+          <ng-container *ngIf="streamRetrieved[0] && (items.quote?.text || missionService.showHeadline)">
+            <dt class="col-sm-5">
+              <div class="d-flex align-items-center">
+                <i class="material-icons mr-2" style="font-size: 16px;">format_quote</i> Favorite quote
+                <button *ngIf="missionService.showEditBtn && (items.quote.text==null || items.quote.text=='')" (click)="quoteOp(0, true, null)" mat-raised-button type="button" [matTooltip]=tooltip [matTooltipPosition]="'above'" class="btn btn-link btn-sm btn-just-icon">
+                  <i class="material-icons">add_circle</i>
+                </button>
+              </div>
+            </dt>
+            <dd class="col-sm-7">
+              <div *ngIf="items.quote.text==null && missionService.showHeadline">
+                Choose your lab favorite quote.
+              </div>
+              <!-- [headline]="'Choose a quote'" -->
+              <div build-quote
+                   [text]=items.quote.text
+                   [name]=items.quote.name
+                   [pic]=items.quote.pic
+                   [showEditBtn]=missionService.showEditBtn
+                   [stream]=streamQuote
+                   (animationDoneEvent)="quoteOp(3)"
+                   (buttonEditClick)="quoteOp(0, true, $event)"
+                   (buttonDeleteClick)="quoteOp(1, false, $event)">
+              </div>
+            </dd>
+          </ng-container>
+        </dl>
+
+        <!-- Lab Statement -->
+         <!-- || missionService.showHeadline) -->
+        <div *ngIf="streamRetrieved[0] && items.statement">
+          <!-- [addButtonFlag]="items.statement==null" -->
+          <!-- [showEditBtn]=missionService.showEditBtn -->
+          <!-- (buttonAddClick)="statementOp(0, true, null)" -->
+          <build-headline [headline]="'Lab Statement'"></build-headline>
+          <!-- <build-modal-intro *ngIf="items.statement==null && missionService.showHeadline"
+                             [headline]="'Choose a lab statement'"
+                             [bodytext]="'Add your lab statement.'">
+          </build-modal-intro> -->
+          <div build-text [text]="items.statement"></div>
+          <!-- [showEditBtn]=missionService.showEditBtn -->
+        </div>
+
+        <!-- <div class="d-none d-md-block"> -->
+          <!-- <button *ngIf="missionService.userStatus>=4 && missionService.groupType" [routerLink]="['tools']" mat-raised-button class="btn btn-light-blue btn-block">
+            <i class="material-icons">supervised_user_circle</i> Lab Members Tools
+          </button> -->
+          <!-- <button *ngIf="missionService.userStatus<4" mat-raised-button class="btn btn-block" [ngClass]="{'btn-light-blue': followStatus, 'btn-outline-light-blue': !followStatus}" (click)="groupFollow()">
+            <i *ngIf="!streamFollow" class="material-icons">{{followStatus ? 'bookmark' : 'bookmark_border'}}</i>
+            <i *ngIf="streamFollow" class="fa fa-circle-o-notch fa-spin fa-size-20" style="color: gray"></i>
+            {{followStatus ? 'Unfollow' : 'Follow'}} {{missionService.groupTypeTitle}}
+          </button> -->
+          <!-- <button *ngIf="missionService.groupStage==2" mat-raised-button class="btn btn-block" [ngClass]="{'btn-light-blue': compareFlag, 'btn-outline-light-blue': !compareFlag}" (click)="groupCompare()">
+            <i class="material-icons">compare</i> {{compareFlag ? 'Uncompare' : 'Compare'}} {{missionService.groupTypeTitle}}
+          </button> -->
+          <!-- <button *ngIf="(userId && missionService.userStatus<4) || userId==null" mat-raised-button class="btn btn-warning btn-block" (click)="groupReport()">
+            <i class="material-icons">report</i> Report {{missionService.groupTypeTitle}}
+          </button> -->
+        <!-- </div> -->
+
+      </div>
+      <div class="col-lg-4 border-right">
+
+        <ng-container *ngIf="missionService.groupStage==2 && items.counts.publications>0">
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <span class="material-icons mr-1">equalizer</span>
+              <b>Publications Stats</b>
+            </div>
+          </h3>
+          <spinner *ngIf="!streamRetrieved[8]"></spinner>
+          <publications-stats-all *ngIf="streamRetrieved[8]" [yearUniqs]=yearUniqs></publications-stats-all>
+        </ng-container>
+
+        <ng-container *ngIf="streamRetrieved[7] && (missionService.userStatus>=6 || (missionService.groupStage==2 && (missionService.onBehalf<6 || missionService.onInvite==1)))">
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <span class="material-icons mr-1">list_alt</span>
+              <b>Recent News</b>
+            </div>
+          </h3>
+          <spinner *ngIf="!streamRetrieved[7]"></spinner>
+          <div class="mb-4">
+            <news-list [newses]=newses [userId]=missionService.userId [sourceType]=7></news-list>
+            <a *ngIf="newses?.length>0" role="button" class="card-title" [routerLink]="['./news']"><b>View All News</b></a>
+          </div>
+        </ng-container>
+
+      </div>
+      <div class="col-lg-4">
+
+        <ng-container *ngIf="missionService.groupStage==2">
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <span class="material-icons mr-1">description</span>
+              <b>Recent Publications</b>
+            </div>
+          </h3>
+          <a *ngIf="missionService.groupStage==2 && streamRetrieved[8] && publications.length>0" role="button" class="card-title" [routerLink]="['./publications']">
+            <b>View All {{items.counts.publications | zeronize}} Publications</b>
+          </a>
+          <hr class="mt-1">
+          <publications-list [streamRetrieved]=streamRetrieved[8]
+                             [smallPicFlag]=true
+                             [publications]=publications
+                             [sourceType]=0
+                             [userId]=userService.userId
+                             [stream]=streamPublications
+                             [streamFolder]=streamPublicationsFolder
+                             (btnPDF)="pdfSlide($event)"
+                             (btnFolder)="publicationFolder($event)">
+          </publications-list>
+        </ng-container>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="row no-gutters">
+
+  <div class="col-md-8">
+
+    <!-- DETAILS -->
+    <div *ngIf="streamRetrieved[0] && (items.topic?.length>0 || this.items.topic || items.establish || items.fundings || items.counts.publications>0 || missionService.publicInfo || missionService.publicInfo)" class="card mt-0">
+      <div class="card-body">
+
+        <h3 class="text-dark mt-0">
+          <div class="d-flex align-items-center">
+            <span class="material-icons mr-1">assignment</span>
+            <b>Details</b>
+          </div>
+        </h3>
+
+        <ng-container *ngIf="items.topic?.length>0 || this.items.topic || items.establish || items.fundings || missionService.publicInfo">
+          <dl class="row mb-0">
+
+            <ng-container *ngIf="topicArrayFlag && items.topic?.length>0">
+              <dt class="col-sm-4">Research topics</dt>
+              <dd class="col-sm-8">
+                <ng-container *ngFor="let topic of items.topic; let l=last">
+                  <span *ngIf="topic">{{ topic }}<span *ngIf="!l">, </span></span>
+                </ng-container>
+              </dd>
+            </ng-container>
+            <ng-container *ngIf="!topicArrayFlag && this.items.topic">
+              <dt class="col-sm-4">Research topics</dt>
+              <dd class="col-sm-8">{{ this.items.topic }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="items.establish">
+              <dt class="col-sm-4">Establish year</dt>
+              <!-- <dd class="col-sm-8">{{items.establish | date: 'MMM y'}}</dd> -->
+              <dd class="col-sm-8">{{items.establish | date: 'y'}}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.publicInfo?.address">
+              <dt class="col-sm-4">Address</dt>
+              <dd class="col-sm-8">{{missionService.publicInfo.address}}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.publicInfo?.email">
+              <dt class="col-sm-4">Contact email</dt>
+              <dd class="col-sm-8">{{missionService.publicInfo.email}}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="items.fundings.legth>0">
+              <dt class="col-sm-4">Funding</dt>
+              <dd class="col-sm-8">
+                <span *ngFor="let funding of items.fundings; let l=last">
+                  <{{ funding }}<span *ngIf="!l">, </span>
+                </span>
+              </dd>
+            </ng-container>
+
+            <!-- <ng-container *ngIf="0">
+              <dt class="col-sm-4">Collaborations</dt>
+              <dd class="col-sm-8"><a [routerLink]="['./publications']">Pesking Lab</a>, <a [routerLink]="['./publications']">Jones Lab</a>, <a [routerLink]="['./publications']">Petra Lab</a></dd>
+            </ng-container> -->
+
+          </dl>
+          <hr class="mt-2">
+        </ng-container>
+
+        <!-- <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">public</i> Followers</div>
+        <dd class="col-sm-7 card-title"><a [routerLink]="['./network']">{{(groupsFollowersLength + peoplesFollowingLength) || '-'}}</a></dd>
+        <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">public</i> Views</div>
+        <dd class="col-sm-7 card-title">{{items.views.total | zeronize}}</dd> -->
+
+        <!-- <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">public</i> Publications</div>
+        (Views: {{items.views.publications | zeronize}})
+        <h5 class="text-info">325</h5> <p class="text-muted">Total Citations</p> -->
+
+        <!-- <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">public</i> Services</div>
+        <a [routerLink]="['./services']">{{items.counts.resources | zeronize}}</a>
+        (Views: {{items.views.resources | zeronize}}) -->
+
+        <!-- <div class="d-flex align-items-center"><i class="material-icons mr-2" style="font-size: 16px;">public</i> Projects</div>
+        {{items.counts.currentProjects + items.counts.pastProjects | zeronize}}
+        (Views: {{items.views.projects | zeronize}}) -->
+
+        <ng-container *ngIf="items.counts.publications>0">
+          <dl class="row mb-0">
+            <ng-container *ngIf="items.counts">
+              <dt class="col-sm-4">Total publications</dt>
+              <dd class="col-sm-8">{{items.counts.publications}} <a [routerLink]="['./publications']"><i class="ml-1 fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+            <ng-container *ngIf="items.journals.length>0">
+              <dt class="col-sm-4">Journals</dt>
+              <dd class="col-sm-8">
+                <ng-container *ngFor="let journal of (toggleJournals ? items.journals : items.journals.slice(0,6)); let l=last">
+                  {{ journal }}<span *ngIf="!l">, </span>
+                </ng-container>
+                <ng-container *ngIf="items.journals?.length>6 || toggleJournals">
+                  ...  <i (click)="toggleJournals=!toggleJournals" class="ml-2 fa" [ngClass]="{'fa-minus-square-o': toggleJournals, 'fa-plus-square-o': !toggleJournals}" aria-hidden="true"></i>
+                </ng-container>
+              </dd>
+            </ng-container>
+          </dl>
+          <hr class="mt-2">
+        </ng-container>
+
+        <ng-container *ngIf="missionService.socialInfo || missionService.publicInfo">
+          <dl class="row mb-0">
+
+            <ng-container *ngIf="missionService.publicInfo?.website">
+              <dt class="col-sm-4">Website</dt>
+              <dd class="col-sm-8 card-title"><a [href]="missionService.publicInfo.website" target="_empty">{{missionService.publicInfo.website}} <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.scholar">
+              <dt class="col-sm-4">Google scholar</dt>
+              <dd class="col-sm-8 card-title"><a href="https://scholar.google.com/citations?user={{missionService.socialInfo.scholar}}" target="_empty">View on Google Scholar <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.orcid">
+              <dt class="col-sm-4">Orcid</dt>
+              <dd class="col-sm-8 card-title"><a href="https://orcid.org/{{missionService.socialInfo.orcid}}" target="_empty">View on ORCID <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.github">
+              <dt class="col-sm-4">Github</dt>
+              <dd class="col-sm-8 card-title"><a href="https://github.com/{{missionService.socialInfo.github}}" target="_empty">View on Github <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.linkedin">
+              <dt class="col-sm-4">LinkedIn</dt>
+              <dd class="col-sm-8 card-title"><a href="https://www.linkedin.com/in/{{missionService.socialInfo.linkedin}}" target="_empty">View on LinkedIn <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.twitter">
+              <dt class="col-sm-4">Twitter</dt>
+              <!-- <dd class="col-sm-8 card-title"><span class="text-muted">(5431) </span> <a href="https://www.twitter.com/{{missionService.socialInfo.twitter}}" target="_empty">View on Twitter <i class="fa fa-external-link" aria-hidden="true"></i></a></dd> -->
+              <dd class="col-sm-8 card-title"><a href="https://www.twitter.com/{{missionService.socialInfo.twitter}}" target="_empty">View on Twitter <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.researchgate">
+              <dt class="col-sm-4">ResearchGate</dt>
+              <dd class="col-sm-8 card-title"><a href="https://www.researchgate.net/profile/{{missionService.socialInfo.researchgate}}" target="_empty">View on ResearchGate <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.facebook">
+              <dt class="col-sm-4">Facebook</dt>
+              <dd class="col-sm-8 card-title"><a href="https://www.facebook.com/{{missionService.socialInfo.facebook}}" target="_empty">View on Facebook <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.youtube">
+              <dt class="col-sm-4">Youtube</dt>
+              <dd class="col-sm-8 card-title"><a href="https://www.youtube.com/{{missionService.socialInfo.youtube}}" target="_empty">View on YouTube <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.pinterest">
+              <dt class="col-sm-4">Pinterest</dt>
+              <dd class="col-sm-8 card-title"><a href="https://www.pinterest.com/{{missionService.socialInfo.pinterest}}" target="_empty">View on Pinterest <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+            <ng-container *ngIf="missionService.socialInfo?.instagram">
+              <dt class="col-sm-4">Instagram</dt>
+              <dd class="col-sm-8 card-title"><a href="https://www.instagram.com/{{missionService.socialInfo.instagram}}" target="_empty">View on Instagram <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+            </ng-container>
+
+          </dl>
+        </ng-container>
+
+      </div>
+    </div>
+
+    <!-- BACKGROUND -->
+    <!-- Photos of your lab or images that represent your research are a great way to showcase your lab -->
+    <ng-container *ngIf="streamRetrieved[0] && (items.background || items.pic || missionService.showHeadline)">
+      <!-- <div *ngIf="!companyFlag && (items.pic || missionService.showHeadline)" [ngStyle]="{ 'background-image': 'url(' + items.pic + ')'}" [@itemsAnimation]="('active')" class="coverPic" on-mouseover='buttonOver(true)' on-mouseleave='buttonOver(false)'>
+        <div *ngIf="showButton || streamBackgroundPic>0" class="btn-toolbar img-overlay-right mr-2" role="toolbar">
+          <button [disabled]="streamBackgroundPic>0" role="button" class="btn btn-sm btn-light" (click)="backgroundPicOp(0, true, null)">
+            <i *ngIf="streamBackgroundPic==0" class="fa fa-camera" aria-hidden="true"></i>
+            <i *ngIf="streamBackgroundPic>0" class="fa fa-spinner fa-spin fa-1x" aria-hidden="true"></i>
+          </button>
+          <button [disabled]="!items.pic || streamBackgroundPic>0" role="button" class="btn btn-sm btn-light ml-2" (click)="backgroundPicOp(1, false, null)">
+            <i *ngIf="streamBackgroundPic==0" class="fa fa-trash" aria-hidden="true"></i>
+            <i *ngIf="streamBackgroundPic>0" class="fa fa-spinner fa-spin fa-1x" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div> -->
+      <div #scrollBackground></div>
+      <div *ngIf="items.background || missionService.showHeadline" class="card mt-0">
+        <div class="card-body">
+          <!-- <build-headline *ngIf="missionService.showHeadline"
+                          [addButtonFlag]="!items.background"
+                          [showEditBtn]=missionService.showEditBtn
+                          [headline]="'Background'"
+                          (buttonAddClick)="backgroundOp(0, true, null)">
+          </build-headline> -->
+          <h3 class="text-dark mt-0">
+            <div class="d-flex align-items-center">
+              <span class="material-icons mr-1">supervised_user_circle</span>
+              <b>Background</b>
+              <button *ngIf="missionService.showEditBtn && !items.background" (click)="backgroundOp(0, true, null)" mat-raised-button type="button" class="btn btn-link btn-sm btn-just-icon">
+                <i class="material-icons">add_circle</i>
+              </button>
+            </div>
+          </h3>
+          <hr class="mt-2">
+          <build-modal-intro *ngIf="missionService.showEditBtn && items.background==null"
+                             [headline]="'Introduce your lab'"
+                             [bodypic]="'align-left'"
+                             [bodytext]="'Add a description of your lab and the research you\'re doing so others understand what you\'re working on.'">
+          </build-modal-intro>
+          <div build-text
+               [text]=items.background
+               [showEditBtn]=missionService.showEditBtn
+               [stream]=streamBackground
+               (animationDoneEvent)="backgroundOp(3)"
+               (buttonEditClick)="backgroundOp(0, true, $event)"
+               (buttonDeleteClick)="backgroundOp(1, false, $event)">
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- RANKS -->
+    <div *ngIf="streamRetrieved[0] && items.rank" class="card mt-0">
+      <div class="card-body">
+
+        <h3 class="text-dark mt-0">
+          <div class="d-flex align-items-center">
+            <span class="material-icons mr-1">insert_chart</span>
+            <b>Institute Ranking</b>
+          </div>
+        </h3>
+        <hr class="mt-2">
+
+        <ng-container *ngIf="items.rank.times">
+          <dl class="row mb-0">
+            <dt class="col-sm-9">World University Rankings</dt>
+            <dd class="col-sm-3 mb-0"><span class="pull-right"><b>{{items.rank.times | rankPipe:0}}</b> (2019)</span></dd>
+            <dd class="col-sm-12 text-muted mt-0">by Times Higher Education</dd>
+            <dd class="col-sm-12">
+              <span *ngIf="!toggleRank[0]">{{textRank[0] | slice:0:232}}</span>
+              <span *ngIf="toggleRank[0]">{{textRank[0]}}</span>
+              <a (click)="toggleRank[0]=!toggleRank[0]" [routerLink]="['.']" class="ml-1" style="cursor: pointer;">Show {{!toggleRank[0] ? 'More' : 'Less'}}</a>
+            </dd>
+          </dl>
+          <hr class="mt-1 mb-3">
+        </ng-container>
+
+        <ng-container *ngIf="items.rank.shanghai">
+          <dl class="row mb-0">
+            <dt class="col-sm-9">Academic Ranking of World Universities</dt>
+            <dd class="col-sm-3 mb-0"><span class="pull-right"><b>{{items.rank.shanghai | rankPipe:1}}</b> (2019)</span></dd>
+            <dd class="col-sm-12 text-muted mt-0">by Shanghai Jiao Tong University</dd>
+            <dd class="col-sm-12">
+              <span *ngIf="!toggleRank[1]">{{textRank[1] | slice:0:147}}</span>
+              <span *ngIf="toggleRank[1]">{{textRank[1]}}</span>
+              <a (click)="toggleRank[1]=!toggleRank[1]" [routerLink]="['.']" class="ml-1" style="cursor: pointer;">Show {{!toggleRank[1] ? 'More' : 'Less'}}</a>
+            </dd>
+          </dl>
+          <hr class="mt-1 mb-3">
+        </ng-container>
+
+        <ng-container *ngIf="items.rank.top">
+          <dl class="row mb-0">
+            <dt class="col-sm-9">QS World University Rankings</dt>
+            <dd class="col-sm-3 mb-0"><span class="pull-right"><b>{{items.rank.top | rankPipe:2}}</b> (2019)</span></dd>
+            <dd class="col-sm-12 text-muted mt-0">by TopUniversities</dd>
+            <dd class="col-sm-12">
+              <span *ngIf="!toggleRank[2]">{{textRank[2] | slice:0:194}}</span>
+              <span *ngIf="toggleRank[2]">{{textRank[2]}}</span>
+              <a (click)="toggleRank[2]=!toggleRank[2]" [routerLink]="['.']" class="ml-1" style="cursor: pointer;">Show {{!toggleRank[2] ? 'More' : 'Less'}}</a>
+            </dd>
+          </dl>
+          <hr class="mt-1 mb-3">
+        </ng-container>
+
+        <ng-container *ngIf="items.rank.usnews">
+          <dl class="row mb-0">
+            <dt class="col-sm-9">Best Global Universities Rankings</dt>
+            <dd class="col-sm-3 mb-0"><span class="pull-right"><b>{{items.rank.usnews | rankPipe:3}}</b> (2019)</span></dd>
+            <dd class="col-sm-12 text-muted mt-0">by U.S. News & World Report</dd>
+            <dd class="col-sm-12">
+              <span *ngIf="!toggleRank[3]">{{textRank[3] | slice:0:197}}</span>
+              <span *ngIf="toggleRank[3]">{{textRank[3]}}</span>
+              <a (click)="toggleRank[3]=!toggleRank[3]" [routerLink]="['.']" class="ml-1" style="cursor: pointer;">Show {{!toggleRank[3] ? 'More' : 'Less'}}</a>
+            </dd>
+          </dl>
+          <hr class="mt-1 mb-3">
+        </ng-container>
+
+      </div>
+    </div>
+
+    <div *ngIf="streamRetrieved[0] && ((userService.userId && userService.planNumber==0) || userService.userId==null)" style="height: 22rem;" class="d-block d-md-none card mt-0">
+      <div class="card-body">
+        <!-- <google-adsense></google-adsense> -->
+        <google-adsense></google-adsense>
+        <div style="position: absolute; bottom: 0;">
+          <div *ngIf="userService.userId && userService.planNumber==0" style="position: absolute; bottom: 0;">
+            <button mat-raised-button type="button" class="btn btn-link" (click)="planUpdate()">Upgrade to PRO to remove Ads</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFFILIATIONS -->
+    <ng-container *ngIf="streamRetrieved[0] && labFlag && (items.affiliations && items.affiliations[0]) && missionService.groupStage>1 && missionService.groupStage!=7">
+      <!-- col-sm-6 -->
+      <div *ngFor="let affiliation of items.affiliations; let i=index" class="mt-5">
+        <affiliation-item *ngIf="i==0"
+                          [itemAutofocus]="itemFocus==i"
+                          [affiliation]=affiliation
+                          [showEditBtn]=missionService.showEditBtn
+                          [index]=i
+                          [stream]=streamAffiliation[i]
+                          (animationDoneEvent)="affiliationStreamFunc()"
+                          (buttonUpdateClick)="affiliationSlide($event, i, false)"
+                          (buttonDeleteClick)="affiliationDelete($event,i)">
+        </affiliation-item>
+      </div>
+    </ng-container>
+
+    <div *ngIf="streamRetrieved[0]" class="d-block d-md-none col-12 mb-4">
+      <div class="text-center">
+        Share<br>
+        <share-buttons [show]="4" [theme]="material-light" [include]="['facebook','twitter','linkedin', 'email']"></share-buttons>
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="streamRetrieved[0]" class="d-none d-md-block col-md-4">
+    <group-sidebar [userId]=missionService.userId
+                   (groupFollowersUpdate)="followrsOp($event,0)"
+                   (peopleFollowingsUpdate)="followrsOp($event,1)"
+                   (buttonClaimClick)="groupClaim()">
+    </group-sidebar>
+  </div>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-pic *ngIf=backgroundPicBuildFlag
+                 (update)="backgroundPicOp(2, false, $event)"
+                 (cancel)="backgroundPicOp(0, false, $event)"
+                 [title]="'Lab Cover Photo'"
+                 [itemId]=missionService.groupId
+                 [width]=380
+                 [height]=126
+                 [type]=3
+                 [pic]=items.pic>
+</build-slide-pic>
+
+<build-slide-text *ngIf=backgroundBuildFlag
+                  (update)="backgroundOp(2, false, $event)"
+                  (cancel)="backgroundOp(0, false, $event)"
+                  [title]="'Lab Background'"
+                  [text]=items.background>
+</build-slide-text>
+
+<build-slide-tags *ngIf=tagsBuildFlag
+                  [tags]=items.intrests
+                  [headline]="'Lab Research Interests'"
+                  (update)="tagsOp(2, false, $event)"
+                  (cancel)="tagsOp(0, false, $event)">
+</build-slide-tags>
+
+<build-slide-quote *ngIf=quoteBuildFlag
+                   (update)="quoteOp(2, false, $event)"
+                   (cancel)="quoteOp(0, false, $event)"
+                   [text]=items.quote.text
+                   [name]=items.quote.name
+                   [pic]=items.quote.pic>
+</build-slide-quote>
+
+<build-slide-affiliation *ngIf=affiliationBuildFlag
+                         (update)="affiliationUpdate($event)"
+                         (cancel)="affiliationSlide($event)"
+                         [itemId]=missionService.groupId
+                         [affilation]=affiliationBuild
+                         [abbrFlag]=false
+                         [newFlag]=affiliationNewFlag>
+</build-slide-affiliation>
+
+<!-- <p *ngIf="items.thanks" class="lead pt-4">Thanks</p>
+<div build-text [text]="items.thanks" [showEditBtn]=missionService.showEditBtn></div> -->
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="labFlag ? 'lab' : 'company'"></modal-signup>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Claim Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleClaimModal" #toggleClaimModal [hidden]="true" data-toggle="modal" data-target="#claimModal"></button>
+
+<div *ngIf="missionService.groupIndex" class="modal fade" id="claimModal" data-target="#claimModal" tabindex="-1" role="dialog" aria-labelledby="ClaimModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-claim [mode]=0 [item]=missionService.groupIndex.group [userId]=missionService.userId (closeModal)="closeClaimModalFunc()"></modal-claim>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Compare Modal - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleCompareModal" #toggleCompareModal [hidden]="true" data-toggle="modal" data-target="#CompareModal"></button>
+
+<div class="modal fade" id="CompareModal" tabindex="-1" role="dialog" aria-labelledby="CompareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Compare labs</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Oops! You can only compare maximum of 3 research labs. Please remove one the labs before adding another one.
+      </div>
+    </div>
+  </div>
+</div>

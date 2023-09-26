@@ -1,0 +1,616 @@
+<div class="container-fluid" style="margin-bottom: 80px; margin-top: 50px;">
+
+  <div class="card card-stats pb-3">
+    <div class="card-header card-header-light-blue card-header-icon">
+      <div class="card-icon p-0">
+        <i class="material-icons">equalizer</i>
+      </div>
+      <h3 *ngIf="groups.length==0" class="card-title">Compare</h3>
+      <h3 *ngIf="streamRetrieved && groups.length>0" class="card-title" [@itemsAnimation]="('active')">
+        Compare <span *ngFor="let group of groups; let f=first;">
+          <span *ngIf="group?.groupIndex" class="mr-1"><span *ngIf="!f">vs.</span> {{ group?.groupIndex.group.name }}</span>
+        </span>
+      </h3>
+    </div>
+  </div>
+
+  <spinner *ngIf="!streamRetrieved"></spinner>
+
+  <div *ngIf="streamRetrieved && otherThanNull==false" class="card" [@itemsAnimation]="('active')">
+    <div class="card-header">
+      <h5 class="mt-3">
+        <!-- <h5 class="mt-3">There are no labs to compare yet.</h5> -->
+        <p>
+          Search for your favorite research labs and click on the <i class="fa fa-clone mx-1" aria-hidden="true"></i> icon to compare.
+        </p>
+        <button mat-raised-button class="btn btn-round btn-light-blue" [routerLink]="['/','search']">
+          <i class="material-icons mr-">search</i> Search Labs
+          <div class="ripple-container"></div>
+        </button>
+      </h5>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved && groups.length>0" class="card mt-0 p-0" [@itemsAnimation]="('active')">
+    <div class="card-body p-0">
+
+      <div class="table-responsive">
+      <table class="table table-borderless table-sm">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th *ngFor="let groupIndex of groupsIndex; let i=index" class="border-left" style="width: 27%" [ngClass]="{'middleColor': i==1}" scope="col">
+              <div class="d-flex">
+                <div class="mr-auto">
+                  <a *ngIf="groupIndex.group.link" class="card-title" [routerLink]="['/',groupIndex.university.link, groupIndex.department.link, groupIndex.group.link]">{{ groupIndex.group.name }}</a>
+                  <a *ngIf="!groupIndex.group.link" class="card-title">{{ groupIndex.group.name }}</a>
+                </div>
+                <div><a (click)="unGroupCompare(i)" style="cursor:pointer;"><i class="material-icons small text-secondary">close</i></a></div>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="pb-0">
+          <tr class="border-top py-0 my-0">
+            <th class="text-secondary" scope="row"></th>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <!-- *ngIf="group.relation?.status<4 && relation?.status<4"  -->
+              <button *ngIf="relationFlag==false" (click)="groupFollow(i)" mat-raised-button [matTooltip]="followStatus ? 'Unfollow' : 'Follow'" [matTooltipPosition]="'below'" type="button" class="p-1 btn btn-link">
+                <i *ngIf="!streamFollow[i]" class="text-muted fa fa-size-20" aria-hidden="true" [ngClass]="{'fa-bookmark': group.followStatus, 'fa-bookmark-o' : !group.followStatus}"></i>
+                <i *ngIf="streamFollow[i]" class="fa fa-circle-o-notch fa-spin fa-size-20" style="color: gray"></i>
+              </button>
+              <button mat-raised-button type="button" class="p-1 btn btn-success btn-link" (click)="openShareModalFunc(i)" matTooltip="Share Lab" [matTooltipPosition]="'below'">
+                <i class="material-icons">share</i>
+              </button>
+              <button mat-raised-button type="button" class="p-1 btn btn-warning btn-link" (click)="openReportModalFunc(i)" matTooltip="Report Lab" [matTooltipPosition]="'below'">
+                <i class="material-icons">report</i>
+              </button>
+              <button [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link, 'contact']" mat-raised-button type="button" class="p-1 btn btn-primary btn-link" matTooltip="Contact Lab" [matTooltipPosition]="'below'">
+                <i class="material-icons">email</i>
+              </button>
+            </td>
+          </tr>
+          <tr class="border-top py-0 my-0">
+            <th class="text-secondary" scope="row">Insitute</th>
+            <td *ngFor="let groupIndex of groupsIndex; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left"></td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary text-nowrap">University</td>
+            <td *ngFor="let groupIndex of groupsIndex; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="groupIndex.university.link" class="card-title" [routerLink]="['/',groupIndex.university.link]">{{ groupIndex.university.name }}</a>
+              <a *ngIf="!groupIndex.university.link" class="card-title">{{ groupIndex.university.name }}</a>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary text-nowrap">Department</td>
+            <td *ngFor="let groupIndex of groupsIndex; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="groupIndex.department.link" class="card-title" [routerLink]="['/',groupIndex.university.link, groupIndex.department.link]">{{ groupIndex.department.name }}</a>
+              <a *ngIf="!groupIndex.department.link" class="card-title">{{ groupIndex.department.name }}</a>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary text-nowrap">Ranking</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <table *ngIf="group.rank" class="table">
+                <tbody>
+                  <tr *ngIf="group.rank.times">
+                    <td class="pt-0 pl-0">Times Higher Education</td>
+                    <td class="pt-0 pl-0">{{group.rank.times | rankPipe:0}}</td>
+                  </tr>
+                  <tr *ngIf="group.rank.shanghai">
+                    <td class="pt-0 pl-0">Shanghai Jiao Tong University</td>
+                    <td class="pt-0 pl-0">{{group.rank.shanghai | rankPipe:1}}</td>
+                  </tr>
+                  <tr *ngIf="group.rank.top">
+                    <td class="pt-0 pl-0">TopUniversities</td>
+                    <td class="pt-0 pl-0">{{group.rank.top | rankPipe:2}}</td>
+                  </tr>
+                  <tr *ngIf="group.rank.usnews">
+                    <td class="pt-0 pl-0">U.S. News & World Report</td>
+                    <td class="pt-0 pl-0">{{group.rank.usnews | rankPipe:3}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="group.rank==null">-</div>
+            </td>
+          </tr>
+
+          <!---------------------------->
+          <!---------- Overview -------->
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <th class="text-secondary" scope="row">Overview</th>
+            <td *ngFor="let groupIndex of groupsIndex; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left"></td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary text-nowrap">Main topic</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">{{group.topic || '-'}}</td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary text-nowrap">Background</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" style="vertical-align: top;" class="border-left">
+              <div build-text-pic [mode]=true [text]=group.background [textMax]=250></div>
+              <span *ngIf="!group.background">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary text-nowrap">Research interests</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" style="vertical-align: top;" class="border-left">
+              <ng-container *ngIf="group.intrests">
+                <div class="overflow-auto">
+                  <span *ngFor="let interest of (intrestsFlag[i] ? group.intrests : group.intrests.slice(0,5))" class="badge badge-light-blue mr-1">
+                    {{ interest }}
+                  </span>
+                </div>
+                <button *ngIf="group.intrests.length>5" mat-raised-button type="button" (click)="intrestsFlag[i]=!intrestsFlag[i]" class="btn btn-primary btn-link btn-sm btn-just-icon">
+                  <i class="material-icons">{{intrestsFlag[i] ? 'remove' : 'add' }}</i>
+                </button>
+              </ng-container>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Country</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <span class="flag" [matTooltip]="group.city + ', ' + (group.state ? group.state + ', ' : '') + (group.country | country)" [matTooltipPosition]="'below'">
+                <img [src]="'./assets/img/flags/' + (group.country | country | flag) + '.png'" alt="">
+              </span>
+              {{group.country ? (group.country | country) : '-'}}
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">State</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">{{group.state || '-'}}</td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">City</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">{{group.city || '-'}}</td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Map</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <agm-map *ngIf="group.location" [zoom]=6 [latitude]="group.location[0]" [longitude]="group.location[1]">
+                <agm-marker [latitude]="group.location[0]" [longitude]="group.location[1]"></agm-marker>
+              </agm-map>
+              <span *ngIf="!group.location">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Establish date</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">{{group.establish || '-'}}</td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Principal investigator</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <ng-container *ngIf="group.peoples[0]">
+                <img *ngIf="group.peoples[0].pic" class="rounded-circle" [width]=35 [height]=35 [src]=group.peoples[0].pic>
+                <span *ngIf="!group.peoples[0].pic" [style.font-size]="1.0 + 'rem'" class="p-0 m-0 fa-stack fa-1x">
+                  <i class="fa fa-circle fa-stack-2x p-0 m-0" style="color: #cdcdc1"></i>
+                  <span class="fa fa-stack-1x fa-name fa-inverse">{{group.peoples[0].name | acronym}}</span>
+                </span>
+                {{group.peoples[0].name}}
+              </ng-container>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Title</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <span *ngIf="group.peoples[0]">{{titlesSelect[group.peoples[0].positions[0].titles[0]]}}</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Number of people</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">{{sizes[i] || '-'}}</td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">People</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <div compare-people
+                   [countsMembers]=titlesCountsMembers[i]
+                   [countsAlumni]=titlesCountsAlumni[i]
+                   [peopleInput]="group.peoples"
+                   [index]=i>
+              </div>
+            </td>
+          </tr>
+          <!-- <tr class="py-0 my-0">
+            <td class="text-secondary">Interview</td>
+            <td class="border-left" style="color: black;">50 minutes</td>
+            <td class="border-left" style="color: black; background-color: #EDF7FB"></td>
+            <td class="border-left" style="color: black;">33 minutes</td>
+          </tr> -->
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Official Website</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.publicInfo?.website" [href]="group.publicInfo.website" target="_empty"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="group.publicInfo?.website==null">-</span>
+            </td>
+          </tr>
+
+          <!---------------------------->
+          <!---------- Contact --------->
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <th class="text-secondary" scope="row">Contact</th>
+            <td *ngFor="let groupIndex of groupsIndex; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left"></td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Address</td>
+            <td *ngFor="let group of groups; let i=index" style="vertical-align: top;" [ngClass]="{'middleColor': i==1}" class="border-left">{{group.publicInfo?.address || '-'}}</td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Email</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">{{group.publicInfo?.email || '-'}}</td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Phone number</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">{{group.publicInfo?.phone || '-'}}</td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Fax number</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">{{group.publicInfo?.fax || '-'}}</td>
+          </tr>
+
+          <!---------------------------->
+          <!----------- Social --------->
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <th class="text-secondary" scope="row">Social</th>
+            <td *ngFor="let groupIndex of groupsIndex; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left"></td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Linkedin</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.socialInfo?.linkedin" href="https://www.linkedin.com/in/{{group.socialInfo.linkedin}}" target="_empty">View on LinkedIn <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="!group.socialInfo?.linkedin">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Twitter</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.socialInfo?.twitter" href="https://www.twitter.com/{{group.socialInfo.twitter}}" target="_empty">View on Twitter <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="!group.socialInfo?.twitter">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Researchgate</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.socialInfo?.researchgate" href="https://www.researchgate.net/profile/{{group.socialInfo.researchgate}}" target="_empty">View on ResearchGate <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="!group.socialInfo?.researchgate">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Facebook</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.socialInfo?.facebook" href="https://www.facebook.com/{{group.socialInfo.facebook}}">View on Facebook <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="!group.socialInfo?.facebook">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Youtube</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.socialInfo?.youtube" href="https://www.youtube.com/{{group.socialInfo.youtube}}" target="_empty">View on YouTube <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="!group.socialInfo?.youtube">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Pintrest</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.socialInfo?.pinterest" href="https://www.pinterest.com/{{group.socialInfo.pinterest}}" target="_empty">View on Pinterest <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="!group.socialInfo?.pintrest">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Instagram</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.socialInfo?.instagram" href="https://www.pinterest.com/{{group.socialInfo.instagram}}" target="_empty">View on Instagram <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="!group.socialInfo?.instagram">-</span>
+            </td>
+          </tr>
+          <!-- <a href="https://github.com/{{missionService.socialInfo.github}}" target="_empty">View on Github <i class="fa fa-external-link" aria-hidden="true"></i></a> -->
+
+          <!---------------------------->
+          <!-------- Publications ------>
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <th class="text-secondary" scope="row">Publications</th>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left"></td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Total publications</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              {{group.publicationsTotal>0 ? group.publicationsTotal : '-'}}
+            </td>
+          </tr>
+          <!-- <tr class="py-0 my-0">
+            <td class="text-secondary"></td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <compare-stats [index]=i [yearUniqs]=group.yearUniqs></compare-stats>
+            </td>
+          </tr> -->
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Total citations</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              {{group.citationsTotal>0 ? group.citationsTotal : '-'}}
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">ORCID</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.socialInfo?.orcid" href="https://orcid.org/{{group.socialInfo.orcid}}" target="_empty">View on ORCID <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="!group.socialInfo?.orcid">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Google Scholar</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <a *ngIf="group.socialInfo?.scholar" href="https://scholar.google.com/citations?user={{group.socialInfo.scholar}}" target="_empty">View on Google Scholar <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <span *ngIf="!group.socialInfo?.scholar">-</span>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <td class="text-secondary">Journals</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" style="vertical-align: top;" class="border-left">
+              <div class="overflow-auto">
+                <span *ngFor="let journal of (journalsFlag[i] ? group.journals : group.journals.slice(0,5))" class="badge badge-light-blue mr-1">
+                  {{ journal }}
+                </span>
+              </div>
+              <button *ngIf="group.journals.length>5" mat-raised-button type="button" (click)="journalsFlag[i]=!journalsFlag[i]" class="btn btn-primary btn-link btn-sm btn-just-icon">
+                <i class="material-icons">{{journalsFlag[i] ? 'remove' : 'add' }}</i>
+              </button>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <!-- *ngIf="group.publicationsTotal>0" -->
+            <td class="text-secondary">Latest publications</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" style="vertical-align: top;" class="border-left">
+              <p *ngFor="let publication of group.publicationsLatest">
+                {{publication.title}} <span class="text-muted"><i>{{publication.date | date:'y'}} (citations: {{publication.citationsCount}})</i></span>
+              </p>
+            </td>
+          </tr>
+          <tr class="py-0 my-0">
+            <!-- *ngIf="group.publicationsTotal>0" -->
+            <td class="text-secondary">Highest citations</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}"  style="vertical-align: top;" class="border-left">
+              <p *ngFor="let publication of group.publicationsCitations">
+                {{publication.title}} <span class="text-muted"><i>{{publication.date | date:'y'}} (citations: {{publication.citationsCount}})</i></span>
+              </p>
+            </td>
+          </tr>
+
+          <!---------------------------->
+          <!---------- Positions ------->
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <td class="text-secondary">Open Positions</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <ng-container *ngIf="group.positions && group.positions.length>0">
+                <div *ngFor="let position of group.positions; let l=last;">
+                  <b>{{titlesSelect[position.position]}}</b>
+                  <p class="my-2">{{position.title}}</p>
+                  <p style='white-space:pre-wrap;' [innerHTML]="position.description | safeHtml"></p>
+                  <div class="mt-2">
+                    <p class="mb-1">
+                      <i class="fa fa-clock-o fa-fw" aria-hidden="true"></i> Published: {{ position.created_on | momentPipe:'':1 }}
+                    </p>
+                    <p class="mb-1">
+                      <i class="fa fa-check fa-fw" aria-hidden="true"></i> Spots available: {{ position.spotsAvailable }}
+                    </p>
+                    <p *ngIf="position.stepsEnables[0]" class="mb-1">
+                      <i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Submission Deadline: {{position.stepsDates[0]}}
+                    </p>
+                    <!-- <div class="text-center px-3 pb-2">1000$<br><span class="text-muted">Salary</span></div> -->
+                    <!-- <div class="text-center px-3 pb-2">2 Years<br><span class="text-muted">Duration</span></div> -->
+                  </div>
+                  <hr *ngIf="!l">
+                </div>
+              </ng-container>
+              <div *ngIf="!group.positions || group.positions?.length==0">-</div>
+            </td>
+          </tr>
+
+          <!---------------------------->
+          <!---------- Projects -------->
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <td class="text-secondary">Research Projects</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <ng-container *ngIf="group.projects && group.projects.length>0">
+                <div *ngFor="let project of group.projects; let f=first" class="text-center">
+                  <single-pic [ngClass]="{'pb-4': project.pic}" [pic]=project.pic [type]=1 [width]="64" [height]="64" [widthE]="2.2" [stack]=true [stackColor]=colorPallete [stackPic]="'cubes'"></single-pic>
+                  <p class="mt-2">{{project.name}}</p>
+                  <!-- <a [routerLink]="['/',group.groupIndex.university.link,group.groupIndex.department.link,group.groupIndex.group.link,'projects',project._id]">{{ project.name }}</a> -->
+                </div>
+              </ng-container>
+              <div *ngIf="!group.projects || group.projects?.length==0">-</div>
+            </td>
+          </tr>
+
+          <!---------------------------->
+          <!---------- Services -------->
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <td class="text-secondary">Services</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <ng-container *ngIf="group.resources && group.resources.length>0">
+                <div *ngFor="let resource of group.resources; let f=first" class="text-center">
+                  <single-pic [ngClass]="{'pb-4': resource.pic}" [pic]=resource.pic [type]=1 [width]="64" [height]="64" [widthE]="2.2" [stack]=true [stackColor]=colorPallete [stackPic]="'cubes'"></single-pic>
+                  <p class="mt-2">{{resource.name}}</p>
+                  <!-- <a [routerLink]="['/',group.groupIndex.university.link,group.groupIndex.department.link,group.groupIndex.group.link,'services',resource._id]">{{ resource.name }}</a> -->
+                </div>
+              </ng-container>
+              <div *ngIf="!group.resource || group.resource?.length==0">-</div>
+            </td>
+          </tr>
+
+          <!---------------------------->
+          <!----------- Funding -------->
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <td class="text-secondary">Funding sources</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <ng-container *ngIf="group.fundings && group.fundings.length>0">
+                <div *ngFor="let funding of group.fundings; let f=first" class="text-center">
+                  <single-pic class="img-fluid" [pic]=funding.pic [type]=1 [width]="80" [widthE]="2.2" [stack]=true [stackColor]=colorPallete [stackPic]="'money'"></single-pic>
+                  <p class="mt-2">{{funding.name}}</p>
+                </div>
+              </ng-container>
+              <div *ngIf="!group.fundings || group.fundings?.length==0">-</div>
+            </td>
+          </tr>
+
+          <!---------------------------->
+          <!------- Collaborations ----->
+          <!---------------------------->
+
+          <!-- //complexName -->
+          <!-- <tr class="border-top py-0 my-0">
+            <td class="text-secondary">Collaborations</td>
+            <td class="border-left" style="color: black;">http</td>
+            <td class="border-left" style="color: black; background-color: #EDF7FB">http</td>
+            <td class="border-left" style="color: black;">http</td>
+          </tr> -->
+
+          <!---------------------------->
+          <!---------- Teaching -------->
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <td class="text-secondary">Teaching</td>
+            <td *ngFor="let group of groups; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <ng-container *ngIf="group.teachings && group.teachings.length>0">
+                <div *ngFor="let teaching of group.teachings; let f=first" class="text-center">
+                  <single-pic class="img-fluid" [pic]=teaching.pic [type]=1 [width]="80" [widthE]="2.2" [stack]=true [stackColor]=colorPallete [stackPic]="'graduation-cap'"></single-pic>
+                  <p class="mt-2">{{teaching.name}}</p>
+                </div>
+              </ng-container>
+              <div *ngIf="!group.teachings || group.teachings?.length==0">-</div>
+            </td>
+          </tr>
+
+          <!---------------------------->
+          <!----------- Gallery -------->
+          <!---------------------------->
+
+          <tr class="border-top py-0 my-0">
+            <td class="text-secondary">Gallery</td>
+            <td *ngFor="let galleryImages of galleriesImages; let i=index" [ngClass]="{'middleColor': i==1}" class="border-left">
+              <ng-container *ngIf="galleryImages.length>0">
+                <ngx-gallery [options]="galleryOptionsSm" [images]="galleryImages"></ngx-gallery>
+              </ng-container>
+            </td>
+          </tr>
+
+          <!---------------------------->
+          <!------------ News ---------->
+          <!---------------------------->
+
+          <!-- <tr class="border-top py-0 my-0">
+            <td class="text-secondary">Recent news</td>
+            <td class="border-left" style="color: black;">New Postdoc</td>
+            <td class="border-left" style="color: black; background-color: #EDF7FB">Nature!</td>
+            <td class="border-left" style="color: black;">Annual Lab Trip</td>
+          </tr> -->
+
+          <!---------------------------->
+          <!------------ Costs --------->
+          <!---------------------------->
+
+          <!-- <tr class="border-top py-0 my-0">
+            <td class="text-secondary">Cost of living</td>
+            <td class="border-left" style="color: black;">500$</td>
+            <td class="border-left" style="color: black; background-color: #EDF7FB">1000$</td>
+            <td class="border-left" style="color: black;">3500$</td>
+          </tr> -->
+
+          <!---------------------------->
+          <!----------- Housing -------->
+          <!---------------------------->
+
+          <!-- <tr class="py-0 my-0">
+            <td class="text-secondary">Housing</td>
+            <td class="border-left" style="color: black;">500$</td>
+            <td class="border-left" style="color: black; background-color: #EDF7FB">1000$</td>
+            <td class="border-left" style="color: black;">3500$</td>
+          </tr> -->
+
+          <!---------------------------->
+          <!----------- Weather -------->
+          <!---------------------------->
+
+          <!-- <tr class="py-0 my-0">
+            <td class="text-secondary">Weather</td>
+            <td class="border-left" style="color: black;">500$</td>
+            <td class="border-left" style="color: black; background-color: #EDF7FB">1000$</td>
+            <td class="border-left" style="color: black;">3500$</td>
+          </tr> -->
+
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Share Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" attr.data-target="#ShareModal{{activeIndex}}"></button>
+
+<div *ngIf="shareFlag" class="modal fade" id="ShareModal{{activeIndex}}" data-target="#shareModal" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=0
+                   [itemId]="groupsIndex[activeIndex].group._id"
+                   [flag]=shareFlag
+                   (closeModal)="closeShareModalFunc()">
+      </modal-share>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Report Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<button id="toggleReportModal" #toggleReportModal [hidden]="true" data-toggle="modal" attr.data-target="#ReportModal{{activeIndex}}"></button>
+
+<div *ngIf="reportFlag" class="modal fade" id="ReportModal{{activeIndex}}" data-target="#reportModal" tabindex="-1" role="dialog" aria-labelledby="ReportModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <modal-report [mode]=0
+                    [groupIndex]="groupsIndex[activeIndex]"
+                    [userId]=userService.userId
+                    (closeModal)="closeReportModalFunc()">
+      </modal-report>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action></modal-signup>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="card-header card-header-image" data-header-animation="true">
+  <img class="img" [src]=group.pic>
+</div> -->

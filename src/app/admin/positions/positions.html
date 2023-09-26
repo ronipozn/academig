@@ -1,0 +1,59 @@
+<!-- streamPositions -->
+
+<div class="card mt-0">
+  <div class="card-body">
+    <button [disabled]="!streamRetrieved" role="button" class="btn btn-sm btn-info" (click)="updateList()">
+      Reload
+    </button>
+  </div>
+</div>
+
+<div *ngIf="!streamRetrieved" class="py-4">
+  <spinner></spinner>
+</div>
+
+<ng-container *ngFor="let position of positions; let i=index">
+  <div class="card mt-0 mb-3">
+    <div class="card-body">
+
+      <div class="mt-2 mb-0" [ngClass]="{'text-dark': position.standout==0, 'text-white': position.standout>0}">
+        <div class="d-flex align-items-center">
+          <div *ngIf="position.standout<3 || position.standout==null" class="mr-auto"><b>POSTED POSTED {{moment(position.created_on).format("DD MMM YYYY HH:MM")}}</b></div>
+          <div *ngIf="position.standout==3" class="mr-auto"><b>FEATURED JOB</b></div>
+          <span *ngIf="!position.payment" class="badge badge-warning">Payment missing</span>
+          <span *ngIf="position.invite" class="badge badge-warning ml-2">Invite icomplete</span>
+        </div>
+      </div>
+
+      <div *ngIf="position.title" class="card-title mt-0" [ngClass]="{'text-dark': position.standout==0, 'text-white': position.standout>0}">
+        <a class="h3 mt-2" [routerLink]="[position._id]"><b>{{position.title}}</b></a>
+      </div>
+
+      <div *ngIf="position.feedback" class="card-title mt-0"><b>Feedback: {{feedbackSelect[position.feedback]}}</b></div>
+
+      <div class="media mb-0 pb-0">
+        <img *ngIf="position.group && position.group.university.pic" class="mx-2 pr-2" [height]=80 [src]=position.group.university.pic>
+        <div class="media-body mb-0 pb-0">
+
+          <div *ngIf="position.group" class="mb-1">
+            <group-link [groupIndex]=position.group></group-link>
+            <span *ngIf="position.country" class="small">
+              <br><span class="flag mr-2"><img [src]="'./assets/img/flags/' + (position.country | flag) + '.png'" alt=""></span> <span *ngIf="position.state">{{position.state}},</span> <span *ngIf="position.city">{{position.city}},</span> {{position.country}}
+            </span>
+          </div>
+
+          <div class="small d-flex align-items-center" [ngClass]="{'text-dark': sourceType!=2 || position.standout==0, 'text-white': position.standout>0}">
+            <span class="mr-4">{{titlesTypes[position.position]}}</span>
+            <span *ngIf="position.type!=null" class="mr-4">{{typeSelect[position.type]}}</span>
+            <span *ngIf="position.contractLength!=null" class="mr-4">{{position.contractLength}} {{lengthSelect[position.contractLengthType]}}</span>
+            <span *ngIf="position.spotsAvailable" class="mr-4">{{position.spotsAvailable}} Spots</span>
+            <span *ngIf="position.stepsDates && position.stepsDates[0]" class="mr-4">Deadline: {{ position.stepsDates[0] | date }}</span>
+            <span *ngIf="position.stepsDates && position.stepsDates[8]">Start date: {{ position.stepsDates[8] | date }}</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ng-container>

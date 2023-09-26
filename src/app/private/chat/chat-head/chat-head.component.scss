@@ -1,0 +1,27 @@
+.alert {display:inline-block;}
+
+.fa-circle {
+  font-size: 14px;
+}
+
+.profile {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.circle {
+  position: relative;
+  top: 0.75rem;
+  left: -0.75rem;
+  stroke-width: 6;
+  border:2px solid white;
+  border-radius: 50%;
+}
+
+// @media (min-width: 1200px) {
+//   .my-custom-class {
+//     max-width: 960px;
+//     /*max-width: 1140px;*/
+//   }
+// }

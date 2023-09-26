@@ -1,0 +1,39 @@
+<nav aria-label="Navigation">
+  <ul class="pagination pagination-dots justify-content-center">
+    <span *ngFor="let step of stepArr; let i=index">
+
+      <li *ngIf="stepNum==i && cyclic==true">
+        <a role="button" (click)="moveRadioStep(i)">
+          <div id="fill-blue-circle"></div>
+        </a>
+      </li>
+
+      <li *ngIf="stepNum!=i && cyclic==true">
+        <a role="button" (click)="moveRadioStep(i)">
+          <div id="empty-circle-gray"></div>
+        </a>
+      </li>
+
+      <li *ngIf="stepNum>(i-1) && cyclic==false">
+        <a role="button" (click)="moveRadioStep(i)">
+          <div *ngIf="stepsInvalid[i]" id="fill-red-circle"></div>
+          <div *ngIf="!stepsInvalid[i]" id="fill-blue-circle"></div>
+        </a>
+      </li>
+
+      <li *ngIf="boundNum<(i) && cyclic==false">
+        <a>
+          <div id="empty-circle-gray"></div>
+        </a>
+      </li>
+
+      <li *ngIf="boundNum>(i-1) && stepNum<(i) && cyclic==false">
+        <a role="button" (click)="moveRadioStep(i)">
+          <div *ngIf="stepsInvalid[i]" id="empty-circle-red"></div>
+          <div *ngIf="!stepsInvalid[i]" id="empty-circle-azure"></div>
+        </a>
+      </li>
+
+    </span>
+  </ul>
+</nav>

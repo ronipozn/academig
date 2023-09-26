@@ -1,0 +1,204 @@
+<!-- card-stats card-stats -->
+<div class="card mt-0 mb-0" style="border-radius: 0px; background-color: #F3F9FE">
+  <div class="media">
+
+    <div class="d-none d-lg-block mb-0 pb-0">
+      <img *ngIf="_groupIndex.group.pic" [width]=90 [height]=90 [src]=_groupIndex.group.pic style="cursor:pointer;" [routerLink]="['./']">
+      <span *ngIf="!_groupIndex.group.pic" class="fa-4x fa-stack" style="cursor:pointer; background-color:#1EABF1" [routerLink]="['./']">
+        <strong class="fa-stack-1x" style="color: white; font-size: 2rem;">{{acronym}}</strong>
+      </span>
+    </div>
+
+    <div class="media-body">
+
+      <div class="card-header py-0 mt-2 mb-0"> <!-- card-header-icon -->
+
+        <div class="d-flex align-items-center">
+          <div class="mr-auto">
+            <!-- <img *ngIf="_groupIndex.group.pic" class="mr-2" data-notify="icon" [height]=30 [width]=30 [src]=_groupIndex.group.pic> -->
+            <div class="d-flex align-items-center small mb-1">
+              <mat-icon class="text-muted mr-1">supervised_user_circle</mat-icon> {{labFlag ? 'RESEARCH LAB' : 'COMPANY'}}
+            </div>
+            <div class="d-flex align-items-center">
+              <h3 class="my-0 pb-0 text-dark">
+                {{_groupIndex.group.name}}
+              </h3>
+              <span *ngIf="labFlag" class="ml-2 align-self-end d-none d-lg-block card-category">
+                <a class="text-dark" [routerLink]="['/', _groupIndex.university.link]"><b>{{_groupIndex.university.name}}</b></a> /
+                <a class="text-dark" [routerLink]="['/', _groupIndex.university.link, _groupIndex.department.link]"><b>{{_groupIndex.department.name}}</b></a>
+              </span>
+              <span *ngIf="!labFlag" class="ml-2 align-self-end d-none d-lg-block card-category">
+                <a style="color: #6C757D">{{_groupIndex.department.name}}</a>
+              </span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <!-- <button *ngIf="showEditBtn" mat-raised-button class="btn btn-sm btn-raised btn-round btn-outline secondary" data-toggle="modal" data-target="#pointsModal">
+              <i class="fa fa-bar-chart" aria-hidden="true"></i> 15.43
+            </button> -->
+            <button *ngIf="showEditBtn || groupStage==-1" mat-raised-button matTooltip="Suggestions" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm" [routerLink]="['./suggestions']">
+              <i joyrideStep="suggestionsStep" title="Lab Suggestions" text="See Academig' suggestions for your lsn profile. Learn new ways to improve your profile, and get suggestions for new content." class="text-muted fa fa-size-20 fa-magic" aria-hidden="true"></i>
+            </button>
+            <button *ngIf="userStatus>=4 && labFlag" mat-raised-button matTooltip="Lab Tools" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm" [routerLink]="['./tools']">
+              <i joyrideStep="toolsStep" title="Lab Members Tools" text="The members tools page is a place dedicated for your lab members, where you can manage the lab seminars, reports, events and internal communication. By default, the members area is visible only to lab members." class="text-muted fa fa-wrench fa-size-20"></i>
+            </button>
+            <button *ngIf="showEditBtn" mat-raised-button matTooltip="Settings" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm" [routerLink]="['./settings']">
+              <i class="text-muted fa fa-size-20 fa-cog" aria-hidden="true"></i>
+            </button>
+            <button *ngIf="showEditBtn || previewStatus>0" mat-raised-button matTooltip="View as Profile Visitor" [matTooltipPosition]="'below'" (click)="togglePreviewFunc()" type="button" class="btn btn-link btn-sm">
+              <i joyrideStep="eyeStep" title="Visitor" text="See your lab profile as a visitor" [ngClass]="{'text-success': previewStatus>=6, 'text-muted': previewStatus<6}" class="fa fa-size-20 fa-eye" aria-hidden="true"></i>
+            </button>
+            <button *ngIf="userStatus<4" mat-raised-button class="btn btn-round" [ngClass]="{'btn-light-blue': followStatus, 'btn-outline-light-blue': !followStatus}" (click)="toggleFollowFunc()">
+              <i *ngIf="!streamFollow" class="material-icons">{{followStatus ? 'bookmark' : 'bookmark_border'}}</i> {{followStatus ? 'Unfollow lab' : 'Follow'}}
+              <i *ngIf="streamFollow" class="fa fa-circle-o-notch fa-spin fa-size-20" style="color: gray"></i>
+            </button>
+            <button *ngIf="!showEditBtn && groupStage==2" mat-raised-button class="d-none d-lg-block btn btn-round btn-light-blue ml-2" (click)="toggleCompareFunc()">
+              <i class="material-icons">compare</i> {{compareFlag ? 'Uncompare lab' : 'Compare lab'}}
+            </button>
+            <!-- [ngClass]="{'btn-light-blue': compareFlag, 'btn-light-blue': !compareFlag}" -->
+          </div>
+        </div>
+        <!-- <button *ngIf="(userId && missionService.userStatus<4) || userId==null" mat-raised-button class="btn btn-light-blue mr-2" (click)="groupReport()" matTooltip="Report lab" [matTooltipPosition]="'below'">
+          <i class="material-icons">report</i> Report
+        </button> -->
+
+        <p *ngIf="labFlag" class="d-lg-none card-category mb-0">
+          <a class="text-dark" [routerLink]="['/', _groupIndex.university.link]"><b>{{_groupIndex.university.name}}</b></a> /
+          <a class="text-dark" [routerLink]="['/', _groupIndex.university.link, _groupIndex.department.link]"><b>{{_groupIndex.department.name}}</b></a>
+        </p>
+
+        <p *ngIf="!labFlag" class="d-lg-none card-category mb-0">
+          <a style="color: #6C757D">{{_groupIndex.department.name}}</a>
+        </p>
+
+      </div>
+
+      <div class="d-lg-none">
+        <div class="col-12">
+          <mat-form-field>
+            <!-- selectionChange -->
+            <mat-select [(value)]="modifiedPath" name="nav" (valueChange)="selectChange($event)">
+              <mat-option [value]="'.'">Summary</mat-option>
+              <mat-option [value]="'network'">Network</mat-option>
+
+              <mat-optgroup *ngIf="showEditBtn || topics.length>0" [label]="'Research Projects'">
+                <mat-option *ngFor="let topic of topics" [value]="'research/' + topic.name | urlize">{{topic.name}}</mat-option>
+                <mat-option *ngIf="showEditBtn" [value]="'research-topics'">Manage Research Topics</mat-option>
+              </mat-optgroup>
+
+               <!-- *ngIf="visibleFlag"  -->
+              <mat-option [value]="'people'" joyrideStep="peopleStep" title="People page" text="Manage your lab members: add, remove and edit their details.">People</mat-option>
+              <mat-option [value]="'publications'">Publications</mat-option>
+              <mat-option *ngIf="groupProgress[30] && !showEditBtn && labFlag" [value]="'papers-kit'">Papers Kit</mat-option>
+              <!-- Last: As a lab owner, you can manage all the candidates’ applications in one place, to learn more click here -->
+              <mat-option *ngIf="showEditBtn || groupProgress[14] || groupProgress[15] || groupProgress[16]" [value]="'jobs'" joyrideStep="jobsStep" title="Jobs postings" text="Start posting your lab' open positions online at the jobs page, or view and edit your current lab' job postings.">{{labFlag ? 'Jobs' : 'Jobs'}}</mat-option>
+              <mat-option *ngIf="showEditBtn || groupProgress[6] || groupProgress[7]" [value]="'services'">Services</mat-option>
+              <mat-option *ngIf="(showEditBtn || groupProgress[29]) && labFlag" [value]="'outreach'">Outreach</mat-option>
+              <mat-option *ngIf="(showEditBtn || groupProgress[28]) && labFlag" [value]="'teaching'">Teaching</mat-option>
+              <mat-option *ngIf="(showEditBtn || groupProgress[11] || groupProgress[12]) && labFlag" [value]="'collaborations'">Collaborations</mat-option>
+              <mat-option *ngIf="(showEditBtn || groupProgress[13]) && labFlag" [value]="'funding'">Funding</mat-option>
+              <mat-option *ngIf="showEditBtn || groupProgress[27]" [value]="'gallery'">Gallery</mat-option>
+              <mat-option *ngIf="groupProgress[24] && !showEditBtn && labFlag" [value]="'seminars'">Seminars</mat-option>
+              <mat-option *ngIf="showEditBtn || groupProgress[17] || groupProgress[18] || groupProgress[19]" [value]="'media'">Media</mat-option>
+              <mat-option *ngIf="showEditBtn || groupProgress[20]" [value]="'faq'">FAQ</mat-option>
+              <mat-option *ngIf="visibleFlag" [value]="'news'" joyrideStep="newsStep" title="News page" text="The news page is automatically updated with all the changes that are made in the differnt lab profile pages. Academics who follows your lab will get notified with the lab' updates.">News</mat-option>
+              <mat-option [value]="'contact'">Contact</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="d-none d-lg-block card-footer my-0 pb-0">
+
+        <ul class="mt-0 pt-0 ml-0 pl-0 nav nav-pills card-header-tabs">
+
+          <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['.']">Summary</a>
+          </li>
+
+          <li class="mx-2"> <!-- *ngIf="visibleFlag"  -->
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./network']">Network</a>
+          </li>
+
+          <li *ngIf="showEditBtn || topics.length>0" class="mx-2 dropdown">
+             <!-- || groupProgress[6] || groupProgress[7] -->
+            <a class="dropdown-toggle pb-1" style="cursor:pointer;" id="navbarResearch" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Research
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarResearch">
+              <a *ngFor="let topic of topics; let i=index" class="dropdown-item" [routerLink]="['./research',topic.name | urlize]">
+                {{topic.name}}
+              </a>
+              <div class="dropdown-divider" *ngIf="showEditBtn && topics.length>0"></div>
+              <a class="dropdown-item" *ngIf="showEditBtn" [routerLink]="['./research-topics']">Manage Research Topics</a>
+            </div>
+          </li>
+
+          <li class="mx-2"> <!-- *ngIf="visibleFlag"  -->
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./people']" joyrideStep="peopleStep" title="People page" text="Manage your lab members: add, remove and edit their details.">People</a>
+          </li>
+
+          <li class="mx-2"> <!-- *ngIf="(showEditBtn || groupProgress[5])" -->
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./publications']">Publications</a>
+          </li>
+
+          <li *ngIf="!showEditBtn && groupProgress[30] && labFlag" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./papers-kit']">Papers Kit</a>
+          </li>
+
+          <li *ngIf="showEditBtn || groupProgress[14] || groupProgress[15] || groupProgress[16]" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./jobs']" joyrideStep="jobsStep" title="Jobs postings" text="Start posting your lab' open positions online at the jobs page, or view and edit your current lab' job postings.">{{labFlag ? 'Jobs' : 'Jobs'}}</a>
+          </li>
+
+          <li *ngIf="showEditBtn || groupProgress[6] || groupProgress[7]" class="mx-2" title="Lab Services">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./services']">Services</a>
+          </li>
+
+          <li *ngIf="(showEditBtn || groupProgress[29]) && labFlag" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./outreach']">Outreach</a>
+          </li>
+
+          <li *ngIf="(showEditBtn || groupProgress[28]) && labFlag" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./teaching']">Teaching</a>
+          </li>
+
+          <li *ngIf="(showEditBtn || groupProgress[11] || groupProgress[12]) && labFlag" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./collaborations']">Collaborations</a>
+          </li>
+
+          <li *ngIf="(showEditBtn || groupProgress[13]) && labFlag" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./funding']">Funding</a>
+          </li>
+
+          <li *ngIf="showEditBtn || groupProgress[27]" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./gallery']">Gallery</a>
+          </li>
+
+          <li *ngIf="!showEditBtn && groupProgress[24] && labFlag" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./seminars']">Seminars</a>
+          </li>
+
+          <li *ngIf="showEditBtn || groupProgress[17] || groupProgress[18] || groupProgress[19]" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./media']">Media</a>
+          </li>
+
+          <li *ngIf="showEditBtn || groupProgress[20]" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./faq']">FAQ</a>
+          </li>
+
+          <li *ngIf="visibleFlag" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./news']" joyrideStep="newsStep" title="News page" text="The news page is automatically updated with all the changes that are made in the differnt lab profile pages. Academics who follows your lab will get notified with the lab' updates.">News</a>
+          </li>
+
+          <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./contact']">Contact</a>
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-start">
+
+  <div class="d-flex align-items-center flex-column">
+    <span *ngIf="groupIndex?.group.pic" class="pr-2 ml-1 mt-0 py-2">
+      <img class="rounded-circle" [width]=48 [height]=48 [src]=groupIndex.group.pic>
+    </span>
+    <span *ngIf="!groupIndex?.group.pic" class="p-0 ml-0 mt-1 mb-0 mr-1 fa-stack">
+      <i class="fa fa-circle fa-stack-2x" [style.color]="'#cdcdc1'"></i>
+      <span class="fa fa-stack-1x fa-inverse">{{acronym}}</span>
+    </span>
+  </div>
+
+  <div class="mb-0 mt-2 small">
+    <a [routerLink]="['/',groupIndex.university.link, groupIndex.department.link, groupIndex.group.link]">
+      <b>{{ groupIndex.group.name }}</b>
+    </a>
+    <br>
+    <a [routerLink]="['/',groupIndex.university.link]">{{ groupIndex.university.name }}</a>
+    <!-- <a [routerLink]="['/',groupIndex.university.link,groupIndex.department.link]">{{ groupIndex.department.name }}</a> -->
+  </div>
+
+</div>

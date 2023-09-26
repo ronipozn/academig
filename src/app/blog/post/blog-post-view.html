@@ -1,0 +1,87 @@
+<div style="background: white;font-size:20px;color:#212529;font-family:Lora,'Times New Roman',serif">
+
+<!-- Page Header -->
+<!-- <header class="masthead" style="background-image: url('img/post-bg.jpg')"> -->
+<header *ngIf="pageId=='a-graduate-program-for-phd-to-join-or-not-to-join'" class="masthead" style="background-image: url('./assets/img/blog/laboratory-blog.jpg')">
+
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1>A graduate program for Ph.D. – to join or not to join?</h1>
+          <!-- <h2 class="subheading">Problems look mighty small from 150 miles up</h2> -->
+          <p class="meta">Posted by <a [routerLink]="['/people/tatipk86']">Tatyana Pozner</a> on May 27, 2019 &middot; 6 min read</p>
+          <a [routerLink]="['/']" class="mt-4 pt-4" style="color: white; font-size:35px;font-family:Lora,'Times New Roman',serif">
+            <img src="./assets/img/academig.jpg" [width]="41" [height]="44" alt="academig" class="mr-2">
+            <!-- <b>Academig Blog</b> -->
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Post Content -->
+<article *ngIf="pageId=='a-graduate-program-for-phd-to-join-or-not-to-join'">
+  <div class="container mb-4">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <share-buttons class="text-right mb-3" [exclude]="['google','pinterest']" [show]="3"></share-buttons>
+
+        <markdown ngPreserveWhitespaces [src]="post"></markdown>
+        <!-- https://www.npmjs.com/package/ngx-markdown -->
+
+        <!-- <p>Placeholder text by
+          <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by
+          <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.
+        </p> -->
+
+        <div class="media border">
+          <img src="./assets/img/Tatyana_pozner.jpeg" class="align-self-start rounded-circle my-3 mx-3" [width]="100" [height]="100" alt="Tatyana Pozner">
+          <div class="media-body pt-0 mt-3">
+            <p class="my-0">Tatyana is an eager neuroscientist, during the day she is pursuing her Ph.D. in stem cell biology, at night she is the mad scientist of Academig – mixing reactions on our webpage.</p>
+            <p class="small mt-1 mb-2">
+              <a [routerLink]="['/people/tatipk86']">
+                <img src="./assets/img/academig.jpg" class="rounded-circle" [width]="23" [height]="23" alt="academig">
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <p class="text-center text-muted post-meta">Posted by <!-- {{post.date}}, {{post.name}} -->
+          <a [routerLink]="['/people/tatipk86']">Tatyana Pozner</a> on May 27, 2019
+        </p>
+
+        <!-- <disqus [identifier]="pageId"></disqus> -->
+        <div id="hyvor-talk-view"></div>
+
+      </div>
+    </div>
+  </div>
+</article>
+
+<article *ngIf="pageId!='a-graduate-program-for-phd-to-join-or-not-to-join'">
+  <div class="middle my-4 py-4">
+    <div class="mt-4 pt-4 d-flex justify-content-center">
+      <img src="./assets/img/microscope404.png" [width]="150" [height]="150">
+    </div>
+    <div class="d-flex justify-content-center text-center">
+      <h1 class="font-weight-light">This blog post is not available</h1>
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+      <blockquote *ngIf="source==1" class="blockquote">
+          Uh oh! we couldn't find the page you were looking for.
+          <br>Or see our <a [routerLink]="['/help']">Help Center</a> for more information.
+      </blockquote>
+    </div>
+    <div class="d-flex justify-content-center mt-4 mb-4 pb-4">
+      <button [routerLink]="['/blog']" role="button" class="text-success btn btn-link">Academig Blog</button>
+    </div>
+  </div>
+</article>
+
+</div>
+
+<info-footer></info-footer>

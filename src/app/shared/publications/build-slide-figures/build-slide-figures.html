@@ -1,0 +1,61 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">Upload Figures, Tables and Supplements</h3>
+
+  <div class="form-container">
+    <form (ngSubmit)="onSubmit()" novalidate>
+
+      Figures:
+      <div class="mt-1" id="direct_upload">
+        <div class="card-columns">
+          <div *ngFor="let dummy of files1Count; let i=index" class="card">
+            <single-pic [centerFlag]=true
+                        [pic]="files1 ? files1 + '/nth/' + i + '/' : null"
+                        [thumbnailFlag]=true
+                        [type]=1>
+            </single-pic>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': files1}">
+          <input type="hidden" id="files1"
+                 name="files1"
+                 data-images-only
+                 data-preview-step
+                 data-multiple
+                 data-crop="free, 16:9, 4:3, 5:4, 1:1"
+                 data-image-shrink="1024x1024"
+                 data-multiple-max=20>
+         </div>
+      </div>
+
+      <br>Tables:
+      <div class="mt-1" id="direct_upload">
+        <div class="card-columns">
+          <div *ngFor="let dummy of files2Count; let i=index" class="card">
+            <single-pic [centerFlag]=true
+                        [pic]="files2 ? files2 + '/nth/' + i + '/' : null"
+                        [thumbnailFlag]=true
+                        [type]=1>
+            </single-pic>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': files2}">
+          <input type="hidden" id="files2"
+                 name="files2"
+                 data-images-only
+                 data-preview-step
+                 data-multiple
+                 data-crop="free, 16:9, 4:3, 5:4, 1:1"
+                 data-image-shrink="1024x1024"
+                 data-multiple-max=20>
+         </div>
+      </div>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">Add</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

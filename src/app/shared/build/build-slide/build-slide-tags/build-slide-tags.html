@@ -1,0 +1,34 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">{{title[(tagsModified[0]==null) ? 0 : 1]}} {{headline}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [fieldType]=8
+                              [labelRequired]=true
+                              [itemTitle]=headline
+                              [itemPlaceholder]="'+ ' + key"
+                              [itemSecondaryPlaceholder]="'Enter a new ' + key"
+                              [itemExplain]="'Choose up to ' + max + ' ' + key + 's.'"
+                              [maxItems]=max
+                              [controlName]="'tagsModified'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+      <!-- duplicates? -->
+      <!-- [hidden]="tagsModified.length==0" -->
+      <!-- [editable]="true" -->
+
+      <div class="pull-left form-group mt-3">
+        <button type="submit" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-fill btn-light-blue">
+          <span *ngIf="tagsModified[0]!=null">Update</span>
+          <span *ngIf="tagsModified[0]==null">Add</span>
+        </button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<div *ngIf="streamRetrieved && newses.length==0" class="card mt-0">
+  <div class="card-body">
+    <build-headline [showEditBtn]=true
+                    [addButtonFlag]=false
+                    [headline]="'Lab Private News'">
+    </build-headline>
+    <build-modal-intro [headline]="'Add the first lab private news'"
+                       [bodypic]="'feed'"
+                       [bodytext]="'Your lab private news list is still empty. Add the first news by clicking on the Plus button.'">
+    </build-modal-intro>
+    <button mat-raised-button class="btn btn-light-blue btn-round my-2" (click)="newsSlide(true, null, true)">
+      <i class="material-icons">add_circle_outline</i> Add News
+    </button>
+  </div>
+</div>
+<div #scrollAdd></div>
+
+<button *ngIf="newses.length>0" mat-raised-button class="btn btn-light-blue btn-round mb-4" (click)="newsSlide(true, null, true)">
+  <i class="material-icons">add_circle_outline</i> Add News
+</button>
+
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<ul *ngIf="streamRetrieved==true" class="list-unstyled">
+  <li *ngFor="let news of newses; let i=index"
+      class="mb-2"
+      private-news-item
+      [news]=news
+      [userId]=userService.userId
+      [userStatus]=userStatus
+      [stream]=streamNews[i]
+      [streamComments]=streamComments[i]
+      [sourceType]=sourceType
+      (buttonCommentClick)="newsComment(true, i, true, $event)"
+      (buttonEditCommentClick)="newsComment(true, i, false, $event)"
+      (buttonDeleteCommentClick)="commentDelete(i, $event)"
+      (buttonShowCommentsClick)="showComments(i)"
+      (buttonEditClick)="newsSlide(true, i, false)"
+      (buttonDeleteClick)="newsDelete(i, 1)"
+      (animationDoneEvent)="animationDone()">
+  </li>
+</ul>
+
+<build-slide-text-pic *ngIf=newsBuildFlag
+                      [title]="'Lab Private News'"
+                      [itemId]=groupId
+                      [text]="newsNewFlag ? null : (newsCommentFlag ? newses[newsIndex].comments[commentIndex].text : newses[newsIndex].text)"
+                      [pic]="newsNewFlag ? null : (newsCommentFlag ? newses[newsIndex].comments[commentIndex].pic : newses[newsIndex].pic)"
+                      (update)="newsUpdate($event)"
+                      (cancel)="newsSlide(false, 0, false)">
+</build-slide-text-pic>
+
+<!-- <div class="btn-toolbar justify-content-start" role="toolbar" aria-label="Toolbar Lab News">
+    <button role="button" class="btn btn-sm btn-outline-info"><i class="fa fa-camera" aria-hidden="true"></i></button>
+    <button role="button" class="btn btn-sm btn-outline-info"><i class="fa fa-paperclip" aria-hidden="true"></i></button>
+    <button role="button" class="btn btn-sm btn-outline-info"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+    <button role="button" class="btn btn-sm btn-outline-info"><i class="fa fa-smile-o" aria-hidden="true"></i></button>
+    <button role="button" class="btn btn-sm btn-outline-info"><i class="fa fa-paper-plane mr-2" aria-hidden="true"></i>Post</button>
+</div> -->

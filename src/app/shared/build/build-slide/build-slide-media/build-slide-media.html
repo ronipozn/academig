@@ -1,0 +1,200 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">{{newString}} {{title | capitalize}}</h3>
+
+  <div class="d-flex justify-content-center">
+    <dots-nav
+      [stepNum]=stepNum
+      [stepTotal]=2
+      [stepsInvalid]="[formModel.get('link').invalid && controlStatus[0],
+                       (formModel.get('title').invalid && controlStatus[1])
+                       || (formModel.get('location').invalid && controlStatus[2])
+                       || (formModel.get('date').invalid && controlStatus[3])]"
+      (stepChange)=changeStep(null,$event)>
+    </dots-nav>
+  </div>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="adminFlag && newFlag && groupId" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <div [hidden]="stepNum!=0">
+
+        <div class="custom-controls-stacked">
+
+          <label *ngIf="existFlag" class="custom-control custom-radio">
+            <input id="radioStacked1" name="radio-stacked" type="radio" class="custom-control-input">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description"><b>New {{title}}</b></span>
+          </label>
+
+          <span *ngIf="activeTab==0 && existFlag" class="text-muted small">Use a Youtube or Vimeo link.</span>
+          <span *ngIf="activeTab==1 && existFlag" class="text-muted small">Upload a PDF or PPT file.</span>
+          <span *ngIf="activeTab==2 && existFlag" class="text-muted small">Use the full website link of your press.</span>
+
+          <build-modal-text-field *ngIf="activeTab==0"
+                                  [itemFirst]=true
+                                  [labelRequired]=true
+                                  [itemTitle]="'Talk link'"
+                                  [labelHide]=existFlag
+                                  [itemExplain]="'Use a Youtube or Vimeo link.'"
+                                  [controlName]="'link'"
+                                  (controlStatus)=controlStatusFunc($event,0)
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+
+          <div *ngIf="activeTab==1" id="direct_upload">
+            <div class="d-flex justify-content-center">
+              <input type="hidden" id="url" name="url" data-input-accept-types=".pdf" data-tabs="file url gdrive dropbox skydrive">
+            </div>
+          </div>
+
+          <p *ngIf="activeTab==1 && url && progressPDF<100">
+            <ngb-progressbar type="info"
+                             [value]=progressPDF
+                             [striped]="true">
+            </ngb-progressbar>
+          </p>
+
+          <!-- [render-text]="true" -->
+          <!-- <pdf-viewer *ngIf="activeTab==1 && url"
+                      [src]="url"
+                      [autoresize]="true"
+                      [show-all]="false"
+                      [original-size]="false"
+                      (on-progress)="onProgressPDF($event)"
+                      (after-load-complete)="callBackPDF($event)"
+                      style="display: block;">
+          </pdf-viewer> -->
+
+          <build-modal-text-field *ngIf="activeTab==2"
+                                  [itemFirst]=true
+                                  [fieldType]=13
+                                  [typeSelected]="'url'"
+                                  [labelRequired]=true
+                                  [labelHide]=existFlag
+                                  [itemTitle]="'Press link'"
+                                  [controlName]="'link'"
+                                  (controlStatus)=controlStatusFunc($event,0)
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+
+          <!-- <label *ngIf="existFlag" class="custom-control custom-radio my-2">
+            <input id="radioStacked2" name="radio-stacked" type="radio" class="custom-control-input">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description"><b>Choose from the Media library</b></span>
+          </label> -->
+
+          <build-slide-select-media *ngIf="existFlag && activeTab==0"
+                                    [groupId]=groupId
+                                    [title]="'Choose existing talk'"
+                                    [type]=0
+                                    [controlName]="'talk'"
+                                    [parentGroup]=formModel>
+          </build-slide-select-media>
+
+          <build-slide-select-media *ngIf="existFlag && activeTab==1"
+                                    [groupId]=groupId
+                                    [title]="'Choose exisiting poster'"
+                                    [type]=1
+                                    [controlName]="'poster'"
+                                    [parentGroup]=formModel>
+          </build-slide-select-media>
+
+          <build-slide-select-media *ngIf="existFlag && activeTab==2"
+                                    [groupId]=groupId
+                                    [title]="'Choose exisiting press'"
+                                    [type]=2
+                                    [controlName]="'press'"
+                                    [parentGroup]=formModel>
+          </build-slide-select-media>
+
+        </div>
+
+        <ng-container *ngIf="activeTab==0 && urlValid">
+          <div class="embed-responsive embed-responsive-16by9 my-3">
+            <iframe [src]="url" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </ng-container>
+
+      </div>
+      <div [hidden]="stepNum!=1">
+
+        <build-modal-text-field [itemTitle]="'Title'"
+                                [itemFirst]=true
+                                [labelRequired]=true
+                                [controlName]="'title'"
+                                [parentGroup]="formModel"
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+
+        <build-modal-text-field [itemTitle]=locationTitle
+                                [controlName]="'location'"
+                                [parentGroup]="formModel"
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+
+        <build-modal-text-field [fieldType]=1
+                                [typeSelected]="'date'"
+                                [itemTitle]="'Date'"
+                                [controlName]="'date'"
+                                [parentGroup]="formModel"
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+
+        <build-modal-text-field [fieldType]=2
+                                [itemTitle]="'Abstract'"
+                                [itemExplain]="'Keep abstract up to 300 characters.'"
+                                [controlName]="'abstract'"
+                                [parentGroup]="formModel"
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+
+        <build-slide-select-members *ngIf="!sourceFlag && activeTab<2"
+                                    [groupId]=groupId
+                                    [userId]=userId
+                                    [title]="'Choose ' + membersTitle"
+                                    [controlName]="'members'"
+                                    [parentGroup]="formModel"
+                                    [preMembersInput]=preMembers
+                                    (membersOutput)=membersFunc($event)>
+        </build-slide-select-members>
+
+        <build-slide-select-projects *ngIf="!sourceFlag"
+                                     [groupId]=groupId
+                                     [userId]=userId
+                                     [title]="'Choose Projects'"
+                                     [controlName]="'projects'"
+                                     [parentGroup]="formModel"
+                                     [preProjectsInput]=preProjects
+                                     (projectsOutput)=projectsFunc($event)>
+        </build-slide-select-projects>
+
+      </div>
+
+      <div class="pull-left form-group">
+        <button *ngIf="stepNum==0" role="button" mat-raised-button class="btn btn-sm btn-light-blue" [disabled]="(!urlValid && activeTab==0) || (!url && activeTab==1)" (click)="changeStep(true,null)">Next</button>
+        <button *ngIf="stepNum==1" type="submit" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-light-blue">
+          <span *ngIf=newFlag>Add</span>
+          <span *ngIf=!newFlag>Update</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-link" (click)="changeStep(false,null)" [disabled]="stepNum==0">Back</button>
+        <button type="button" [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,607 @@
+<spinner *ngIf="!streamRetrieved[0] || !streamRetrieved[1] || !streamRetrieved[2] || !streamRetrieved[3] || !streamRetrieved[4] || !streamRetrieved[5]"></spinner>
+
+<error-404 *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2] && streamRetrieved[3] && streamRetrieved[4] && streamRetrieved[5] && project==null && ((sourceType==0 && parentId!=null) || sourceType!=0)" [source]=sourceType></error-404>
+
+<div *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2] && streamRetrieved[3] && streamRetrieved[4] && streamRetrieved[5] && streamRetrieved[6] && project && (parentId || sourceType!=0)" class="mb-4">
+
+  <div class="row no-gutters">
+
+    <div class="col-lg-9">
+
+      <div class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <div class="d-flex justify-content-start">
+
+            <div *ngIf="project.pic || adminFlag" class="mr-2">
+              <ng-container *ngIf="project.pic">
+                <img *ngIf="adminFlag" [width]=60 [height]=60 [src]="project.pic" style="cursor: pointer;" (click)="picOp(0, true, null)">
+                <img *ngIf="!adminFlag" [width]=60 [height]=60 [src]="project.pic">
+              </ng-container>
+              <ng-container *ngIf="!project.pic">
+                <span class="fa-stack fa-3x fa-lg" style="cursor:pointer;" (click)="picOp(0, true, null)">
+                  <i class="fa fa-square fa-stack-2x" style="color:#CDCDC1"></i>
+                  <strong class="fa-stack-1x" style="color: white; font-size: 2rem;">{{project.name | acronym}}</strong>
+                </span>
+              </ng-container>
+            </div>
+
+            <div>
+              <!-- [ngClass]="{'mb-0': sourceType==1 && project.group}" -->
+              <div *ngIf="project.period" class="mb-0 text-dark">
+                <ng-container *ngIf="project.period.mode==2 && project.period.start">
+                  <b>STARTED ON {{ project.period.start | date: 'MMM y' | uppercase }}</b>
+                </ng-container>
+                <ng-container *ngIf="project.period.mode==0">
+                  <span *ngIf="project.period.start"><b>BETWEEN {{ project.period.start | date: 'MMM y' | uppercase }} - {{ project.period.end | date: 'MMM y' | uppercase }}</b></span>
+                  <span *ngIf="!project.period.start"><b>UNTIL {{ project.period.end | date: 'MMM y' | uppercase }}</b></span>
+                </ng-container>
+              </div>
+              <div class="d-flex align-items-center">
+                <h3 class="card-title mr-2"><b>{{ project.name }}</b></h3>
+                <build-buttons [editFlag]=true [showButton]="adminFlag && streamTitle==0" (buttonDeleteClick)="titleOp(1, false, $event)" (buttonEditClick)="titleOp(0, true, $event)"></build-buttons>
+                <spinner-put [stream]=streamTitle (animationDoneEvent)="animationDone(0,3)"></spinner-put>
+              </div>
+              <p *ngIf="sourceType==1 && project.group">
+                <group-link [groupIndex]=project.group></group-link>
+              </p>
+              <!-- <p *ngIf="!project.group" class="d-flex justify-content-start align-items-center">
+                <single-pic class="d-flex mr-2" [pic]=project.people[0].pic [width]=24 [height]=24 [type]=0></single-pic>
+                <a [routerLink]="['/people',project.people[0]._id]">{{ project.people[0].name }}</a>
+              </p> -->
+              <!-- Views: {{ project.views[4] }} -->
+            </div>
+
+          </div>
+
+          <div *ngIf="adminFlag || project.description">
+              <build-headline *ngIf="!project.description"
+                              class="mt-3"
+                              [showEditBtn]=adminFlag
+                              [addButtonFlag]="project.description==null"
+                              [headline]="'Short Introduction'"
+                              (buttonAddClick)="descriptionOp(0, true, $event)">
+              </build-headline>
+              <div build-text
+                   [text]=project.description
+                   [stream]=streamDescription
+                   [showEditBtn]=adminFlag
+                   (animationDoneEvent)="descriptionOp(3)"
+                   (buttonEditClick)="descriptionOp(0, true, $event)"
+                   (buttonDeleteClick)="descriptionOp(1, false, $event)">
+              </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- <div class="mb-4" [ngClass]="{'card p-3' : sourceType}">
+        <p *ngIf=sourceType class="lead">Recent updates</p>
+        <h5 *ngIf=!sourceType class="pt-4">Recent updates</h5>
+      </div> -->
+
+      <div *ngIf="adminFlag || project.description" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]="project.description==null"
+                          [headline]="'Introduction'"
+                          (buttonAddClick)="descriptionOp(0, true, $event)">
+          </build-headline>
+          <div build-text
+               [text]=project.description
+               [stream]=streamDescription
+               [showEditBtn]=adminFlag
+               (animationDoneEvent)="descriptionOp(3)"
+               (buttonEditClick)="descriptionOp(0, true, $event)"
+               (buttonDeleteClick)="descriptionOp(1, false, $event)">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="adminFlag || project.background" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]="project.background==null"
+                          [headline]="'Background'"
+                          (buttonAddClick)="backgroundOp(0, true, $event)">
+          </build-headline>
+          <div *ngIf="project.background" build-text-pic
+               [text]=project.background
+               [pic]=project.backgroundPic
+               [caption]=project.backgroundCaption
+               [stream]=streamBackground
+               [showEditBtn]=adminFlag
+               [titleText]="'Project Background Image'"
+               [bodyText]="'This is the place for the project background image.'"
+               [imgCenter]=true
+               (animationDoneEvent)="backgroundOp(3)"
+               (buttonEditClick)="backgroundOp(0, true, $event)"
+               (buttonDeleteClick)="backgroundOp(1, false, $event)">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="adminFlag || project.goals" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]="project.goals==null"
+                          [headline]="'Goals'"
+                          (buttonAddClick)="goalsOp(0, true, $event)">
+          </build-headline>
+          <div build-text
+               [text]=project.goals
+               [stream]=streamGoals
+               [showEditBtn]=adminFlag
+               (animationDoneEvent)="goalsOp(3)"
+               (buttonEditClick)="goalsOp(0, true, $event)"
+               (buttonDeleteClick)="goalsOp(1, false, $event)">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!streamRetrieved[6] || (streamRetrieved[6] && faqs[0]) || adminFlag" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]=true
+                          [headline]="'FAQ'"
+                          (buttonAddClick)="faqSlide(true, 0, true)">
+          </build-headline>
+          <spinner *ngIf="!streamRetrieved[6]"></spinner>
+          <div *ngIf="streamRetrieved[6] && faqs[0]">
+            <faq-list [bagName]="'faqs-bag'"
+                      [faqs]=faqs
+                      [itemFocus]=itemFocus
+                      [stream]=streamFAQ
+                      [showEditBtn]=adminFlag
+                      (animationDoneEvent)="faqStreamFunc()"
+                      (buttonEditClick)="faqSlide(true, $event, false)"
+                      (buttonDeleteClick)="faqDelete($event)">
+            </faq-list>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="adminFlag || project.showcases[0]" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]="project.showcases.length<20"
+                          [headline]="'Gallery'"
+                          (buttonAddClick)="showcaseOp(4, true, $event, null)">
+          </build-headline>
+          <div *ngIf="project.showcases[0]" class="pt-2">
+            <div class="card-columns">
+              <div *ngFor="let showcase of project.showcases; let i=index" class="card build-showcase p-2 mb-3">
+                <div build-pic
+                     class="card-img"
+                     [pic]=showcase.pic
+                     [type]=1
+                     [leftFlag]=true
+                     [fluidFlag]=true
+                     [showEditBtn]=adminFlag
+                     [widthFlag]=false
+                     (buttonEditClick)="showcaseOp(0, true, $event, i)"
+                     (buttonDeleteClick)="showcaseOp(1, false, $event, i)">
+                </div>
+                <div class="card-body px-1 pb-0 pt-1">
+                  {{ showcase.name }} <spinner-put [stream]=streamShowcase[i] (animationDoneEvent)="showcaseStreamFunc(i)"></spinner-put>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!streamRetrieved[1] || adminFlag || (streamRetrieved[1] && publications[0])" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]=true
+                          [headline]="'Publications'"
+                          (buttonAddClick)="publicationSlide(0, true)">
+          </build-headline>
+          <div *ngIf="typesCount>0" class="mt-0 ml-2 mb-3">
+            <publications-buttons [streamRetrieved]=streamRetrieved[1]
+                                  [typesData]=typesData
+                                  [typesCount]=typesCount
+                                  [sourceType]=1
+                                  (typesFlag)="typesFlagFunc($event)">
+            </publications-buttons>
+          </div>
+          <publications-list-table [streamRetrieved]=streamRetrieved[1]
+                                   [publicationToggle]=publicationToggle
+                                   [publications]=publications
+                                   [sourceType]=3
+                                   [showEditBtn]=adminFlag
+                                   [showHeadline]=adminFlag
+                                   [userId]=userId
+                                   [typesFlag]=typesFlag
+                                   [stream]=streamPublications
+                                   [streamDelete]=streamDelete
+                                   [streamFolder]=streamPublicationsFolder
+                                   (types)="typesDataFunc($event)"
+                                   (btnPDF)="pdfSlide($event)"
+                                   (btnDelete)="publicationDelete($event)"
+                                   (btnFolder)="publicationFolder($event)"
+                                   (animationDoneEvent)="streamPublicationsFunc()">
+          </publications-list-table>
+        </div>
+      </div>
+
+      <div *ngIf="!streamRetrieved[2] || adminFlag || (streamRetrieved[2] && talks[0])" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [headline]="'Talks'"
+                          [addButtonFlag]=true
+                          (buttonAddClick)="mediaSlide(0, true, 0, true)">
+          </build-headline>
+          <media-talk-list [streamRetrieved]=streamRetrieved[2]
+                           [talks]=talks
+                           [sourceType]=2
+                           [showEditBtn]=adminFlag
+                           [stream]=streamTalk
+                           [itemFocus]=itemFocus
+                           (animationDoneEvent)="mediaStreamFunc(0)"
+                           (buttonEditClick)="mediaSlide(0, true, $event, false)"
+                           (buttonDeleteClick)="mediaDelete(0, $event)">
+          </media-talk-list>
+        </div>
+      </div>
+
+      <div *ngIf="!streamRetrieved[3] || adminFlag || (streamRetrieved[3] && posters[0])" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [headline]="'Posters'"
+                          [addButtonFlag]=true
+                          (buttonAddClick)="mediaSlide(1, true, 0, true)">
+          </build-headline>
+          <media-poster-list [streamRetrieved]=streamRetrieved[3]
+                             [posters]=posters
+                             [sourceType]=2
+                             [showEditBtn]=adminFlag
+                             [itemFocus]=itemFocus
+                             [stream]=streamPoster
+                             (btnPDF)="pdfSlide(true,$event)"
+                             (animationDoneEvent)="mediaStreamFunc(1)"
+                             (buttonEditClick)="mediaSlide(1, true, $event, false)"
+                             (buttonDeleteClick)="mediaDelete(1, $event)">
+          </media-poster-list>
+        </div>
+      </div>
+
+      <div *ngIf="!streamRetrieved[4] || adminFlag || (streamRetrieved[4] && presses[0])" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [headline]="'Press'"
+                          [addButtonFlag]=true
+                          (buttonAddClick)="mediaSlide(2, true, 0, true)">
+          </build-headline>
+          <media-press-list [streamRetrieved]=streamRetrieved[4]
+                            [presses]=presses
+                            [sourceType]=2
+                            [showEditBtn]=adminFlag
+                            [itemFocus]=itemFocus
+                            [stream]=streamPress
+                            (animationDoneEvent)="mediaStreamFunc(2)"
+                            (buttonEditClick)="mediaSlide(2, true, $event, false)"
+                            (buttonDeleteClick)="mediaDelete(2, $event)">
+          </media-press-list>
+        </div>
+      </div>
+
+      <details-buttons class="d-none d-sm-block"
+                       [mode]=4
+                       [item]="{_id: project._id, name: project.name, pic: project.pic}"
+                       [userId]=userId
+                       [meFlag]=adminFlag
+                       [streamFollow]=streamFollow
+                       [followStatus]=project.followStatus
+                       (buttonFollowClick)="projectFollow()">
+      </details-buttons>
+
+    </div>
+
+    <div class="col-lg-3">
+
+      <div class="d-none d-lg-block">
+        <div class="d-flex justify-content-start">
+          <div class="d-none d-sm-block ml-4"></div>
+          <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+            <div class="card-body">
+              <build-headline [headline]="'SHARE THIS PROJECT'"></build-headline>
+              <share-buttons [show]="4"
+                             [include]="['facebook','twitter','linkedin', 'email']">
+              </share-buttons>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="project.group && (project.people[0] || project.collaborations[0] || project.fundings[0] || adminFlag)"
+           class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <build-headline [headline]="'PROJECT DETAILS'"></build-headline>
+
+            <div *ngIf="adminFlag || project.people[0]">
+              <div class="text-dark" class="mb-1">
+                Project Members
+                <build-buttons [showButton]="showEditBtn && streamMini[0]==0"
+                               [editFlag]=true
+                               (buttonEditClick)="miniOp(0,0,true,$event)">
+                </build-buttons>
+                <spinner-put [stream]=streamMini[0]
+                             (animationDoneEvent)="animationDone(1,0)">
+                </spinner-put>
+              </div>
+              <div *ngIf="project.people[0]">
+                <div *ngFor="let people of project.people; let l=last" class="d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+                  <single-pic class="d-flex mr-2"
+                              [pic]=people.pic
+                              [width]=32
+                              [height]=32
+                              [type]=0>
+                  </single-pic>
+                  <a *ngIf="sourceType<5" [routerLink]="['../../people',people._id]" class="card-title">{{ people.name }}</a>
+                  <a *ngIf="sourceType==5" [routerLink]="['/people',people._id]" class="card-title">{{ people.name }}</a>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="adminFlag || project.collaborations[0] || project.fundings[0]" class="mb-3"></div>
+
+            <div *ngIf="adminFlag || project.collaborations[0]">
+              <div class="text-dark">
+                Collaborations
+                <build-buttons [showButton]="showEditBtn && streamMini[1]==0"
+                               [editFlag]=true
+                               (buttonEditClick)="miniOp(0,1,true,$event)">
+                </build-buttons>
+                <spinner-put [stream]=streamMini[1]
+                             (animationDoneEvent)="animationDone(2,1)">
+                </spinner-put>
+              </div>
+              <div *ngIf="project.collaborations[0]">
+                <div *ngFor="let collaboration of project.collaborations; let l=last" class="d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+
+                  <img *ngIf="collaboration.pic" [height]=32 [src]=collaboration.pic>
+
+                  <span *ngIf="!collaboration.pic" [style.font-size]="1.0 + 'rem'" class="p-0 mr-2 fa-stack fa-1x">
+                    <i class="fa fa-square fa-stack-2x py-0 my-0" [style.color]="'#cdcdc1'"></i>
+                    <span class="fa fa-stack-1x fa-inverse py-0 my-0">RP</span>
+                  </span>
+
+                  <a [routerLink]="['./../collaborations']">{{ collaboration.name }}</a>
+
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="adminFlag || project.fundings[0]" class="mb-3"></div>
+
+            <div *ngIf="adminFlag || project.fundings[0]">
+              <div class="text-dark">
+                Fundings
+                <build-buttons [showButton]="showEditBtn && streamMini[2]==0"
+                               [editFlag]=true
+                               (buttonEditClick)="miniOp(0,2,true,$event)">
+                </build-buttons>
+                <spinner-put [stream]=streamMini[2]
+                             (animationDoneEvent)="animationDone(3,2)">
+                </spinner-put>
+              </div>
+              <td *ngIf="project.fundings[0]">
+                <div *ngFor="let funding of project.fundings; let l=last" class="d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+                  <single-pic class="d-flex mr-2"
+                              [pic]=funding.pic
+                              [width]=32
+                              [height]=32
+                              [widthE]=1
+                              [heightE]=1
+                              [type]=2
+                              [stack]=true
+                              [stackPic]="'money'">
+                  </single-pic>
+                  <a [routerLink]="['../fundings']">{{ funding.name }}</a>
+                </div>
+              </td>
+            </div>
+
+          <!-- <p *ngIf="adminFlag" class="text-muted mt-3 mb-0 small">
+            <i class="fa fa-info-circle" aria-hidden="true"></i> Only the project members and groups admins can edit the project details.
+          </p> -->
+
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!streamRetrieved[5] || adminFlag || (streamRetrieved[5] && resources[0])" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <build-headline [showEditBtn]=adminFlag
+                            [headline]="'RELATED SERVICES'"
+                            [addButtonFlag]=true
+                            (buttonAddClick)="resourcesOp(0, true, null, null)">
+            </build-headline>
+            <resource-list [streamRetrieved]=streamRetrieved[5]
+                           [resources]=resources
+                           [sourceType]=2
+                           [showEditBtn]=adminFlag
+                           [itemFocus]=itemFocus
+                           [deleteFlag]=true
+                           [stream]=streamResources
+                           [streamFollow]=streamResourcesFollow
+                           (animationDoneEvent)="streamResourcesFunc()"
+                           (buttonDeleteClick)="resourcesOp(1, false, null, $event)">
+            </resource-list>
+            <!-- (buttonFollowClick)="resourceFollow(i, $event)"> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <details-buttons class="d-block d-md-none"
+                   [mode]=4
+                   [item]="{_id: project._id, name: project.name, pic: project.pic}"
+                   [userId]=userId
+                   [meFlag]=adminFlag
+                   [streamFollow]=streamFollow
+                   [followStatus]=project.followStatus
+                   (buttonFollowClick)="projectFollow()">
+  </details-buttons>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide($event)"
+           [title]=fileTitle
+           [fileName]=fileName
+           [type]=1>
+</slide-pdf>
+
+<build-slide-pic *ngIf=picBuildFlag
+                 (update)="picOp(2, false, $event)"
+                 (cancel)="picOp(0, false, $event)"
+                 [title]="'Project Image'"
+                 [pic]=project.pic
+                 [width]=128
+                 [height]=128
+                 [type]=0>
+</build-slide-pic>
+
+<build-slide-text *ngIf=titleBuildFlag
+                  (update)="titleOp(2, false, $event)"
+                  (cancel)="titleOp(0, false, $event)"
+                  [title]="'Update Title'"
+                  [fieldType]=1
+                  [text]=project.name>
+</build-slide-text>
+
+<build-slide-object *ngIf=miniBuildFlag[0]
+                    [itemSmall]=true
+                    [mode]=0
+                    [groupId]=project.group.group._id
+                    [userId]=userId
+                    [title]="'Update Project Members'"
+                    [controlName]="'members'"
+                    [preMembersInput]=project.people
+                    (update)="miniOp(2, 0, false, $event)"
+                    (cancel)="miniOp(0, 0, false, null)">
+</build-slide-object>
+<!-- [minSelected]=1 -->
+
+<build-slide-object *ngIf=miniBuildFlag[1]
+                    [itemSmall]=true
+                    [mode]=1
+                    [groupId]=project.group.group._id
+                    [userId]=userId
+                    [title]="'Update Project Collaborations'"
+                    [controlName]="'collaborations'"
+                    [preCollaborationsInput]=project.collaborations
+                    (update)="miniOp(2, 1, false, $event)"
+                    (cancel)="miniOp(0, 1, false, $event)">
+</build-slide-object>
+
+<build-slide-object *ngIf=miniBuildFlag[2]
+                    [itemSmall]=true
+                    [mode]=2
+                    [groupId]=project.group.group._id
+                    [userId]=userId
+                    [title]="'Update Project Fundings'"
+                    [controlName]="'fundings'"
+                    [preFundingsInput]=project.fundings
+                    (update)="miniOp(2, 2, false, $event)"
+                    (cancel)="miniOp(0, 2, false, $event)">
+</build-slide-object>
+
+<build-slide-text *ngIf=descriptionBuildFlag
+                  (update)="descriptionOp(2, false, $event)"
+                  (cancel)="descriptionOp(0, false, $event)"
+                  [title]="'Project Introduction'"
+                  [fieldType]=2
+                  [textAreaRows]=10
+                  [text]=project.description>
+</build-slide-text>
+
+<build-slide-text-pic *ngIf=backgroundBuildFlag
+                      [title]="'Project Background'"
+                      [text]=project.background
+                      [pic]=project.backgroundPic
+                      [caption]=project.backgroundCaption
+                      [itemId]=project._id
+                      [captionFlag]=true
+                      (update)="backgroundOp(2, false, $event)"
+                      (cancel)="backgroundOp(0, false, $event)">
+</build-slide-text-pic>
+
+<build-slide-text *ngIf=goalsBuildFlag
+                  (update)="goalsOp(2, false, $event)"
+                  (cancel)="goalsOp(0, false, $event)"
+                  [title]="'Project Goals'"
+                  [text]=project.goals>
+</build-slide-text>
+
+<build-slide-faq *ngIf=faqBuildFlag
+                 (update)="faqUpdate($event)"
+                 (cancel)="faqSlide($event)"
+                 [faq]=faqs[faqIndex]
+                 [newFlag]=faqNewFlag>
+</build-slide-faq>
+
+<build-slide-text-pic *ngIf=showcaseUpdateFlag
+                      [title]="'Update Gallery Photo'"
+                      [type]=1
+                      [text]="project.showcases[showcaseIndex].name"
+                      [pic]="project.showcases[showcaseIndex].pic"
+                      (update)="showcaseOp(2, false, $event, showcaseIndex)"
+                      (cancel)="showcaseOp(0, false, $event, null)">
+</build-slide-text-pic>
+
+<build-slide-pic-multi *ngIf=showcaseAddFlag
+                       [limit]="20-project.showcases.length"
+                       [itemId]=projId
+                       (addMultiple)="showcaseOp(3, false, $event, null)"
+                       (cancel)="showcaseOp(4, false, $event, null)"
+                       [title]="'Add Gallery Photos'">
+</build-slide-pic-multi>
+
+<build-slide-publications *ngIf=publicationBuildFlag
+                          (update)="publicationUpdate($event)"
+                          (cancel)="publicationSlide($event, false)"
+                          [newFlag]=true
+                          [groupId]="project.group ? project.group.group._id : null"
+                          [userId]=userId
+                          [publication]=publicationBuild
+                          [dois]=dois>
+</build-slide-publications>
+
+<build-slide-media *ngIf=mediaBuildFlag
+                   (update)="mediaUpdate($event)"
+                   (cancel)="mediaSlide($event)"
+                   [activeTab]=mediaMode
+                   [groupId]="project.group ? project.group.group._id : null"
+                   [itemId]=projId
+                   [userId]=userId
+                   [newFlag]=mediaNewFlag
+                   [sourceFlag]=true
+                   [existFlag]=false
+                   [talk]=talks[mediaIndex]
+                   [poster]=posters[mediaIndex]
+                   [press]=presses[mediaIndex]>
+</build-slide-media>
+
+<build-slide-associated-resource *ngIf=resourcesBuildFlag
+                                 [userId]=userId
+                                 [projId]=projId
+                                 [title]="'Add Related Services'"
+                                 [itemExplain]="'Search for your lab services or other services in Academig.'"
+                                 (update)="resourcesOp(2, false, $event, null)"
+                                 (cancel)="resourcesOp(0, false, null, null)">
+</build-slide-associated-resource>

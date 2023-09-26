@@ -1,0 +1,192 @@
+<!-- this.publications = this.userInvites.filter(r => r.mode==4).map(r => r.publication).filter(r => r!=null) -->
+<!-- <div class="card-deck">
+  <div *ngFor="let invite of userInvites; let i=index">
+    <div *ngIf="invite.group" class="card border-secondary">
+      <div class="card-header">{{invite.group.group.name}}</div>
+      <div class="card-body text-secondary">
+        <p *ngIf="invite.mode==0" class="card-text">You have received an invitation to join {{invite.group.group.name}} as the Principal Investigator.</p>
+        <p *ngIf="invite.mode>=1" class="card-text">You have received an invitation to join {{invite.group.group.name}}.</p>
+        <p><a [routerLink]="['/', invite.group.university.link, invite.group.department.link, invite.group.group.link, 'people']" class="btn btn-info">Go to {{invite.group.group.name}}</a></p>
+        <group-link class="py-0 my-0" [groupIndex]=invite.group></group-link>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<ng-container *ngIf="object!=null && object._id!='0'">
+  <div class="dropdown-item my-1 py-1" style="white-space: normal; cursor:pointer;" (click)="navigateFunc()"
+       [ngClass]="{'list-group-item-action': is_seen, 'list-group-item-info': !is_seen}">
+    <div class="media">
+
+      <img *ngIf="picItem" class="mt-1 mr-2" [width]=36 [height]=36 [src]=picItem [ngClass]="{'rounded-circle': type==0, 'rounded': type==1, 'rounded-0': type==2}">
+      <i *ngIf="!picItem" class="material-icons mt-1 mr-2" style="color: #BEC2C7; font-size: 39px;">supervised_user_circle</i>
+
+      <div class="media-body">
+        <p class="my-0 card-title">
+
+          <!-- - - - - - - - - - - - - - -->
+          <!-- - - - - - 13000 - - - - - -->
+          <!-- - - - - - - - - - - - - - -->
+
+          <!-- is_seen {{is_seen}} -->
+
+          <span *ngIf="verbDigits[0]==1 && verbDigits[1]==3 && actor">
+            <span *ngIf="verbDigits[2]==0"><b><a [routerLink]="['/','people',actor?._id]">{{actor?.name}}</a> shared the:</b></span>
+            <span *ngIf="verbDigits[2]==1"><b>Report on:</b></span>
+            <span *ngIf="verbDigits[4]==0"> lab {{object?.group.name}}</span>
+            <span *ngIf="verbDigits[4]==1"> researcher {{object?.name}}</span>
+            <span *ngIf="verbDigits[4]==2"> publication {{object?.name}}</span>
+            <span *ngIf="verbDigits[4]==3"> service {{object?.name}}</span>
+            <span *ngIf="verbDigits[4]==4"> project {{object?.name}}</span>
+            <span *ngIf="verbDigits[4]==5"> open position {{titlesSelect[object?.title]}}</span>
+          </span>
+
+          <!-- - - - - - - - - - - - - - -->
+          <!-- - - - - - 15000 - - - - - -->
+          <!-- - - - - - - - - - - - - - -->
+
+          <span *ngIf="verb==15000">
+            <b>Welcome to Academig.</b> Click to learn how Academig can help you.
+          </span>
+
+          <!-- - - - - - - - - - - - - - -->
+          <!-- - - - - - 16000 - - - - - -->
+          <!-- - - - - - - - - - - - - - -->
+
+          <span *ngIf="(verb==16000 || verb==16001) && object && actor"><b>Lab news <span *ngIf="verb==16001">comment</span></b> by <a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> in {{object.group.name}}.</span>
+          <span *ngIf="verb==16100 && object"><b>{{actor.name}}</b> published a new lab seminars schedule at <b>{{object.group.name}}</b>.<br>Location: {{text}}<br>Next meeting: {{link}}</span>
+          <span *ngIf="verb==16101 && object && actor"><b>{{actor.group.name}}</b>: Your lab seminar date has passed and it now appears in the past seminars section.<br>Title: {{text}}</span>
+          <span *ngIf="verb==16102 && object">Reminder from <b>{{object.group.name}}</b>. You are the next label seminar speaker.<br>Location: {{text}}<br>Date: {{link}}</span>
+          <span *ngIf="verb==16103 && object">Reminder from <b>{{object.group.name}}</b>. There is a lab seminar tomorrow.<br>{{text}}<br>Date: {{link}}</span>
+          <span *ngIf="verb==16104 && object">The next lab seminar in <b>{{object.group.name}}</b> scheduled to {{text}} was canceled.<br>The new date is {{link}}</span>
+          <span *ngIf="verb==16105 && object">The details of the next lab seminar in <b>{{object.group.name}}</b> have been updated.<br>Topic: {{text}}<br>Date: {{link}}</span>
+          <span *ngIf="verb==16106 && object">The next lab seminar in <b>{{object.group.name}}</b> scheduled to {{text}} is {{link ? 'back to life' : 'canceled'}}</span>
+          <span *ngIf="verb==16107 && object && actor"><b>{{actor.name}}</b> canceled the lab seminars schedule at <b>{{object.group.name}}</b>.</span>
+          <span *ngIf="verb==16200 && object && actor"><b>{{actor.name}}</b> published a new reports schedule in the lab: <b>{{object.group.name}}</b>.<br>Next submission date is: {{text}}</span>
+          <span *ngIf="verb==16201 && object">Reminder from <b>{{object.group.name}}</b>. The next report submission date is: {{text}}</span>
+          <span *ngIf="verb==16202 && object"><b>Lab report.</b> The submission date of your lab reports has just passed. You can finalize the submission.</span>
+          <span *ngIf="verb==16203 && object && actor"><b>{{actor.name}}</b> canceled the next report submission at <b>{{object.group.name}}</b>.<br>Next submission date is: {{text}}</span>
+          <span *ngIf="verb==16204 && object && actor"><b>{{actor.name}}</b> changed the next report submission details at <b>{{object.group.name}}</b>.<br>Next Submission date is: {{text}}</span>
+          <span *ngIf="verb==16205 && object && actor"><b>{{actor.name}}</b> canceled the reports schedule at <b>{{object.group.name}}</b>.</span>
+          <span *ngIf="verb==16206 && object && actor"><b>{{actor.name}}</b> has just finalized the latest lab report at <b>{{object.group.name}}</b>.</span>
+          <span *ngIf="verb==16300 && object && actor"><b>{{actor.name}}</b> added a new lab event to <b>{{object.group.name}}</b>.</span>
+          <span *ngIf="verb==16400 && object && actor">New message in {{object.group.name}} chat room from <b>{{actor.name}}</b>:</span>
+
+          <!-- - - - - - - - - - - - - - -->
+          <!-- - - - - - 1000 - - - - - - -->
+          <!-- - - - - - - - - - - - - - -->
+
+          <span *ngIf="verb==1001"><b>New publication:</b> {{ object.name }}</span>
+          <span *ngIf="verb==1002"><b>New service:</b> {{ object.name }}</span>
+          <span *ngIf="verb==1003"><b>New project:</b> {{ object.name }}</span>
+          <span *ngIf="verb==1004"><b>New collaboration:</b> {{ object.group.name }}</span>
+          <span *ngIf="verb==1005"><b>New position:</b> {{ titlesSelect[object.title] }}</span>
+          <span *ngIf="verb==1006"><b>New funding:</b> {{ object.group.name }}</span>
+          <span *ngIf="verb==1010"><b>New question:</b> {{ text }}</span>
+          <span *ngIf="verb==1011"><b>New talk:</b> {{ object.name }}</span>
+          <span *ngIf="verb==1012"><b>New poster:</b> {{ object.name }}</span>
+          <span *ngIf="verb==1013"><b>New press:</b> {{ object.name }}</span>
+
+          <span *ngIf="verb==1200">Lab deleted: <b>{{link}}</b><br>{{text}}</span>
+          <!-- <br><group-link *ngIf="target?.group" class="py-0 my-0" [groupIndex]=target></group-link> -->
+
+          <span *ngIf="verb==1500"><b>A new lab matches your search filters:</b> {{ object.group.name }}<br>{{text}}</span>
+
+          <!-- - - - - - - - - - - - - - -->
+          <!-- - - - - - 3000 - - - - - - -->
+          <!-- - - - - - - - - - - - - - -->
+
+          <span *ngIf="verb==3000"><b>{{object.group.name}} is approved.</b> The lab profile is now public and you can invite your lab members.<br>{{text}}</span>
+          <span *ngIf="verb==3001"><b>{{object.group.name}} is not live yet.>.</b> Before it can live, you have to make some changes. Please follow the instructions below and republish.<br>{{text}}</span>
+          <span *ngIf="verb==3002">You request to open the lab profile: <b>{{link}}</b>, was declined.<br>{{text}}</span>
+
+          <!-- - - - - - - - - - - - - - -->
+          <!-- - - - - - 4000 - - - - - - -->
+          <!-- - - - - - - - - - - - - - -->
+
+          <span *ngIf="(verb==4000 || verb==4100) && actor"><b>{{actor.name}}</b> requests to join as a {{titlesSelect[text]}} <span *ngIf="verb==4100">alumni</span> to {{object.group.name}}.</span>
+          <span *ngIf="(verb==4001 || verb==4101) && actor"><b>{{actor.name}}</b> canceled the request to join {{object.group.name}}.</span>
+          <span *ngIf="(verb==4002 || verb==4102) && actor"><b>{{actor.name}}</b> accepted your request to join {{object.group.name}}.</span>
+          <span *ngIf="(verb==4003 || verb==4103) && actor"><b>{{actor.name}}</b> declined your request to join {{object.group.name}}.</span>
+          <span *ngIf="(verb==4500 || verb==4600) && actor"><b>{{actor.name}}</b> invites you to join as a {{titlesSelect[text]}} <span *ngIf="verb==4600">alumni</span> to {{object.group.name}}.</span>
+          <span *ngIf="(verb==4501 || verb==4601) && actor"><b>{{actor.name}}</b> canceled the invitation to join {{object.group.name}}.</span>
+          <span *ngIf="(verb==4503 || verb==4603) && actor"><b>{{actor.name}}</b> accepted the invitation to join {{object.group.name}}.</span>
+          <span *ngIf="(verb==4504 || verb==4604) && actor"><b>{{actor.name}}</b> declined the invitation to join {{object.group.name}}.</span>
+
+          <!-- - - - - - - - - - - - -  - -->
+          <!-- - - - - - - 5000 - - - - - -->
+          <!-- - - - - - - - - - - - -  - -->
+
+          <span *ngIf="verb==5100 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> started a new {{titlesSelect[text]}} position in {{object.group.name}}.</span>
+          <span *ngIf="verb==5101 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> rejoined {{object.group.name}} as a {{titlesSelect[text]}}.</span>
+          <span *ngIf="verb==5200 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> ended the {{titlesSelect[text]}} position in {{object.group.name}}.</span>
+          <span *ngIf="verb==5201 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> finished the {{titlesSelect[text]}} position in {{object.group.name}} and moved to the alumni list.</span>
+          <span *ngIf="verb==5300 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> finished the {{titlesSelect[text]}} position and left {{object.group.name}}.</span>
+          <span *ngIf="verb==5400 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> joined {{object.group.name}} as a {{titlesSelect[text]}}.</span>
+
+          <!-- - - - - - - - - - - - -  - -->
+          <!-- - - - - - - 6000 - - - - - -->
+          <!-- - - - - - - - - - - - -  - -->
+
+          <!-- Group Following -->
+          <!-- FIX: links -->
+          <span *ngIf="verbDigits[0]==6 && verbDigits[1]==1">
+            <a *ngIf="verb==6100 || verb==6102" [routerLink]="['/',object.university.link,object.department.link,object.group.link]"><b>{{ object.group.name }}</b></a>
+            <a *ngIf="verb==6101 || verb==6103" [routerLink]="['/',object.university.link,object.department.link,object.group.link]"><b>{{ object.group.name }}</b></a>
+            <span *ngIf="verb==6100 || verb==6101">follows</span>
+            <span *ngIf="verb==6102 || verb==6103">unfollowed</span>
+            <a *ngIf="verb==6100 || verb==6102" [routerLink]="['/',object.university.link,object.department.link,object.group.link]"><b>{{ object.group.name }}</b></a>
+            <a *ngIf="verb==6101 || verb==6103" [routerLink]="['/',object.university.link,object.department.link,object.group.link]"><b>{{ object.group.name }}</b></a>
+          </span>
+
+          <!-- People Following -->
+          <span *ngIf="(verbDigits[0]==6 && verbDigits[1]==0) && actor">
+            <a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> follows
+            <span *ngIf="verb==6000">the lab: <b>{{ object.group.name }}</b></span>
+            <span *ngIf="verb==6001">the publication: <b>{{ object.name }}</b></span>
+            <span *ngIf="verb==6002">the service: <b>{{ object.name }}</b></span>
+            <span *ngIf="verb==6003">the project: <b>{{ object.name }}</b></span>
+            <span *ngIf="verb==6004">the position: <b>{{ titlesSelect[object.title] }}</b></span>
+            <span *ngIf="verb==6020">you</span>
+          </span>
+
+          <!-- - - - - - - - - - - - -  - -->
+          <!-- - - - - - - 9000 - - - - - -->
+          <!-- - - - - - - - - - - - -  - -->
+
+          <!-- Services -->
+          <span *ngIf="verb==9001 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> added you as a member of the service: <b>{{ object.name }}</b>.</span>
+          <span *ngIf="verb==9002 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> pulled you out of the service: <b>{{ object.name }}</b>.</span>
+
+          <!-- Projects -->
+          <span *ngIf="verb==9501 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> added you as a member of the project: <b>{{ object.name }}</b>.</span>
+          <span *ngIf="verb==9502 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> pulled you out of the project: <b>{{ object.name }}</b>.</span>
+
+          <!-- - - - - - - - - - - - -  - -->
+          <!-- - - - - - - 10000 - - - -  -->
+          <!-- - - - - - - - - - - - -  - -->
+
+          <span *ngIf="verb==10000 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> invites you to join a collaboration.</span>
+          <span *ngIf="verb==10001 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> accepted to join the collaboration.</span>
+          <span *ngIf="verb==10002 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> declined the collaboration invite.</span>
+
+          <!-- - - - - - - - - - - - -  - -->
+          <!-- - - - - - - 11000 - - - -  -->
+          <!-- - - - - - - - - - - - -  - -->
+
+          <span *ngIf="verb==11000 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> invites you to join a funding.</span>
+          <span *ngIf="verb==11001 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> accepted to join the funding.</span>
+          <span *ngIf="verb==11002 && actor"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> declined the funding invite.</span>
+
+        </p>
+
+        <p *ngIf="(verb==16000 || verb==16001 || verb==16400) && text" class="my-0" style='white-space:pre-wrap;' [innerHTML]="text"></p> <!-- TEXT -->
+        <img *ngIf="(verb==16300 || verb==16400) && link" class="mt-2" [height]=80 [src]=link> <!-- LINK -->
+        <p *ngIf="(verb==16000 || verb==16001) && pic" class="mb-0"><img [height]=80 [src]=pic></p> <!-- PIC -->
+        <span class="mb-0 text-muted small">{{ time + 'Z' | date:'dd MMM yyyy'}}</span> <!-- DATE -->
+
+      </div>
+    </div>
+  </div>
+  <hr class="my-0">
+</ng-container>

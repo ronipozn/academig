@@ -1,0 +1,38 @@
+<div class="card-collapse">
+
+  <div class="card-header" role="tab" id="heading{{i}}">
+    <!-- <span [ngClass]="{'invisible': (!showEditBtn || !(showButton && stream==0))}" class="handle"></span> -->
+    <h5 class="mb-0">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{i}}">
+        {{i+1}}. {{faq.question}}
+        <i class="material-icons">keyboard_arrow_down</i>
+      </a>
+    </h5>
+  </div>
+
+  <div id="collapse{{i}}" class="collapse" role="tabpanel" aria-labelledby="heading">
+    <div class="card-body">
+
+      <div build-text
+           [text]=faq.answer
+           [showEditBtn]=showEditBtn
+           [stream]=stream
+           (animationDoneEvent)="animationDone()"
+           (buttonEditClick)="buttonEditFunc()"
+           (buttonDeleteClick)="buttonDeleteFunc()">
+      </div>
+
+      <div *ngIf="sourceType==1" class="my-0">
+        <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+        <button [disabled]="streamSuggestion>0" role="button" class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+        <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+      </div>
+      <div *ngIf="sourceType==3" class="my-0">
+        <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+        <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+      </div>
+
+    </div>
+  </div>
+
+</div>

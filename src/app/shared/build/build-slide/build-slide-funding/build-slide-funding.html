@@ -1,0 +1,174 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">
+    <span *ngIf="newFlag==0">Update Funding</span>
+    <span *ngIf="modeNum==0 && newFlag==1">New Funding</span>
+    <span *ngIf="modeNum==1 && newFlag==1">Past Funding</span>
+    <span *ngIf="newFlag==2">Update Role</span>
+    <span *ngIf="newFlag==3">Leave Role</span>
+    <span *ngIf="newFlag==4">Add Role</span>
+  </h3>
+
+  <div *ngIf="newFlag<2" class="d-flex justify-content-center">
+    <dots-nav [stepNum]=stepNum
+              [stepTotal]=stepTotal
+              [stepsInvalid]="[((formModel.get('link').invalid && controlStatus[0]) ||
+                                (formModel.get('abbr').invalid && controlStatus[1]) ||
+                                (formModel.get('title').invalid && controlStatus[2]) ||
+                                (formModel.get('description').invalid && controlStatus[3])),
+                               false,
+                               false]"
+              (stepChange)=changeStep(null,$event)>
+    </dots-nav>
+  </div>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="adminFlag && newFlag==1" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <div [hidden]="stepNum!=0">
+
+        <build-modal-name-field *ngIf="newFlag<=1"
+                                [userId]=userId
+                                [labelRequired]=true
+                                [mode]=10
+                                [itemTitle]="'Title'"
+                                [iconTitle]="'money'"
+                                [itemFirst]=true
+                                [controlName]="'title'"
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus[0]
+                                (controlStatus)=controlTitleFunc($event)>
+        </build-modal-name-field>
+
+        <div class="row no-gutters" *ngIf="newFlag<=1">
+          <div class="col mr-1">
+            <build-modal-text-field [itemTitle]="'Abbrevation'"
+                                    [labelRequired]=true
+                                    [controlName]="'abbr'"
+                                    (controlStatus)=controlStatusFunc($event,1)
+                                    [parentGroup]=formModel
+                                    [submitStatus]=submitStatus[0]>
+            </build-modal-text-field>
+          </div>
+          <div class="col ml-1">
+            <build-modal-text-field [itemTitle]="'ID'"
+                                    [controlName]="'officalId'"
+                                    [parentGroup]=formModel
+                                    [submitStatus]=submitStatus[0]>
+            </build-modal-text-field>
+          </div>
+        </div>
+
+        <build-modal-text-field *ngIf="newFlag<=1"
+                                [itemTitle]="'Link'"
+                                [controlName]="'link'"
+                                (controlStatus)=controlStatusFunc($event,0)
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus[0]>
+        </build-modal-text-field>
+
+        <build-modal-text-field *ngIf="newFlag<=1"
+                                [fieldType]=2
+                                [textAreaRows]=3
+                                [itemTitle]="'Short Description'"
+                                [controlName]="'description'"
+                                (controlStatus)=controlStatusFunc($event,3)
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus[0]>
+        </build-modal-text-field>
+
+        <div *ngIf="newFlag<=1" id="direct_upload">
+          <single-pic *ngIf="file || funding?.pic"
+                      [centerFlag]=true
+                      [pic]="file ? file : funding.pic"
+                      [thumbnailFlag]=true
+                      [stackPic]="'money'"
+                      [type]=1
+                      [width]=112
+                      [height]=112
+                      [widthE]=4>
+          </single-pic>
+          <div class="d-flex justify-content-center" [ngClass]="{'mt-3': file || funding?.pic}">
+            <input type="hidden" id="file" name="file" data-images-only data-preview-step data-crop="112x112 upscale">
+          </div>
+        </div>
+
+        <!-- ngIf to avoid redundant Projects loading -->
+        <!-- <build-slide-select-projects *ngIf="newFlag<=1"
+                                     [groupId]=groupId
+                                     [userId]=userId
+                                     [title]="'Related Projects'"
+                                     [parentGroup]=formModel
+                                     [controlName]="'projects'"
+                                     [preProjectsInput]=preProjects
+                                     (projectsOutput)=projectsFunc($event)>
+        </build-slide-select-projects> -->
+
+      </div>
+
+      <div [hidden]="stepNum!=1">
+        <build-periods *ngIf="newFlag<=1"
+                       [itemTitle]="'Funding Periods'"
+                       [parentGroup]=formModel
+                       [controlName]="'periods'"
+                       [newFlag]=newFlag
+                       [periods]=funding?.periods
+                       [submitStatus]=submitStatus[1]>
+        </build-periods>
+      </div>
+
+      <div [hidden]="stepNum!=2">
+        <build-roles [itemTitle]="(newFlag==1) ? 'Roles' : 'New role'"
+                     [parentGroup]=formModel
+                     [controlName]="'roles'"
+                     [newFlag]=newFlag
+                     [roles]=funding?.roles
+                     [userId]=userId
+                     [groupStage]=groupStage
+                     [fundingId]=funding?._id
+                     [submitStatus]=submitStatus[2]>
+        </build-roles>
+      </div>
+
+      <div *ngIf="stepNum==3">
+        <span *ngIf="!meFlag">Are you sure you want to remove the selected role from this funding?</span>
+        <span *ngIf="meFlag">Are you sure you want to leave your role at this funding?</span>
+      </div>
+
+      <!-- <hr class="mt-2"> -->
+      <div class="pull-left form-group">
+        <button *ngIf="newFlag>1 || (stepNum==2 && newFlag==1) || (stepNum==1 && newFlag==0)" type="submit" [disabled]="newFlag<=1 && (uploadFlag || disableFlag)" class="btn btn-sm btn-light-blue">
+          <span *ngIf="newFlag==1 || newFlag==4">Add</span>
+          <span *ngIf="newFlag==2 || newFlag==0">Update</span>
+          <span *ngIf="newFlag==3">
+            <span *ngIf="!meFlag">Remove</span>
+            <span *ngIf="meFlag">Leave</span>
+          </span>
+        </button>
+        <button *ngIf="(stepNum<2 && newFlag==1) || (stepNum<1 && newFlag==0)" type="button" class="btn btn-sm btn-light-blue" (click)="changeStep(true,null)">Next</button>
+        <button *ngIf="newFlag<2" type="button" class="btn btn-sm btn-link" (click)="changeStep(false,null)" [disabled]="stepNum==0">Back</button>
+        <button type="button" [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+      <div class="pull-left">
+        <p *ngIf="stepNum==2 && newFlag==1 && groupStage==2" class="mt-2 text-muted">
+          Requests to approve will be sent automatically to each user from each role.
+          Also, the funding will be added to each user profile.
+        </p>
+      </div>
+
+    </form>
+  </div>
+</div>

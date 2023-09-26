@@ -1,0 +1,15 @@
+<div on-mouseover='buttonOver(true)' on-mouseleave='buttonOver(false)' [ngClass]="{'build p-0': showEditBtn}">
+
+  <p class="my-0">
+    <a class="mr-1 card-title h5" target="_blank" [href]="link.link">{{ link.name }}</a>
+    <spinner-put [stream]=stream (animationDoneEvent)="animationDone($event)"></spinner-put>
+    <build-buttons [showButton]=showButton
+                   (buttonEditClick)="buttonEditFunc($event)"
+                   (buttonDeleteClick)="buttonDeleteFunc($event)">
+    </build-buttons>
+  </p>
+
+  <span class="m-0 p-0" style='white-space:pre-wrap;' [innerHTML]="link.description | safeHtml"></span>
+  <!-- <i>{{ link.description }}</i> -->
+
+</div>

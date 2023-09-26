@@ -1,0 +1,54 @@
+<div class="side-form">
+
+  <h3 class="title text-dark text-center">{{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <mat-form-field appearance="outline" class="mb-3" [ngClass]="{'has-success': formModel.get('topic').valid && formModel.get('topic').dirty, 'has-danger': (formModel.get('topic').invalid) || (formModel.get('topic').dirty && formModel.get('topic').invalid)}">
+        <mat-label>Research topics</mat-label>
+        <!-- ariaLabel="topics[0]" -->
+        <mat-select multiple formControlName=topic placeholder="Choose your lab main topics">
+          <mat-option *ngFor="let topic of topics; let i=index" [value]="topic">
+            {{ topic }}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-hint>
+          You can choose multiple research topics.
+        </mat-hint> -->
+        <span class="form-control-feedback">
+          <i *ngIf="formModel.get('topic').valid && formModel.get('topic').dirty" class="material-icons">done</i>
+          <i *ngIf="formModel.get('topic').invalid || (formModel.get('topic').dirty && formModel.get('topic').invalid)" class="material-icons">clear</i>
+        </span>
+      </mat-form-field>
+
+      <!-- <build-modal-text-field [labelRequired]=false
+                              [itemTitle]="'Establish date'"
+                              [fieldType]=1
+                              [typeSelected]="'month'"
+                              [controlName]="'establish'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field> -->
+      <build-month-field [labelRequired]=false
+                         [itemTitle]="'Establish date'"
+                         [controlName]="'establish'"
+                         [parentGroup]="formModel">
+      </build-month-field>
+
+      <mat-form-field class="mt-2">
+        <mat-select placeholder="Number of people" [formControlName]="'size'" ariaLabel="groupSize[0]">
+          <mat-option *ngFor="let size of ((groupType) ? groupSize : companySize)" [value]="size.id">
+            {{ size.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="pull-left form-group">
+        <button type="submit" [disabled]="disableFlag" mat-raised-button class="btn btn-sm btn-light-blue">Update</button>
+        <button type="button" [disabled]=disableFlag mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

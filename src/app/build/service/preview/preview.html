@@ -1,0 +1,26 @@
+<div class="card">
+  <div class="card-body">
+    <div [formGroup]="firstFormGroup">
+      <h3 class="card-title text-success mb-3"><b>Service search preview</b></h3>
+      <preview-item [firstFormGroup]=firstFormGroup
+                    [secondFormGroup]=secondFormGroup
+                    [country]="detailsPreview?.university?.country | country"
+                    [state]="detailsPreview?.university?.state"
+                    [city]="detailsPreview?.university?.city">
+      </preview-item>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div [formGroup]="secondFormGroup">
+      <h3 class="card-title text-success mb-3"><b>Service details preview</b></h3>
+      <preview-details [firstFormGroup]=firstFormGroup
+                       [secondFormGroup]=secondFormGroup>
+                       <!-- [detailsPreview]=detailsPreview -->
+                       >
+      </preview-details>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,341 @@
+<nav class="navbar navbar-expand-md navbar-light" style="background-color: white">
+  <div class="container-fluid">
+
+  <div class="d-none d-md-block w-100 order-1 order-md-0">
+    <ul class="navbar-nav ml-3 mr-auto">
+      <div class="navbar-wrapper">
+        <button mat-raised-button [routerLink]="['/']" class="btn btn-white btn-round btn-just-icon">
+          <img src="./assets/img/academig.jpg" [width]="41" [height]="44" alt="academig">
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </ul>
+  </div>
+
+  <div class="mx-auto order-0">
+    <nav aria-label="Sign up navigation">
+
+      <ul *ngIf="countNum==0" class="d-none d-md-block pagination mt-3">
+        <li class="page-item"><a role="button" class="page-link"></a></li>
+      </ul>
+
+      <ul *ngIf="!submitFlag && countNum>0" class="pagination pagination-light-blue mt-3">
+        <ng-container *ngFor="let _j of forArray; let i=index">
+          <!-- (click)="moveRadioStep(i+1)"  -->
+          <li *ngIf="(stepNum)>steps[forkNum][i+1]" class="page-item">
+            <a mat-button style="pointer-events: none;" class="page-link">{{i+1}}</a>
+          </li>
+          <!-- (click)="moveRadioStep(i+1)"  -->
+          <li *ngIf="(stepNum)==steps[forkNum][i+1]" class="page-item active">
+            <a mat-button style="pointer-events: none;" class="page-link">{{i+1}}</a>
+          </li>
+          <!-- (click)="moveRadioStep(i+1)"  -->
+          <li *ngIf="(boundNum)>=steps[forkNum][i+1] && (stepNum)<steps[forkNum][i+1]" class="page-item">
+            <a mat-button style="pointer-events: none;" class="page-link">{{i+1}}</a>
+          </li>
+          <li *ngIf="(boundNum)<steps[forkNum][i+1] && (stepNum)<steps[forkNum][i+1]" class="page-item">
+            <a mat-button style="pointer-events: none;" class="page-link">{{i+1}}</a>
+          </li>
+        </ng-container>
+      </ul>
+
+    </nav>
+  </div>
+
+  <div class="d-none d-sm-block navbar-collapse collapse w-100">
+    <ul class="navbar-nav ml-auto">
+      <button mat-raised-button class="btn btn-sm btn-link" role="button" (click)="skipBuild()">Skip</button>
+      <button mat-raised-button class="btn btn-sm btn-link" role="button" (click)="logout()">Log out</button>
+    </ul>
+  </div>
+
+  <div class="d-md-none w-100">
+    <div class="navbar-nav">
+      <div class="d-flex justify-content-center">
+        <a *ngIf="restrictFlag==true" [routerLink]="['/']" style="cursor:pointer;"><img class="rounded-circle" src="./assets/img/academig.jpg" [width]="24" [height]="24" alt="academig"></a>
+        <button *ngIf="restrictFlag==false" mat-raised-button class="btn btn-sm btn-link" role="button" (click)="skipBuild()">Skip</button>
+        <button mat-raised-button class="btn btn-sm btn-link" role="button" (click)="logout()">Log out</button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</nav>
+
+<div class="form-container" style="background-color: #F8F8F8;">
+
+  <!-- style="height:100%"  -->
+  <div class="container-fluid" [@screenAnimation]="('appear')">
+    <div class="card-body">
+
+      <signup-build-restrict *ngIf="restrictFlag==true"
+                             [mode]=1
+                             [userName]=userService.userName>
+      </signup-build-restrict>
+
+      <form *ngIf="restrictFlag==false" class="form-group needs-validation" (keydown.enter)="$event.preventDefault()" (ngSubmit)="onSubmit()" novalidate>
+
+        <div [@screenAnimation]="(stepNum==0 ? 'active' : 'notActive')">
+          <signup-build-welcome *ngIf="stepNum===0"
+                                (newStep)="moveStep($event)"
+                                [marketingFromDepartmentFlag]="userService.buildMarketingWebsiteFlag"
+                                [parentGroup]=formModel
+                                [forkNum]=forkNum
+                                [userName]=userService.userName>
+          </signup-build-welcome>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==1 ? 'active' : 'notActive')">
+          <signup-build-personal-info *ngIf="stepNum===1"
+                                      (newStep)="moveStep($event)"
+                                      (previousStep)="previousStep()"
+                                      (picSlide)="userPicOp(0, true, null)"
+                                      [parentGroup]=formModel
+                                      [forkNum]=forkNum
+                                      [userPic]=userService.userPic>
+          </signup-build-personal-info>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==2 ? 'active' : 'notActive')">
+          <signup-build-invites *ngIf="stepNum===2"
+                                (newStep)="moveStep($event)"
+                                (previousStep)="previousStep()"
+                                (btnAccpet)="suggestionDecision($event,0)"
+                                (btnReject)="suggestionDecision($event,1)"
+                                [parentGroup]=formModel
+                                [publications]=publicationsSuggestions
+                                [streamPublications]=streamPublications
+                                [streamSuggestions]=streamSuggestions
+                                [userId]=userService.userId>
+          </signup-build-invites>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==3 ? 'active' : 'notActive')">
+          <signup-build-institute-email *ngIf="stepNum===3"
+                                        (newStep)="moveStep($event)"
+                                        (previousStep)="previousStep()"
+                                        [forkNum]=forkNum
+                                        [parentGroup]=formModel>
+          </signup-build-institute-email>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==4 ? 'active' : 'notActive')">
+          <signup-build-current-website *ngIf="stepNum===4"
+                                        (newStep)="moveStep($event)"
+                                        (previousStep)="previousStep()"
+                                        [forkNum]=forkNum
+                                        [parentGroup]=formModel>
+          </signup-build-current-website>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==5 ? 'active' : 'notActive')">
+          <signup-build-cover *ngIf="stepNum===5"
+                              (newStep)="moveStep($event)"
+                              (previousStep)="previousStep()"
+                              (picSlide)="coverPicOp(0, true, null)"
+                              (picDelete)="coverPicOp(1, false, null)"
+                              [parentGroup]=formModel
+                              [forkNum]=forkNum
+                              [coverPic]=coverPic
+                              [subPicIndex]=subPicIndex>
+          </signup-build-cover>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==6 ? 'active' : 'notActive')">
+          <signup-build-group-info *ngIf="stepNum===6"
+                                   (skipLabStep)="skipLabStep()"
+                                   (newStep)="moveStep($event)"
+                                   (previousStep)="previousStep()"
+                                   [marketingFromDepartmentFlag]="userService.buildMarketingWebsiteFlag"
+                                   [parentGroup]=formModel
+                                   [companyItems]=companyItems
+                                   [topics]=topics
+                                   [forkNum]=forkNum>
+          </signup-build-group-info>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==7 ? 'active' : 'notActive')">
+          <signup-build-group-logo *ngIf="stepNum===7"
+                                   (newStep)="moveStep($event)"
+                                   (previousStep)="previousStep()"
+                                   (picSlide)="groupPicOp(0, true, null)"
+                                   (picDelete)="groupPicOp(1, false, null)"
+                                   [parentGroup]=formModel
+                                   [groupPic]=groupPic
+                                   [userId]=userService.userId
+                                   [forkNum]=forkNum>
+          </signup-build-group-logo>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==8 ? 'active' : 'notActive')">
+          <signup-build-group-privacy *ngIf="stepNum===8"
+                                      (newStep)="moveStep($event)"
+                                      (previousStep)="previousStep()"
+                                      [parentGroup]=formModel>
+          </signup-build-group-privacy>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==17 ? 'active' : 'notActive')">
+          <signup-build-group-people *ngIf="stepNum===17"
+                                     (newStep)="moveStep($event)"
+                                     (previousStep)="previousStep()"
+                                     [forkNum]=forkNum
+                                     [parentGroup]=formModel
+                                     [userPic]=userService.userPic
+                                     [userId]=userService.userId>
+          </signup-build-group-people>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==9 ? 'active' : 'notActive')">
+          <signup-build-user-info *ngIf="stepNum===9"
+                                  (newStep)="moveStep($event)"
+                                  (previousStep)="previousStep()"
+                                  [forkNum]=forkNum
+                                  [parentGroup]=formModel
+                                  [userPic]=userService.userPic
+                                  [userId]=userService.userId>
+          </signup-build-user-info>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==10 ? 'active' : 'notActive')">
+          <signup-build-pi-info *ngIf="stepNum===10"
+                                (newStep)="moveStep($event)"
+                                (previousStep)="previousStep()"
+                                (picSlide)="secondPicOp(0, true, null)"
+                                [forkNum]=forkNum
+                                [parentGroup]=formModel
+                                [userPic]=secondPic>
+          </signup-build-pi-info>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==11 ? 'active' : 'notActive')">
+          <signup-build-about *ngIf="stepNum===11"
+                              (newStep)="moveStep($event)"
+                              (previousStep)="previousStep()"
+                              [forkNum]=forkNum
+                              [parentGroup]=formModel>
+          </signup-build-about>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==12 ? 'active' : 'notActive')">
+          <signup-build-names *ngIf="stepNum===12"
+                              (newStep)="moveStep($event)"
+                              (previousStep)="previousStep()"
+                              [parentGroup]=formModel
+                              [forkNum]=forkNum
+                              [userName]=userService.userName>
+          </signup-build-names>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==13 ? 'active' : 'notActive')">
+          <signup-build-newsletter *ngIf="stepNum===13"
+                                   (newStep)="moveStep($event)"
+                                   (previousStep)="previousStep()"
+                                   [parentGroup]=formModel>
+          </signup-build-newsletter>
+        </div>
+
+        <!-- <div [@screenAnimation]="(stepNum==14 ? 'active' : 'notActive')">
+          <signup-build-group-position *ngIf="stepNum===14"
+                                       (newStep)="moveStep($event)"
+                                       (previousStep)="previousStep()"
+                                       [titleSelect]=titleSelect
+                                       [parentGroup]=formModel>
+          </signup-build-group-position>
+        </div> -->
+
+        <div [@screenAnimation]="(stepNum==18 ? 'active' : 'notActive')">
+          <signup-build-topics *ngIf="stepNum===18"
+                               (newStep)="moveStep($event)"
+                               (previousStep)="previousStep()"
+                               [topics]=topics
+                               [parentGroup]=formModel>
+          </signup-build-topics>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==19 ? 'active' : 'notActive')">
+          <signup-build-follow *ngIf="stepNum===19"
+                               (newStep)="moveStep($event)"
+                               (previousStep)="previousStep()"
+                               [topics]=topics
+                               [parentGroup]=formModel>
+          </signup-build-follow>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==14 ? 'active' : 'notActive')">
+          <signup-build-library *ngIf="stepNum===14"
+                                (newStep)="moveStep($event)"
+                                (previousStep)="previousStep()"
+                                [parentGroup]=formModel>
+          </signup-build-library>
+        </div>
+
+        <div [@screenAnimation]="(stepNum==15 ? 'active' : 'notActive')">
+          <signup-build-pro-mentoring *ngIf="stepNum===15"
+                                      [parentGroup]=formModel
+                                      (newStep)="moveStep($event)"
+                                      (previousStep)="previousStep()">
+          </signup-build-pro-mentoring>
+          <!-- <signup-build-plan *ngIf="stepNum===15"
+                             [parentGroup]=formModel
+                             [forkNum]=forkNum
+                             (newStep)="moveStep($event)"
+                             (previousStep)="previousStep()">
+          </signup-build-plan> -->
+        </div>
+
+        <div [@screenAnimation]="(stepNum==16 ? 'active' : 'notActive')">
+          <signup-build-finish *ngIf="stepNum==16"
+                               (newStep)="moveStep($event)"
+                               (previousStep)="previousStep()"
+                               [parentGroup]=formModel
+                               [submitFlag]=submitFlag
+                               [forkNum]=forkNum
+                               [userName]=userService.userName>
+          </signup-build-finish>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<build-slide-pic *ngIf=userPicBuildFlag
+                 (update)="userPicOp(2, false, $event)"
+                 (cancel)="userPicOp(0, false, null)"
+                 [title]="'Profile Picture'"
+                 [itemId]=userService.userId
+                 [pic]=userService.userPic
+                 [source]=1
+                 [type]=0>
+</build-slide-pic>
+
+<build-slide-pic *ngIf=groupPicBuildFlag
+                 (update)="groupPicOp(2, false, $event)"
+                 (cancel)="groupPicOp(0, false, null)"
+                 [title]="(this.forkNum==4 || this.forkNum==5 || this.forkNum==7) ? 'Company Logo': 'Lab Logo'"
+                 [itemId]=userService.userId
+                 [pic]=groupPic
+                 [source]=1
+                 [type]=1>
+</build-slide-pic>
+
+<build-slide-pic *ngIf=coverPicBuildFlag
+                 (update)="coverPicOp(2, false, $event)"
+                 (cancel)="coverPicOp(0, false, null)"
+                 [title]="'Cover Picture'"
+                 [itemId]=userService.userId
+                 [pic]=coverPic
+                 [source]=1
+                 [type]=3>
+</build-slide-pic>
+
+<!-- <build-slide-pic *ngIf=secondPicBuildFlag
+                 (update)="secondPicOp(2, false, $event)"
+                 (cancel)="secondPicOp(0, false, null)"
+                 [title]="'Second'"
+                 [itemId]=userService.userId
+                 [pic]=secondPic
+                 [type]=0>
+</build-slide-pic> -->

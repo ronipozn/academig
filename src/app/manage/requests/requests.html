@@ -1,0 +1,203 @@
+<!-- mode==1 -->
+<!-- <div *ngIf="messages==null" class="card">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-modal-intro [headline]="'You don\'t have access to this page.'" [bodypic]="'ban'"></build-modal-intro>
+  </div>
+</div> -->
+
+<!-- *ngIf="mode==1 && "  -->
+<div [ngClass]="{'col-xl-10 offset-xl-1': mode==0, 'mb-4': mode==1}" style="padding-top: 0px;">
+<!-- <div class="container"> -->
+
+  <div *ngIf="mode==1 && channelSelected && streamResourcesRetrieved && resources.length>0" class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <messages-head [resource]="resources[0]"
+                         [presence]=presence
+                         [mode]=0
+                         (deleteChannel)="deleteChannel()">
+          </messages-head>
+          <!-- [channelSelected]=channelSelected -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-4 mr-0 pr-0">
+      <div class="card mr-0 pr-0" [ngClass]="{'mt-0 ': mode==1}">
+        <div class="card-header">
+
+          <div class="d-flex align-items-center mb-1">
+            <div class="mr-auto">
+              <div class="d-flex align-items-center" style="font-size: 16px">
+                <i class="material-icons mr-2">build</i>
+                <b>{{(mode==0) ? 'My Service Requests' : 'Service Requests'}}</b>
+              </div>
+            </div>
+            <!-- <div> -->
+              <!-- <select *ngIf="streamResourcesRetrieved && mode==0" class="px-3 custom-select custom-select-sm" (change)="changeType($event.target.value)"> -->
+                <!-- <option value="0" selected>All Requests ({{ (mode==0) ? resources.length : resources[0].channels.length }})</option> -->
+                <!-- <option value="1">Starred ({{starredLength}})</option> -->
+                <!-- <option value="2">Unread (0)</option> -->
+                <!-- <option value="3">Finalized (0)</option> -->
+                <!-- <option value="4">Pending Requests (0)</option> -->
+                <!-- <option value="5">Archived ({{archivedLength}})</option> -->
+              <!-- </select> -->
+            <!-- </div> -->
+          </div>
+          <hr class="mt-0">
+
+          <div class="d-none d-md-block chatlist mb-auto" style="height: 65vh;">
+            <div *ngIf="mode==0" class="list-group mb-2">
+              <ng-container *ngFor="let resource of resources; let i=index">
+                <messages-list [mode]=0
+                               [type]=type
+                               [selectedFlag]="channelSelected==i"
+                               [resource]=resource
+                               (refreshChannel)="refreshChannel(i)"
+                               (postChannel)="postChannel(i,0,$event)">
+                </messages-list>
+              </ng-container>
+            </div>
+            <div *ngIf="mode==1 && resources" class="list-group mb-2">
+              <ng-container *ngFor="let channel of resources[0].channels; let i=index">
+                <messages-list [mode]=1
+                               [type]=type
+                               [selectedFlag]="channelSelected==i"
+                               [channel]=channel
+                               (refreshChannel)="refreshChannel(i)"
+                               (postChannel)="postChannel(i,1,$event)">
+                </messages-list>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="d-md-none chatlist mb-auto" style="height: 20vh;">
+            <div *ngIf="mode==0" class="list-group mb-2">
+              <ng-container *ngFor="let resource of resources; let i=index">
+                <messages-list [mode]=0
+                               [type]=type
+                               [selectedFlag]="channelSelected==i"
+                               [resource]=resource
+                               (refreshChannel)="refreshChannel(i)"
+                               (postChannel)="postChannel(i,0,$event)">
+                </messages-list>
+              </ng-container>
+            </div>
+            <div *ngIf="mode==1 && resources" class="list-group mb-2">
+              <ng-container *ngFor="let channel of resources[0].channels; let i=index">
+                <messages-list [mode]=1
+                               [type]=type
+                               [selectedFlag]="channelSelected==i"
+                               [channel]=channel
+                               (refreshChannel)="refreshChannel(i)"
+                               (postChannel)="postChannel(i,1,$event)">
+                </messages-list>
+              </ng-container>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card" [ngClass]="{'mt-0 ': mode==1}">
+        <div class="card-header">
+
+          <!-- https://stackoverflow.com/questions/29515475/binding-value-to-style -->
+          <div *ngIf="!streamRetrieved" class="chatlist mb-auto pt-4" [ngStyle]="{ 'height': ((mode==0) ? '70vh' : '59.5vh') }">
+            <spinner></spinner>
+          </div>
+
+          <build-modal-intro *ngIf="streamRetrieved && ((mode==0 && resources.length==0) || (mode==1 && resources[0].channels.length==0))"
+                             [headline]="'Service Requests'"
+                             [bodypic]="'comment-o'"
+                             [bodytext]="'You don\'t have any service requests yet.'">
+          </build-modal-intro>
+
+          <ng-container *ngIf="mode==0 && channelSelected && streamResourcesRetrieved && resources.length>0">
+            <messages-head [resource]="resources[channelSelected]"
+                           [channelSelected]=0
+                           [presence]=presence
+                           [mode]=1
+                           (deleteChannel)="deleteChannel()">
+            </messages-head>
+            <hr class="mt-0">
+          </ng-container>
+
+          <div *ngIf="streamRetrieved && mode==1 && resources[0].channels[channelSelected]">
+            <div class="d-flex align-items-center justify-content-start mb-2">
+              <span class="text-dark mr-2">Contact people:</span>
+              <div *ngFor="let member of resources[0].channels[channelSelected].users; let i=index" class="mr-2">
+                <a [routerLink]="['/people',member._id]">
+                  <single-pic class="profile" [pic]=member.pic [width]=28 [height]=28 [type]=0></single-pic>
+                </a>
+              </div>
+            </div>
+            <hr class="mt-0">
+          </div>
+
+          <div *ngIf="streamRetrieved" class="chatlist mb-auto pt-2" [ngStyle]="{ 'height': ((mode==0) ? '64vh' : '58.5vh') }" #scrollMe>
+            <ng-container *ngFor="let message of messages; let i=index; let l=last">
+              <messages-box [message]=message
+                            [messageSpinner]=streamMessage
+                            [messageLastFlag]=l
+                            [userId]=userService.userId
+                            [userPic]=userService.userPic
+                            [withPic]=withPic
+                            (btnPicClick)="picMoal($event)"
+                            (deleteMessage)="deleteMessage(i)"
+                            (animationDoneEvent)=streamFunc()>
+              </messages-box>
+              <h1 *ngIf="i==0" class="middle small text-muted mb-4">
+                INQUIRY SENT {{message.date | momentPipe:'':2}}
+              </h1>
+            </ng-container>
+          </div>
+
+          <app-new-message *ngIf="streamRetrieved && channelSelected!=null && ((mode==0 && resources.length>0) || (mode==1 && resources[0].channels.length>0))"
+                           [channelId]="(mode==0) ? resources[channelSelected].channels[0]._id : resources[0].channels[channelSelected]._id"
+                           [channelBlock]="(mode==0) ? resources[channelSelected].channels[0].block : resources[0].channels[channelSelected].block"
+                           (createMessage)="createMessage($event)">
+          </app-new-message>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - -->
+<button id="togglePicModal" #togglePicModal [hidden]="true" data-toggle="modal" data-target="#PicModal"></button>
+
+<div class="modal fade" id="PicModal" tabindex="-1" role="dialog" aria-labelledby="PicModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="picModalTitle">{{galleries[galleryIndex]?.title}}</h5> -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img class="d-block mx-auto" style="max-height: calc(100vh - 225px);" src="{{modalPic}}">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <resource-list [streamRetrieved]="streamRetrieved[3]"
+               [resources]=resources
+               [sourceType]=1
+               [stream]=streamResources
+               [streamFollow]=streamResourcesFollow
+               (buttonFollowClick)="resourceFollow($event)">
+</resource-list> -->

@@ -1,0 +1,13 @@
+/*button.btnFollowing:hover:after {
+  content:"Unfollow";
+}*/
+
+button.btnFollowing:hover {
+  background-color: #e67e22;
+  border-color: #d35400;
+}
+
+button.btnUnfollow {
+  background-color: #e67e22;
+  border-color: #d35400;
+}

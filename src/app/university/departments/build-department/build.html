@@ -1,0 +1,90 @@
+<div class="side-form">
+
+  <h3 class="title text-center">{{newFlag ? 'Build' : 'Update'}} Department / School / Center</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [fieldType]=4
+                              [itemTitle]="'Unit'"
+                              [labelRequired]=true
+                              [itemArray]=unitsStrings
+                              [controlName]="'unit'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-name-field *ngIf="newFlag"
+                              [signUpFlag]=true
+                              [labelRequired]=true
+                              [iconTitle]="'building-o'"
+                              [universityId]=universityId
+                              [mode]=2
+                              [itemTitle]="'Name'"
+                              [placeholder]="'Choose name'"
+                              [controlName]="'department'"
+                              [parentGroup]=formModel
+                              [submitStatus]=errorFlag
+                              [itemExplain]="'Choose from the drop down list or write your own. Keep name between 5-40 characters.'"
+                              (controlStatus)="keyUp()">
+      </build-modal-name-field>
+      <!-- [submitStatus]=submitStatus> -->
+
+      <build-modal-text-field *ngIf="newFlag"
+                              [labelRequired]=true
+                              [itemTitle]="'Abbreviation'"
+                              [controlName]="'link'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <button *ngIf="newFlag" type="button"class="btn btn-sm btn-light-blue mt-0 mb-3" (click)="abbrGenerate()">Generate abbreviation</button>
+
+      <build-modal-text-field *ngIf="newFlag"
+                              [labelRequired]=true
+                              [typeSelected]="'url'"
+                              [fieldType]=1
+                              [itemTitle]="'Website'"
+                              [controlName]="'website'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="newFlag"
+                              [labelRequired]=true
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [itemTitle]="'Description'"
+                              [controlName]="'description'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="newFlag"
+                              [labelRequired]=true
+                              [itemTitle]="'Description source'"
+                              [controlName]="'source'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div *ngIf="newFlag">
+        <br>Logo:
+        <div class="mt-1" id="direct_upload">
+          <single-pic *ngIf="file" [centerFlag]=true [pic]="file" [type]=2 [width]=112 [height]=112></single-pic>
+          <div class="d-flex justify-content-center" [ngClass]="{'mt-3': file}">
+            <input type="hidden" id="file" name="file" data-images-only data-preview-step>
+          </div>
+        </div>
+      </div>
+
+      <span *ngIf="departmentId"><b>Exist</b></span>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue" [disabled]="departmentId">{{newFlag ? 'Add' : 'Update'}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,86 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <div class="form-container">
+      <form class="form-group" [formGroup]="formModel" (ngSubmit)="updateList()" novalidate>
+
+        <build-modal-text-field [itemTitle]="'Search'"
+                                [itemFirst]=true
+                                [controlName]="'text'"
+                                [parentGroup]="formModel">
+        </build-modal-text-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Country" [formControlName]="'country'" ariaLabel="countries[0]">
+            <mat-option *ngFor="let country of countries" [value]="country.id">
+              {{ country.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button [disabled]="!streamRetrievedUniversities" role="button" mat-raised-button class="btn btn-sm btn-light-blue mr-2" (click)="updateList()">
+          Reload
+        </button>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!streamRetrievedUniversities" class="py-4">
+  <spinner [text]="'Page'"></spinner>
+</div>
+
+<div *ngIf="streamRetrievedUniversities" class="card mt-0">
+  <div class="card-body">
+
+    <p><b>Count:</b> {{count}}</p>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pic</th>
+            <th class="text-nowrap">Details</th>
+            <th class="text-nowrap">Added</th>
+            <th class="text-nowrap">Counters</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let university of universities; let i=index">
+
+            <th scope="row">{{i}}</th>
+
+            <td>
+              <single-pic [pic]=university.pic
+                          [height]=80
+                          [type]=1>
+              </single-pic>
+            </td>
+
+            <td>
+              <b>Name:</b> {{university.name}}<br>
+              <b>ID: </b> <a [routerLink]="['/',university.link]">{{university.link}}</a><br>
+              <b>Country: </b> {{university.country | country}}<br>
+              <b>Stage: </b> {{university.stage}}<br>
+            </td>
+
+            <td>
+              {{university.dates | date:'dd MMM y' }}<br>{{university.dates | date:'HH:mm' }}
+            </td>
+
+            <td>
+              <b>Categories:</b> {{university.categories}}<br>
+              <b>Departments:</b> {{university.departments}}
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>

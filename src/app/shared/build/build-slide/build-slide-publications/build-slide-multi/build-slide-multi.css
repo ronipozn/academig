@@ -1,0 +1,15 @@
+.side-form {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    right: 0;
+    height: 100%;
+    overflow: auto;
+    background: #fff;
+    padding: 80px 20px 15px 20px;
+    border-left: 1px solid #e0e0e0;
+}
+
+@media (max-width: 575px) {.side-form {width: 100%;}}
+@media (min-width: 576px) and (max-width: 767px) {.side-form {width: 60%;}}
+@media (min-width: 768px) {.side-form {width: 40%;}}

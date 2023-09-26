@@ -1,0 +1,47 @@
+<div class="media">
+
+  <!-- <div [ngClass]="{'invisible': (!showEditBtn || sourceType>0 || !(showButton && stream==0))}" class="handle"></div> -->
+
+  <div class="media-body" [ngClass]="{'ml-2': showEditBtn}">
+
+    <p class="my-0 card-title">
+      <a class="lead mr-2" target="_blank" [href]="press.link">{{press.title}}</a>
+      <spinner-put [stream]=stream (animationDoneEvent)="animationDone($event)"></spinner-put>
+      <build-buttons [showButton]="showEditBtn && stream==0"
+                     (buttonEditClick)="buttonEditFunc($event)"
+                     (buttonDeleteClick)="buttonDeleteFunc($event)">
+      </build-buttons>
+    </p>
+
+    <div *ngIf="sourceType>=3 && press.group">
+      <group-link [groupIndex]=press.group></group-link>
+    </div>
+
+    <i class="mr-1">{{ press.source }}</i> {{ press.date | date:'dd MMM y' }}
+
+    <p *ngIf="press.abstract" class="my-2">
+      {{ press.abstract }}
+    </p>
+
+    <div *ngIf="sourceType==0 && press.projects[0]" class="mt-2">
+      <span><b>Related Projects:</b></span>
+      <span class="card-title d-flex justify-content-start align-items-center">
+        <span *ngFor="let project of press.projects; let f=first; let l=last" class="small" [ngClass]="{'mb-3': !l}">
+          <single-pic class="mr-2" [pic]=project.pic [width]=29 [height]=29 [type]=true [stack]=true [stackPic]="'cubes'"></single-pic>
+          <a [routerLink]="['../projects',project._id]">{{ project.name }}</a>
+        </span>
+      </span>
+    </div>
+
+    <div *ngIf="sourceType==5" class="mt-2">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+      <button [disabled]="streamSuggestion>0" role="button" class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </div>
+    <div *ngIf="sourceType==7" class="mt-2">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </div>
+
+  </div>
+</div>

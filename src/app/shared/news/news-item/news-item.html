@@ -1,0 +1,362 @@
+<div class="timeline-badge" [ngClass]="{'light-blue': (verb==1000 && !object?.university?.pic) || (objectPicFlag && !object?.pic) || (actorPicFlag && !actor?.pic)}">
+<!-- [ngClass]="{'light-blue': !(objectName && object.pic) && !actor.pic}" -->
+
+  <div *ngIf="verb==1000 && object.university" class="timeline-badge">
+    <i *ngIf="!object.university.pic" class="material-icons">extension</i>
+    <img *ngIf="object.university.pic" class="rounded-circle" [width]=51 [height]=51 [src]="object.university.pic">
+  </div>
+
+  <ng-container *ngIf="objectPicFlag && object">
+    <div *ngIf="sourceType==3 || sourceType==4" [routerLink]="['..',objectName,object._id]" style="cursor:pointer;" class="timeline-badge">
+      <i *ngIf="!object.pic" class="material-icons">{{objectStack}}</i>
+      <img *ngIf="object.pic" class="rounded-circle" [width]=51 [height]=51 [src]="object.pic">
+    </div>
+    <div *ngIf="(sourceType!=3 && sourceType!=4)" [routerLink]="[objectName,object._id]" style="cursor:pointer;" class="timeline-badge">
+      <i *ngIf="!object.pic" class="material-icons">{{objectStack}}</i>
+      <img *ngIf="object.pic" class="rounded-circle" [width]=51 [height]=51 [src]="object.pic">
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="actorPicFlag && actor">
+    <div *ngIf="!actor.pic" [routerLink]="['/people/',actor._id]" style="cursor:pointer;" class="timeline-badge">
+      <i class="material-icons">face</i>
+    </div>
+    <div *ngIf="actor.pic" [routerLink]="['/people/',actor._id]" style="cursor:pointer;" class="timeline-badge">
+      <img class="rounded-circle" [width]=51 [height]=51 [src]="actor.pic">
+    </div>
+  </ng-container>
+
+</div>
+
+<div class="timeline-panel" [@itemsAnimation]="('active')">
+
+  <div class="timeline-heading small mb-1">
+
+    <span *ngIf="verb==20000"><b>News</b></span>
+
+    <span *ngIf="verb==1000"><b>Lab</b></span>
+    <span *ngIf="verb==1001"><b>New Publication</b></span>
+    <span *ngIf="verb==1002"><b>New Service</b></span>
+    <span *ngIf="verb==1003"><b>New Project</b></span>
+    <span *ngIf="verb==1004"><b>New Collaboration</b></span>
+    <span *ngIf="verb==1005"><b>New Position</b></span>
+    <span *ngIf="verb==1006"><b>New Funding</b></span>
+    <span *ngIf="verb==1007"><b>New Gallery</b></span>
+    <span *ngIf="verb==1008"><b>New Teaching</b></span>
+    <span *ngIf="verb==1010"><b>New Question</b></span>
+    <span *ngIf="verb==1011"><b>New Talk</b></span>
+    <span *ngIf="verb==1012"><b>New Poster</b></span>
+    <span *ngIf="verb==1013"><b>New Press Release</b></span>
+    <span *ngIf="verb==1050 && actor"><b>New User</b></span>
+    <span *ngIf="verbDigits[0]==6 && verb!=6001"><b>New Following</b></span>
+    <span *ngIf="verbDigits[0]==6 && verb==6001"><b>Reading Library</b></span>
+
+    <ng-container *ngIf="verb[0]==5 && actor && object.group">
+      <span *ngIf="verb==5100"><b>New Position</b></span>
+      <span *ngIf="verb==5101"><b>New Position</b></span> <!-- Moved from Alumni to Active. -->
+      <span *ngIf="verb==5200"><b>Finished Position</b></span>
+      <span *ngIf="verb==5201"><b>Finished Position</b></span> <!-- Moved from Active to Alumni. -->
+      <span *ngIf="verb==5300"><b>Left</b></span>
+      <span *ngIf="verb==5400"><b>Join</b></span>
+    </ng-container>
+
+    &#8226; <b>{{ time + 'Z' | date: 'short' }}</b>
+
+  </div>
+
+  <div class="timeline-body">
+
+    <!-- New Lab -->
+    <span *ngIf="verb==1000 && object.university" class="card-title">
+      <b>Lab: </b><a [routerLink]="['/',object.university.link,object.department.link,object.group.link]">{{ object.group.name }}</a>
+      <br><b>Department: </b><a [routerLink]="['/',object.university.link,object.department.link]">{{ object.department.name }}</a>
+      <br><b>University: </b><a [routerLink]="['/',object.university.link]">{{ object.university.name }}</a>
+      <p *ngIf="text" class="mt-2"><span style='white-space:pre-wrap;' [innerHTML]="text | safeHtml"></span></p>
+      <p *ngIf="link" class="my-2">
+        <span *ngFor="let tag of link" class="mr-2">
+          <span class="badge badge-light-blue">{{ tag }}</span>
+        </span>
+      </p>
+      <!-- <p *ngIf="pic" class="mt-2 mb-0"><img class="img-fluid" style="max-height: calc(100vh - 350px);" [src]=pic></p> -->
+    </span>
+
+    <!-- New User -->
+    <span *ngIf="verb==1050 && actor" class="card-title">
+      <a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a>
+    </span>
+
+    <!-- New Group Items -->
+    <a *ngIf="verb==1001" class="title" [routerLink]="['/publications/',object._id]"><b>{{ object.name }}</b></a>
+    <a *ngIf="verb==1002" class="title" [routerLink]="['/services/',object._id]"><b>{{ object.name }}</b></a>
+    <a *ngIf="verb==1003" class="title" [routerLink]="['/projects/',object._id]"><b>{{ object.name }}</b></a>
+    <a *ngIf="verb==1004" class="title" [routerLink]="['/',object.university.link,object.department.link,object.group.link]"><b>{{ object.group.name }}</b></a>
+    <a *ngIf="verb==1005" class="title" [routerLink]="['/positions/',object._id]"><b>{{ titlesSelect[object.title] }}</b></a>
+    <a *ngIf="verb==1006 && target" class="title" [routerLink]="['/',target.university.link,target.department.link,target.group.link,'projects','fundings']"><b>{{ object.name }}</b></a>
+    <a *ngIf="verb==1008" class="title" [routerLink]="['/people',actor._id,'teaching']"><b>{{ object.name }}</b></a>
+    <span *ngIf="verb==1010"><b>{{ text }}</b></span>
+    <span *ngIf="verb==1011 || verb==1012 || verb==1013"><b>{{ object.name }}</b></span>
+    <span *ngIf="verb==1016"><b>{{ text }}</b></span>
+    <span *ngIf="target?.group && sourceType<3 && (verb>1000 && verb<1050)">
+      <br><group-link class="py-0 my-0" [groupIndex]=target></group-link>
+    </span>
+    <img *ngIf="verb==1016" class="mt-2 img-fluid" style="max-height: calc(100vh - 600px);" [src]=pic>
+
+    <!-- Lab Members -->
+    <span *ngIf="verb[0]==5 && actor && object.group" class="card-title">
+      <span *ngIf="verb==5100"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> has a new {{titlesSelect[text]}} position in {{object.group.name}}.</span>
+      <span *ngIf="verb==5101"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> has a new {{titlesSelect[text]}} position in {{object.group.name}}.</span>
+      <span *ngIf="verb==5200"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> finished the {{titlesSelect[text]}} position in {{object.group.name}}.</span>
+      <span *ngIf="verb==5201"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> finished the {{titlesSelect[text]}} position in {{object.group.name}}.</span>
+      <span *ngIf="verb==5300"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> left {{object.group.name}}.</span>
+      <span *ngIf="verb==5400"><a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a> joined {{object.group.name}} as {{titlesSelect[text]}}.</span>
+      <span *ngIf="target?.group && sourceType<3"><br><group-link class="py-0 my-0" [groupIndex]=target></group-link></span>
+    </span>
+    <span *ngIf="verb[0]==5 && (!actor || !object.group)"><i>Deleted</i></span>
+
+    <!-- Group Following -->
+    <span *ngIf="verbDigits[0]==6 && verbDigits[1]==1 && object.group && target.group" class="card-title">
+      Lab
+      <a *ngIf="verb==6100 || verb==6102" [routerLink]="['/',object.university.link,object.department.link,object.group.link]"><b>{{ object.group.name }}</b></a>
+      <a *ngIf="(verb==6101 || verb==6103) && target" [routerLink]="['/',target.university.link,target.department.link,target.group.link]"><b>{{ target.group.name }}</b></a>
+      <span *ngIf="verb==6100 || verb==6101" class="ml-1">follows</span>
+      <span *ngIf="verb==6102 || verb==6103" class="ml-1">no longer follows</span>
+      the group:
+      <a *ngIf="(verb==6100 || verb==6102) && target" [routerLink]="['/',target.university.link,target.department.link,target.group.link]"><b>{{ target.group.name }}</b></a>
+      <a *ngIf="verb==6101 || verb==6103" [routerLink]="['/',object.university.link,object.department.link,object.group.link]"><b>{{ object.group.name }}</b></a>
+    </span>
+    <span *ngIf="verbDigits[0]==6 && verbDigits[1]==1 && (!object.group || !target.group)"><i>Deleted</i></span>
+
+    <!-- People Following -->
+    <span *ngIf="verbDigits[0]==6 && verbDigits[1]==0 && actor" class="card-title mr-1">
+      <ng-container *ngIf="verb!=6001">
+        <a [routerLink]="['/people/',actor._id]"><b>{{ actor.name }}</b></a>
+        <span class="mx-1">follows</span>
+        <span *ngIf="verb==6000">the lab:<a [routerLink]="['/',object.university.link,object.department.link,object.group.link]"><b>{{ object.group.name }}</b></a></span>
+        <span *ngIf="verb==6002">the resource: <a [routerLink]="['/resources/',object._id]"><b>{{ object.name }}</b></a></span>
+        <span *ngIf="verb==6003">the project: <a [routerLink]="['/projects/',object._id]"><b>{{ object.name }}</b></a></span>
+        <span *ngIf="verb==6004">the position: <a [routerLink]="['/positions/',object._id]"><b>{{ titlesSelect[object.title]}}</b></a></span>
+        <span *ngIf="verb==6020"><a [routerLink]="['/people/',object._id]"><b>{{ object.name }}</b></a></span>
+        <span *ngIf="verb!=6020 && target && target.group && sourceType<3"><br><group-link class="py-0 my-0"[groupIndex]=target></group-link></span>
+      </ng-container>
+
+      <span *ngIf="verb==6001">Library paper: <a [routerLink]="['/publications/',object._id]"><b>{{ object.name }}</b></a>.</span>
+      <!-- (<i>{{text}} folder</i>) -->
+    </span>
+
+    <!-- News -->
+    <span *ngIf="verb==20000 && (text || pic) && actor">
+      <a [routerLink]="['/people/',actor._id]" class="card-title"><b>{{ actor.name }}</b></a>
+      <span *ngIf="text"><br><span style='white-space:pre-wrap;' [innerHTML]="text | safeHtml"></span></span>
+      <span *ngIf="pic" class="d-flex justify-content-center"><img class="mt-2 mb-0 img-fluid" style="max-height: calc(100vh - 350px);" [src]=pic></span>
+    </span>
+
+    <!-- Creator -->
+    <p *ngIf="verb!=1000 && verb!=1001 && verb!=1050 && verbDigits[0]==1 && actor && sourceType!=4" class="mt-2 mb-0 d-flex flex-wrap card-title">
+      <span class="d-flex align-items-center">
+        <single-pic class="d-flex mr-1" [pic]=actor.pic [type]=0 [stackPic]="'user-circle-o'" [width]=24 [height]=24 [widthE]=1.5></single-pic>
+        <a [routerLink]="['/people',actor._id]" class="small">{{ actor.name }}</a>
+      </span>
+    </p>
+
+    <!-- Publication Authors -->
+    <p *ngIf="verb==1001 && object.authors && object.authors[0]" class="mt-2 mb-0 d-flex flex-wrap card-title">
+      <publication-authors [authors]=object.authors [userId]=userId></publication-authors>
+    </p>
+
+    <!-- Project / Resource / Media Members -->
+    <p *ngIf="(verb==1002 || verb==1003 || verb==1011 || verb==1012 || verb==1013) && members!=null" class="mt-2 mb-0 d-flex flex-wrap card-title">
+      <span class="text-muted mr-1">Members:</span><br>
+      <span *ngFor="let member of members; let l=last" class="d-flex align-items-center mb-2">
+        <single-pic class="d-flex mr-1" [pic]=member.pic [type]=0 [width]=24 [height]=24 [widthE]=1.5 [stackPic]="'user-circle-o'"></single-pic>
+        <a [routerLink]="['/people',member._id]" class="small">{{ member.name }}</a>
+        <span *ngIf="!l" class="mx-1">&middot;</span>
+      </span>
+    </p>
+
+    <!-- Text -->
+    <p *ngIf="verb==1001 && text" class="mt-2 mb-0 card-title">
+      <span class="text-muted mr-1">Abstract:</span>
+      <span *ngIf="text && text.length<=200" style='white-space:pre-wrap;' [innerHTML]="text | safeHtml"></span>
+
+      <span *ngIf="!toggleAbstractFlag && text && text.length>200" [innerHTML]="text | slice:0:250 | safeHtml"></span>
+      <span *ngIf="!toggleAbstractFlag && text && text.length>200">
+        ... <i (click)="toggleAbstract()" class="ml-2 fa fa-plus-square-o" aria-hidden="true"></i>
+      </span>
+
+      <span *ngIf="toggleAbstractFlag && text && text.length>200" [innerHTML]="text | safeHtml"></span>
+      <span *ngIf="toggleAbstractFlag && text && text.length>200">
+        <i (click)="toggleAbstract()" class="ml-2 fa fa-minus-square-o" aria-hidden="true"></i>
+      </span>
+      <!-- <span class="">{{text}}</span> -->
+    </p>
+
+    <p *ngIf="verb==1002 && text" class="mt-2 mb-0">
+      <span *ngFor="let tag of text" class="mr-2">
+        <span class="badge badge-light-blue">{{ tag }}</span>
+      </span>
+    </p>
+
+    <p *ngIf="(verb==1002 || verb==1003 || verb==1004 || verb==1006 || verb==1008) && text" class="mt-2 mb-0 card-title">
+      <!-- <span build-text-pic [text]=text [textMax]=200></span> -->
+      <!-- {{text}} -->
+      <span style='white-space:pre-wrap;' [innerHTML]="text | safeHtml"></span>
+      <button *ngIf="verb==1004" class="mt-2 btn btn-sm btn-outline-info" [routerLink]="['/',object.university.link,object.department.link,object.group.link, 'projects', 'collaborations']">See collaboration</button>
+    </p>
+
+    <p *ngIf="verb==1005 && (text || link)" class="mt-2 mb-0">
+      <span *ngIf="link"><span class="text-muted">Details:</span> {{link}}<br></span>
+      <!-- {{text}} -->
+      <!-- <span build-text-pic [text]=text [textMax]=200></span> -->
+      <span style='white-space:pre-wrap;' [innerHTML]="text | safeHtml"></span>
+    </p>
+
+    <p *ngIf="(verb==1011 || verb==1012 || verb==1013) && text" class="mt-2 mb-0 card-title">
+      <span *ngIf="verb==1011 || verb==1012" class="text-muted mr-1">Abstract:</span>
+      <span class="">{{text}}</span>
+    </p>
+
+    <p *ngIf="verb==1010 && link" class="mt-2 mb-0 card-title">
+      <span class="text-muted">Answer:</span>
+      <span style='white-space:pre-wrap;' [innerHTML]="link | safeHtml"></span>
+    </p>
+
+    <!-- LINK -->
+    <div *ngIf="verb==1012" class="mt-2">
+      <button *ngIf="link" role="button" class="px-0 btn btn-link" (click)="pdfSlide(object.name,link)">View Poster
+        <!-- <pdf-viewer [src]="link" [original-size]="true" [fit-to-page]="true" [page]="1" [render-text]="false" style="display: block;"></pdf-viewer> -->
+      </button>
+      <button *ngIf="pic" role="button" class="px-0 btn btn-link" (click)="pdfSlide(object.name,pic)">View Poster
+        <!-- <pdf-viewer [src]="pic" [original-size]="true" [fit-to-page]="true" [page]="1" [render-text]="false" style="display: block;"></pdf-viewer> -->
+      </button>
+    </div>
+
+    <div *ngIf="verb==1011 && (link || pic)" class="mt-2 mr-1">
+      <div *ngIf="link" class="embed-responsive embed-responsive-16by9"><iframe width="100%" height="300" [src]="link | safe"></iframe></div>
+      <div *ngIf="pic" class="embed-responsive embed-responsive-16by9"><iframe width="100%" height="300" [src]="pic | safe"></iframe></div>
+    </div>
+
+    <p *ngIf="verb==1013 && link" class="mt-1"><a class="card-title" [href]=link target="_empty">{{link}}</a></p>
+    <p *ngIf="verb==1013 && pic" class="mt-1"><a class="card-title" [href]=pic target="_empty">{{pic}}</a></p>
+
+  </div>
+
+  <!-- <p>object {{object.pic}}</p> -->
+  <!-- <p>actor {{actor.pic}}</p> -->
+
+  <ng-container *ngIf="sourceType!=7 && (verbDigits[0]==1 || verbDigits[0]==5 || verb==20000)"> <!-- *ngIf="actor._id!=userId" -->
+    <hr>
+    <div *ngIf="sourceType!=7 && (verbDigits[0]==1 || verbDigits[0]==5 || verb==20000)" class="d-flex bd-highlight"> <!-- *ngIf="actor._id!=userId" -->
+
+      <span class="d-flex align-items-center mr-3">
+        <button type="button" class="btn btn-link btn-sm pl-0 pr-2" (click)="buttonCommentFunc($event)">
+          <i style="color: #525252;" class="fa fa-2x fa-comment-o" aria-hidden="true"></i>
+        </button> {{commentsCount}}
+      </span>
+
+      <span *ngIf="actor" class="d-flex align-items-center">
+        <button *ngIf="actor._id!=userId" class="btn btn-link btn-sm pl-0 pr-2" (click)="buttonClapsFunc()">
+          <i *ngIf="clapDone" style="color: #525252;" class="fa fa-2x fa-sign-language" aria-hidden="true"></i>
+          <i *ngIf="!clapDone" style="color:green" class="fa fa-2x fa-sign-language" aria-hidden="true" [@itemsAnimation]="('active')" (@itemsAnimation.done)="clapDoneFunc($event)"></i>
+        </button>
+        <i *ngIf="actor._id==userId" style="color: #525252;" class="fa fa-2x fa-sign-language mr-2" aria-hidden="true"></i>
+        {{claps}} <div class="d-none d-md-block ml-1">Claps</div>
+        <!-- {{clapsMe}} -->
+        <!-- <span *ngIf="claps>0" class="text-muted"><br>
+          <span *ngIf="clapsMe>0 && claps-clapsMe==0">All claps from you</span>
+          <span *ngIf="clapsMe>0 && claps-clapsMe>0">Claps from you and others</span>
+          <span *ngIf="clapsMe==0">Claps from {{clapsIds.length}} others</span>
+          <span *ngIf="clapsMe==0">Claps from others</span>
+        </span> -->
+        <!-- <span *ngIf="clapsMe>0 && claps-clapsMe>0">Claps from you and {{clapsIds.length-1}} others</span> -->
+      </span>
+
+      <div class="ml-auto d-flex align-items-center">
+
+        <span *ngIf="verb==20000 && (text || pic) && (actor && actor._id==userId)" [matTooltipPosition]="'below'" matTooltip="Edit news">
+          <button type="button" class="btn btn-link btn-sm" (click)="buttonEditNewsFunc()">
+            <i style="color: #525252;" class="fa fa-pencil fa-2x" aria-hidden="true"></i>
+          </button>
+        </span>
+
+        <span *ngIf="verb==20000 && (text || pic) && (actor && actor._id==userId)" [matTooltipPosition]="'below'" matTooltip="Delete news">
+          <button type="button" class="btn btn-link btn-sm" (click)="buttonDeleteNewsFunc()">
+            <i style="color: #525252;" class="fa fa-trash fa-2x" aria-hidden="true"></i>
+          </button>
+        </span>
+
+        <span *ngIf="verb==1000" [matTooltipPosition]="'below'" [matTooltip]="compareStatus ? 'Uncompare' : 'Compare'">
+          <button type="button" class="btn btn-link btn-sm" (click)="buttonCompareFunc()">
+            <i class="fa fa-2x fa-clone" aria-hidden="true" [ngClass]="{'text-success': compareStatus, 'text-muted': !compareStatus}"></i>
+          </button>
+        </span>
+
+        <span [matTooltipPosition]="'below'" [matTooltip]="(followStatus ? 'Unfollow ' : 'Follow ') + ((verb==1000) ? 'Group' : (verb==1001) ? 'Publication' : (verb==1002) ? 'Resource' : (verb==1003) ? 'Project' : (verb==1005) ? 'Position' : 'User') + '.'">
+          <button *ngIf="verb==1000 || (actor && actor._id!=userId)" type="button" class="btn btn-link btn-sm" (click)="buttonFollowFunc()">
+            <i style="color: #525252;" class="fa fa-2x" aria-hidden="true" [ngClass]="{'fa-bookmark': followStatus, 'fa-bookmark-o' : !followStatus}"></i>
+          </button>
+        </span>
+
+        <button type="button" class="btn btn-link btn-sm" (click)="buttonShareFunc($event)">
+          <i style="color: #525252;" class="fa fa-2x fa-share" aria-hidden="true"></i>
+        </button>
+
+        <!-- <button *ngIf="userId && actor._id!=userId" role="button" id="dropdownExtraButton" class="btn btn-link btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i style="color: #525252;" class="fa fa-2x fa-ellipsis-v" aria-hidden="true"></i>
+        </button> -->
+        <!-- <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownButtons" style="cursor:pointer;">
+          <a *ngIf="verbDigits[0]==1 || verb==20000" style="color: #525252;" class="dropdown-item small pl-2" (click)="buttonUnClapFunc()">
+            <span *ngIf="own.claps.length==5">Undo your last 5 claps</span>
+            <span *ngIf="own.claps.length<5">Undo your latest claps</span>
+            // Undo your latest clap
+          </a>
+          <div class="dropdown-divider"></div>
+          <a style="color: #525252;" class="dropdown-item small pl-2">
+            Share in Academig
+          </a>
+        </div> -->
+
+      </div>
+    </div>
+
+    <hr *ngIf="sourceType!=7 && newCommentFlag">
+
+    <div *ngIf="sourceType!=7 && newCommentFlag" class="d-flex justify-content-start align-items-center" aria-label="new comment">
+      <single-pic [pic]=userPic [width]=32 [height]=32 [type]=0></single-pic>
+      <input class="ml-2 form-control" type="text" id="comment" placeholder="Write a comment..." (keydown.enter)="newComment()" [disabled]=channelBlock [(ngModel)]="comment">
+
+      <!-- <input type="hidden" id="file"
+             name="file"
+             data-images-only
+             data-preview-step
+             data-system-dialog
+             data-crop="free, 16:9, 4:3, 5:4, 1:1"> -->
+    </div>
+  </ng-container>
+
+  <!-- <div *ngIf="((verbDigits[0]==1 && verb!=1050) || verbDigits[0]==5 || verb==20000) && comments && comments.length==0 && numComments>0" class="card-footer">
+    <button class="btn btn-link" (click)="showComments()">Load {{reactionsCounts.comment}} comments...</button>
+  </div> -->
+
+  <div *ngIf="sourceType!=7 && comments && comments.length>0" class="mt-3 mb-0 pb-0">
+    <hr>
+    <ul class="list-unstyled">
+      <li *ngFor="let comment of comments.slice().reverse(); let i=index; let l=last"
+          [ngClass]="{'mb-2': !l}"
+          comment-item
+          [news]=comment
+          [commentors]=commentors
+          [user]=user
+          [userId]=userId
+          (buttonEditClick)="editComment(i)"
+          (buttonDeleteClick)="deleteComment(i)"
+          (animationDoneEvent)="animationDone()">
+      </li>
+      <!-- [stream]=streamComments[i] -->
+    </ul>
+  </div>
+
+</div>
+
+<div *ngIf="object && 0 && !(verb[0]==5 && (!actor || !object.group)) && !(verbDigits[0]==6 && verbDigits[1]==1 && (!object.group || !target.group))">
+
+</div>

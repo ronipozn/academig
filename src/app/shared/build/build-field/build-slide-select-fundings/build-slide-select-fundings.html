@@ -1,0 +1,48 @@
+<div [formGroup]=parentGroup>
+
+  <div *ngIf="!labelHide" class="mb-0 mt-0" [ngClass]="{'mt-3': !itemFirst, 'pl-0 form-control-sm': itemSmall}">
+    <b>{{title}}:</b>
+  </div>
+
+  <div *ngIf="!streamRetrieved">
+    <i class="fa fa-circle-o-notch fa-spin fa-2x" style="color: gray"></i>
+  </div>
+
+  <div *ngIf="streamRetrieved">
+
+    <div *ngIf="fundings[0]!=null" class="d-flex flex-row flex-wrap" [formArrayName]=controlName>
+      <div *ngFor="let funding of fundings; let i=index; let f=first; let l=last">
+        <!-- <div class="py-2" [ngClass]="{'pr-2': f, 'pl-2': l, 'px-2': !(f || l)}" > -->
+        <div on-mouseover="picHoverFunc(i)" on-mouseout="picHoverFunc(-1)" class="py-2">
+          <div class="mb-0 pb-0 px-0 form-check">
+            <!-- <label class="form-check-label px-0" [ngClass]="{'mr-2': f, 'ml-2': l, 'mx-2': !(f || l)}"> -->
+            <label class="form-check-label" [ngClass]="{'mr-3': f, 'ml-1': l, 'mr-2': !(f || l)}">
+
+              <input class="mx-0 px-0 form-check-input invisible" type="checkbox" [formControlName]="i">
+
+              <single-pic [pic]=funding.pic
+                          [selectFlag]="parentGroup.get(controlName).value[i]"
+                          [width]=29
+                          [height]=29
+                          [widthE]=1
+                          [heightE]=1
+                          [type]=1
+                          [stack]=true
+                          [stackPic]="'money'">
+              </single-pic>
+
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="fundings[0]==null">
+      <span class="text-muted small">No Fundings</span>
+    </div>
+
+    <span class="small text-muted">{{picHover}}&nbsp;</span>
+
+  </div>
+
+</div>

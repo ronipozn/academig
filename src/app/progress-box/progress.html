@@ -1,0 +1,165 @@
+<div style="background-color: #E9E5DF">
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-xl-12">
+
+      <div class="d-flex mt-3 mb-3">
+        <div class="mr-auto">
+          <b>Rony, complete these steps to get the most out of Academig:</b>
+        </div>
+        <div><span class="material-icons">close</span></div>
+      </div>
+
+      <!-- <div class="col-12 mb-3">
+        <div class="progress mb-0" style="height:15px;">
+          <div class="progress-bar bg-success" role="progressbar" style="height:15px;" [style.width]="profileScore+'%'" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="text-muted small">
+          {{profileScore}}% complete
+        </div>
+      </div> -->
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card card-product mt-0">
+            <div class="card-body">
+              <h4 class="card-title">
+                <img src="./assets/img/progress/university.svg" style="max-height: 5rem;" class="mx-auto d-block img-fluid" alt="academig_welcome">
+                <a href="#pablo">Add your research interests</a>
+              </h4>
+              <div class="card-description">
+                When did you start your Post Doc at Peskin Lab. Add it now.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card card-product mt-0">
+            <div class="card-body">
+              <h4 class="card-title">
+                <img src="./assets/img/progress/profile_picture.svg" style="max-height: 5rem;" class="mx-auto d-block img-fluid" alt="academig_welcome">
+                <a href="#pablo">Update your profile picture</a>
+              </h4>
+              <div class="card-description">
+                Profiles with pictures get twice the visibility. Add your own.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card card-product mt-0">
+            <div class="card-body">
+              <h4 class="card-title">
+                <img src="./assets/img/progress/job_alert.svg" style="max-height: 5rem;" class="mx-auto d-block img-fluid" alt="academig_welcome">
+                <a href="#pablo">Academic Job Alerts</a><br>
+              </h4>
+              <div class="card-description">
+                Over 20 million job posting available.<br>Don't miss out.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div *ngIf="0 && source==0" class="card mt-0">
+
+        <div class="card-header">Improve your profile</div>
+
+        <div class="card-body">
+
+          <div class="col-12 mb-2">
+            <div class="progress mr-2 mb-0" style="height:15px;">
+              <div class="progress-bar bg-success" role="progressbar" style="height:15px;" [style.width]="profileScore+'%'" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="text-muted small">
+              {{profileScore}}% complete
+            </div>
+          </div>
+
+          <div class="media my-3">
+            <span class="d-flex fa-stack mr-1">
+              <i class="fa fa-circle fa-stack-2x" style="color:#5bc0de;"></i>
+              <i *ngIf="taskLeft>0" class="fa fa-{{taskIcon[taskNum]}} fa-stack-1x fa-inverse"></i>
+              <i *ngIf="taskLeft==0" class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+            </span>
+            <div class="media-body align-self-center mt-1">
+              <h5 *ngIf="taskLeft>0" class="mb-0 small" [ngSwitch]="taskNum">
+                <span *ngSwitchCase="0"> Update your <a [routerLink]="['./people',peopleId]"><b>profile picture</b></a></span>
+                <span *ngSwitchCase="1"> Add your <a [routerLink]="['./people',peopleId]"><b>research interests</b></a></span>
+                <span *ngSwitchCase="2"> Add your <a [routerLink]="['./people',peopleId]"><b>About Me</b></a></span>
+                <span *ngSwitchCase="3"> Add your <a [routerLink]="['./people',peopleId]"><b>positions and education</b></a></span>
+                <span *ngSwitchCase="4"> Update your <a [routerLink]="['./people',peopleId]"><b>cover picture</b></a></span>
+                <!-- 5 -->
+                <span *ngSwitchCase="6"> Add your <a [routerLink]="['./people',peopleId,'publications']"><b>publications</b></a></span>
+                <span *ngSwitchCase="7"> Add your first <a [routerLink]="['./people',peopleId,'news']"><b>news</b></a> </span>
+                <span *ngSwitchCase="8"> Add your first <a [routerLink]="['./people',peopleId,'services']"><b>service</b></a> </span>
+                <span *ngSwitchCase="9"> Add your first <a [routerLink]="['./people',peopleId,'projects']"><b>project</b></a></span>
+                <span *ngSwitchCase="10"> Add your first <a [routerLink]="['./people',peopleId,'funding']"><b>funding</b></a></span>
+                <span *ngSwitchCase="11"> Add your first <a [routerLink]="['./people',peopleId,'teaching']"><b>teaching</b></a></span>
+                <span *ngSwitchCase="12"> Add your first <a [routerLink]="['./people',peopleId,'gallery']"><b>gallery</b></a></span>
+                <span *ngSwitchCase="13"> Add your first <a [routerLink]="['./people',peopleId,'media']"><b>talk</b></a></span>
+                <span *ngSwitchCase="14"> Add your first <a [routerLink]="['./people',peopleId,'media']"><b>poster</b></a></span>
+                <span *ngSwitchCase="15"> Add your first <a [routerLink]="['./people',peopleId,'media']"><b>press</b></a></span>
+                and go up to {{profileScore+taskScore[taskNum]}}%.
+              </h5>
+              <h5 *ngIf="taskLeft==0" class="mb-0 small">No more suggestions for now.</h5>
+            </div>
+          </div>
+          <button *ngIf="taskLeft>1" class="btn btn-sm btn-link small mx-0 px-0" (click)="changeTask()">See other suggestions</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<div *ngIf="source==1" class="row">
+
+  <div class="col-12 mb-2">
+    <div class="progress mr-2 mb-0">
+      <div class="progress-bar bg-success" role="progressbar" [style.width]="profileScore+'%'" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <div class="text-muted small">
+      {{profileScore}}% complete
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="row align-items-center">
+      <div class="col-1 mr-1">
+        <span class="fa-stack">
+          <i class="fa fa-circle fa-stack-2x" style="color:#5bc0de;"></i>
+          <i *ngIf="taskLeft>0" class="fa fa-{{taskIcon[taskNum]}} fa-stack-1x fa-inverse"></i>
+          <i *ngIf="taskLeft==0" class="fa fa-trophy fa-stack-1x fa-inverse"></i>
+        </span>
+      </div>
+      <div class="col">
+        <h5 *ngIf="taskLeft>0" class="mb-0 small" [ngSwitch]="taskNum">
+          <span *ngSwitchCase="0"> Update your <a [routerLink]="['.']"><b>Profile Picture</b></a></span>
+          <span *ngSwitchCase="1"> Add your <a [routerLink]="['.']"><b>Research Interests</b></a></span>
+          <span *ngSwitchCase="2"> Add your <a [routerLink]="['.']"><b>About Me</b></a></span>
+          <span *ngSwitchCase="3"> Add your <a [routerLink]="['.']"><b>Positions and Degrees</b></a></span>
+          <span *ngSwitchCase="4"> Update your <a [routerLink]="['.']"><b>Cover Picture</b></a></span>
+          <!-- 5 -->
+          <span *ngSwitchCase="6"> Add your <a [routerLink]="['publications']"><b>Publications</b></a></span>
+          <span *ngSwitchCase="7"> Add your first <a [routerLink]="['news']"><b>News</b></a> </span>
+          <span *ngSwitchCase="8"> Add your first <a [routerLink]="['services']"><b>Resource</b></a> </span>
+          <span *ngSwitchCase="9"> Add your first <a [routerLink]="['projects']"><b>Project</b></a></span>
+          <span *ngSwitchCase="10"> Add your first <a [routerLink]="['funding']"><b>Funding</b></a></span>
+          <span *ngSwitchCase="11"> Add your first <a [routerLink]="['teaching']"><b>Teaching</b></a></span>
+          <span *ngSwitchCase="12"> Add your first <a [routerLink]="['gallery']"><b>Gallery</b></a></span>
+          <span *ngSwitchCase="13"> Add your first <a [routerLink]="['media']"><b>Talk</b></a></span>
+          <span *ngSwitchCase="14"> Add your first <a [routerLink]="['media']"><b>Poster</b></a></span>
+          <span *ngSwitchCase="15"> Add your first <a [routerLink]="['media']"><b>Press</b></a></span>
+          and go up to {{profileScore+taskScore[taskNum]}}%.
+        </h5>
+        <h5 *ngIf="taskLeft==0" class="mb-0 small">No more suggestions for now.</h5>
+      </div>
+    </div>
+    <button *ngIf="taskLeft>1" class="btn btn-sm btn-link small mx-0 px-0" (click)="changeTask()">See other suggestions</button>
+  </div>
+</div>

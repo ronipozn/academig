@@ -1,0 +1,209 @@
+<!-- <h2 *ngIf="streamRetrieved && && missionService.countryId" class="mt-0 pt-0">
+  <span *ngIf="missionService.positionId">{{missionService.positionId}} in</span>
+  {{missionService.countryId}}<span *ngIf="missionService.stateId">, {{missionService.stateId}}</span><span *ngIf="missionService.cityId">, {{missionService.cityId}}</span>
+</h2> -->
+
+<!-- <button mat-raised-button class="p-0 mt-1 ml-4 btn btn-link" style="transform: scale(1.2); cursor:pointer;" (click)="previewStatusesGlobal=!previewStatusesGlobal">
+  <i class="fa fa-folder-open-o" aria-hidden="true"></i> Full details {{previewStatusesGlobal ? 'x' : '>'}}
+</button> -->
+
+<!-- <img [height]="20" [src]="'./assets/img/algolia.png'"> -->
+
+<!-- <div *ngIf="streamRetrieved && hits.length>0 && mapFlag" class="card mt-0">
+  <app-geo-search></app-geo-search>
+  <button class="btn btn-link btn-sm pl-0 pt-2" (click)="mapFlag=!mapFlag">Hide map</button>
+</div> -->
+
+<!-- <app-search-box [query]="'search_input'" (onQuerySuggestionClick)="setQuery($event)"></app-search-box> -->
+<!-- public searchParameters = { query: "" }; -->
+<!-- public setQuery({ query }: { query: string }) { this.searchParameters.query = query; } -->
+
+<div class="ais-InstantSearch">
+  <ais-instantsearch [config]="config_search">
+
+    <div style="background-image: linear-gradient(#283E73, #74B1CC);">
+      <div class="py-2 px-3 text-white" [ngClass]="{'container-fluid': !isMobile}">
+        <div class="mt-2">
+          <div class="row align-items-center">
+            <div class="col-auto mr-auto">
+              <h3 class="d-none d-sm-block mt-0">
+                <div class="d-flex align-items-center">
+                <span *ngIf="sourceType<3"><i class="material-icons mr-2">{{sourceIconName}}</i> {{capitalizeOp(searchTypeName)}}</span>
+                <span *ngIf="sourceType>=3"><i class="material-icons mr-2">{{sourceIconName}}</i> Academic {{capitalizeOp(searchTypeName)}}</span>
+                </div>
+              </h3>
+              <h3 class="d-block d-sm-none mt-0">
+                {{capitalizeOp(searchTypeName)}}
+              </h3>
+            </div>
+            <div class="col-auto">
+              <button *ngIf="sourceType==1 || sourceType==2" type="button" mat-raised-button class="btn btn-sm btn-success mt-0" [routerLink]="['/build-lab']">
+                Contribute {{(sourceType==1) ? 'Lab' : 'Company'}} Data
+              </button>
+              <!-- <button *ngIf="!userService.userId && sourceType==3" type="button" mat-raised-button class="btn btn-sm btn-success mt-0" [routerLink]="'submit'">
+                Add Your Researcher Data
+              </button> -->
+              <button *ngIf="sourceType>=4 && sourceType<=7" type="button" mat-raised-button class="btn btn-sm btn-success mt-0" [routerLink]="['/',searchTypeName,'submit']">
+                Submit your {{searchTypeName.slice(0, -1)}}
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- FIX: (onQuerySuggestionClick)="setQuery($event)" -->
+        <app-search-box [sourceType]=sourceType [query]="'search_input'"></app-search-box>
+        <!-- <img [height]="20" [src]="'./assets/img/algolia.png'"> -->
+        <!-- <button mat-raised-button class="p-0 mt-1 ml-4 btn btn-link" style="transform: scale(1.2); cursor:pointer;" (click)="previewStatusesGlobal=!previewStatusesGlobal">
+          <i class="fa fa-folder-open-o" aria-hidden="true"></i> Full details {{previewStatusesGlobal ? 'x' : '>'}}
+        </button> -->
+      </div>
+    </div>
+
+    <app-loading-indicator></app-loading-indicator>
+
+    <div *ngIf="userService.userId==null || userService.planNumber==0" class="d-flex justify-content-center">
+      <google-feed-adsense></google-feed-adsense>
+    </div>
+
+    <div class="container-fluid" style="margin-bottom: 40px;">
+
+      <!-- <ng-container *ngIf="sourceType==7">
+        <h3 class="my-2"><b>Academic Apps Highlights</b></h3>
+        <highlights></highlights>
+        <h3 class="my-2"><b>Academic Apps Collections</b></h3>
+        <div class="row">
+          <div *ngFor="let collection of collections; let i=index" class="col-6">
+            <div class="card mt-0 bg-dark text-white"
+                 [ngClass]="{'collection0': i==0, 'collection1': i==1, 'collection2': i==2, 'collection3': i==3}"
+                 style="height: 8rem;">
+              <div class="card-img-overlay">
+                <h3 class="card-title"><b>{{collection.title}}</b></h3>
+                <p class="card-text lead"><b>{{collection.description}}</b></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container> -->
+      <!-- collection.link -->
+
+      <div class="row mt-2">
+        <div [hidden]="expandTableFlag" class="col-12 col-lg-3 mb-3">
+          <div class="d-flex align-items-center mb-2">
+            <h3 class="mr-auto my-0"><b>Filters</b></h3>
+            <div>
+              <button class="btn btn-sm btn-link text-dark" style="transform: scale(1.2); cursor:pointer;" (click)="expandFiltersFlag=!expandFiltersFlag">
+                <i class="material-icons">{{expandFiltersFlag ? 'expand_less' : 'expand_more'}}</i> {{expandFiltersFlag ? 'Close All' : 'Expand All'}}
+              </button>
+              <!-- <app-refinement-clear></app-refinement-clear> -->
+            </div>
+          </div>
+          <search-filters [userId]=userService.userId
+                          [isMobile]=isMobile
+                          [expandFlag]=expandFiltersFlag
+                          [adminFlag]=adminFlag
+                          [sourceType]=sourceType
+                          [planNumber]=userService.planNumber
+                          (upgradeMode)="upgradeModeOp($event)">
+          </search-filters>
+        </div>
+        <div class="mb-3" [ngClass]="{'col-lg-12': expandTableFlag, 'col-lg-9': !expandTableFlag}">
+
+          <div class="mb-2"><app-refinement-clear></app-refinement-clear></div>
+          <current-refinements [sourceType]=sourceType></current-refinements>
+          <app-finetune-list [att]="'interests'"></app-finetune-list>
+
+          <button *ngIf="!missionService.isLoading" mat-mini-fab color="light" class="d-none d-lg-block" style="position: absolute; margin-left: -1.5em; margin-top: 1.5rem; z-index: 100;" (click)="expandTableFlag=!expandTableFlag">
+            <i [ngClass]="{'fa-expand': !expandTableFlag, 'fa-compress': expandTableFlag}" class="fa fa-rotate-270" aria-hidden="true"></i>
+          </button>
+          <search-table [isMobile]=isMobile
+                        [searchTypeName]="capitalizeOp(searchTypeName)"
+                        [sourceType]=sourceType
+                        (upgradeMode)="upgradeModeOp($event)">
+          </search-table>
+
+        </div>
+      </div>
+
+    </div>
+
+  </ais-instantsearch>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Upgrade Modal - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleUpgradeModal" #toggleUpgradeModal [hidden]="true" data-toggle="modal" data-target="#UpgradeModal"></button>
+
+<div class="modal fade" id="UpgradeModal" tabindex="-1" role="dialog" aria-labelledby="UpgradeModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="ModalUpgrade"><b>{{upgradeTitle[upgradeMode]}}</b></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img *ngIf="upgradeMode!=null" [src]="'./assets/img/upgrade/' + upgradePics[upgradeMode] + '.svg'" class="d-flex mx-auto img-fluid pb-4" style="width: 10rem;" alt="academig_pro">
+        <p *ngIf="upgradeMode==0" class="text-center"><b>Oops! You can only set a maximum of 3 search filters.</b></p>
+        <p *ngIf="userService.userId && upgradeMode==1" class="text-center"><b>Oops! You can only follow maximum of 5 research labs.</b></p>
+        <p *ngIf="userService.userId && upgradeMode==2" class="text-center"><b>Oops! You can only save 1 search.</b></p>
+        <p *ngIf="upgradeMode==4" class="text-center"><b>Oops! You can only get statistics of up to 5 research labs.</b></p>
+        <p *ngIf="upgradeMode==5" class="text-center"><b>Oops! You can only view the first 2 pages.</b></p>
+
+        <!-- Search Filters -->
+        <ul *ngIf="upgradeMode==0">
+          <li>Build advanced searches and dig deeper with Academig Pro.</li>
+          <li>Access all premium features to discover and track new opportunities.</li>
+          <li>Sign up now for just $7 per month!</li>
+        </ul>
+
+        <!-- Following (personalized alerts) -->
+        <ul *ngIf="upgradeMode==1">
+          <li>Get email alerts when the lab profiles in your following list have new activity.</li>
+          <li>Unlock all Academig Pro features.</li>
+          <li>Sign up now for just $7 per month!</li>
+        </ul>
+
+        <!-- Save Search -->
+        <ul *ngIf="upgradeMode==2">
+          <li>Get alerts when new lab profiles match your search criteria.</li>
+          <li>Unlock all the features of Academig Pro.</li>
+          <li>Sign up now for just $7 per month!</li>
+        </ul>
+
+        <!-- Statistics -->
+        <ul *ngIf="upgradeMode==4">
+          <li>Compare data columns and see averages, totals, and more.</li>
+          <li>Expand your search results and dig deeper.</li>
+          <li>Start your free Academig Pro trial today!</li>
+        </ul>
+
+        <!-- Pagination -->
+        <ul *ngIf="upgradeMode==5">
+          <li>Build advanced searches and dig deeper with Academig Pro.</li>
+          <li>Access all premium features to discover and track new opportunities.</li>
+          <li>Sign up now for just $7 per month!</li>
+        </ul>
+
+        <hr class="py-0">
+        <div class="modal-footer justify-content-center py-0 my-0">
+          <button *ngIf="userService.userId==null" mat-raised-button type="button" class="btn btn-light-blue btn-round" data-dismiss="modal" (click)="signUpFunc()">Sign Up</button>
+          <button *ngIf="userService.userId" mat-raised-button type="button" class="btn btn-light-blue btn-round" data-dismiss="modal" (click)="planUpdate()">Start 7 Days Free Trial</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]="'follow'" [itemText]="'lab'"></modal-signup>
+    </div>
+  </div>
+</div>

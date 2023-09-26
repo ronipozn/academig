@@ -1,0 +1,38 @@
+<div class="d-flex" [ngClass]="{'flex-row' : userId!=message.userId, 'flex-row-reverse mr-2' : userId==message.userId}">
+
+  <single-pic class="mt-1" [pic]="(userId==message.userId) ? userPic : withPic" [width]=32 [height]=32 [type]=0> </single-pic>
+
+  <div on-mouseover='buttonOver(true)' on-mouseleave='buttonOver(false)' class="d-flex flex-row-reverse p-0">
+
+    <div class="alert py-1" [ngClass]="{'alert-gray ml-2' : userId!=message.userId, 'alert-green mr-2' : userId==message.userId}" role="alert">
+      <p *ngIf="message.type==0" class="mb-0">{{ message.text }}</p>
+      <p *ngIf="message.type==10" class="mb-0"><i>Message deleted</i></p>
+
+      <img *ngIf="message.file" class="mx-auto d-block my-2 mx-0 rounded" height="83" [src]=message.file (click)="picClick(message.file)" style="cursor:pointer;">
+
+      <span class="small text-muted">{{message.date | momentPipe:'':2}}</span>
+      <!-- <i *ngIf="userId==message.userId" class="ml-1 fa fa-check"></i>
+      <i *ngIf="userId==message.userId" class="fa fa-check text-success" style="margin-left:-2px;"></i> -->
+      <spinner-put *ngIf="messageLastFlag" [stream]=messageSpinner (animationDoneEvent)="animationDone($event)"></spinner-put>
+    </div>
+
+    <img *ngIf="message.file"
+         class="mx-auto d-block mt-2 rounded"
+         src=""
+         imgPreview
+         [image]=file
+         [height]=100
+         (click)="picClick(message.file)"
+         style="cursor:pointer;">
+
+    <!-- <build-buttons *ngIf="stream==0" -->
+    <build-buttons *ngIf="userId==message.userId && message.type!=10"
+                   [ngClass]="{'invisible': !showButton}"
+                   [showButton]=true
+                   [deleteFlag]=true
+                   (buttonDeleteClick)="buttonDeleteFunc($event)">
+    </build-buttons>
+
+  </div>
+
+</div>

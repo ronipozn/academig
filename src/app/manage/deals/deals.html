@@ -1,0 +1,88 @@
+<div *ngIf="!streamRetrieved" class="py-4">
+  <spinner></spinner>
+</div>
+
+<div *ngIf="streamRetrieved && deals.length==0" class="offset-md-1 col-md-10 pt-4 mb-4">
+  <div class="card mt-0">
+    <div class="card-body mt-2">
+      <h4 class="text-dark mb-2"><b>No deals</b></h4>
+      <p>You have not purchased any academic deals yet.</p>
+      <button mat-raised-button class="btn btn-light-blue" [routerLink]="['/search/apps']">
+        <i class="material-icons mr-1">computer</i> Browse Deals
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved && deals.length>0" class="offset-md-1 col-md-10 pt-4 mb-4">
+
+  <h3><b>My Deals</b></h3>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-10">
+          <mat-form-field appearance="outline">
+            <mat-label>Search...</mat-label>
+            <input #input type="text" (keyup)="searchKeyUpOp(input.value)" matInput placeholder="Placeholder">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Deals filter</mat-label>
+            <!-- (valueChange)="updateOp($event)" -->
+            <mat-select [(value)]="statusFilter" name="nav">
+              <mat-option value="-1">All</mat-option>
+              <mat-option *ngFor="let status of buyStatus; let i=index" [value]="i">{{status}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngFor="let deal of dealsFilterd">
+    <ng-container *ngFor="let buy of deal.buys">
+      <div *ngIf="buy.status==statusFilter || statusFilter==-1" class="card">
+        <div class="card-body">
+          <div class="row justify-content-between">
+            <div class="col-md-6">
+              <div class="media">
+                <img [src]="deal.pic" width="50" class="mr-3" [alt]="deal.name">
+                <div class="media-body">
+                  <h4 class="mt-0"><b>{{deal.name}}</b></h4>
+                  <b>Order placed:</b> {{buy.date | date}}<br>
+                  <b>Order ID:</b> #{{buy._id}}<br>
+                  <!-- 028-9479585-3251509 -->
+                  <b>Eligible for refund until:</b> {{moment(buy.date).add(60, 'days') | date}}<br>
+                  <b>Status:</b> {{buyStatus[buy.status]}} {{buy.status}}<br>
+                  <b>Plan:</b> Code based<br>
+                  <!--  {{deal.planType}}<br>  --> <!-- FIX -->
+                  <b>Price:</b> {{deal.price.price_reduced}}$<br>
+                  <a [routerLink]="['/','apps',deal.link,'deal']" class="mt-2 btn btn-light-blue">View your deal</a>
+                </div>
+              </div>
+              <!-- Purchase Codes: 2 -->
+            </div>
+            <div class="col-md-6">
+              <div class="btn-group-vertical pull-right">
+                <button class="btn btn-secondary">Redeem</button>
+                <button class="btn btn-secondary">Refund</button>
+                <button class="btn btn-secondary">View Invoice</button>
+                <button class="btn btn-secondary">Refer a friend</button>
+                <button class="btn btn-secondary">Write a review</button>
+                <button class="btn btn-secondary">Watch webinar replay</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+</div>
+
+<!-- Redeem Page:<br>
+Redeem Your Product REDEEM BY JANUARY, 19 2021, Redemption Code, Redemption URL, Redemption Instructions, Stacking Instructions, Need Help?, Extra Resources<br>
+Refund Instructions REFUND BY JANUARY 19, 2021<br>
+Deal terms -->

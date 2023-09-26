@@ -1,0 +1,368 @@
+<!-- <univeristy-vector-map></univeristy-vector-map> -->
+
+<div style="background-color: white;" class=" pt-2 pb-3">
+  <div class="d-flex align-items-center justify-content-between">
+    <div *ngIf="type==1" class="col-md-12">
+      <h3>Browse Institutes and Research Labs Worldwide</h3>
+      <!-- <a class="card-title" [routerLink]="['/', 'search', 'labs']" [queryParams]="params">Labs in {{item}}</a> -->
+    </div>
+    <div *ngIf="type!=1" class="col-md-12">
+      <h3 *ngIf="mode==4 || mode==3">Universities in {{item}} {{state}} {{city}}</h3>
+      <h3 *ngIf="mode!=4 && mode!=3">Top Universities <span *ngIf="mode>2">in</span> {{item}}</h3>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="type==1" class="container-fluid pb-4" style="min-height:86vh">
+
+  <div class="mt-2">
+    <nav class="breadcrumb small m-0 p-0" style="background-color: #EEEEEE">
+      <a class="breadcrumb-item card-title" [routerLink]="'/'">Home</a>
+      <a class="breadcrumb-item card-title" [routerLink]="['/countries']">Countries</a>
+    </nav>
+  </div>
+
+  <div *ngIf="streamRetrieved && (userService.userId==null || userService.planNumber==0)" class="d-flex justify-content-center">
+    <google-feed-adsense></google-feed-adsense>
+  </div>
+
+  <div class="row align-items-center mt-4">
+    <ng-container *ngFor="let country of countries; let i=index">
+      <div *ngIf="i>0" class="col-6 col-md-4 mb-2">
+        <a class="card-title" [routerLink]="['/','country',country.name | urlize]">{{country.name}}</a>
+         <!-- (3) -->
+      </div>
+    </ng-container>
+  </div>
+
+</div>
+
+<div *ngIf="type==0 || type==2" class="container-fluid pb-4" style="min-height:86vh">
+
+  <!-- <div *ngIf="!streamRetrieved" class="d-flex justify-content-center mt-3">
+    <i class="fa fa-2x fa-spinner fa-spin"></i>
+  </div> -->
+
+  <div *ngIf="!streamRetrieved" class="d-flex justify-content-center mt-4">
+    <div class="spinner-border text-secondary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved" class="mt-2">
+    <nav class="breadcrumb small m-0 p-0" style="background-color: #EEEEEE">
+      <a class="breadcrumb-item card-title" [routerLink]="'/'">Home</a>
+      <a class="breadcrumb-item card-title" [routerLink]="['/','countries']">Countries</a>
+      <a *ngIf="type==0" class="breadcrumb-item card-title" [routerLink]="['/', 'country', item | urlize]">{{item}}</a>
+      <a *ngIf="type==0 && state" class="breadcrumb-item card-title" [routerLink]="['/', 'country', item | urlize, state | urlize]">{{state}}</a>
+      <a *ngIf="type==0 && city" class="breadcrumb-item card-title" [routerLink]="['/', 'country', item | urlize, state ? ((state | urlize)+'/'+(city | urlize)) : 'a/'+(city | urlize)]">{{city}}</a>
+      <span *ngIf="type==2" class="breadcrumb-item card-title">Top</span>
+      <span *ngIf="type==2" class="breadcrumb-item card-title">{{item}}</span>
+    </nav>
+  </div>
+
+  <div *ngIf="streamRetrieved && (userService.userId==null || userService.planNumber==0)" class="d-flex justify-content-center">
+    <google-feed-adsense></google-feed-adsense>
+  </div>
+
+  <div *ngIf="streamRetrieved" class="d-flex align-items-center">
+    <div class="mr-auto">
+      <div class="d-flex align-items-center">
+        <mat-form-field>
+          <mat-label>University search</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Name" #input>
+          <!-- <input [ngModel]="name" [placeholder]="'University search'" (ngModelChange)="updateName($event)" type="text" class="ml-2 form-control" id="InputName"> -->
+        </mat-form-field>
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-sm btn-link" style="transform: scale(1.2); cursor:pointer; color: dark;" (click)="columnsOp()" matTooltip="Manage search results columns" [matTooltipPosition]="'below'">
+        <i class="material-icons">border_inner</i> COLUMNS
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved" class="mat-elevation-z8">
+     <!-- matSortActive="rankTimes" matSortStart="asc" matSortDisableClear -->
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+
+      <ng-container matColumnDef="flag">
+        <th style="width: 6%;" mat-header-cell *matHeaderCellDef mat-sort-header></th>
+        <td style="width: 6%;" mat-cell *matCellDef="let row">
+          <a class="flag mr-1" [routerLink]="['/country', row.country | country | urlize]">
+            <img [src]="'./assets/img/flags/' + (row.country | country | flag) + '.png'" alt="">
+          </a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th style="width: 15%;" mat-header-cell *matHeaderCellDef mat-sort-header> <b>Universities</b> </th>
+        <td style="width: 15%;" mat-cell *matCellDef="let row">
+          <a [routerLink]="['/',row.link]" class="card-title">{{row.name}}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="location">
+        <th style="width: 15%;" [hidden]="!visibleColumns[2]" mat-header-cell *matHeaderCellDef mat-sort-header> <b>Location</b> </th>
+        <td style="width: 15%;" [hidden]="!visibleColumns[2]" mat-cell *matCellDef="let row">
+          <a *ngIf="row.city" [routerLink]="['/country', row.country | country | urlize, (row.state || 'all') | urlize, row.city | urlize]" class="card-title">{{ row.city }}, </a>
+          <a *ngIf="row.state" [routerLink]="['/country', row.country | country | urlize, row.state | urlize]" class="card-title">{{ row.state }}, </a>
+          <a [routerLink]="['/country', row.country | country | urlize]" class="card-title">{{ row.country | country }}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="establish">
+        <th [hidden]="!visibleColumns[3]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>Establish</b></th>
+        <td [hidden]="!visibleColumns[3]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.establish || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="control">
+        <th [hidden]="!visibleColumns[4]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>Control Type</b></th>
+        <td [hidden]="!visibleColumns[4]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.establish || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="entity">
+        <th [hidden]="!visibleColumns[5]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>Entity Type</b></th>
+        <td [hidden]="!visibleColumns[5]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.establish || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rankTimes">
+        <th [hidden]="!visibleColumns[6]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>Times</b></th>
+        <!-- <b>Times Higher<br>Education Ranking</b> -->
+        <td [hidden]="!visibleColumns[6]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.rankTimes || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rankTop">
+        <th [hidden]="!visibleColumns[7]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>TopUniversities</b></th>
+        <!-- <b>TopUniversities<br>Ranking</b> -->
+        <td [hidden]="!visibleColumns[7]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.rankTop || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rankShanghai">
+        <th [hidden]="!visibleColumns[8]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>ARWU</b></th>
+        <!-- ARWU Ranking -->
+        <td [hidden]="!visibleColumns[8]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.rankShanghai || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rankUsNews">
+        <th [hidden]="!visibleColumns[9]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>U.S. News</b></th>
+        <!-- U.S. News & World<br>Report Ranking -->
+        <td [hidden]="!visibleColumns[9]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.rankUsNews || '-'}} </td>
+        <!-- [style.color]="row.color" -->
+      </ng-container>
+
+      <ng-container matColumnDef="rankFacebook">
+        <th [hidden]="!visibleColumns[10]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>Facebook</b></th>
+        <td [hidden]="!visibleColumns[10]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.rankFacebook || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rankTwitter">
+        <th [hidden]="!visibleColumns[11]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>Twitter</b></th>
+        <td [hidden]="!visibleColumns[11]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.rankTwitter || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rankLinkedin">
+        <th [hidden]="!visibleColumns[12]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>Linkedin</b></th>
+        <td [hidden]="!visibleColumns[12]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.rankLinkedin || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rankInstagram">
+        <th [hidden]="!visibleColumns[13]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>Instagram</b></th>
+        <td [hidden]="!visibleColumns[13]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.rankInstagram || '-'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rankYoutube">
+        <th [hidden]="!visibleColumns[14]" style="width: 11%;" mat-header-cell *matHeaderCellDef mat-sort-header><b>Youtube</b></th>
+        <td [hidden]="!visibleColumns[14]" style="width: 11%;" mat-cell *matCellDef="let row"> {{row.rankYoutube || '-'}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[50, 100, 200]"></mat-paginator>
+  </div>
+
+  <!-- <div *ngIf="streamRetrieved" [@itemsAnimation]="('active')">
+    <div class="card-body mt-0">
+      <div class="d-flex align-items-center">
+        <div class="mr-auto lead d-flex align-items-center">
+          Name <input [ngModel]="name" [placeholder]="'University search'" (ngModelChange)="updateName($event)" type="text" class="ml-2 form-control" id="InputName">
+        </div>
+        <div class="pull-left lead mr-4">Rank</div>
+        <i class="material-icons">outlined_flag</i>
+      </div>
+    </div>
+    <div *ngFor="let university of universitiesReg" class="card mt-0 mb-3">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <a [routerLink]="['/',university.link]" class="d-flex justify-content-start card-title">
+            <img *ngIf="university.pic" [src]="university.pic" class="mr-3" [height]="45" [width]="45">
+          </a>
+          <div class="mr-auto"><a [routerLink]="['/',university.link]" class="lead card-title">{{ university.name }}</a></div>
+          <div *ngIf="rank==0 && university.rank && university.rank.times>0" class="lead mt-1 mr-4">{{university.rank.times | rankPipe:0}}</div>
+          <div *ngIf="rank==1 && university.rank && university.rank.shanghai>0" class="lead mt-1 mr-4">{{university.rank.shanghai | rankPipe:1}}</div>
+          <div *ngIf="rank==2 && university.rank && university.rank.top>0" class="lead mt-1 mr-4">{{university.rank.top | rankPipe:2}}</div>
+          <div *ngIf="rank==3 && university.rank && university.rank.usnews>0" class="lead mt-1 mr-4">{{university.rank.usnews | rankPipe:3}}</div>
+          <a class="flag" [routerLink]="['/country', university.country | country | urlize]" [matTooltip]="university.country | country" [matTooltipPosition]="'below'">
+            <img [src]="'./assets/img/flags/' + (university.country | country | flag) + '.png'" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+</div>
+
+<div *ngIf="streamRetrieved && (type==0 && city==null)" class="bg-light py-4">
+  <p *ngIf="cities.length>0" class="font-weight-light topH4 text-center py-4">Cities in {{item}} {{state}}</p>
+  <p *ngIf="states.length>0" class="font-weight-light topH4 text-center py-4">States in {{item}}</p>
+  <div class="container-fluid">
+    <div class="card mt-0">
+      <div class="card-body text-center">
+        <div class="row">
+          <ng-container *ngFor="let city of cities; let i=index;">
+            <div class="col-6 col-md-4 mb-2">
+              <a class="card-title" [routerLink]="[city | urlize]">{{city}}</a>
+            </div>
+          </ng-container>
+          <ng-container *ngFor="let state of states; let i=index;">
+            <div class="col-6 col-md-4 mb-2">
+              <a class="card-title" [routerLink]="[state | urlize]">{{state}}</a>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved" class="bg-light py-4">
+  <p class="font-weight-light topH4 text-center py-4">Top Universities</p>
+
+  <div class="container-fluid">
+
+    <div class="card mt-0">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-2 col-sm-4">
+            <ul class="nav nav-pills nav-pills-info nav-pills-icons flex-column" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#universities_regions" role="tablist">
+                  <i class="material-icons">layers</i> Regions
+                </a>
+              </li>
+              <!-- <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#universities_languages" role="tablist">
+                  <i class="material-icons">language</i> Languages
+                </a>
+              </li> -->
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#universities_social" role="tablist">
+                  <i class="material-icons">thumb_up_alt</i> Social Media
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#universities_countries" role="tablist">
+                  <i class="material-icons">map</i> Countries
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-10 col-sm-8">
+            <span class="d-block d-sm-none"><hr></span>
+            <div class="tab-content">
+              <div class="tab-pane active" id="universities_regions">
+                <h3 class="card-title">Universities by Region</h3>
+                <p class="mt-4"><a class="h5 card-title" [routerLink]="['/top-universities']">Top 200 Universities in the World</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-north-america']">Top 200 Universities in North America</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-south-america']">Top 200 Universities in South America</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-europe']">Top 200 Universities in Europe</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-africa']">Top 200 Universities in Africa</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-asia']">Top 200 Universities in Asia</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-oceania']">Top 200 Universities in Oceania</a></p>
+              </div>
+              <!-- <div class="tab-pane" id="universities_languages">
+                  <h3 class="card-title">Top Universities by Language</h3>
+                  <p><a class="h5" [routerLink]="['/top-english-speaking-universities']">Top English-speaking Universities</a></p>
+                  <p><a class="h5" [routerLink]="['/top-arabic-speaking-universities']">Top Arabic-speaking Universities</a></p>
+                  <p><a class="h5" [routerLink]="['/top-spanish-speaking-universities']">Top Spanish-speaking Universities</a></p>
+              </div> -->
+              <div class="tab-pane" id="universities_social">
+                <h3 class="card-title">Universities by Social Media</h3>
+                <p class="mt-4"><a class="h5 card-title" [routerLink]="['/top-universities-facebook']">Top Universities by Facebook</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-twitter']">Top Universities by Twitter</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-linkedin']">Top Universities by Linkedin</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-instagram']">Top Universities by Instagram</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-youtube']">Top Universities by Youtube</a></p>
+              </div>
+              <div class="tab-pane" id="universities_countries">
+                <h3 class="card-title">Universities by Country</h3>
+                <p class="mt-4"><a class="h5 card-title" [routerLink]="['/top-universities-united-states']">Universities in United States</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-united-kingdom']">Universities in United Kingdom</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-canada']">Universities in Canada</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-australia']">Universities in Australia</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-ireland']">Universities in Ireland</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-germany']">Universities in Germany</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-france']">Universities in France</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-india']">Universities in India</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-china']">Universities in China</a></p>
+                <p><a class="h5 card-title" [routerLink]="['/top-universities-japan']">Universities in Japan</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<info-footer></info-footer>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Columns Modal - - - - - - - -  --->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleColumnsModal" #toggleColumnsModal [hidden]="true" data-toggle="modal" data-target="#ColumnsModal"></button>
+
+<div class="modal fade" id="ColumnsModal" tabindex="-1" role="dialog" aria-labelledby="InsightsModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-notice" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ColumnsModalLabel">Columns</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngFor="let row of nameColumns; let i=index;">
+          <div *ngIf="i>1" [ngSwitch]="visibleColumns[i]">
+            <div *ngSwitchCase="true">
+              <div class="form-check mb-3">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" value="" (click)="visibleColumns[i]=false" checked>
+                  <span class="form-check-sign"><span class="check"></span></span>
+                  {{row}}
+                </label>
+              </div>
+            </div>
+            <div *ngSwitchDefault>
+              <div class="form-check mb-3">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" value="" (click)="visibleColumns[i]=true">
+                  <span class="form-check-sign"><span class="check"></span></span>
+                  {{row}}
+                </label>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

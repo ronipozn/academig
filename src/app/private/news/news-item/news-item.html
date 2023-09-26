@@ -1,0 +1,114 @@
+<!-- [ngStyle]="{'background': (sourceType==2) ? '#f7f7f9' : ''}"  -->
+<div class="mt-0" [ngClass]="{'border-0': sourceType==2, 'card': sourceType<2}" [@itemsAnimation]="('active')">
+  <div class="pb-0" [ngClass]="{'card-body': sourceType<2}">
+
+    <div class="media pb-0">
+      <a class="mr-2" [routerLink]="['../../people',news.actor._id]">
+         <single-pic [type]=0 [pic]=news.actor.pic [width]=35 [height]=35></single-pic>
+      </a>
+      <div class="media-body" [ngClass]="{'p-1': sourceType==2}" style="border: 2px solid white; border-radius: 10px; background: white;">
+        <div on-mouseover='buttonOver(true)' on-mouseleave='buttonOver(false)'>
+             <!-- [ngClass]="{'build p-0': editFlag && stream==0}"> -->
+          <a [routerLink]="['../../people',news.actor._id]" class="card-title mr-1"><b>{{news.actor.name}}</b></a>
+          <small class="text-muted mr-1">{{news.time | momentPipe:''}}</small>
+          <spinner-put [stream]=stream (animationDoneEvent)="animationDone($event)"></spinner-put>
+          <!-- <build-buttons [showButton]="showButton && stream==0 && editFlag"
+                         (buttonEditClick)="buttonEditFunc($event)"
+                         (buttonDeleteClick)="buttonDeleteFunc($event)">
+          </build-buttons> -->
+          <p class="mb-2" style='white-space:pre-wrap;' [innerHTML]="news.text | safeHtml"></p>
+          <img *ngIf="news.pic" class="img-fluid mx-auto d-block" width="300px" [src]=news.pic>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="sourceType<2">
+      <hr class="my-1">
+      <div class="d-flex bd-highlight">
+        <span class="d-flex align-items-center mr-3">
+          <button type="button" class="btn btn-link btn-sm pl-0 pr-2" (click)="buttonCommentFunc($event)">
+            <i style="color: #525252;" class="fa fa-2x fa-comment-o" aria-hidden="true"></i>
+          </button> {{news.numComments}}
+        </span>
+
+        <span class="d-flex align-items-center">
+          <button class="btn btn-link btn-sm pr-0" (click)="buttonClapsFunc()">
+            <i *ngIf="clapDone" style="color: #525252;" class="fa fa-2x fa-sign-language" aria-hidden="true"></i>
+            <i *ngIf="!clapDone" style="color:green" class="fa fa-2x fa-sign-language" aria-hidden="true" [@itemsAnimation]="('active')" (@itemsAnimation.done)="clapDoneFunc($event)"></i>
+          </button>
+          <!-- *ngIf="actor._id==userId" -->
+            <!-- <i style="color: #525252;" class="fa fa-2x fa-sign-language mr-2" aria-hidden="true"></i> -->
+            {{claps}} <div class="ml-1 d-none d-md-block">Claps</div>
+            <!-- {{clapsMe}} -->
+            <!-- <span *ngIf="claps>0" class="text-muted"><br>
+              <span *ngIf="clapsMe>0 && claps-clapsMe==0">All claps from you</span>
+              <span *ngIf="clapsMe>0 && claps-clapsMe>0">Claps from you and others</span>
+              <span *ngIf="clapsMe==0">Claps from {{clapsIds.length}} others</span>
+              <span *ngIf="clapsMe==0">Claps from others</span>
+            </span> -->
+            <!-- <span *ngIf="clapsMe>0 && claps-clapsMe>0">Claps from you and {{clapsIds.length-1}} others</span> -->
+        </span>
+
+        <div class="ml-auto d-flex align-items-center">
+
+          <span *ngIf="userId==news.actor._id" [matTooltipPosition]="'below'" matTooltip="Edit news">
+            <button type="button" class="btn btn-link btn-sm" (click)="buttonEditFunc()">
+              <i style="color: #525252;" class="fa fa-pencil fa-2x" aria-hidden="true"></i>
+            </button>
+          </span>
+
+          <span *ngIf="userId==news.actor._id" [matTooltipPosition]="'below'" matTooltip="Delete news">
+            <button type="button" class="btn btn-link btn-sm" (click)="buttonDeleteNews()">
+              <i style="color: #525252;" class="fa fa-trash fa-2x" aria-hidden="true"></i>
+            </button>
+          </span>
+
+          <!-- <button type="button" class="btn btn-link btn-sm" (click)="buttonShareFunc($event)">
+            <i style="color: #525252;" class="fa fa-2x fa-share" aria-hidden="true"></i>
+          </button> -->
+
+          <!-- <button *ngIf="userId && actor._id!=userId" role="button" id="dropdownExtraButton" class="btn btn-link btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i style="color: #525252;" class="fa fa-2x fa-ellipsis-v" aria-hidden="true"></i>
+          </button> -->
+          <!-- <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownButtons" style="cursor:pointer;">
+            <a *ngIf="verbDigits[0]==1 || verb==20000" style="color: #525252;" class="dropdown-item small pl-2" (click)="buttonUnClapFunc()">
+              <span *ngIf="own.claps.length==5">Undo your last 5 claps</span>
+              <span *ngIf="own.claps.length<5">Undo your latest claps</span>
+              // Undo your latest clap
+            </a>
+            <div class="dropdown-divider"></div>
+            <a style="color: #525252;" class="dropdown-item small pl-2">
+              Share in Academig
+            </a>
+          </div> -->
+
+        </div>
+
+      </div>
+    </ng-container>
+
+    <!-- card-footer  -->
+    <ng-container *ngIf="sourceType<2 && (news.numComments>0 || news.comments.length>0)">
+      <hr class="mt-1 mb-3">
+      <div *ngIf="news.comments.length==0 && news.numComments>0" class="mb-2">
+        <button class="btn btn-link p-0" (click)="buttonShowCommentsFunc()">Load {{news.numComments}} comments...</button>
+      </div>
+      <div *ngIf="news.comments.length>0">
+        <ul class="list-unstyled">
+          <li *ngFor="let news of news.comments; let i=index"
+              private-news-item
+              [news]=news
+              [userId]=userId
+              [userStatus]=userStatus
+              [stream]=streamComments[i]
+              [sourceType]=2
+              (buttonEditClick)="buttonEditCommentFunc(i)"
+              (buttonDeleteClick)="buttonDeleteCommentFunc(i)"
+              (animationDoneEvent)="animationDone()">
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+
+  </div>
+</div>

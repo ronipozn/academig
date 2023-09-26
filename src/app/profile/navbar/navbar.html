@@ -1,0 +1,192 @@
+<div class="card mt-0 mb-2" style="border-radius: 0px; background-color: #F3F9FE">
+  <div class="media">
+
+    <span class="d-none d-md-block mb-0 pb-0">
+      <ng-container *ngIf="peoplePic">
+        <img *ngIf="meFlag" [width]=120 [height]=120 [src]=peoplePic style="cursor: pointer;" (click)="profilePicEdit()">
+        <img *ngIf="!meFlag" [width]=120 [height]=120 [src]=peoplePic style="cursor:pointer;" [routerLink]="['./']">
+      </ng-container>
+      <ng-container *ngIf="!peoplePic">
+        <span class="fa-stack fa-4x fa-lg" style="cursor:pointer;" [routerLink]="['./']">
+          <i class="fa fa-circle fa-stack-2x" style="color:#CDCDC1"></i>
+          <strong class="fa-stack-1x" style="color: white; font-size: 2rem;">{{peopleName | acronym}}</strong>
+        </span>
+      </ng-container>
+    </span>
+
+    <div class="media-body">
+
+      <div class="card-header py-0 mt-2 mb-0">
+
+        <div class="d-flex align-items-center">
+          <div class="mr-auto">
+            <div class="d-flex align-items-center small mb-1">
+              <mat-icon class="text-muted mr-1">supervised_user_circle</mat-icon> RESEARCHER
+            </div>
+            <div class="d-flex align-items-center">
+              <h3 *ngIf="!meFlag" class="my-0 pb-0 text-dark">
+                {{peopleName}}
+              </h3>
+              <div *ngIf="meFlag" class="d-flex align-items-baseline">
+                <h3 class="my-0"><b>{{ peopleName }}</b></h3>
+                <spinner-put [stream]=streamName class="ml-1" (animationDoneEvent)="profileNameEdit(false)"></spinner-put>
+                <build-buttons [showButton]="streamName==0" [editFlag]=true (buttonEditClick)="profileNameEdit(true)"></build-buttons>
+              </div>
+
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <!-- <button *ngIf="showEditBtn" mat-raised-button class="btn btn-sm btn-raised btn-round btn-outline secondary" data-toggle="modal" data-target="#pointsModal">
+              <i class="fa fa-bar-chart" aria-hidden="true"></i> 15.43
+            </button> -->
+            <span *ngIf="meFlag || previewStatus>0">
+              <button type="button" [disabled]="previewStatus>0" class="btn btn-link btn-sm px-0 mr-3" [routerLink]="['/settings']" matTooltip="Settings" [matTooltipPosition]="'below'">
+                <i class="text-muted fa fa-20 fa-cog" aria-hidden="true"></i>
+              </button>
+              <button (click)="togglePreviewFunc()" type="button" class="btn btn-link btn-sm px-0" matTooltip="View as Profile Visitor" [matTooltipPosition]="'below'">
+                <i [ngClass]="{'text-success': previewStatus==1, 'text-muted': previewStatus==0}"
+                   class="fa fa-20 fa-eye" aria-hidden="true"></i>
+              </button>
+            </span>
+            <button *ngIf="!meFlag" [disabled]="previewStatus>0" mat-raised-button class="btn btn-round ml-2" [ngClass]="{'btn-light-blue': followStatus, 'btn-outline-light-blue': !followStatus}" (click)="buttonFollowFunc()">
+              <i *ngIf="!streamFollow" class="material-icons">{{followStatus ? 'bookmark' : 'bookmark_border'}}</i> {{followStatus ? 'Unfollow' : 'Follow'}}
+              <i *ngIf="streamFollow" class="ml-1 fa fa-circle-o-notch fa-spin fa-size-20"></i>
+            </button>
+            <button *ngIf="!meFlag || previewStatus>0" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item [disabled]="previewStatus>0" (click)="buttonMessageFunc()">
+                <mat-icon>message</mat-icon>
+                <span>Message</span>
+              </button>
+              <!-- disabled -->
+              <button mat-menu-item [disabled]="previewStatus>0" (click)="buttonReportFunc()">
+                <mat-icon>report</mat-icon>
+                <span>Report</span>
+              </button>
+              <button mat-menu-item [disabled]="previewStatus>0" (click)="buttonBlockFunc()">
+                <mat-icon *ngIf="!streamBlock" >{{blockStatus ? 'lock_open' : 'lock'}}</mat-icon>
+                <i *ngIf="streamBlock" class="ml-1 fa fa-circle-o-notch fa-spin fa-size-20"></i>
+                <span>{{blockStatus ? 'Unblock' : 'Block'}}</span>
+              </button>
+              <!-- <button mat-menu-item>
+                <mat-icon>notifications_off</mat-icon>
+                <span>Disable alerts</span>
+              </button> -->
+            </mat-menu>
+            <!-- <button *ngIf="!meFlag" mat-raised-button class="d-none d-lg-block btn btn-round btn-light-blue ml-2" (click)="toggleCompareFunc()">
+              <i class="material-icons">compare</i> {{compareFlag ? 'Uncompare researcher' : 'Compare researcher'}}
+            </button> -->
+            <!-- <button *ngIf="meFlag" mat-raised-button matTooltip="Suggestions" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm" [routerLink]="['./ai']">
+              <i joyrideStep="suggestionsStep" title="Suggestions" text="See Academig' suggestions for your profile. Learn new ways to improve your profile, and get suggestions for new content." class="text-muted fa fa-size-20 fa-magic" aria-hidden="true"></i>
+            </button> -->
+            <!-- <button *ngIf="meFlag" mat-raised-button matTooltip="Assist" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm" [routerLink]="['./tools']">
+              <i joyrideStep="toolsStep" title="Researcher tools" text="The researcher assist page is a place dedicated for advancing your academic carrer" class="text-muted material-icons" style="font-size: 18px;">supervised_user_circle</i>
+            </button> -->
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-lg-none">
+        <div class="col-12">
+          <mat-form-field>
+            <!-- selectionChange -->
+            <mat-select [(value)]="modifiedPath" name="nav" (valueChange)="selectChange($event)">
+              <mat-option [value]="'.'">Summary</mat-option>
+              <mat-option [value]="'network'">Network</mat-option>
+              <mat-option *ngIf="meFlag || progress[8]" [value]="'mentoring'">Mentoring</mat-option>
+              <mat-option [value]="'library'">Library</mat-option>
+              <mat-option [value]="'publications'">Publications</mat-option>
+              <mat-option *ngIf="meFlag || progress[9]" [value]="'projects'">Projects</mat-option>
+              <mat-option *ngIf="meFlag || progress[10]" [value]="'funding'">Funding</mat-option>
+              <mat-option *ngIf="meFlag || progress[14]" [value]="'outreach'">Outreach</mat-option>
+              <mat-option *ngIf="meFlag || progress[11]" [value]="'teaching'">Teaching</mat-option>
+              <mat-option *ngIf="meFlag || progress[12]" [value]="'gallery'">Gallery</mat-option>
+              <mat-option *ngIf="meFlag || progress[13] || progress[14] || progress[15]" [value]="'media'">Media</mat-option>
+              <mat-option *ngIf="peopleId!='academig'" [value]="'news'" joyrideStep="newsStep" title="News page" text="The news page is automatically updated with all the changes that are made in the differnt lab profile pages. Academics who follows your lab will get notified with the lab' updates.">News</mat-option>
+              <mat-option [value]="'contact'">Contact</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="d-none d-lg-block card-footer my-0 pb-0">
+
+        <ul class="mt-0 pt-0 ml-0 pl-0 nav nav-pills card-header-tabs">
+
+          <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['.']">Summary</a>
+          </li>
+
+          <li class="mx-2"> <!-- *ngIf="visibleFlag"  -->
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./network']">Network</a>
+          </li>
+
+          <li *ngIf="meFlag || progress[8]" class="mx-2 pill" title="Mentoring">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./mentoring']">Mentoring</a>
+          </li>
+
+          <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./library']">Library</a>
+          </li>
+
+          <li class="mx-2"> <!-- *ngIf="(showEditBtn || groupProgress[5])" -->
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./publications']">Publications</a>
+          </li>
+
+          <li *ngIf="meFlag || progress[9]" class="mx-2" joyrideStep="peopleStep" title="Project page" text="">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./projects']">Projects</a>
+          </li>
+
+          <li *ngIf="meFlag || progress[10]" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./funding']">Funding</a>
+          </li>
+
+          <li *ngIf="meFlag || progress[14]" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./outreach']">Outreach</a>
+          </li>
+
+          <li *ngIf="meFlag || progress[11]" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./teaching']">Teaching</a>
+          </li>
+
+          <li *ngIf="meFlag || progress[12]" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./gallery']">Gallery</a>
+          </li>
+
+          <li *ngIf="meFlag || progress[13] || progress[14] || progress[15]" class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./media']">Media</a>
+          </li>
+
+           <!-- *ngIf="visibleFlag" -->
+          <li *ngIf="peopleId!='academig'" class="mx-2" title="User News">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./news']" joyrideStep="newsStep" title="News page" text="The news page is automatically updated with all the changes that are made in the differnt lab profile pages. Researchers who follows your profile will get notified with the your updates.">News</a>
+          </li>
+
+          <li class="mx-2" title="User Contact">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./contact']">Contact</a>
+          </li>
+
+          <!-- <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./outreach']">Outreach</a>
+          </li> -->
+          <!-- <li class="mx-2">
+            <a [routerLinkActive]="['active']" class="pb-1" [routerLink]="['./faq']">FAQ</a>
+          </li> -->
+          <!-- <li *ngIf="meFlag || progress[16]" class="mx-2">
+            <a [routerLinkActive]="['active']" [routerLink]="['./interview']">Interview</a>
+          </li> -->
+          <!-- <li class="mx-2">
+            <a [routerLinkActive]="['active']" [routerLink]="['./books']">Books</a>
+          </li> -->
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

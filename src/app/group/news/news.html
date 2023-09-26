@@ -1,0 +1,64 @@
+<div *ngIf="missionService.showPage" class="row no-gutters" [ngClass]="{'justify-content-md-center': !missionService.socialInfo?.twitter}">
+
+  <div class="col-md-8" [@itemsAnimation]="('active')">
+
+    <spinner *ngIf="!streamRetrieved && offset==0"></spinner>
+
+    <div *ngIf="streamRetrieved && newses.length==0" class="card mt-0">
+      <div class="card-body">
+        <h5 class="mb-2">No news</h5>
+        <p>The news list is empty.</p>
+        <button *ngIf="missionService.showEditBtn" mat-raised-button class="btn btn-light-blue" (click)="newsSlide(true, null, true)">
+          <span class="material-icons">list</span> Add News
+        </button>
+        <img src="./assets/img/items/teaching.svg" class="mx-auto d-block img-fluid my-2" [width]="350" alt="academig_news">
+      </div>
+    </div>
+
+    <button *ngIf="missionService.showEditBtn && streamRetrieved && newses.length>0" mat-raised-button class="ml-4 mb-4 btn btn-light-blue" (click)="newsSlide(true, null, true)">
+      <span class="material-icons">list</span> Add News
+    </button>
+
+    <news-list *ngIf="streamRetrieved || offset!=0"
+               [newses]=newses
+               [userId]=missionService.userId
+               [followings]=followings
+               [sourceType]=3
+               [streamRetrieved]=streamRetrieved
+               (buttonEditNewsClick)="newsSlide(true, $event, false)"
+               (buttonDeleteNewsClick)="newsDelete($event)"
+               (buttonMoreNewsClick)="loadMore()">
+    </news-list>
+
+  </div>
+
+  <div *ngIf="missionService.socialInfo?.twitter" class="col-md-4" [@itemsAnimation]="('active')">
+    <div class="d-flex justify-content-start">
+      <div class="d-none d-md-block ml-4"></div>
+      <div class="card mt-0 flex-grow-1">
+        <div class="card-body">
+          <ngx-twitter-timeline *ngIf="missionService.socialInfo?.twitter"
+                                [data]="{sourceType: 'url', url: 'https://twitter.com/'+missionService.socialInfo.twitter}"
+                                [opts]="{tweetLimit: 5}">
+          </ngx-twitter-timeline>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text-pic *ngIf=newsBuildFlag
+                      [title]="newsNewFlag ? 'Add Lab News' : 'Update Lab News'"
+                      [itemId]=missionService.groupId
+                      [text]="newsNewFlag ? null : newses[this.newsIndex].text"
+                      [pic]="newsNewFlag ? null : newses[this.newsIndex].pic"
+                      [aiFlag]=false
+                      (update)="newsUpdate($event)"
+                      (cancel)="newsSlide(false, 0, false)">
+</build-slide-text-pic>

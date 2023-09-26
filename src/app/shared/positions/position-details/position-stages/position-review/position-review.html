@@ -1,0 +1,107 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div [@itemsAnimation]="('active')">
+
+  <div *ngIf="streamRetrieved && candidatesFlag" class="card mt-0">
+    <div class="card-body ml-0 pl-0">
+      <ul class="nav nav-pills nav-pills-light-blue" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active': activeTab===0}" data-toggle="tab" href="#candidates" [routerLink]="['.']" fragment="candidates" queryParamsHandling='preserve' role="tab">All Candidates ({{proposals[0].length}})</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active': activeTab===1}" data-toggle="tab" href="#shortlisted" [routerLink]="['.']" fragment="shortlisted" queryParamsHandling='preserve' role="tab">Shortlisted ({{proposals[1].length}})</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#messaged" role="tab" (click)="tabClick(2)">Messaged ({{proposals[2].length}})</a>
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active': activeTab===3}" data-toggle="tab" href="#waitlist" [routerLink]="['.']" fragment="waitlist" queryParamsHandling='preserve' role="tab">Waitlist ({{proposals[3].length}})</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{'active': activeTab===4}" data-toggle="tab" href="#archived" [routerLink]="['.']" fragment="archived" queryParamsHandling='preserve' role="tab">Archived ({{proposals[4].length}})</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved && candidatesFlag" class="mt-0">
+
+    <div *ngIf="proposals[tabNum].length==0 && (filterFlag==false || tabNum>0)" class="card mt-0">
+      <div class="card-body">
+        <build-headline [headline]="emptyHeadlines[tabNum]"></build-headline>
+        <build-modal-intro [headline]="emptyTitles[tabNum]"></build-modal-intro>
+      </div>
+    </div>
+
+    <ng-container *ngIf="filterFlag==false || tabNum>0">
+      <position-proposal *ngFor="let proposal of proposals[tabNum]; let i=index;"
+                         [proposal]=proposal
+                         [tabNum]=tabNum
+                         [gradesRequired]=gradesRequired
+                         [lettersRequired]=lettersRequired
+                         [refereesRequired]=refereesRequired
+                         (stageClick)="stageOp(i, $event)"
+                         (noteClick)="noteOp(i, true, 0)">
+      </position-proposal>
+    </ng-container>
+
+    <ng-container *ngIf="filterFlag==true && tabNum==0">
+      <div class="card mt-0 mb-3">
+        <div class="card-body">
+          <build-headline [headline]="'Candidate Filtering'"></build-headline>
+          We prioritizes candidate based on the job requirements you've indicated, making sure you see the best candidates first.
+          You will receive manually prioritized batches of applicants 7, 14, 30 and 60 days starting from the job posting date, {{created_on | date:'dd MMM y'}}.
+          <br>
+          <!-- Source<br> -->
+        </div>
+      </div>
+      <ng-container *ngFor="let filterDate of filterDates; let i=index">
+        <div class="card mt-0 mb-3">
+          <div *ngIf="(proposalsFiltered[i].length>0 && moment().isAfter(moment(filterDate))) || moment().isBefore(moment(filterDate))" class="card-body">
+            <build-headline [headline]="filterIntervals[i+1] + ' Days'"></build-headline>
+            <span *ngIf="proposalsFiltered[i].length==0" class="text-muted"><i>Wait until {{filterDate}}</i></span>
+            <position-proposal *ngFor="let proposal of proposalsFiltered[i]; let p=index"
+                               [proposal]=proposal
+                               [tabNum]=0
+                               [gradesRequired]=gradesRequired
+                               [lettersRequired]=lettersRequired
+                               [refereesRequired]=refereesRequired
+                               (stageClick)="stageFilterOp(i, p, $event)"
+                               (noteClick)="noteOp(p, true, 0)">
+            </position-proposal>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
+  </div>
+
+</div>
+
+<!------------------------------------->
+<!-------------- Note Modal ----------->
+<!------------------------------------->
+<button id="toggleNoteModal" #toggleNoteModal [hidden]="true" data-toggle="modal" data-target="#noteModal"></button>
+
+<div *ngIf="streamRetrieved" class="modal fade" id="noteModal" data-target="#noteModal" tabindex="-1" role="dialog" aria-labelledby="PositionNote" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div *ngIf="noteFlag" class="modal-header">
+        <p class="lead modal-title" id="ModalLabel">{{proposals[tabNum][noteIndex].profile.name}}</p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="noteOp(null, false, 1)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body pb-0">
+        <div class="form-group">
+          <label for="noteTextarea">Notes</label>
+          <textarea class="form-control" id="NoteTextarea" rows="5" [(ngModel)]="note"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button role="button" mat-raised-button class="btn btn-sm btn-link" data-dismiss="modal" (click)="noteOp(null, false, 1)">Close</button>
+        <button role="button" mat-raised-button class="btn btn-sm btn-light-blue" data-dismiss="modal" (click)="noteOp(null, false, 2)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+/* https://stackoverflow.com/questions/55334935/floating-horizontal-scrollbar-with-mat-table-in-angular */
+
+.example-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.rotate-90 {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.table-container {
+  /* height: 400px; */
+  /* width: 550px; */
+  max-width: 100%;
+  overflow: auto;
+}
+
+.mat-table {
+  overflow-x: scroll;
+}
+
+.mat-cell,
+.mat-header-cell {
+  word-wrap: initial;
+  display: table-cell;
+  padding: 0px 10px;
+  line-break: unset;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.mat-row,
+.mat-header-row {
+  display: table-row;
+}
+
+/* table {
+  width: 100%;
+}
+
+td, th {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
+} */
+
+/* .mat-table-sticky:first-child {
+  border-right: 1px solid #e0e0e0;
+}
+
+.mat-table-sticky:last-child {
+  border-left: 1px solid #e0e0e0;
+}
+
+td.mat-column-action {
+  width: 20px;
+  padding-right: 8px;
+}
+
+th.mat-column-name, td.mat-column-name {
+  padding-left: 8px;
+} */
+
+/* .table-double-striped tr:nth-child(6n+1),
+.table-double-striped tr:nth-child(6n+2),
+.table-double-striped tr:nth-child(6n+3) {
+  background: #E2E2E2;
+}
+*/

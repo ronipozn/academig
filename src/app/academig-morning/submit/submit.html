@@ -1,0 +1,58 @@
+<div class="container mt-3">
+  <div class="form-container">
+
+    Opening<br>
+    Academia: 3 major points<br>
+    Story 1<br>
+    Story 2<br>
+    Story 3<br>
+    Sponsored By<br>
+    Story 4<br>
+    Story 5<br>
+    What Else is Incubating<br>
+    Academig’s Infographic<br>
+    Academig’s Bets<br>
+    Academig’s Trivia<br>
+    Share Academig Morning (only email)<br>
+    Academig Club (Gather Points)<br>
+    Academic Trivia Answer<br>
+    Footer<br>
+    Academic Quote
+
+    <form [formGroup]="storyFormGroup">
+      <div class="card mt-0">
+        <div class="card-body">
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Topic</mat-label>
+            <input matInput formControlName="topic" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Category</mat-label>
+            <input matInput formControlName="category" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Pic</mat-label>
+            <input matInput formControlName="pic" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Alt</mat-label>
+            <input matInput formControlName="alt" required>
+          </mat-form-field>
+          <trumbowyg-ngx-editor id="editor" formControlName="text"></trumbowyg-ngx-editor>
+        </div>
+      </div>
+    </form>
+
+    <!-- *ngIf="!submitCompleted" -->
+    <button mat-button [disabled]="submitFlag" class="btn btn-success" (click)="onSubmit()">
+      Submit <i *ngIf="submitFlag" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+    </button>
+
+    <div *ngIf="submitCompleted" class="card">
+      <div class="card-body">
+        <h4>Academig Story Submission Successful</h4>
+      </div>
+    </div>
+
+  </div>
+</div>

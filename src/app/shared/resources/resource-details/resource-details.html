@@ -1,0 +1,748 @@
+<spinner *ngIf="!streamRetrieved[0] || !streamRetrieved[1] || !streamRetrieved[2]"></spinner>
+
+<error-404 *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2] && resource==null && (((sourceType==0 || sourceType==5) && parentId!=null) || (sourceType!=0))" [source]=sourceType></error-404>
+
+<div *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2] && resource && (parentId || sourceType!=0)" class="mb-4">
+
+  <div *ngIf="showEditBtn && resource.mode==0" class="alert alert-warning border-warning alert-dismissible fade show text-center" role="alert">
+    <h4>Service is on hold.</h4>This mean it doesn't appear in the search results and the request button is disabled.
+  </div>
+
+  <div *ngIf="showEditBtn && resource.mode==2" class="alert alert-danger border-danger alert-dismissible fade show text-center" role="alert">
+    <h4>Service is expired.</h4>This mean it doesn't appear in the search results and visitors can't see it in the services listing page.
+  </div>
+
+  <div class="row no-gutters">
+
+    <div class="col-lg-9">
+
+      <div class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <div class="d-flex justify-content-start">
+
+            <div class="mr-auto">
+              <div class="d-flex justify-content-start">
+                <div *ngIf="resource.pic || adminFlag" class="mr-2">
+                  <ng-container *ngIf="resource.pic">
+                    <img *ngIf="adminFlag" [width]=60 [height]=60 [src]="resource.pic" style="cursor: pointer;" (click)="picOp(0, true, null)">
+                    <img *ngIf="!adminFlag" [width]=60 [height]=60 [src]="resource.pic">
+                  </ng-container>
+                  <ng-container *ngIf="!resource.pic">
+                    <span class="fa-stack fa-3x fa-lg" style="cursor:pointer;" (click)="picOp(0, true, null)">
+                      <i class="fa fa-square fa-stack-2x" style="color:#CDCDC1"></i>
+                      <strong class="fa-stack-1x" style="color: white; font-size: 2rem;">{{resource.name | acronym}}</strong>
+                    </span>
+                  </ng-container>
+                </div>
+                <div>
+                  <p *ngIf="resource.created_on" class="text-dark d-flex align-items-center mb-0">
+                    <b>POSTED {{ resource.created_on | momentPipe:'':1 | uppercase }}</b>
+                    <!-- <b>VIEWS: {{ resource.views[4] }}</b> -->
+                  </p>
+                  <div class="d-flex align-items-center">
+                    <h3 class="card-title mr-2"><b>{{ resource.name }}</b></h3>
+                    <build-buttons [editFlag]=true [showButton]="showEditBtn && streamTitle==0" (buttonDeleteClick)="titleOp(1, false, $event)" (buttonEditClick)="titleOp(0, true, $event)"></build-buttons>
+                    <spinner-put [stream]=streamTitle (animationDoneEvent)="animationDone(3)"></spinner-put>
+                  </div>
+                  <p *ngIf="resource.categoryId>0"><span class="text-muted">Category:</span> {{ serviceSelect[resource.categoryId] }}</p>
+                  <p *ngIf="sourceType==1 && resource.group"><group-link [groupIndex]=resource.group></group-link></p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <span *ngIf="!resource.payment" [matTooltip]="'Service posting is hidden for visitors.'" [matTooltipPosition]="'below'" class="badge badge-danger">Payment missing</span>
+              <ng-container *ngIf="resource.payment">
+                <span *ngIf="resource.mode==0" class="badge badge-pill badge-warning" style="color: white">On Hold</span>
+                <span *ngIf="resource.mode==1" class="badge badge-pill badge-warning" style="color: white">Active</span>
+                <span *ngIf="resource.mode==2" class="badge badge-pill badge-danger" style="color: white">Expired</span>
+              </ng-container>
+            </div>
+
+          </div>
+
+          <div *ngIf="adminFlag || resource.tags[0]" class="d-flex justify-content-start d-flex align-items-center">
+            <ng-container *ngFor="let tag of resource.tags; let l=last">
+              <button *ngIf="tag" (click)="tagClickOp(i)" mat-raised-button style="background-color: #DDE1F3" class="btn btn-sm btn-outline-light-blue mr-1">{{ tag }}</button>
+            </ng-container>
+            <div class="d-flex justify-content-start align-items-center">
+              <a *ngIf="adminFlag && streamTags==0" mat-raised-button role="button" style="cursor:pointer" class="btn btn-sm btn-link px-0" [ngClass]="{'btn-primary': resource.tags[0]}" (click)="tagsOp(0, true, null)">
+                <i *ngIf="!resource.tags[0]" class="material-icons mr-1">add_circle</i> <span *ngIf="!resource.tags[0]">Add keywords</span>
+                <i *ngIf="resource.tags[0]" class="material-icons">edit</i>
+              </a>
+              <a *ngIf="adminFlag && streamTags==0 && resource.tags[0]" mat-raised-button role="button" style="cursor:pointer" class="btn btn-sm btn-danger btn-link ml-1 p-0" aria-haspopup="true" aria-expanded="false" (click)="tagsOp(1, false, null)">
+                <i class="material-icons">close</i>
+              </a>
+              <spinner-put class="ml-1" [stream]=streamTags (animationDoneEvent)="animationDone(2)"></spinner-put>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div *ngIf="adminFlag || resource.description" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]="resource.description==null"
+                          [headline]="'Description'"
+                          (buttonAddClick)="descriptionOp(0, true, $event)">
+          </build-headline>
+          <div *ngIf="resource.description" build-text-pic
+               [text]=resource.description
+               [pic]=resource.descriptionPic
+               [caption]=resource.descriptionCaption
+               [stream]=streamDescription
+               [showEditBtn]=adminFlag
+               [titleText]="'Resource Description Image'"
+               [bodyText]="'This is the place for the resource description image.'"
+               [imgCenter]=true
+               (animationDoneEvent)="descriptionOp(3)"
+               (buttonEditClick)="descriptionOp(0, true, $event)"
+               (buttonDeleteClick)="descriptionOp(1, false, $event)">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!streamRetrieved[2] || adminFlag || (streamRetrieved[2] && faqs[0])" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]=true
+                          [headline]="'FAQ'"
+                          (buttonAddClick)="faqSlide(true, 0, true)">
+          </build-headline>
+          <spinner *ngIf="!streamRetrieved[2]"></spinner>
+          <div *ngIf="streamRetrieved[2] && faqs[0]" class="mt-0">
+            <faq-list [bagName]="'faqs-bag'"
+                      [faqs]=faqs
+                      [itemFocus]=itemFocus
+                      [stream]=streamFAQ
+                      [showEditBtn]=adminFlag
+                      (animationDoneEvent)="faqStreamFunc()"
+                      (buttonEditClick)="faqSlide(true, $event, false)"
+                      (buttonDeleteClick)="faqDelete($event)">
+            </faq-list>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="adminFlag || resource.gallery[0]" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]="resource.gallery.length<20"
+                          [headline]="'Gallery'"
+                          (buttonAddClick)="galleryOp(4, true, $event, null)">
+          </build-headline>
+          <div *ngIf="resource.gallery[0]" class="pt-2">
+            <div class="card-columns">
+              <div *ngFor="let gallery of resource.gallery; let i=index" class="card build2 p-2 mb-3">
+                <div build-pic
+                     class="card-img"
+                     [pic]=gallery.pic
+                     [type]=1
+                     [leftFlag]=true
+                     [fluidFlag]=true
+                     [showEditBtn]=adminFlag
+                     [widthFlag]=false
+                     (buttonEditClick)="galleryOp(0, true, $event, i)"
+                     (buttonDeleteClick)="galleryOp(1, false, $event, i)">
+                </div>
+                <div class="card-body px-1 pb-0 pt-1">
+                  {{ gallery.name }} <spinner-put [stream]=streamGallery[i] (animationDoneEvent)="galleryStreamFunc(i)"></spinner-put>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!streamRetrieved[1] || adminFlag || (streamRetrieved[1] && publications[0])" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]=true
+                          [headline]="'Publications'"
+                          (buttonAddClick)="publicationSlide(0, true)">
+          </build-headline>
+          <div *ngIf="typesCount>0" class="mb-3 mt-0 ml-2">
+            <publications-buttons [streamRetrieved]=streamRetrieved[1]
+                                  [typesData]=typesData
+                                  [typesCount]=typesCount
+                                  [sourceType]=1
+                                  (typesFlag)="typesFlagFunc($event)">
+            </publications-buttons>
+          </div>
+          <publications-list-table [streamRetrieved]=streamRetrieved[1]
+                                   [publicationToggle]=publicationToggle
+                                   [publications]=publications
+                                   [sourceType]=4
+                                   [showEditBtn]=adminFlag
+                                   [showHeadline]=adminFlag
+                                   [userId]=userId
+                                   [typesFlag]=typesFlag
+                                   [stream]=streamPublications
+                                   [streamDelete]=streamPublicationDelete
+                                   [streamFolder]=streamPublicationsFolder
+                                   (types)="typesDataFunc($event)"
+                                   (btnPDF)="pdfSlide($event)"
+                                   (btnDelete)="publicationDelete($event)"
+                                   (btnFolder)="publicationFolder($event)"
+                                   (animationDoneEvent)="streamFunc(0)">
+          </publications-list-table>
+        </div>
+      </div>
+
+      <div *ngIf="adminFlag || resource.links[0]" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <build-headline [showEditBtn]=adminFlag
+                          [addButtonFlag]=true
+                          [headline]="'Links'"
+                          (buttonAddClick)="linkSlide(true, 0, true)">
+          </build-headline>
+          <ul *ngFor="let link of resource.links; let i=index" class="list-unstyled">
+            <link-item [link]=link
+                       [stream]=streamLink[i]
+                       [showEditBtn]=adminFlag
+                       (buttonEditClick)="linkSlide($event, i, false)"
+                       (buttonDeleteClick)="linkDelete(i)"
+                       (animationDoneEvent)="linkStreamFunc()">
+            </link-item>
+          </ul>
+        </div>
+      </div>
+
+      <resource-table [showEditBtn]=adminFlag
+                      [tableMode]=0
+                      [sourceType]=sourceType
+                      [manuals]=resource.manuals
+                      [stream]=streamTable[0]
+                      (animationDoneEvent)="tableStreamFunc(0)"
+                      (pdfSlideClick)="pdfSlide($event)"
+                      (buildFlag)="tableOp($event, true, 0)"
+                      (buttonEditClick)="tableOp($event, true, 1)"
+                      (buttonDeleteClick)="tableOp($event, false, 2)">
+      </resource-table>
+
+      <resource-table [showEditBtn]=adminFlag
+                      [tableMode]=1
+                      [sourceType]=sourceType
+                      [codes]=resource.codes
+                      [stream]=streamTable[1]
+                      (animationDoneEvent)="tableStreamFunc(1)"
+                      (pdfSlideClick)="pdfSlide($event)"
+                      (buildFlag)="tableOp($event, true, 0)"
+                      (buttonEditClick)="tableOp($event, true, 1)"
+                      (buttonDeleteClick)="tableOp($event, false, 2)">
+      </resource-table>
+
+      <resource-table [showEditBtn]=adminFlag
+                      [tableMode]=2
+                      [sourceType]=sourceType
+                      [cads]=resource.cads
+                      [stream]=streamTable[2]
+                      (animationDoneEvent)="tableStreamFunc(2)"
+                      (pdfSlideClick)="pdfSlide($event)"
+                      (buildFlag)="tableOp($event, true, 0)"
+                      (buttonEditClick)="tableOp($event, true, 1)"
+                      (buttonDeleteClick)="tableOp($event, false, 2)">
+      </resource-table>
+
+      <resource-table [showEditBtn]=adminFlag
+                      [tableMode]=3
+                      [sourceType]=sourceType
+                      [inventories]=resource.inventories
+                      [stream]=streamTable[3]
+                      (animationDoneEvent)="tableStreamFunc(3)"
+                      (pdfSlideClick)="pdfSlide($event)"
+                      (buildFlag)="tableOp($event, true, 0)"
+                      (buttonEditClick)="tableOp($event, true, 1)"
+                      (buttonDeleteClick)="tableOp($event, false, 2)">
+      </resource-table>
+
+      <resource-table [showEditBtn]=adminFlag
+                      [tableMode]=4
+                      [sourceType]=sourceType
+                      [equipments]=resource.equipments
+                      [stream]=streamTable[4]
+                      (animationDoneEvent)="tableStreamFunc(4)"
+                      (pdfSlideClick)="pdfSlide($event)"
+                      (buildFlag)="tableOp($event, true, 0)"
+                      (buttonEditClick)="tableOp($event, true, 1)"
+                      (buttonDeleteClick)="tableOp($event, false, 2)">
+      </resource-table>
+
+      <details-buttons class="d-none d-sm-block"
+                       [mode]=3
+                       [item]="{_id: resource._id, name: resource.name, pic: resource.pic}"
+                       [userId]=userId
+                       [meFlag]=adminFlag
+                       [streamFollow]=streamFollow
+                       [followStatus]=resource.followStatus
+                       (buttonFollowClick)="resourceFollow()">
+      </details-buttons>
+
+    </div>
+
+    <div class="col-lg-3">
+
+      <!-- *ngIf="showEditBtn"  -->
+      <div class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body">
+
+            <ng-container *ngIf="resource.how==0 && !adminFlag">
+              <button *ngIf="resource.requests==null || (resource.requests && resource.requests[0]==null) || !isAuthenticated" role="button" mat-raised-button class="btn btn-block btn-success" (click)="openRequestModalFunc()">
+                Make Request
+              </button>
+              <button *ngIf="resource.requests && resource.requests[0] && isAuthenticated" role="button" mat-raised-button class="btn btn-block btn-warning" (click)="manageRequestOp()">
+                Manage Request
+              </button>
+            </ng-container>
+
+            <ng-container *ngIf="adminFlag">
+              <a class="btn btn-block btn-success" [routerLink]="['/',resource.group.university.link,resource.group.department.link,resource.group.group.link,'services',resource._id,'manage']">
+                Manage Requests
+              </a>
+
+              <!-- 0. Resume -->
+              <button *ngIf="resource.mode==0 || resource.mode==2" type="button" mat-raised-button class="btn btn-warning btn-block mb-2" (click)="resourceHold()">
+                <span matTooltip="Resume service appearance in search results. Service requests can be made." [matTooltipPosition]="'below'">Resume Service</span>
+              </button>
+
+              <!-- 1. On Hold-->
+              <button *ngIf="resource.mode==1" type="button" mat-raised-button class="btn btn-light-blue btn-block mb-2" (click)="resourceHold()">
+                <span matTooltip="Service won't appear in search results. Also, no service requests can be made while service is on hold." [matTooltipPosition]="'below'">Put Service On hold</span>
+              </button>
+
+              <!-- 3. Cancel Service -->
+              <button *ngIf="resource.mode<2" type="button" mat-raised-button class="btn btn-danger btn-block" data-toggle="modal" data-target="#CancelModal">
+                Cancel Service
+              </button>
+
+              <!-- 4. Delete Service -->
+              <button *ngIf="resource.mode==2" type="button" mat-raised-button class="btn btn-danger btn-block" data-toggle="modal" data-target="#CancelModal">
+                Delete Service
+              </button>
+            </ng-container>
+
+            <div *ngIf="resource.how!=null && (resource.mode==0 || resource.mode==1)" class="card mt-2 mb-0">
+              <div class="card-body">
+                <u>Request method</u><br>
+                {{howSelect[resource.how]}} {{resource.direct}}
+              </div>
+            </div>
+
+            <!-- Refunds -->
+
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="adminFlag" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <!-- mb-lg-0 -->
+        <div class="card mt-0 border border-primary bg-color" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <h4 class="text-center card-title text-muted"><b>'{{titlesStandout[resource.standout]}}' PLAN</b></h4>
+            <hr>
+            <ul class="fa-ul">
+              <li *ngFor="let feature of featuresStandout; let i=index" class="d-flex align-items-center text-dark">
+                <span class="fa-li"><i class="fa" [ngClass]="{'text-success fa-check-circle': i<=thresholdStandout[resource.standout], 'text-muted fa-check-circle-o': i>thresholdStandout[resource.standout]}"></i></span>{{feature}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="resource.price && (resource.price.request || adminFlag)" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body">
+
+            <div class="d-flex align-items-center">
+              <h4 class="card-title"><b>SERVICE DETAILS</b></h4>
+              <!-- <spinner-put *ngIf="streamGeneral>0" class="ml-2 my-2" [stream]=streamGeneral (animationDoneEvent)="animationDone(0)"></spinner-put>
+              <build-buttons *ngIf="streamGeneral==0" [editFlag]=true [showButton]="adminFlag && streamGeneral==0" (buttonEditClick)="generalOp(0, true, $event)"></build-buttons> -->
+              <a *ngIf="adminFlag && streamPrice==0" role="button" mat-raised-button style="cursor:pointer" class="btn btn-sm btn-link ml-1 p-0" [ngClass]="{'btn-primary': resource.price.request}" (click)="priceOp(0,true,null)">
+                <i *ngIf="resource.price.request" class="material-icons">{{resource.price.request ? 'edit' : 'add_circle'}}</i>
+              </a>
+            </div>
+            <hr class="mt-0 mb-3">
+
+            <p *ngIf="resource.price.request">
+              <span class="text-dark mr-1">Price:</span>
+              <span *ngIf="resource.price.mode==0 && !resource.price.range">{{resource.price.price[0] | currency: currencySymbols[resource.price.currency]:'symbol'}}</span>
+              <span *ngIf="resource.price.mode==0 && resource.price.range">{{resource.price.price[0] | currency: currencySymbols[resource.price.currency]:'symbol'}} - {{resource.price.price[1] | currency: currencySymbols[resource.price.currency]:'symbol'}}</span>
+              <span *ngIf="resource.price.mode==0" class="ml-1">{{servicePriceType[resource.price.type]}}</span>
+              <span *ngIf="resource.price.mode==1" class="ml-1">Shown by request</span>
+            </p>
+
+            <p *ngIf="resource.price.internalId"><span class="text-dark">Internal ID: </span> <b>{{ resource.price.internalId }}</b></p>
+
+            <!-- <p *ngIf="(adminFlag || resource.country) && resource.country">
+              <span class="text-dark">Location:</span>
+              <span class="flag mx-1"><img [src]="'./assets/img/flags/' + (resource.country | country | flag) + '.png'" alt=""></span>
+              <b>{{ resource.country | country }}, {{resource.state}} {{ resource.city }}</b>
+            </p> -->
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="resource.group && (adminFlag || resource.people[0])" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <div class="d-flex justify-content-start align-items-center">
+              <build-headline [headline]="'CONTACTS'" [headlineStyle]=1></build-headline>
+              <div *ngIf="adminFlag && streamMini[0]==0">
+                <a role="button" mat-raised-button style="cursor:pointer" class="btn btn-sm btn-link ml-1 p-0" [ngClass]="{'btn-primary': resource.people[0]}" (click)="miniOp(0,0,true,$event)">
+                  <i *ngIf="!resource.people[0]" class="material-icons">add_circle</i>
+                  <i *ngIf="resource.people[0]" class="material-icons">edit</i>
+                </a>
+              </div>
+              <spinner-put class="ml-1" [stream]=streamMini[0] (animationDoneEvent)="animationDone(0)"></spinner-put>
+            </div>
+            <hr class="mt-0">
+            <div *ngIf="resource.people[0]">
+              <div *ngFor="let people of resource.people; let l=last" class="d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+                <single-pic class="d-flex mr-2" [pic]=people.pic [width]=32 [height]=32 [type]=0></single-pic>
+                <a [routerLink]="['/people',people._id]" class="card-title">{{ people.name }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="resource.projects[0]" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <build-headline [headline]="'ASSOCIATED PROJECTS'"></build-headline>
+            <div *ngFor="let project of resource.projects; let l=last" class="d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+              <single-pic class="d-flex mr-2" [ngClass]="{'ml-1 mt-1': project.pic}" [pic]=project.pic [type]=1 [width]=30 [height]=30 [widthE]=1 [stack]=true [stackPic]="'cubes'"></single-pic>
+              <a [routerLink]="['/projects',project._id]">{{ project.name }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="adminFlag || resource.termsMore || resource.termsMode>0" class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <div class="d-flex justify-content-start">
+              <build-headline [headline]="'TERMS OF USE'" [headlineStyle]=1></build-headline>
+              <a *ngIf="adminFlag" role="button" mat-raised-button style="cursor:pointer" class="btn btn-sm btn-link ml-2 p-0" (click)="termsOp(0, true, $event)">
+                <i *ngIf="resource.termsMode==0 && resource.termsMore==null" class="material-icons">add_circle</i>
+                <i *ngIf="!(resource.termsMode==0 && resource.termsMore==null)" class="material-icons">edit</i>
+              </a>
+              <a *ngIf="adminFlag && !(resource.termsMode==0 && resource.termsMore==null)" role="button" mat-raised-button style="cursor:pointer" class="btn btn-sm btn-link ml-2 p-0" aria-haspopup="true" aria-expanded="false" (click)="termsOp(1, false, $event)">
+                <i class="material-icons">delete</i>
+              </a>
+            </div>
+            <hr class="mt-0">
+
+            <div *ngIf="resource.termsMode>0">
+              The content of this resource is licensed under the
+              <i [ngSwitch]="resource.termsMode">
+                <span *ngSwitchCase="1">GNU AGPLv3 License</span>
+                <span *ngSwitchCase="2">GNU GPLv3 License</span>
+                <span *ngSwitchCase="3">GNU LGPLv3 License</span>
+                <span *ngSwitchCase="4">Mozilla Public License 2.0</span>
+                <span *ngSwitchCase="5">Apache License 2.0</span>
+                <span *ngSwitchCase="6">MIT License</span>
+                <span *ngSwitchCase="7">The Unlicense</span>
+              </i>
+            </div>
+
+            <p *ngIf="resource.termsMode>0">
+              <a href='https://choosealicense.com/licenses/' target='empty'>
+                Further clarifications
+              </a>
+            </p>
+
+            <div *ngIf="resource.termsMore"
+                 build-text
+                 [text]=resource.termsMore
+                 [showEditBtn]=false
+                 [stream]=streamTerms>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="d-none d-lg-block">
+        <div class="d-flex justify-content-start">
+          <div class="d-none d-sm-block ml-4"></div>
+          <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+            <div class="card-body">
+              <build-headline [headline]="'SHARE THIS SERVICE'"></build-headline>
+              <share-buttons [show]="4"
+                             [include]="['facebook','twitter','linkedin', 'email']">
+              </share-buttons>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <details-buttons class="d-block d-md-none"
+                   [mode]=3
+                   [item]="{_id: resource._id, name: resource.name, pic: resource.pic}"
+                   [userId]=userId
+                   [meFlag]=adminFlag
+                   [streamFollow]=streamFollow
+                   [followStatus]=resource.followStatus
+                   (buttonFollowClick)="resourceFollow()">
+  </details-buttons>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text *ngIf=titleBuildFlag
+                  (update)="titleOp(2, false, $event)"
+                  (cancel)="titleOp(0, false, $event)"
+                  [title]="'Update Title'"
+                  [fieldType]=1
+                  [text]=resource.name>
+</build-slide-text>
+
+<build-slide-pic *ngIf=picBuildFlag
+                 (update)="picOp(2, false, $event)"
+                 (cancel)="picOp(0, false, $event)"
+                 [title]="'Resource Image'"
+                 [pic]=resource.pic
+                 [width]=128
+                 [height]=128
+                 [type]=0>
+</build-slide-pic>
+
+<build-slide-object *ngIf=miniBuildFlag[0]
+                    [itemSmall]=true
+                    [mode]=0
+                    [groupId]=resource.group.group._id
+                    [userId]=userId
+                    [title]="'Update Contact People'"
+                    [controlName]="'members'"
+                    [preMembersInput]=resource.people
+                    (update)="miniOp(2, 0, false, $event)"
+                    (cancel)="miniOp(0, 0, false, $event)">
+</build-slide-object>
+<!-- [minSelected]=1 -->
+
+<build-slide-object *ngIf=miniBuildFlag[1]
+                    [itemSmall]=true
+                    [mode]=3
+                    [groupId]=resource.group.group._id
+                    [userId]=userId
+                    [title]="'Update Projects'"
+                    [controlName]="'projects'"
+                    [preProjectsInput]=resource.projects
+                    (update)="miniOp(2, 1, false, $event)"
+                    (cancel)="miniOp(0, 1, false, $event)">
+</build-slide-object>
+
+<build-slide-tags *ngIf=tagsBuildFlag
+                  [tags]=resource.tags
+                  [headline]="'Resource Tags'"
+                  (update)="tagsOp(2, false, $event)"
+                  (cancel)="tagsOp(0, false, $event)">
+</build-slide-tags>
+
+<build-slide-text-pic *ngIf=backgroundBuildFlag
+                      [title]="'Resource Background'"
+                      [text]=resource.background
+                      [pic]=resource.backgroundPic
+                      [caption]=resource.backgroundCaption
+                      [itemId]=resource._id
+                      [captionFlag]=true
+                      (update)="backgroundOp(2, false, $event)"
+                      (cancel)="backgroundOp(0, false, $event)">
+</build-slide-text-pic>
+
+<build-slide-text-pic *ngIf=descriptionBuildFlag
+                      [title]="'Resource Description'"
+                      [text]=resource.description
+                      [pic]=resource.descriptionPic
+                      [caption]=resource.descriptionCaption
+                      [itemId]=resource._id
+                      [captionFlag]=true
+                      (update)="descriptionOp(2, false, $event)"
+                      (cancel)="descriptionOp(0, false, $event)">
+</build-slide-text-pic>
+
+<terms-build *ngIf=termsBuildFlag
+             (update)="termsOp(2, false, $event)"
+             (cancel)="termsOp(0, false, $event)"
+             [mode]=resource.termsMode
+             [more]=resource.termsMore>
+</terms-build>
+
+<build-slide-text-pic *ngIf=galleryUpdateFlag
+                      [title]="'Update Gallery Photo'"
+                      [type]=1
+                      [text]="resource.gallery[galleryIndex].name"
+                      [pic]="resource.gallery[galleryIndex].pic"
+                      (update)="galleryOp(2, false, $event, galleryIndex)"
+                      (cancel)="galleryOp(0, false, $event, null)">
+</build-slide-text-pic>
+
+<build-slide-pic-multi *ngIf=galleryAddFlag
+                       [limit]="20-resource.gallery.length"
+                       [itemId]=projId
+                       (addMultiple)="galleryOp(3, false, $event, null)"
+                       (cancel)="galleryOp(4, false, $event, null)"
+                       [title]="'Add Gallery Photos'">
+</build-slide-pic-multi>
+
+<build-slide-faq *ngIf=faqBuildFlag
+                 (update)="faqUpdate($event)"
+                 (cancel)="faqSlide($event)"
+                 [faq]=faqs[faqIndex]
+                 [newFlag]=faqNewFlag>
+</build-slide-faq>
+
+<build-slide-link *ngIf=linkBuildFlag
+                  (update)="linkUpdate($event)"
+                  (cancel)="linkSlide($event)"
+                  [link]=resource.links[linkIndex]
+                  [newFlag]=linkNewFlag>
+</build-slide-link>
+
+<build-slide-publications *ngIf=publicationBuildFlag
+                          (update)="publicationUpdate($event)"
+                          (cancel)="publicationSlide($event, false)"
+                          [newFlag]=true
+                          [groupId]="resource.group ? resource.group.group._id : null"
+                          [userId]=userId
+                          [publication]=publicationBuild
+                          [dois]=dois>
+</build-slide-publications>
+
+<resource-table-build *ngIf=tableBuildFlag
+                      (update)="tableOp($event, false, 3)"
+                      (cancel)="tableOp(null, false, 4)"
+                      [headline]=tableBuildHeadline
+                      [newFlag]=tableNewFlag
+                      [mode]=tableBuildMode
+                      [index]=tableIndex
+                      [resource]=resource>
+</resource-table-build>
+
+<resource-price-build *ngIf=priceBuildFlag
+                      (update)="priceOp(2, alse, $event)"
+                      (cancel)="priceOp(0, false, null)"
+                      [newFlag]=tableNewFlag
+                      [price]="resource.price">
+</resource-price-build>
+
+<!------------------------------------------------->
+<!-- - - - - - - - - PDF Slide - - - - - - - - - -->
+<!------------------------------------------------->
+
+<slide-pdf *ngIf=pdfSlideFlag
+           (save)="pdfSlide($event)"
+           [title]=pdfTitle
+           [fileName]=pdfFileName>
+</slide-pdf>
+
+<!------------------------------------------------->
+<!-- - - - - - - - - Signup Modal - - - - - - - --->
+<!------------------------------------------------->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="'user'"></modal-signup>
+    </div>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!-- - - - - - - - - Request Modal - - - - - - - --->
+<!------------------------------------------------->
+<button id="toggleRequestModal" #toggleRequestModal [hidden]="true" data-toggle="modal" data-target="#requestModal"></button>
+
+<div class="modal fade" id="requestModal" data-target="#requestModal" tabindex="-1" role="dialog" aria-labelledby="RequestModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form #requestform="ngForm" (ngSubmit)="requestOp(requestform)">
+
+      <div class="modal-header">
+        <p class="lead modal-title" id="ModalLabel">Request a quote</p>
+        <button *ngIf="!streamRequest" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body pb-0">
+        <div class="form-group">
+          <label for="request-message">Message</label>
+          <textarea class="form-control" id="request-message" rows="10" name="messageRequest" required ngModel></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer pb-0">
+        <button [disabled]="streamRequest" role="button" mat-raised-button class="btn btn-sm btn-link mr-2" data-dismiss="modal">Close</button>
+        <button type="submit" mat-raised-button class="d-flex align-items-center btn btn-sm btn-success" [disabled]="streamRequest">
+          <i class="fa fa-paper-plane pr-2"></i> Send Request
+          <div *ngIf="streamRequest" class="ml-2">
+            <i class="fa fa-1x fa-spinner fa-spin"></i>
+          </div>
+        </button>
+      </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Cancel Modal - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleCancelModal" #toggleCancelModal [hidden]="true" data-toggle="modal" data-target="#CancelModal"></button>
+
+<div *ngIf="streamRetrieved && resource!=null" class="modal fade" id="CancelModal" tabindex="-1" role="dialog" aria-labelledby="CancelModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="ModalCancel"><b>{{(resource.mode==2) ? 'Delete' : 'Cancel'}} Service</b></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to {{(resource.mode==2) ? 'delete' : 'cancel'}} <b>"{{ resource.name }}"</b>?</p>
+        <p *ngIf="resource.mode==2">This will permanently delete the service from your profile and search results.</p>
+        <p *ngIf="resource.mode<2">You can resume the service from the services page at any point.</p>
+
+        <div *ngIf="resource.mode==2" class="form-group">
+          <label for="InputName"><small><b>Enter "DELETE" to confirm.</b></small></label>
+          <input [(ngModel)]="deleteHint" type="text" class="form-control" id="InputName" aria-describedby="textHelp">
+        </div>
+
+        <div class="modal-footer justify-content-center py-0 my-0">
+          <button *ngIf="resource.mode<2" mat-raised-button [disabled]="streamHold==3" type="button" class="btn btn-danger btn-block" (click)="resourceCancel()">
+            <div class="d-flex align-items-center">
+              Cancel service <div *ngIf="streamHold" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></div>
+            </div>
+          </button>
+          <button *ngIf="resource.mode==2" mat-raised-button [disabled]="streamDelete==3 || deleteHint!='DELETE'" type="button" class="btn btn-danger btn-block" (click)="resourceDelete()">
+            <div class="d-flex align-items-center">
+              Delete service <div *ngIf="streamDelete" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></div>
+            </div>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

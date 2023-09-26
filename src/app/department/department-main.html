@@ -1,0 +1,77 @@
+<loading *ngIf="!streamRetrieved"></loading>
+
+<error-404 *ngIf="streamRetrieved && missionService.departmentId==null" [source]=2></error-404>
+
+<div *ngIf="streamRetrieved && missionService.departmentId" class="d-flex flex-column-reverse" style="padding-top: 0px;">
+
+ <div *ngIf="streamRetrieved && missionService.departmentIndex.university.name!='company'" class="mt-4">
+    <site-footer [name]=missionService.departmentIndex.department.name
+                 [pic]=missionService.departmentIndex.department.pic
+                 [public]=missionService.publicInfo
+                 [social]=missionService.socialInfo
+                 [streamPublic]=streamPublicInfo
+                 [streamSocial]=streamSocialInfo
+                 [groupIndex]=missionService.departmentIndex
+                 [type]=1
+                 [btnEditFlag]=missionService.showEditBtn
+                 (buttonPublicClick)="publicInfoSlide(true)"
+                 (buttonSocialClick)="socialInfoSlide(true)"
+                 (animationEndPublic)="publicInfoDone()"
+                 (animationEndSocial)="socialInfoDone()">
+    </site-footer>
+ </div>
+
+ <div style="min-height: 86vh">
+   <div class="container-fluid">
+
+     <div *ngIf="missionService.departmentIndex.university.name=='company'" class="card card-stats mt-0">
+       <div class='card-header'>
+         <h3 class="card-title">{{missionService.departmentIndex.department.name}} Providers</h3>
+         <a [routerLink]="['/company']">
+           <h6>Choose different service category</h6>
+         </a>
+       </div>
+     </div>
+
+      <breadcrumbs [mode]=1
+                   [country]="missionService.departmentCountry | country"
+                   [state]=missionService.departmentState
+                   [city]=missionService.departmentCity
+                   [university]=item.departmentIndex.university
+                   [department]=item.departmentIndex.department
+                   [page]=currentUrlSegments[1]?.path>
+      </breadcrumbs>
+
+      <router-outlet></router-outlet>
+
+    </div>
+ </div>
+
+ <department-navbar *ngIf="streamRetrieved && missionService.departmentId && missionService.departmentIndex.university.name!='company'"
+                    [activePath]=currentUrlSegments[2]?.path
+                    [departmentIndex]=item.departmentIndex
+                    [departmentType]="item.type || 0"
+                    [departmentStage]=item.stage
+                    [authFlag]=missionService.showEditBtn>
+ </department-navbar>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-info *ngIf=infoBuildFlag
+                  (update)="publicInfoUpdate($event)"
+                  (cancel)="publicInfoSlide(false)"
+                  [publicInfo]=missionService.publicInfo
+                  [mode]=2>
+</build-slide-info>
+
+<build-slide-social *ngIf=socialBuildFlag
+                    (update)="socialInfoUpdate($event)"
+                    (cancel)="socialInfoSlide(false)"
+                    [socialInfo]=missionService.socialInfo
+                    [mode]=2>
+</build-slide-social>

@@ -1,0 +1,50 @@
+<ng-container *ngIf="missionService.departmentId">
+
+  <div *ngIf="missionService.departmentStage==0">
+    <p>Every day, people are adding new departments and programs to their profiles in Academig.</p>
+    <p>We are checking all new additions before they go live and it takes us up to 72 hours to do so.</p>
+    <p>What we are doing:</p>
+    <ol>
+      <li>Checking official website <i class="fa fa-check" aria-hidden="true"></i></li>
+      <li>Calling administration <i class="fa fa-check" aria-hidden="true"></i></li>
+      <li>Adding cover photo</li>
+      <li>Adding contact details</li>
+    </ol>
+    <!-- <h5 class="text-center">PIC</h5> fix -->
+  </div>
+
+  <div *ngIf="adminFlag" class="mb-4">
+    <div class="dropdown">
+      <button mat-raised-button mat-min-fab role="button" class="btn btn-sm btn-info btn-round btn-fab mb-2" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="material-icons">add</i>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" style="cursor:pointer" (click)="buildWebsiteFunc()">
+          {{missionService.departmentIndex.university.name=='company' ? 'Add Company' : 'Add Lab'}}
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" style="cursor:pointer" (click)="csvOp(0, true, null)">Upload CSV</a>
+      </div>
+    </div>
+    <spinner-put [stream]=streamCsv (animationDoneEvent)="streamCsvFunc()"></spinner-put>
+  </div>
+
+  <department-groups-list *ngIf="missionService.departmentStage==1"
+                          [mode]=0>
+  </department-groups-list>
+
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-pic *ngIf=csvBuildFlag
+                 (update)="csvOp(2, false, $event)"
+                 (cancel)="csvOp(0, false, $event)"
+                 [title]="'Labs CSV'"
+                 [type]=6>
+</build-slide-pic>
+<!-- [pic]=publication.pdf -->
+<!-- [itemId]=projId -->

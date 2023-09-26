@@ -1,0 +1,53 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <img src="./assets/img/build/background.svg" style="max-height: 10rem;" class="mx-auto d-block img-fluid" alt="academig_lab_introduction"> -->
+
+  <h3 *ngIf="forkNum<8" class="mb-3 text-center"><b>About your {{(labType==0) ? 'lab' : 'company'}}</b></h3>
+  <h3 *ngIf="forkNum==8" class="mb-3 text-center"><b>About you</b></h3>
+
+  <div class="form-group row">
+    <div class="col-12 col-md-11 col-xl-8 mx-auto">
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <build-modal-text-field [itemFirst]=true
+                                  [fieldType]=2
+                                  [textAreaRows]=5
+                                  [itemTitle]="'Background'"
+                                  [itemExplain]="(forkNum<8) ? 'Add a description of your lab and the research focus of the lab so others get familiar with what you\'re working on.' : 'Showcase your research by adding a short introduction about yourself and your interests.'"
+                                  [controlName]="'background'"
+                                  [parentGroup]=parentGroup>
+          </build-modal-text-field>
+          <!-- Button: Add an image -->
+        </div>
+      </div>
+
+      <div class="card mt-0">
+        <div class="card-body">
+          <h5 *ngIf="forkNum==8" class="my-2"><b>Pro tip: We use the research interests you pick here to build your research labs feed</b></h5>
+          <build-modal-text-field [fieldType]=8
+                                  [itemTitle]="(labType==0) ? ((forkNum==8) ? 'Research Interests' : 'Lab Research Interests') : 'Expertise'"
+                                  [itemPlaceholder]="(labType==0) ? '+ Interest' : '+ Expertise'"
+                                  [itemSecondaryPlaceholder]="(labType==0) ? 'Enter a new interest' : 'Enter a new expertise'"
+                                  [itemExplain]="(labType==0) ? 'Enter one or more research interests (up to 6) separated by commas (,) or press enter.' : 'Enter one or more company expertise (up to 6) separated by commas (,) or press enter.'"
+                                  [maxItems]=6
+                                  [itemValues]=parentGroup.value.interests
+                                  [controlName]="'interests'"
+                                  [parentGroup]=parentGroup>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

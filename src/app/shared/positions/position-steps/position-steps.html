@@ -1,0 +1,24 @@
+<build-modal-intro *ngIf="activeStepsText[0]==null && !showEditBtn"
+                   [addButtonFlag]=showEditBtn
+                   (buttonAddClick)="positionSlide(true)"
+                   [headline]="'Application deadlines'"
+                   [bodypic]="'exchange'"
+                   [bodytext]="'There are no application deadlines for this position.'">
+                   <!-- You can manage the entire application process here -->
+</build-modal-intro>
+
+<div class="row bs-wizard mt-0 pt-0" style="border-bottom:0;">
+
+  <span *ngFor="let activeStep of activeStepsStatus; let i=index" class="col-3 bs-wizard-step {{ activeStep }} mb-3">
+
+    <div class="bs-wizard-stepnum text-center text-dark">Step {{i+1}}</div>
+
+    <div class="progress"><div class="progress-bar"></div></div>
+
+    <span class="bs-wizard-dot"></span>
+
+    <div class="bs-wizard-info text-center text-dark">{{ activeStepsText[i] }}<br>{{ activeStepsDate[i] | date:'dd MMM y' }}</div>
+
+  </span>
+
+</div>

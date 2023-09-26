@@ -1,0 +1,48 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">Update {{title[mode]}} General Info</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()">
+
+      <build-modal-text-field [iconTitle]="'home'"
+                              [itemTitle]="'Address'"
+                              [itemFirst]=true
+                              [fieldType]=2
+                              [textAreaRows]=5
+                              [controlName]="'address'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [iconTitle]="'envelope'"
+                              [itemTitle]="'Email'"
+                              [controlName]="'email'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [iconTitle]="'phone'"
+                              [itemTitle]="'Phone'"
+                              [controlName]="'phone'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [iconTitle]="'fax'"
+                              [itemTitle]="'Fax'"
+                              [controlName]="'fax'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <build-modal-text-field [iconTitle]="'globe'"
+                              [itemTitle]="site[mode] + ' website'"
+                              [controlName]="'website'"
+                              [parentGroup]=formModel>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button role="button" [disabled]=disableFlag mat-raised-button class="btn btn-sm btn-fill btn-light-blue">Update</button>
+        <button type="button" [disabled]=disableFlag mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

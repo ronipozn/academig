@@ -1,0 +1,31 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<ng-container *ngIf="streamRetrieved">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card mt-4">
+        <div class="card-body mt-0">
+          <p class="mb-0"><b>Stage</b></p>
+          <hr class="mt-0 mb-1">
+          <div class="togglebutton">
+            <label for="UniversityStage">
+              <input type="checkbox" id="UniversityStage" [(ngModel)]="account.stage" (change)="toogleStage()">
+              <span class="toggle"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-0">
+        <div class="card-body mt-0">
+          <p class="mb-0"><b>Country, State & City</b></p>
+          <hr class="mt-0 mb-2">
+          <p>Country: {{missionService.country | country}}</p>
+          <p>State: {{missionService.state || '-'}}</p>
+          <p>City: {{missionService.city || '-'}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

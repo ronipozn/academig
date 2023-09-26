@@ -1,0 +1,34 @@
+<div *ngIf="challengeFlag" class="fixed-bottom px-0">
+  <div class="card bg-success py-2 mb-0" style="background-color: #6D69FB; border-radius: 0px;" data-notify="container">
+    <span data-notify="message">
+      <div class="d-none d-lg-block">
+        <div class="d-flex justify-content-around align-items-center">
+          <div class="lead mr-2">
+            <b><i class="fa fa-rocket" aria-hidden="true"></i> Challenge yourself to read more research papers in 2020!</b>
+          </div>
+          <div>
+            <button (click)="challengeFunc()" type="button" mat-raised-button class="btn btn-sm mr-1" style="color: #5BAE5F; background-color: white; border: 1px solid white;">
+              Launch PapersMaster
+            </button>
+            <button (click)="removeChallengeFunc()" mat-raised-button class="btn btn-sm" style="color: white; background-color: transparent; border: 1px solid white;">
+              I’m not interested
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="d-block d-lg-none">
+        <div class="d-flex justify-content-center">
+          <b>Challenge yourself to read more research papers in 2020</b>
+        </div>
+        <div class="d-flex justify-content-center">
+          <a (click)="challengeFunc()" style="cursor: pointer;" class="btn btn-link small pb-0 pt-1 pr-2 mb-0">
+            Launch PapersMaster
+          </a>
+          <a (click)="removeChallengeFunc()" style="cursor: pointer;" class="btn btn-link small pb-0 pt-1 pl-2 mb-0">
+            I’m not interested
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>

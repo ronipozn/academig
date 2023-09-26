@@ -1,0 +1,302 @@
+<div *ngIf="!archiveFlag && (missionService.buildPro==0 || !missionService.buildPro)" class="bg-white pt-4 mb-4">
+  <div class="container">
+    <div class="row justify-content-start pb-4">
+      <div class="d-none d-md-block col-md-6">
+        <h1 class="display-4"><b>Academig Build For Me Pro</b></h1>
+        <p class="mt-4 text-dark font-weight-light">Make Your Lab Profile Up To Date, Automatically</p>
+        Try Lab Suggestions PRO for free for 7 days. Pay just 10$ monthly later, cancel anytime. Learn more <a [routerLink]="['/academig-lab-suggestions']">here</a>.
+        <br><br>
+        <!-- <p class="mt-4 text-dark font-weight-light">Unlock prospecting and research tools on Crunchbase:</p>
+        SALES PROSPECTING
+        FIND INVESTMENTS
+        RAISE CAPITAL
+        MARKET RESEARCH<br><br>-->
+        <button (click)="planUpdate(0)" role="button" class="btn btn-light-blue" aria-haspopup="true" aria-expanded="false">Try Lab Suggestions PRO</button>
+      </div>
+      <!-- <div class="col-md-6 text-center pl-4">
+        <img class="img-fluid text-center" [src]="'https://about.crunchbase.com/wp-content/uploads/2020/04/LPHeader_Mackbook_SearchMenu_1.png'">
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!archiveFlag || streamRetrievedTotal" class="card mt-0" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <div class="d-flex">
+      <div class="mr-auto d-flex align-items-center">
+        <h4 class="card-title mr-2"><b><i class="text-muted fa fa-magic mr-1"></i> Suggestions</b></h4>
+        <button *ngIf="showEditBtn" (click)="openArchiveModalFunc()" mat-raised-button type="button" [matTooltip]=tooltip [matTooltipPosition]="'Archive'" class="btn btn-link btn-sm btn-just-icon">
+          <i class="material-icons">archive</i>
+        </button>
+      </div>
+      <div class="d-flex align-items-center">
+        <span *ngIf="missionService.buildPro<2" class="badge badge-pill badge-warning mr-2">Basic</span>
+        <span *ngIf="missionService.buildPro==2" class="badge badge-pill badge-warning mr-2 p-2">PRO Plan Monthly</span>
+        <!-- <span><a (click)="planUpdate(1)" href="javascript:void(0)" class="card-title mr-2">Change Plan (Yearly)</a></span>
+        <span>|</span>
+        <span><a (click)="planUpdate()" href="javascript:void(0)" class="card-title ml-2">Cancel Plan</a></span> -->
+      </div>
+    </div>
+    <!-- <p>Most recent check was at: 05/06/2019.</p> -->
+    <hr class="mt-2">
+
+    <span *ngIf="streamRetrievedTotal && itemCount==0" class="text-muted">
+      <span *ngIf="!archiveFlag">The list of suggestions is currently empty. You will get a notification once a new suggestion is found by our smart algorithms.</span>
+      <span *ngIf="!archiveFlag"><img src="./assets/img/items/suggestions.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="350" alt="academig_suggestions"></span>
+      <span *ngIf="archiveFlag">The archive list is currently empty. All the rejected items will appear here.</span>
+    </span>
+
+    <span *ngIf="streamRetrievedTotal && itemCount==1" class="text-muted">
+      <span *ngIf="!archiveFlag">{{itemCount}} suggestion is waiting for you.</span>
+      <span *ngIf="archiveFlag">There is {{itemCount}} item in the archive.</span>
+    </span>
+
+    <span *ngIf="streamRetrievedTotal && itemCount>1" class="text-muted">
+      <span *ngIf="!archiveFlag">{{itemCount}} suggestions are waiting for you.</span>
+      <span *ngIf="archiveFlag">There are {{itemCount}} items in the archive.</span>
+    </span>
+
+  </div>
+</div>
+
+<spinner *ngIf="!streamRetrievedTotal"></spinner>
+
+<ng-container *ngIf="streamRetrievedTotal">
+
+  <ng-container *ngIf="!archiveFlag && topics.length>0">
+    <ng-container *ngFor="let topic of topics; let i=index">
+      <div *ngIf="streamRetrievedTopic[i] && (topic.ai || projects[i].length>0)" class="card mt-0" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <div class="d-flex align-items-center mt-0">
+            <span class="lead pt-3"><b>{{topic.name}}</b></span>
+            <a *ngIf="streamTopicSuggestion==0 && topic.ai" (click)="suggestionFunc([i, 1], 20)" style="cursor: pointer;" role="button" class="btn btn-link ml-2 p-0" aria-haspopup="true" aria-expanded="false">
+              <span class="fa-stack">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-check fa-stack-1x fa-inverse" style="color: green"></i>
+              </span>
+            </a>
+            <a *ngIf="streamTopicSuggestion==0 && topic.ai" (click)="suggestionFunc([i, 0], 20)" style="cursor: pointer;" role="button" class="btn btn-link ml-2 p-0" aria-haspopup="true" aria-expanded="false">
+              <span class="fa-stack">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-times fa-stack-1x fa-inverse" style="color: red"></i>
+              </span>
+            </a>
+            <i *ngIf="streamTopicSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+          </div>
+          <hr class="mt-0 mb-4">
+          <!-- <p class="d-flex align-items-center"></p> -->
+          <projects-list [streamRetrieved]=streamRetrievedTopic[i]
+                         [projects]=projects[i]
+                         [sourceType]="adminFlag ? 10 : (archiveFlag ? 9 : 8)"
+                         [aiFlag]="topic.ai==1"
+                         [stream]=streamProjects
+                         [streamFollow]=streamProjects
+                         [streamSuggestion]=streamProjectsSuggestion
+                         (buttonSuggestionClick)="decisionProjectsFunc(i, $event)"
+                         (animationDoneEvent)=streamFunc(0)>
+          </projects-list>
+          <!-- (buttonAcceptClick)="decisionProjectsFunc(i, $event, 1)" -->
+          <!-- (buttonRejectClick)="decisionProjectsFunc(i, $event, 0)" -->
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <div *ngIf="archiveFlag && projects && projects[0].length>0" [ngClass]="{'card mt-0': !archiveFlag}" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Projects'"></build-headline>
+      <projects-list [streamRetrieved]=streamRetrieved[0]
+                     [projects]=projects[0]
+                     [sourceType]="adminFlag ? 10 : (archiveFlag ? 9 : 8)"
+                     [stream]=streamProjects
+                     [streamFollow]=streamProjects
+                     [streamSuggestion]=streamProjectsSuggestion
+                     (animationDoneEvent)=streamFunc(0)>
+      </projects-list>
+      <!-- (buttonSuggestionClick)="suggestionFunc($event, 0)" -->
+    </div>
+  </div>
+
+  <div *ngIf="fundings.length>0" [ngClass]="{'card mt-0': !archiveFlag}" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Funding'"></build-headline>
+      <fundings-list [streamRetrieved]=streamRetrieved[2]
+                     [fundings]=fundings
+                     [sourceType]="adminFlag ? 5 : (archiveFlag ? 4 : 3)"
+                     [stream]=streamFundings
+                     [streamRole]=streamFundings
+                     [streamSuggestion]=streamFundingsSuggestion
+                     (buttonSuggestionClick)="suggestionFunc($event, 2)"
+                     (animationDoneEvent)=streamFunc(2)>
+      </fundings-list>
+    </div>
+  </div>
+
+  <!-- <div *ngIf="positions.length>0" [@itemsAnimation]="('active')" [ngClass]="{'card mt-0': !archiveFlag}">
+    <div class="card-body">
+      <build-headline [headline]="'Open Positions'"></build-headline>
+      <positions-list [streamRetrieved]=streamRetrieved[3]
+                      [positions]=positions
+                      [sourceType]="adminFlag ? 7 : (archiveFlag ? 6 : 5)"
+                      [stream]=streamPositions
+                      [streamFollow]=streamPositions
+                      [streamSuggestion]=streamPositionsSuggestion
+                      (buttonSuggestionClick)="suggestionFunc($event, 3)"
+                      (animationDoneEvent)=streamFunc(3)>
+      </positions-list>
+    </div>
+  </div> -->
+
+  <div *ngIf="resources.length>0" [ngClass]="{'card mt-0': !archiveFlag}" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Services'"></build-headline>
+      <resource-list [streamRetrieved]=streamRetrieved[4]
+                     [resources]=resources
+                     [sourceType]="adminFlag ? 11 : (archiveFlag ? 10 : 9)"
+                     [stream]=streamResources
+                     [streamFollow]=streamResources
+                     [streamSuggestion]=streamResourcesSuggestion
+                     (buttonSuggestionClick)="suggestionFunc($event, 4)"
+                     (animationDoneEvent)=streamFunc(4)>
+      </resource-list>
+    </div>
+  </div>
+
+  <div *ngIf="outreachs.length>0" [ngClass]="{'card mt-0': !archiveFlag}" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Outreach'"></build-headline>
+      <outreachs-list [streamRetrieved]=streamRetrieved[12]
+                      [outreachs]=outreachs
+                      [sourceType]="adminFlag ? 10 : (archiveFlag ? 9 : 8)"
+                      [stream]=streamOutreachs
+                      [streamSuggestion]=streamOutreachsSuggestion
+                      (buttonSuggestionClick)="suggestionFunc($event, 8)"
+                      (animationDoneEvent)="streamFunc()">
+      </outreachs-list>
+    </div>
+  </div>
+
+  <div *ngIf="teachings.length>0" [ngClass]="{'card mt-0': !archiveFlag}" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Teaching'"></build-headline>
+      <teachings-list [streamRetrieved]=streamRetrieved[5]
+                      [teachings]=teachings
+                      [sourceType]="adminFlag ? 10 : (archiveFlag ? 9 : 8)"
+                      [stream]=streamTeachings
+                      [streamFollow]=streamTeachings
+                      [streamSuggestion]=streamTeachingsSuggestion
+                      (buttonSuggestionClick)="suggestionFunc($event, 5)"
+                      (animationDoneEvent)=streamFunc(5)>
+      </teachings-list>
+    </div>
+  </div>
+
+  <div *ngIf="contacts.length>0" [ngClass]="{'card mt-0': !archiveFlag}" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Contacts'"></build-headline>
+      <contact-list [streamRetrieved]=streamRetrieved[11]
+                    [contacts]=contacts
+                    [stream]=streamContacts
+                    [streamSuggestion]=streamContactsSuggestion
+                    [sourceType]="adminFlag ? 3 : (archiveFlag ? 2 : 1)"
+                    (buttonSuggestionClick)="suggestionFunc($event, 11)"
+                    (animationDoneEvent)=streamFunc(11)>
+      </contact-list>
+    </div>
+  </div>
+
+  <div *ngIf="galleries.length>0" [ngClass]="{'card mt-0': !archiveFlag}" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Gallery'"></build-headline>
+      <div *ngIf="galleries[0]" class="ml-2 card-columns">
+        <div *ngFor="let gallery of galleries; let i=index">
+          <gallery-item [_id]=gallery._id
+                        [pic]=gallery.pics[0].pic
+                        [title]=gallery.title
+                        [date]=gallery.date
+                        [description]=gallery.description
+                        [stream]=streamGalleries[i]
+                        [streamSuggestion]=streamGalleriesSuggestion
+                        [mode]="adminFlag ? 6 : (archiveFlag ? 5 : 4)"
+                        (buttonSuggestionClick)="suggestionFunc($event, 6)"
+                        (animationDoneEvent)=streamFunc(6)>
+          </gallery-item>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="faqs.length>0" [ngClass]="{'card mt-0': !archiveFlag}" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'FAQ'"></build-headline>
+      <div class="ml-2">
+        <faq-list [faqs]=faqs
+                  [stream]=streamFAQ
+                  [streamSuggestion]=streamFAQSuggestion
+                  [sourceType]="adminFlag ? 3 : (archiveFlag ? 2 : 1)"
+                  (buttonSuggestionClick)="suggestionFunc($event, 7)"
+                  (animationDoneEvent)=streamFunc(7)>
+        </faq-list>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="talks.length>0 || posters.length>0 || presses.length>0" [ngClass]="{'card mt-0': !archiveFlag}" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Media'"></build-headline>
+      <media-talk-list [streamRetrieved]=streamRetrieved[8]
+                       [talks]=talks
+                       [sourceType]="adminFlag ? 7 : (archiveFlag ? 6 : 5)"
+                       [stream]=streamTalk
+                       [streamSuggestion]=streamTalkSuggestion
+                       (buttonSuggestionClick)="suggestionFunc($event, 8)"
+                       (animationDoneEvent)=streamFunc(8)>
+      </media-talk-list>
+      <media-poster-list [streamRetrieved]=streamRetrieved[9]
+                         [posters]=posters
+                         [sourceType]="adminFlag ? 7 : (archiveFlag ? 6 : 5)"
+                         [stream]=streamPoster
+                         [streamSuggestion]=streamPosterSuggestion
+                         (buttonSuggestionClick)="suggestionFunc($event, 9)"
+                         (btnPDF)="pdfSlide(true,$event)"
+                         (animationDoneEvent)=streamFunc(9)>
+      </media-poster-list>
+      <media-press-list [streamRetrieved]=streamRetrieved[10]
+                        [presses]=presses
+                        [sourceType]="adminFlag ? 7 : (archiveFlag ? 6 : 5)"
+                        [stream]=streamPress
+                        [streamSuggestion]=streamPressSuggestion
+                        (buttonSuggestionClick)="suggestionFunc($event, 10)"
+                        (animationDoneEvent)=streamFunc(10)>
+      </media-press-list>
+    </div>
+  </div>
+
+  <!-- <div *ngIf="publications.length>0" class="card mt-0" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Publications'"></build-headline>
+    <publications-list [streamRetrieved]=streamRetrieved[1]
+                       [publications]=publications
+                       [sourceType]=2
+                       [stream]=streamPublications
+                       [streamFolder]=streamPublications
+                       [streamSuggestions]=streamSuggestions
+                       [suggestFlag]=true
+                       (btnAccpet)="suggestionDecision($event,0)"
+                       (btnReject)="suggestionDecision($event,1)">
+    </publications-list>
+  </div> -->
+
+  <!-- <div class="card mt-0" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'News'"></build-headline>
+  </div> -->
+
+  <!-- <div class="card mt-0" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'People'"></build-headline>
+  </div> -->
+
+  <!-- <div *ngIf="collaborations.length>0" class="card mt-0" [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Collaborations'"></build-headline>
+  </div> -->
+
+</ng-container>

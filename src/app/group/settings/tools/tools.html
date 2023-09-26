@@ -1,0 +1,53 @@
+<div class="row">
+
+  <div class="col-lg-6">
+    <div class="card mt-0">
+      <div class="card-body mt-0">
+        <form class="form-group" [formGroup]="form" (ngSubmit)="privacyOp(0)" novalidate>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" value="0" formControlName="seminars"> The lab seminars page is visible only to {{missionService.groupTypeTitle | lowercase}} members
+              <span class="circle"><span class="check"></span></span>
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" value="1" formControlName="seminars"> The lab seminars page is visible to everyone
+              <span class="circle">
+                <span class="check"></span>
+              </span>
+            </label>
+          </div>
+          <button type="submit" mat-raised-button [disabled]="privacyOp[0]>0" class="btn btn-sm btn-light-blue">Update</button>
+          <spinner-put class="ml-1" [stream]="streamPrivacy[0]" (animationDoneEvent)="streamPrivacy[0]=0"></spinner-put>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card mt-0">
+      <div class="card-body mt-0">
+        <form class="form-group" [formGroup]="form" (ngSubmit)="privacyOp(1)" novalidate>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" value="0" formControlName="kit"> The lab papers kit page is visible only to {{missionService.groupTypeTitle | lowercase}} members
+              <span class="circle"><span class="check"></span></span>
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" value="1" formControlName="kit"> The lab papers kit page is visible to everyone
+              <span class="circle">
+                <span class="check"></span>
+              </span>
+            </label>
+          </div>
+          <button type="submit" mat-raised-button [disabled]="streamPrivacy[1]>0" class="btn btn-sm btn-light-blue">Update</button>
+          <spinner-put class="ml-1" [stream]="streamPrivacy[1]" (animationDoneEvent)="streamPrivacy[1]=0"></spinner-put>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>

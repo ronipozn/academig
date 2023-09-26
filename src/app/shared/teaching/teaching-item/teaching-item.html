@@ -1,0 +1,131 @@
+<li class="media">
+
+  <!-- <div [ngClass]="{'invisible': (!showEditBtn || sourceType>0 || !(showButton && stream==0))}" class="handle"></div> -->
+
+  <single-pic class="d-flex mr-3"
+              [ngClass]="{'mt-2 ml-2': teaching.pic}"
+              [pic]=teaching.pic
+              [type]=1
+              [width]=56
+              [height]=56
+              [widthE]=2
+              [stack]=true
+              [stackColor]="colorPallete[colorNum]"
+              [stackPic]="'graduation-cap'">
+  </single-pic>
+
+  <div class="media-body">
+
+    <span class="lead mr-2">{{ teaching.name }}</span>
+    <!-- <a *ngIf="teaching._id" [routerLink]="[teaching._id]">{{ teaching.name }}</a> -->
+    <!-- <span class="small text-muted"><i class="fa fa-eye" aria-hidden="true"></i> {{ teaching.views[4] }}</span> -->
+
+    <build-buttons [showButton]="showEditBtn && stream==0"
+                   (buttonEditClick)="buttonEditFunc($event)"
+                   (buttonDeleteClick)="buttonDeleteFunc($event)">
+    </build-buttons>
+
+    <spinner-put [stream]=stream
+                 (animationDoneEvent)="animationDone($event)">
+    </spinner-put>
+
+    <div *ngIf="teaching.period && teaching.period.start" class="small text-muted mb-2">
+      <i class="fa fa-clock-o" aria-hidden="true"></i>
+      <span *ngIf="teaching.period.mode==2">
+        Started on {{ teaching.period.start | date: 'MMM y' }}
+      </span>
+      <span *ngIf="teaching.period.mode==0">
+        Between {{ teaching.period.start | date: 'MMM y' }} - {{ teaching.period.end | date: 'MMM y' }}
+      </span>
+    </div>
+
+    <ng-container *ngIf="sourceType>=1 && sourceType<=7 && teaching.group">
+      <group-link [groupIndex]=teaching.group></group-link>
+    </ng-container>
+
+    <p *ngIf="sourceType>=1 && sourceType<=4 && teaching.profile" class="d-flex justify-content-start align-items-center">
+      <single-pic class="d-flex mr-2"
+                  [pic]=teaching.profile.pic
+                  [width]=24
+                  [height]=24
+                  [type]=0>
+      </single-pic>
+      <a [routerLink]="['/people',teaching.profile._id]">{{ teaching.profile.name }}</a>
+    </p>
+
+    <ng-container *ngIf="teaching.id">
+      <span class="text-muted">ID: </span> {{ teaching.id }} <br>
+    </ng-container>
+
+    <ng-container *ngIf="teaching.role">
+      <span class="text-muted">Role: </span>
+      <span *ngIf="teaching.role==0">Lecturer</span>
+      <span *ngIf="teaching.role==1">Guest Lecturer</span>
+      <span *ngIf="teaching.role==2">Teaching Assistant</span>
+      <br>
+    </ng-container>
+
+    <ng-container *ngIf="teaching.location">
+      <span class="text-muted">Location: </span> {{ teaching.location }}<br>
+    </ng-container>
+
+    <ng-container *ngIf="teaching.university">
+      <span class="text-muted">University: </span> {{ teaching.university }}<br>
+    </ng-container>
+
+    <ng-container *ngIf="teaching.description">
+      <span class="text-muted">Description: </span> {{ teaching.description }}<br>
+    </ng-container>
+
+    <ng-container *ngIf="sourceType==8">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+      <button [disabled]="streamSuggestion>0" role="button" class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </ng-container>
+    <ng-container *ngIf="sourceType==10">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </ng-container>
+
+    <!-- <div class="d-flex justify-content-start">
+      <div *ngIf="sourceType!=4 && userService.userId" class="row no-gutters pb-2">
+
+        <div class="col mr-2 mb-2">
+          <follow-btn [followStatus]=teaching.followStatus
+                      [streamFollow]=streamFollow
+                      [stream]=stream
+                      (buttonFollowClick)="buttonFollowFunc($event)">
+          </follow-btn>
+        </div>
+
+        <div class="col mr-2 mb-2">
+          <button [disabled]="stream>0 || !userService.userEmailVerified" data-toggle="modal" (click)="openShareModalFunc()" attr.data-target="#ShareModal{{teaching._id}}" role="button" class="btn btn-sm btn-outline-info" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-share-alt" aria-hidden="true"></i> Share
+          </button>
+        </div>
+
+      </div>
+    </div> -->
+
+  </div>
+
+</li>
+
+<hr *ngIf="sourceType>=8 || sourceType<=10">
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Share Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- <button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" attr.data-target="#ShareModal{{teaching._id}}"></button>
+
+<div class="modal fade" id="ShareModal{{teaching._id}}" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=4
+                   [itemId]=teaching._id
+                   [flag]=shareFlag
+                   (closeModal)="closeShareModalFunc()">
+      </modal-share>
+    </div>
+  </div>
+</div> -->

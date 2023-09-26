@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="ReportModalLabel">Report</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+
+  <p class="mb-2">
+    Help us by reporting content that is offensive, fake, of a commercial nature, or spam.
+  </p>
+
+  <p *ngIf="mode==1" class="text-muted">
+    Reporting users will automatically block them, preventing them from following or messaging you.
+  </p>
+
+  <p *ngIf="mode!=0" class="mb-1">Tell us why you’re reporting the {{itemType}}, {{item.name}}:</p>
+  <p *ngIf="mode==0" class="mb-1">Tell us why you’re reporting the {{itemType}}, {{groupIndex.group.name}}:</p>
+
+  <textarea class="form-control" id="Textarea" rows="4" [(ngModel)]="message"></textarea>
+
+</div>
+
+<div class="modal-footer">
+  <button [disabled]=btnsDisabled role="button" mat-raised-button class="btn btn-sm btn-link" data-dismiss="modal">Close</button>
+
+  <button [disabled]=btnsDisabled role="button" mat-raised-button class="btn btn-sm btn-warning mr-2 d-flex justify-content-start" (click)="sendReport(0)">
+    <div class="d-flex justify-content-start">Spam <span *ngIf="!streamRetrieved[0]" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></span></div>
+  </button>
+
+  <button [disabled]=btnsDisabled role="button" mat-raised-button class="btn btn-sm btn-warning mr-2 d-flex justify-content-start" (click)="sendReport(1)">
+    <div class="d-flex justify-content-start">Fake <span *ngIf="!streamRetrieved[1]" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></span></div>
+  </button>
+
+  <button [disabled]=btnsDisabled role="button" mat-raised-button class="btn btn-sm btn-warning" (click)="sendReport(2)">
+    <div class="d-flex justify-content-start">Offensive <span *ngIf="!streamRetrieved[2]" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></span></div>
+  </button>
+
+</div>

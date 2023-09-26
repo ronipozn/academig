@@ -1,0 +1,49 @@
+<div [formGroup]="parentGroup">
+
+  <h3 class="mb-1 text-center">Let us brighten your inbox.</h3>
+  <p class="mb-0 text-center text-muted">
+    Select the emails you’d love to receive
+  </p>
+
+  <div class="form-group row mb-0">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto">
+      <ul class="list-unstyled" [formArrayName]="'subscribe'">
+        <ng-container *ngFor="let topic of topics; let i=index">
+          <li *ngIf="i==1 || i==3" [ngClass]="{'border-primary': arrayControl?.at(i).value}" class="border p-2 mt-3" style="border-width:3px">
+            <div class="d-flex bd-highlight">
+              <div class="media mr-auto pr-4">
+                <i class="align-self-center mr-3 fa fa-2x fa-{{topicsIcon[i]}}" aria-hidden="true"></i>
+                <div class="media-body small">
+                  <span class="mt-0 mb-1"><b>{{topic}}</b></span><br>
+                  <span class="text-muted">{{topicsExplain[i]}}</span>
+                </div>
+              </div>
+              <div>
+                <div class="togglebutton">
+                  <label for="customSwitch{{i}}">
+                    <input [formControlName]="i" type="checkbox" id="customSwitch{{i}}">
+                    <span class="toggle"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+
+  <p class="small my-0 text-center text-muted">
+    Visit Notification in your Academig Settings tabs if you change your mind.
+  </p>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

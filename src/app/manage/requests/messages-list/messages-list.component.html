@@ -1,0 +1,64 @@
+<button *ngIf="(type==0 || resource.channels[0].type==type) && mode==0" on-mouseover='requestButtonOver(true)' on-mouseleave='requestButtonOver(false)'
+        class="ml-0 mb-2 list-group-item list-group-item-action d-flex align-items-center justify-content-start" [ngClass]="{'active' : selectedFlag}" (click)="refreshChannelFunc()">
+  <single-pic class="mr-3" [pic]=resource.pic [type]=1 [width]=48 [height]=48 [widthE]=2
+              [stack]=true [stackColor]="'5E5770'" [stackPic]="'wrench'">
+  </single-pic>
+  <div>
+    {{resource.name}}
+    <p *ngIf="resource.channels[0].message" class="my-0 small">
+      <span *ngIf="resource.channels[0].message.date">{{resource.channels[0].message.date | momentPipe:'':1}}</span>
+      <span *ngIf="resource.channels[0].unread" class="h6"><span class="badge badge-pill badge-warning">{{resource.channels[0].unread}}</span></span>
+    </p>
+    <!-- <span *ngIf="!channel.users[0]">User Deleted</span> -->
+    <!-- <p *ngIf="channel.message" class="my-1 small">
+      <span *ngIf="channel.message.userId==userService.userId && channel.message.text">You:</span>
+      <span *ngIf="channel.message.text">{{channel.message.text | truncate:[10]}}</span>
+    </p> -->
+  </div>
+  <div *ngIf="showButton" class="btn-group btn-group-vertical ml-2 py-0 my-0">
+    <button *ngIf="type==0 && resource.channels[0].type==0" type="button" (click)="postChannelFunc(1)" mat-raised-button class="btn btn-sm mt-0 mb-1 btn-info">
+      <i class="fa fa-star-o mr-1" aria-hidden="true"></i>Star
+    </button>
+    <button *ngIf="type==0 && resource.channels[0].type==0" type="button" (click)="postChannelFunc(5)" mat-raised-button class="btn btn-sm mb-0 btn-info">
+      <i class="fa fa-archive mr-1" aria-hidden="true"></i>Archive
+    </button>
+    <button *ngIf="resource.channels[0].type==1" type="button" (click)="postChannelFunc(0)" mat-raised-button class="btn btn-sm btn-info">
+      <i class="fa fa-star mr-1" aria-hidden="true"></i>Unstar
+    </button>
+    <button *ngIf="resource.channels[0].type==5" type="button" (click)="postChannelFunc(0)" mat-raised-button class="btn btn-sm btn-info">
+      <i class="fa fa-archive mr-1" aria-hidden="true"></i>Unarchive
+    </button>
+  </div>
+  <div *ngIf="!showButton" class="py-3"></div>
+</button>
+
+<button *ngIf="(type==0 || channel.type==type) && mode==1" on-mouseover='requestButtonOver(true)' on-mouseleave='requestButtonOver(false)'
+        class="ml-0 mb-2 list-group-item list-group-item-action d-flex align-items-center justify-content-start" [ngClass]="{'active' : selectedFlag}" (click)="refreshChannelFunc()">
+  <single-pic *ngIf="channel.users[0].pic" class="mr-3" [pic]="channel.users[0].pic" [width]=48 [height]=48 [type]=0></single-pic>
+  <div>
+    {{channel.users[0].name}}
+    <p *ngIf="channel.message" class="my-0 small">
+      <span *ngIf="channel.message.date">{{channel.message.date | momentPipe:'':1}}</span>
+      <span *ngIf="channel.unread" class="h6"><span class="badge badge-pill badge-warning">{{channel.unread}}</span></span>
+    </p>
+    <!-- <span *ngIf="!channel.users[0]">User Deleted</span> -->
+    <!-- <p *ngIf="channel.message" class="my-1 small">
+      <span *ngIf="channel.message.userId==userService.userId && channel.message.text">You:</span>
+      <span *ngIf="channel.message.text">{{channel.message.text | truncate:[10]}}</span>
+    </p> -->
+  </div>
+  <div *ngIf="showButton" class="btn-group btn-group-vertical ml-2 py-0 my-0">
+    <button *ngIf="type==0 && channel.type==0" type="button" (click)="postChannelFunc(1)" mat-raised-button class="btn btn-sm mt-0 mb-1 btn-info">
+      <i class="fa fa-star-o mr-1" aria-hidden="true"></i>Star
+    </button>
+    <button *ngIf="type==0 && channel.type==0" type="button" (click)="postChannelFunc(5)" mat-raised-button class="btn btn-sm mb-0 btn-info">
+      <i class="fa fa-archive mr-1" aria-hidden="true"></i>Archive
+    </button>
+    <button *ngIf="channel.type==1" type="button" (click)="postChannelFunc(0)" mat-raised-button class="btn btn-sm btn-info">
+      <i class="fa fa-star mr-1" aria-hidden="true"></i>Unstar
+    </button>
+    <button *ngIf="channel.type==5" type="button" (click)="postChannelFunc(0)" mat-raised-button class="btn btn-sm btn-info">
+      <i class="fa fa-archive mr-1" aria-hidden="true"></i>Unarchive
+    </button>
+  </div>
+</button>

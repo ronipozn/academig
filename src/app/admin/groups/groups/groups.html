@@ -1,0 +1,251 @@
+<div class="row">
+
+  <div class="col-sm-10">
+    <div class="card mt-0">
+      <div class="card-header">
+        <div class="input-group no-border">
+          <!-- (keyup)="keyUpOp(input.value)"  -->
+          <input #input type="text" value="" class="form-control" placeholder="Search labs...">
+          <!-- (click)="onSearch()"  -->
+          <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+            <i class="material-icons">search</i>
+            <div class="ripple-container"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-2">
+    <div *ngIf="streamRetrieved[0]" class="card mt-0">
+      <div class="card-body">
+        <b>Total labs:</b> {{groups.length}}<br>
+        <b>Filtered labs:</b> {{groupsToggle?.length}}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card mt-0">
+      <div class="card-body small">
+        <h5>Type</h5>
+        <!-- <div class="togglebutton">
+          <label>
+            <input (change)="stripeidToggle()" type="checkbox">
+            <span class="toggle mr-1"></span>StripeID
+          </label>
+        </div> -->
+        <div *ngFor="let type of onbehalf; let i=index" class="togglebutton mr-2">
+          <label>
+            <input (change)="typeToggle(i,$event.target.checked)" type="checkbox">
+            <span class="toggle mr-1"></span>{{type}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card mt-0">
+      <div class="card-body small">
+        <h5>Stage</h5>
+        <div *ngFor="let stage of stages; let i=index" class="togglebutton mr-2">
+          <label>
+            <input (change)="stageToggle(i,$event.target.checked)" type="checkbox">
+            <span class="toggle mr-1"></span>{{stage}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="col-md-4"> -->
+    <!-- <div class="card mt-0 card-chart">
+      <div class="card-body">
+        <div id="chartPreferences" class="ct-chart"></div>
+      </div>
+      <div class="card-footer">
+        <div class="row">
+          <div class="col-md-12">
+            <h6 class="card-category">Legend</h6>
+          </div>
+          <div class="col-md-12">
+            <i class="fa fa-circle text-info"></i> Unopened
+            <i class="fa fa-circle text-warning"></i> Opened
+            <i class="fa fa-circle text-danger"></i> Joined
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <!-- <div *ngIf="streamRetrieved[0]" class="card mt-0">
+      <div class="card-body">
+        <b>Total labs:</b> {{groups.length}}<br>
+        <b>Filtered labs:</b> {{groupsToggle?.length}}
+      </div>
+    </div>
+  </div> -->
+
+</div>
+
+<!-- <button *ngIf="adminFlag" [disabled]="!streamRetrieved[2] || true" role="button" mat-raised-button class="btn btn-sm btn-light-blue ml-2" (click)="postProgress()">
+  <i class="fa fa-send"></i> Progress Emails
+</button> -->
+
+<spinner *ngIf="!streamRetrieved[0]" class="py-4"></spinner>
+
+<ng-container *ngIf="streamRetrieved[0]">
+
+  <div *ngFor="let group of groupsToggle?.slice(0,more*10); let i=index;" class="card mt-0 mb-3">
+    <div class="card-body">
+
+      <p>
+        <b>{{i+1}}. </b> <group-link [smallFlag]=false [groupIndex]=group.groupIndex></group-link> (<b>Stage: </b> {{group.stage}})<br>
+        <b>Registered: </b> {{group.dates[0] | date:'dd MMM y' }}, {{group.dates[0] | date:'HH:mm' }}<br>
+        <b>Published: </b> <span *ngIf="!group.dates[2]">-</span> <span *ngIf="group.dates[2]">{{group.dates[2] | date:'dd MMM y'}}, {{group.dates[2] | date:'HH:mm'}}</span><br>
+        <b>Type: </b> {{onbehalf[group.onBehalf]}}<br>
+        <b>Domain: </b> {{group.domain ? '+' : '-'}}<br>
+        <b>Club: </b> {{group.club | json}}<br>
+        <b>Interview: </b> {{group.interview | json}}<br>
+        <b>Build Pro: </b> {{group.buildPro}}<br>
+        <span *ngIf="group.currentWebsite"><b>Current Website:</b> <a [href]="group.currentWebsite" target="_empty"><i class="fa fa-link" aria-hidden="true"></i></a></span>
+        <!-- <b>Missing publications:</b> TBD<br> -->
+        <!-- <b>Missing coauthors:</b> TBD -->
+      </p>
+      <p *ngIf="group.emails"><b>Emails:</b> <span *ngFor="let email of group.emails; let i=index" class="mb-0">{{i}}: To: {{email.to_email}}</span></p>
+
+      <ng-container *ngIf="group.stage==2 && (group.onBehalf==6 || group.onBehalf==7)">
+        <hr>
+        <b><u>Marketing:</u></b><br>
+        <ng-container *ngIf="group.marketing">
+          <b>Counter:</b> {{group.marketing.counter}}<br>
+          <!-- <b>Url:</b> <a *ngIf="group.marketing.url" [href]="group.marketing.url" target="_empty"><i class="fa fa-link ml-1" aria-hidden="true"></i></a><br> -->
+          <b>Dates: </b><span *ngFor="let date of group.marketing.dates; let i=index" class="mb-0"><b>{{i+1}}.</b> {{date | date:'dd MMM y'}}, </span><br>
+          <b>Admins: </b><span *ngFor="let user of group.marketing.user; let i=index" class="mb-0"><b>{{i+1}}.</b> {{user}}, </span><br>
+        </ng-container>
+        <button [disabled]="!streamMarketingRetrieved[marketingIndex] || group.marketing?.counter>=3" (click)="marketingSlide(i, true)" type="button" class="btn btn-sm btn-light-blue">Send Marketing</button>
+        <i *ngIf="!streamMarketingRetrieved[marketingIndex]" class="fa fa-1x fa-spinner fa-spin ml-2"></i>
+      </ng-container>
+
+      <ng-container *ngIf="adminFlag">
+        <div class="btn-group" role="group" aria-label="Approve buttons">
+          <ng-container *ngFor="let btnName of btnsNames; let j=index">
+            <button *ngIf="(
+                            (j==0 && group.stage==-1) ||
+                            (j==1 && group.stage!=-1 && group.stage!=7 && group.dates[1] && !group.dates[2]) ||
+                            (j==2 && !group.dates[2] && group.stage!=7 && (group.dates[1] || group.dates[2])) ||
+                            (j==3 && group.dates[2] && group.stage!=9) ||
+                            (j==4 && !group.dates[2]) ||
+                            (j==5 && group.dates[2]) ||
+                            (j==6 && group.stage==9) ||
+                            (j>6 && group.dates[2])
+                           )"
+                    (click)="setActiveIndex(i,j,true,(j>6 ? 1 : 0))" [disabled]="!streamRetrieved[1]" role="button" class="btn btn-sm btn-success mr-2" [ngClass]="{'btn-success': (j<=1 || j>6), 'btn-warning': (j==2 || j==3 || j==6), 'btn-danger': (j==4 || j==5)}">
+              {{btnName}} <i *ngIf="streamRetrieved[1]==false && activeIndex==i" class="fa fa-1x fa-spinner fa-spin"></i>
+            </button>
+          </ng-container>
+
+          <button class="btn btn-primary btn-sm mr-2" type="button">Progress</button>
+
+          <!-- <div class="accordion" id="accordionProgress">
+            <div id="headingProgress">
+            </div>
+            <div id="collapseProgress" class="collapse" aria-labelledby="headingProgress" data-parent="#accordionProgress">
+              <p *ngFor="let task of tasks; let i=index" class="mb-0">{{task}}: {{group.progress[i]}}</p>
+            </div>
+          </div> -->
+
+          <button *ngIf="stripeIdFlag" (click)="setStripeIndex(i)" [disabled]="!streamRetrieved[3]" role="button" class="d-flex mx-auto btn btn-sm btn-info mr-2">
+            Set StripeID <i *ngIf="!streamRetrieved[3] && activeIndex==i" class="fa fa-1x fa-spinner fa-spin"></i>
+          </button>
+
+          <button (click)="emailsStats(i)" [disabled]="!streamRetrieved[4]" role="button" class="d-flex mx-auto btn btn-sm btn-info mr-2">
+            Get Emails Stats <i *ngIf="!streamRetrieved[4] && activeIndex==i" class="fa fa-1x fa-spinner fa-spin"></i>
+          </button>
+
+          <!-- Improve -->
+          <!-- <button *ngIf="(!group.currentWebsite && group.dates[1] && !group.dates[2]) || (group.currentWebsite && !group.dates[2])" -->
+          <!-- <button *ngIf="!group.dates[2] && (group.dates[1] || group.dates[2])" -->
+
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+
+   <!-- [disabled]="!streamMore"  -->
+  <div *ngIf="streamRetrieved[0] && (more*10)<groupsToggle?.length" class="d-flex justify-content-center my-4">
+    <button role="button" class="btn btn-sm btn-light-blue" (click)="showMoreFunc()">
+      <i class="fa fa-arrow-down" aria-hidden="true"></i> Show more
+      <!-- <i *ngIf="!streamMore" class="ml-1 fa fa-spinner fa-spin fa-1x"></i> -->
+    </button>
+  </div>
+
+</ng-container>
+
+<!-- <div *ngIf="streamRetrieved[0] && moreFlag" class="d-flex justify-content-center my-4">
+  <button role="button" [disabled]="!streamMore" class="btn btn-sm btn-light-blue" (click)="showMoreFunc()">
+    <i class="fa fa-arrow-down" aria-hidden="true"></i> Show more
+    <i *ngIf="!streamMore" class="ml-1 fa fa-spinner fa-spin fa-1x"></i>
+  </button>
+</div> -->
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<admin-build *ngIf=adminBuildFlag
+             (update)="sendRepsonse(resNums[activeAction],$event)"
+             (cancel)="setActiveIndex(0,0,false,0)"
+             [title]=btnsNames[activeAction]
+             [action]=activeAction
+             [groupName]=groupsToggle[activeIndex].groupIndex.group.name
+             [university]=groupsToggle[activeIndex].groupIndex.university
+             [department]=groupsToggle[activeIndex].groupIndex.department>
+</admin-build>
+
+<admin-change *ngIf=adminChangeFlag
+              (update)="sendRepsonse(resNums[activeAction],$event)"
+              (cancel)="setActiveIndex(0,0,false,1)"
+              [university]=groupsToggle[activeIndex].groupIndex.university
+              [department]=groupsToggle[activeIndex].groupIndex.department>
+</admin-change>
+
+<build-slide-marketing *ngIf=marketingBuildFlag
+                       [marketing]="groups[marketingIndex].marketing || null"
+                       [mode]=1
+                       (update)="marketingUpdate($event)"
+                       (cancel)="marketingSlide(0, false)">
+</build-slide-marketing>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - Sendgrid Modal - - - - - - - - - --->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSendgridModal" #toggleSendgridModal [hidden]="true" data-toggle="modal" data-target="#SendgridModal"></button>
+
+<div class="modal fade" id="SendgridModal" tabindex="-1" role="dialog" aria-labelledby="SendgridModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+
+    <div *ngIf="streamRetrieved[4] && peoples[0]" class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">{{peoples[0].name}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p *ngFor="let email of peoples[0].emails; let i=index">
+          <b>{{i}}</b>.<br>
+          to_email: {{email.to_email}}<br>
+          subject: {{email.subject}}<br>
+          status: {{email.status}}<br>
+          opens_count: {{email.opens_count}}<br>
+          clicks_count: {{email.clicks_count}}<br>
+          last_event_time: {{email.last_event_time}}<br>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>

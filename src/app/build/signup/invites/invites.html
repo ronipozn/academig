@@ -1,0 +1,41 @@
+<!-- COLLABORATIONS INVITATIONS -->
+<!-- FUNDING INVITATIONS -->
+<!-- PROJECT INVITATIONS -->
+<!-- PUBLICATIONS INVITATIONS -->
+
+<div [formGroup]="parentGroup">
+
+  <h3 class="mb-1 text-center">Publications</h3>
+
+  <p class="mb-4 text-center text-muted">
+    Your profile was attached as a co-author to the following publications.<br>
+    Please accept, reject or just continue and decide later.
+  </p>
+
+  <div class="form-group row">
+    <div class="col-12 col-sm-12 col-md-10 col-lg-8 mx-auto">
+      <publications-list [streamRetrieved]=true
+                         [publications]=publications
+                         [sourceType]=2
+                         [userId]=userId
+                         [stream]=streamPublications
+                         [streamFolder]=streamPublications
+                         [streamSuggestions]=streamSuggestions
+                         [suggestFlag]=true
+                         [centerFlag]=true
+                         (btnAccpet)="btnAccpetFunc($event)"
+                         (btnReject)="btnRejectFunc($event)">
+      </publications-list>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,91 @@
+<div *ngIf="userService.userCompareGroups[0]" style="background-color: #EFF9FE;" class="fixed-bottom px-0" [ngClass]="{'col-sm-4': compareMinimizeFlag, 'col-sm-12': !compareMinimizeFlag}">
+  <div class="d-flex align-items-center mx-0 px-0">
+
+    <!-- border-radius: 0px 0px 0px 0px;  -->
+    <button (click)="toggleMinmize()" style="border: 0px; background-color: #079EE7;" class="d-none d-md-block p-0 ml-0 mr-2 text-white">
+      <div class="card-body" [ngClass]="{'py-0 mt-0': compareMinimizeFlag}">
+        <span *ngIf="!compareMinimizeFlag">Hide</span>
+        <span *ngIf="compareMinimizeFlag">Show</span>
+      </div>
+    </button>
+
+    <button (click)="toggleMinmize()" class="d-md-none btn btn-light-blue p-1">
+      <span *ngIf="!compareMinimizeFlag"><span class="material-icons">vertical_align_center</span></span>
+      <span *ngIf="compareMinimizeFlag"><span class="material-icons">vertical_align_top</span></span>
+    </button>
+
+    <div *ngIf="compareMinimizeFlag" style="color: #079EE7;" class="ml-2 small">
+      {{userService.userCompareGroups.length}} labs in comparison list
+    </div>
+
+    <div *ngIf="!compareMinimizeFlag" class="d-flex justify-content-start">
+      <div *ngFor="let group of userService.userCompareGroups; let i=index; let f=first; let l=last"
+           style="border-width: 3px;" class="border-info px-2 my-0 pt-2 pb-1"
+           [ngClass]="{'border-right': l, 'border-left': !f}">
+
+        <div class="d-flex">
+          <div class="mr-auto">
+            <div class="media">
+              <div class="mr-2 small d-none d-md-block">
+                <a *ngIf="group.groupIndex?.group.pic">
+                  <img class="imgPic rounded-circle" [width]=30 [height]=30 [src]=group.groupIndex?.group.pic>
+                </a>
+                <span *ngIf="!group.groupIndex?.group.pic" class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x" style="color: #cdcdc1"></i>
+                  <span class="fa fa-stack-1x fa-inverse">{{group.groupIndex.group.name | acronym}}</span>
+                </span>
+              </div>
+              <!-- <MD -->
+              <div class="media-body small d-md-none">
+                 <span class="text-nowrap">
+                   {{group.groupIndex.group.name | truncate:[8]}}
+                 </span><br>
+                 <span class="text-muted text-nowrap py-0 my-0">{{group.groupIndex.university.name | truncate:[8]}}</span>
+              </div>
+              <!-- MD -->
+              <div class="media-body small d-none d-md-block d-lg-none">
+                 <span class="text-nowrap">
+                   {{group.groupIndex.group.name | truncate:[8]}}
+                 </span><br>
+                 <span class="text-muted text-nowrap py-0 my-0">{{group.groupIndex.university.name | truncate:[8]}}</span>
+              </div>
+              <!-- LG -->
+              <div class="media-body small d-none d-lg-block d-xl-none">
+                 <span class="text-nowrap py-0 my-0">
+                   {{group.groupIndex.group.name | truncate:[12]}}
+                   <!-- <span *ngIf="group.country" class="text-muted">({{group.country | country | truncate:[5]}})</span> -->
+                 </span><br>
+                 <span class="text-muted text-nowrap py-0 my-0">{{group.groupIndex.university.name | truncate:[17]}}</span>
+              </div>
+              <!-- XL -->
+              <div class="media-body small d-none d-xl-block">
+                 <span class="text-nowrap py-0 my-0">
+                   {{group.groupIndex.group.name | truncate:[15]}}
+                   <!-- <span *ngIf="group.country" class="text-muted">({{group.country | country | truncate:[8]}})</span> -->
+                 </span><br>
+                 <span class="text-muted text-nowrap py-0 my-0">{{group.groupIndex.university.name | truncate:[23]}}</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <a (click)="buttonCompareFunc(i)" class="mr-1 mt-0 pt-0" style="cursor:pointer; font-size: 12px;">
+              <i class="fa fa-remove"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- <span class="text-muted text-nowrap">{{group.groupIndex.department.name | truncate:[20]}}</span><br> -->
+
+    <div *ngIf="!compareMinimizeFlag" class="ml-auto">
+      <div class="mr-1 py-0 my-0">
+        <a [routerLink]="['/compare']" class="d-none d-md-block btn btn-light-blue">Compare labs &#9658;</a>
+        <a [routerLink]="['/compare']" class="d-md-none small p-1 btn btn-light-blue">Compare</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- !auth.isAuthenticated() && (userService.urlType==1 || userService.urlType==2) -->

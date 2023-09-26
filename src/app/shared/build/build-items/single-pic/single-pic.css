@@ -1,0 +1,18 @@
+/* .fa-5x{
+  font-size:8em;
+} */
+
+.fb-btn{
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.hoverImg:hover {
+  border:1px solid #008aca;
+}
+
+.selectImg {
+  /* box-shadow: 0 3pt 1pt 2pt blue; */
+  /*box-shadow: 0 0 3pt 2pt blue;*/
+  outline: 2px solid blue
+}

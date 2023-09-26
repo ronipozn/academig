@@ -1,0 +1,447 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && !missionService.meFlag && mentor==null" class="card mt-0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <h3 class="mb-3 text-center"><b>No mentorship available</b></h3>
+    <img src="./assets/img/items/mentoring.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="350" alt="academig_services">
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved && missionService.meFlag && mentor==null" class="card mt-0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <ng-container *ngIf="missionService.meFlag">
+      <h3 class="mb-3 text-center"><b>Want to become an Academig mentor?</b></h3>
+      <p mat-dialog-content class="text-center lead">
+        <b>Join the elite ranks of global academic mentors who are keen to share their knowledge and help academics succeed.</b>
+      </p>
+      <p class="text-center">
+        <button mat-raised-button class="btn btn-light-blue btn-round my-2" (click)="inviteOp()">
+          <i class="material-icons">hearing</i> Become A Mentor
+        </button>
+      </p>
+      <p class="text-center lead">You'll be helping academics in all academic matters.</p>
+      <img src="./assets/img/items/mentoring.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="350" alt="academig_services">
+    </ng-container>
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved && missionService.meFlag && mentor?.status==0" class="card mt-0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <p mat-dialog-content class="text-center lead">
+      <b>Thank you for your interest. Wait for the invite in your email box.</b>
+    </p>
+    <img src="./assets/img/items/mentoring.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="350" alt="academig_services">
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved && missionService.meFlag && mentor?.status==1" class="card mt-0">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <p mat-dialog-content class="text-center lead">
+      <b>Thank you for your mentoring form submission. Pleae wait for our decison email.</b>
+    </p>
+    <img src="./assets/img/items/mentoring.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="350" alt="academig_services">
+  </div>
+</div>
+
+<div *ngIf="streamRetrieved && missionService.meFlag && mentor?.status==2" class="alert alert-rose py-3 mb-4" style="margin-bottom: 0px;" role="alert">
+  <img src="./assets/img/celebrate.svg" style="max-width: 3rem;" class="img-fluid" alt="mentoring_approved">
+  Your mentorship submission has been approved. Please recheck and update your information before it goes public.
+</div>
+
+<div *ngIf="streamRetrieved && (mentor?.status==3 || (missionService.meFlag && mentor?.status>=2))" class="row no-gutters">
+
+  <div class="col-lg-9">
+
+    <div *ngIf="missionService.meFlag || mentor?.introduction" class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+        <!-- <h3 class="mt-0 mb-3">Mentor Introduction</h3> -->
+        <build-headline [showEditBtn]=missionService.meFlag
+                        [addButtonFlag]=true
+                        [headline]="'Mentor Introduction'"
+                        (buttonAddClick)="introductionOp(0, true, null)">
+        </build-headline>
+        <div *ngIf="mentor?.introduction"
+             build-text-pic
+             [mode]=true
+             [text]=mentor?.introduction
+             [stream]=streamIntroduction
+             [showEditBtn]=missionService.meFlag
+             [titleText]="'Introduction'"
+             [bodyText]="'Add your mentoring introduction and clip.'"
+             [pic]=clipConvert
+             [imgCenter]=true
+             (animationDoneEvent)="introductionOp(3)"
+             (buttonDeleteClick)="introductionOp(1, false, null)"
+             (buttonEditClick)="introductionOp(0, true, null)">
+             <!-- ...
+             show more -->
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="missionService.meFlag || mentor?.expertises.length>0" class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+        <build-headline [showEditBtn]=missionService.meFlag
+                        [addButtonFlag]=true
+                        [headline]="'Expertise'"
+                        (buttonAddClick)="expertiseSlide(true, null, true)">
+        </build-headline>
+        <ul class="list-unstyled">
+          <ng-container *ngFor="let expertise of mentor?.expertises; let i=index; let l=last">
+            <li class="media" on-mouseover='buttonExpertisesOver(i, true)' on-mouseleave='buttonExpertisesOver(i, false)' [ngClass]="{'my-4': !l}">
+              <img src="https://app.growthmentor.com/assets/specialties/seo-3c51850df3ea9b92674c77538adfa655380a6148a8e2858cac3e591fae82d29a.svg" class="mr-3" alt="...">
+              <!-- <img [src]="expertise.pic" class="mr-3" alt="..."> -->
+              <div class="media-body">
+                <h5 class="mt-0 mb-0">
+                  <b>{{expertisesSelect[expertise.name]?.viewValue}}</b>
+                  <spinner-put [stream]="streamExpertise[toolkitIndex]" (animationDoneEvent)="streamExpertise[toolkitIndex]=0"></spinner-put>
+                  <build-buttons [showButton]=showExpertisesButton[i]
+                                 (buttonEditClick)="expertiseSlide(true, i, false)"
+                                 (buttonDeleteClick)="expertiseDelete(i)">
+                  </build-buttons>
+                </h5>
+                <i>{{expertise.years}} years of experience.</i><br>
+                {{expertise.description}}
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="missionService.meFlag || mentor?.toolkits.length>0" class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+        <build-headline [showEditBtn]=missionService.meFlag
+                        [addButtonFlag]=true
+                        [headline]="'Mentor Toolkit'"
+                        (buttonAddClick)="toolkitSlide(true, null, true)">
+        </build-headline>
+        <ul class="list-unstyled">
+          <ng-container *ngFor="let toolkit of mentor?.toolkits; let i=index; let l=last">
+            <li class="media" on-mouseover='buttonToolkitsOver(i, true)' on-mouseleave='buttonToolkitsOver(i, false)' [ngClass]="{'my-4': !l}">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/SPSS_logo.svg/1200px-SPSS_logo.svg.png" [width]="'50'" class="mr-3" alt="...">
+              <!-- <img [src]="toolkit.pic" class="mr-3" alt="..."> -->
+              <div class="media-body">
+                <h5 class="mt-0 mb-0">
+                  <b>{{toolkit.name}}</b>
+                  <spinner-put [stream]="streamToolkit[toolkitIndex]" (animationDoneEvent)="streamToolkit[toolkitIndex]=0"></spinner-put>
+                  <build-buttons [showButton]=showToolkitsButton[i]
+                                 (buttonEditClick)="toolkitSlide(true, i, false)"
+                                 (buttonDeleteClick)="etoolkitDelete(i)">
+                  </build-buttons>
+                </h5>
+                <i>{{toolkit.years}} years of experience.</i><br>
+                {{toolkit.description}}
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="missionService.meFlag || mentor?.links.length>0" class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+        <build-headline [showEditBtn]=missionService.meFlag
+                        [addButtonFlag]=true
+                        [headline]="'My best written content'"
+                        (buttonAddClick)="linkSlide(true, 0, true)">
+        </build-headline>
+        <ul *ngFor="let link of mentor?.links; let i=index" class="list-unstyled">
+          <link-item [link]=link
+                     [stream]=streamLink[i]
+                     [showEditBtn]=missionService.meFlag
+                     (buttonEditClick)="linkSlide($event, i, false)"
+                     (buttonDeleteClick)="linkDelete(i)"
+                     (animationDoneEvent)="linkStreamFunc()">
+          </link-item>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="missionService.meFlag || mentor?.faqs.length>0" class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+        <build-headline [showEditBtn]=missionService.meFlag
+                        [addButtonFlag]=true
+                        [headline]="'Frequently asked questions'"
+                        (buttonAddClick)="faqSlide(true, 0, true)">
+        </build-headline>
+        <faq-list [faqs]=mentor.faqs
+                  [itemFocus]=itemFocus
+                  [stream]=streamFAQ
+                  [showEditBtn]=missionService.meFlag
+                  (animationDoneEvent)="faqStreamFunc()"
+                  (buttonEditClick)="faqSlide(true, $event, false)"
+                  (buttonDeleteClick)="faqDelete($event)">
+        </faq-list>
+      </div>
+    </div>
+
+    <ng-container *ngIf="mentor?.reviews?.length>0">
+      <h3 class="">Reviews</h3>
+      <ul class="timeline timeline-simple">
+        <ng-container *ngFor="let review of mentor?.reviews; let i=index; let l=last">
+          <li class="timeline-inverted">
+            <div class="timeline-badge">
+              <img class="rounded-circle mr-3" [width]=51 [height]=51 [src]="review.reviewer.pic" [alt]="review.reviewer.name">
+              <!-- <img [src]="review.pic" class="mr-3" alt="..."> -->
+            </div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <a [routerLink]="['/']"><b>{{review.reviewer.name}}</b></a>
+              </div>
+              <div class="timeline-body">
+                <p>{{review.description}}</p>
+              </div>
+              <h6>
+                <i class="ti-time"></i> {{review.date | date}}
+                <br>{{review.sessions}} {{review.sessions>1 ? 'sessions' : 'session'}}
+              </h6>
+            </div>
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+
+  </div>
+
+  <div class="col-lg-3">
+
+    <!-- *ngIf="showEditBtn"  -->
+    <div class="d-flex justify-content-start">
+      <div class="d-none d-sm-block ml-4"></div>
+      <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+        <div class="card-body">
+
+          <!-- TBD -->
+
+          <!-- Create Session: -->
+          <!-- Request session (save current price) =>  -->
+          <!-- Request time & date =>  -->
+          <!-- Email Mentor & User =>  -->
+          <!-- Mentor reply =>  -->
+          <!-- Update Calendars (https://calendly.com/) (email both with Sessions Confirmed & Reminders / Declined) =>  -->
+          <!-- Have Session =>  -->
+          <!-- Write Review (email) + Rating + Algolia -->
+          <!-- Buttons: Refer A Friend, Write A Review, Watch Webinar Reply -->
+
+          <!-- Create On-Going: -->
+          <!-- Buttons: Refund, View Invoice -->
+
+          <button *ngIf="missionService.meFlag" mat-raised-button class="btn btn-block btn-light-blue">My Sessions</button>
+          <button *ngIf="!missionService.meFlag" mat-raised-button class="btn btn-block btn-light-blue">Request a call</button>
+          <!-- *ngIf="!missionService.meFlag"  -->
+          <button mat-raised-button class="btn btn-block btn-outline-light-blue" (click)="coachingDialogFunc()">Request on-going coaching</button>
+          <!-- <ng-container *ngIf="!adminFlag">
+            <button *ngIf="resource.requests==null || (resource.requests && resource.requests[0]==null) || !isAuthenticated" role="button" mat-raised-button class="btn btn-block btn-success" (click)="openRequestModalFunc()">
+              Make Request
+            </button>
+            <button *ngIf="resource.requests && resource.requests[0] && isAuthenticated" role="button" mat-raised-button class="btn btn-block btn-warning" (click)="manageRequestOp()">
+              Manage Request
+            </button>
+          </ng-container> -->
+
+          <ng-container *ngIf="adminFlag">
+            <!-- <a class="btn btn-block btn-success" [routerLink]="['/',resource.group.university.link,resource.group.department.link,resource.group.group.link,'services',resource._id,'manage']">
+              Manage Requests
+            </a> -->
+
+            <!-- 0. Resume -->
+            <!-- <button *ngIf="resource.mode==0 || resource.mode==2" type="button" mat-raised-button class="btn btn-warning btn-block mb-2" (click)="resourceHold()">
+              <span matTooltip="Resume service appearance in search results. Service requests can be made." [matTooltipPosition]="'below'">Resume Service</span>
+            </button> -->
+
+            <!-- 1. On Hold-->
+            <!-- <button *ngIf="resource.mode==1" type="button" mat-raised-button class="btn btn-light-blue btn-block mb-2" (click)="resourceHold()">
+              <span matTooltip="Service won't appear in search results. Also, no service requests can be made while service is on hold." [matTooltipPosition]="'below'">Put Service On hold</span>
+            </button> -->
+
+            <!-- 3. Cancel Service -->
+            <!-- <button *ngIf="resource.mode<2" type="button" mat-raised-button class="btn btn-danger btn-block" data-toggle="modal" data-target="#CancelModal">
+              Cancel Service
+            </button> -->
+
+            <!-- 4. Delete Service -->
+            <!-- <button *ngIf="resource.mode==2" type="button" mat-raised-button class="btn btn-danger btn-block" data-toggle="modal" data-target="#CancelModal">
+              Delete Service
+            </button> -->
+          </ng-container>
+
+          <!-- Refunds -->
+
+        </div>
+      </div>
+    </div>
+
+    <!-- <div *ngIf="adminFlag" class="d-flex justify-content-start">
+      <div class="d-none d-sm-block ml-4"></div>
+      <div class="card mt-0 border border-primary bg-color" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <h4 class="text-center card-title text-muted"><b>'{{titlesStandout[resource.standout]}}' PLAN</b></h4>
+          <hr>
+          <ul class="fa-ul">
+            <li *ngFor="let feature of featuresStandout; let i=index" class="d-flex align-items-center text-dark">
+              <span class="fa-li"><i class="fa" [ngClass]="{'text-success fa-check-circle': i<=thresholdStandout[resource.standout], 'text-muted fa-check-circle-o': i>thresholdStandout[resource.standout]}"></i></span>{{feature}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div> -->
+
+    <div *ngIf="1" class="d-flex justify-content-start">
+      <div class="d-none d-sm-block ml-4"></div>
+      <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <h4 class="card-title"><b>MENTOR DETAILS</b></h4>
+            <!-- *ngIf="streamGeneral>0"  -->
+            <spinner-put class="ml-1" [stream]=streamAvailability (animationDoneEvent)="streamAvailability=0"></spinner-put>
+            <a *ngIf="missionService.meFlag" role="button" mat-raised-button style="cursor:pointer" class="btn btn-sm btn-link ml-1 p-1 text-dark" (click)="availabilityOp(0,true,null)">
+              <i  class="material-icons">{{1 ? 'edit' : 'add_circle'}}</i>
+            </a>
+          </div>
+          <hr class="mt-0 mb-3">
+
+          <ng-container *ngIf="mentor.availability">
+            <p><span class="text-dark mr-1">Price:</span> <b>{{pricesSelect[mentor.availability.price].viewValue}}</b></p>
+            <p><span class="text-dark mr-1">Session duration:</span> <ng-container *ngFor="let duration of mentor.availability.durations; let l=last"><b>{{durationsSelect[duration].viewValue}}</b><span *ngIf="!l">, </span></ng-container></p>
+            <p><span class="text-dark mr-1">Session times:</span> <ng-container *ngFor="let time of mentor.availability.times; let l=last"><b>{{timesSelect[time].viewValue}}</b><span *ngIf="!l">, </span></ng-container></p>
+            <p><span class="text-dark mr-1">Session days:</span> <ng-container *ngFor="let day of mentor.availability.days; let l=last"><b>{{daysSelect[day].viewValue}}</b><span *ngIf="!l">, </span></ng-container></p>
+            <p><span class="text-dark mr-1">Availability:</span> <ng-container *ngFor="let availability of mentor.availability.availability; let l=last"><b>{{availabilitySelect[availability].viewValue}}</b><span *ngIf="!l">, </span></ng-container></p>
+            <p><span class="text-dark mr-1">Communication tools:</span> <ng-container *ngFor="let tool of mentor.availability.tools; let l=last"><b>{{toolsSelect[tool].viewValue}}</b><span *ngIf="!l">, </span></ng-container></p>
+          </ng-container>
+          <!-- Languages<br> -->
+
+          <!-- <p *ngIf="(adminFlag || resource.country) && resource.country">
+            <span class="text-dark">Location:</span>
+            <span class="flag mx-1"><img [src]="'./assets/img/flags/' + (resource.country | country | flag) + '.png'" alt=""></span>
+            <b>{{ resource.country | country }}, {{resource.state}} {{ resource.city }}</b>
+          </p> -->
+          <!-- <p><span class="text-dark mr-1">Current location:</span> <b>Chiang Mai, Thailand (+07:00 UTC)</b></p>
+          <p><span class="text-dark mr-1">From:</span> <b>Windsor, Canada</b></p> -->
+
+          <!-- <p><span class="text-dark mr-1">Sessions:</span> <b>320</b></p> -->
+          <!-- <p><span class="text-dark mr-1">Rating:</span> <b>4.3 <ngb-rating style="color: #F8CF6B;" [rate]="4.3" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating></b></p> -->
+
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="mentor.ongoing" class="d-flex justify-content-start">
+      <div class="d-none d-sm-block ml-4"></div>
+      <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <h4 class="card-title"><b>ON-GOING COACHING</b></h4>
+            <spinner-put class="ml-1" [stream]=streamOnGoing (animationDoneEvent)="streamOnGoing=0"></spinner-put>
+            <a *ngIf="missionService.meFlag" role="button" mat-raised-button style="cursor:pointer" class="btn btn-sm btn-link ml-1 p-1 text-dark" (click)="ongoingOp(0,true,null)">
+              <i  class="material-icons">{{1 ? 'edit' : 'add_circle'}}</i>
+            </a>
+          </div>
+          <hr class="mt-0 mb-3">
+          <p>
+            <span class="text-dark mr-1">Price:</span>
+            <!-- <b><i class="fa fa-check-circle mr-1" style="color: green" aria-hidden="true"></i></b> -->
+            <b>Starting at {{mentor.ongoing.price}}$/month</b>
+          </p>
+          <p>
+            <span class="text-dark mr-1">Hours:</span>
+            <b>{{mentor.ongoing.hours}} hours/month</b>
+          </p>
+          <p>
+            <span class="text-dark mr-1">Details:</span>
+            <b>{{mentor.ongoing.details}}</b>
+          </p>
+          <!-- Coaching includes 60-minute strategy calls where we can go over your
+          progress and I can coach you on how to push through whatever
+          short-term growth marketing challenges you're facing. You'll also
+          get access to me on a private Slack channel where you can contact me
+          whenever you want with a guarenteed maximum response time of 24 hours
+          (minus weekends of course). -->
+        </div>
+      </div>
+    </div>
+
+    <div class="d-none d-lg-block">
+      <div class="d-flex justify-content-start">
+        <div class="d-none d-sm-block ml-4"></div>
+        <div class="card mt-0 flex-grow-1" [@itemsAnimation]="('active')">
+          <div class="card-body">
+            <build-headline [headline]="'SHARE THIS MENTOR'"></build-headline>
+            <share-buttons [show]="4"
+                           [include]="['facebook','twitter','linkedin', 'email']">
+            </share-buttons>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- <details-buttons class="d-block d-md-none"
+                 [mode]=3
+                 [item]="{_id: resource._id, name: resource.name, pic: resource.pic}"
+                 [userId]=userId
+                 [meFlag]=adminFlag
+                 [streamFollow]=streamFollow
+                 [followStatus]=resource.followStatus
+                 (buttonFollowClick)="resourceFollow()">
+</details-buttons> -->
+
+
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-mentoring *ngIf=availabilityBuildFlag
+                       [availability]="mentor?.availability"
+                       (update)="availabilityOp(2,false,$event)"
+                       (cancel)="availabilityOp(0,false,null)">
+</build-slide-mentoring>
+
+<build-slide-ongoing *ngIf=ongoingBuildFlag
+                     [ongoing]="mentor?.ongoing"
+                     (update)="ongoingOp(2,false,$event)"
+                     (cancel)="ongoingOp(0,false,null)">
+</build-slide-ongoing>
+
+<build-slide-text-clip *ngIf=introductionBuildFlag
+                       (update)="introductionOp(2, false, $event)"
+                       (cancel)="introductionOp(0, false, $event)"
+                       [title]="'Update Mentring Introduction'"
+                       [text]=mentor?.introduction
+                       [clip]=mentor?.clip>
+</build-slide-text-clip>
+
+<build-slide-expertise *ngIf=expertiseBuildFlag
+                       (update)="expertiseUpdate($event)"
+                       (cancel)="expertiseSlide(false)"
+                       [type]=1
+                       [expertise]="mentor.expertises[expertiseIndex]"
+                       [newFlag]=expertiseNewFlag>
+</build-slide-expertise>
+
+<build-slide-expertise *ngIf=toolkitBuildFlag
+                       (update)="toolkitUpdate($event)"
+                       (cancel)="toolkitSlide(false)"
+                       [type]=0
+                       [expertise]="mentor.toolkits[toolkitIndex]"
+                       [newFlag]=toolkitNewFlag>
+</build-slide-expertise>
+
+<build-slide-link *ngIf=linkBuildFlag
+                  (update)="linkUpdate($event)"
+                  (cancel)="linkSlide($event)"
+                  [link]=mentor.links[linkIndex]
+                  [newFlag]=linkNewFlag>
+</build-slide-link>
+
+<build-slide-faq *ngIf=faqBuildFlag
+                 (update)="faqUpdate($event)"
+                 (cancel)="faqSlide($event)"
+                 [faq]=mentor.faqs[faqIndex]
+                 [newFlag]=faqNewFlag>
+</build-slide-faq>

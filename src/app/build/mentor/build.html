@@ -1,0 +1,119 @@
+<div *ngIf="!validFlag">You don't have access to this page.</div>
+
+<div *ngIf="validFlag && !streamRetrieved" class="mt-4"><spinner></spinner></div>
+
+<!-- <div *ngIf="streamRetrieved && ((labFlag && userService.buildGroupJob?.userStatus>=4) || !labFlag)" [ngClass]="{'form-container': labFlag==false}" class="mb-4">
+  <div [ngClass]="{'container': labFlag==false}" [@screenAnimation]="('appear')"> -->
+
+<div *ngIf="validFlag && streamRetrieved" class="container mb-4">
+  <div class="container" [@screenAnimation]="('appear')">
+
+    <!-- [ngStyle]="{ 'background-image': 'url(' + './assets/img/job/noun_Diploma_975006.png' + ')'}" -->
+
+    <div class="d-none d-sm-block text-center display-4 my-4 py-4">Want to become an academic mentor?<br>Fill in this form to apply.</div>
+    <div class="d-block d-sm-none text-center lead mt-4 py-4">Want to become an academic mentor?<br>Fill in this form to apply.</div>
+
+    <ng-template #stepOne>
+      <form [formGroup]="firstFormGroup">
+        <mentor-info [parentGroup]=firstFormGroup
+                     [submitStatus]="submitStatus[1]"
+                     [invalid]=firstInvalid
+                     [labFlag]=labFlag
+                     [userId]=userService.userId>
+        </mentor-info>
+      </form>
+    </ng-template>
+
+    <ng-template #stepTwo>
+      <form [formGroup]="secondFormGroup">
+        <mentor-self-asses [parentGroup]=secondFormGroup
+                           [submitStatus]="submitStatus[1]"
+                           [invalid]=firstInvalid
+                           [labFlag]=labFlag
+                           [userId]=userService.userId>
+        </mentor-self-asses>
+      </form>
+    </ng-template>
+
+    <ng-template #stepThree>
+      <form [formGroup]="thirdFormGroup">
+        <mentor-experience-expectations [parentGroup]=thirdFormGroup
+                                        [submitStatus]="submitStatus[1]"
+                                        [invalid]=firstInvalid
+                                        [labFlag]=labFlag
+                                        [userId]=userService.userId>
+        </mentor-experience-expectations>
+        <div class="card">
+          <div class="card-body pb-0">
+            <build-modal-text-field [fieldType]=4
+                                    [itemTitle]="'How did you hear about us?'"
+                                    [itemArray]=feedbackSelect
+                                    [controlName]="'feedback'"
+                                    [parentGroup]=thirdFormGroup
+                                    [submitStatus]=submitStatus[1]>
+            </build-modal-text-field>
+          </div>
+        </div>
+      </form>
+    </ng-template>
+
+    <ng-template [ngIf]="smallScreen" [ngIfElse]="bigScreen">
+      <mat-vertical-stepper #stepper labelPosition="bottom" [linear]="true" class="bg-color">
+        <mat-step [stepControl]="firstFormGroup">
+          <ng-template matStepLabel><b>About You</b></ng-template>
+          <ng-container *ngTemplateOutlet="stepOne"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(1)">Continue to self assessment</button>
+          </div>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+          <ng-template matStepLabel><b>Self Assessment</b></ng-template>
+          <ng-container *ngTemplateOutlet="stepTwo"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(2)">Continue to experience and expectations</button>
+            <button mat-button matStepperPrevious [disabled]="submitFlag">Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+          </div>
+        </mat-step>
+        <mat-step [stepControl]="thirdFormGroup">
+          <ng-template matStepLabel><b>Experience and Expectations</b></ng-template>
+          <ng-container *ngTemplateOutlet="stepThree"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <!-- [disabled]="submitFlag"  -->
+            <button mat-button (click)="onSubmit()" class="btn btn-success">Post mentor request</button>
+            <button mat-button matStepperPrevious [disabled]="submitFlag">Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+          </div>
+        </mat-step>
+      </mat-vertical-stepper>
+    </ng-template>
+
+    <ng-template #bigScreen>
+      <mat-horizontal-stepper #stepper labelPosition="bottom" [linear]="true" class="bg-color">
+        <mat-step [stepControl]="firstFormGroup">
+          <ng-template matStepLabel><b>About You</b></ng-template>
+          <ng-container *ngTemplateOutlet="stepOne"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(1)">Continue to Self Assessment</button>
+          </div>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+          <ng-template matStepLabel><b>Self Assessment</b></ng-template>
+          <ng-container *ngTemplateOutlet="stepTwo"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <button mat-button matStepperNext class="btn btn-success" (click)="onContinue(2)">Continue to experience and expectations</button>
+            <button mat-button matStepperPrevious [disabled]="submitFlag">Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+          </div>
+        </mat-step>
+        <mat-step [stepControl]="thirdFormGroup">
+          <ng-template matStepLabel><b>Experience and Expectations</b></ng-template>
+          <ng-container *ngTemplateOutlet="stepThree"></ng-container>
+          <div class="row align-items-center justify-content-between">
+            <!-- [disabled]="submitFlag"  -->
+            <button mat-button (click)="onSubmit()" class="btn btn-success">Post mentor request</button>
+            <button mat-button matStepperPrevious [disabled]="submitFlag">Make Changes <i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+    </ng-template>
+
+  </div>
+</div>

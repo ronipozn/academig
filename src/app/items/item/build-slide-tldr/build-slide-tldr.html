@@ -1,0 +1,45 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">TLDR</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemTitle]="'Feature 1'"
+                              [labelRequired]=true
+                              [controlName]="'feature_1'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Feature 2'"
+                              [labelRequired]=true
+                              [controlName]="'feature_2'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Best for'"
+                              [labelRequired]=true
+                              [controlName]="'best_for'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [itemTitle]="'Alternative to'"
+                              [labelRequired]=true
+                              [controlName]="'alternative_to'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button [disabled]=disableFlag class="btn btn-sm btn-fill btn-light-blue">Update</button>
+        <button type="button" mat-raised-button [disabled]=disableFlag class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

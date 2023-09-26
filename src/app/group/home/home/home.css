@@ -1,0 +1,18 @@
+agm-map {
+  height: 150px;
+}
+
+.coverPic {
+  background-color: #478AB8;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%;
+  height: 300px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.img-overlay-right {
+  position: absolute;
+  top:8px;
+  right:4px;
+}

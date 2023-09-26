@@ -1,0 +1,25 @@
+<div class="side-form">
+
+  <h3 class="title text-center">Update Stats</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+      <div *ngFor="let channel of statsChannels;" [formArrayName]="channel">
+        <mat-label><b>{{channel | uppercase}}</b></mat-label>
+        <div class="row">
+          <mat-form-field *ngFor="let tab of statsTabs; let i=index" class="col-4" appearance="outline">
+            <mat-label>{{tab}}</mat-label>
+            <input matInput type="number" [placeholder]=itemTitle [formControlName]="i" [required]=true>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <hr class="mt-2">
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">Update</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

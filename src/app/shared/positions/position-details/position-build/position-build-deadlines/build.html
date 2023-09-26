@@ -1,0 +1,207 @@
+<div class="side-form">
+
+  <h3 class="title text-center">Update Job Deadlines</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]=formModel (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemFirst]=true
+                              [typeSelected]="'date'"
+                              [fieldType]=1
+                              [itemTitle]="'Submission Deadline'"
+                              [itemExplain]="'Leave empty for no specific deadline.'"
+                              [controlName]="'submissionDeadline'"
+                              (controlStatus)=controlStatusFunc($event,0)
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <p></p>
+
+      <build-modal-text-field [itemFirst]=true
+                              [typeSelected]="'date'"
+                              [fieldType]=1
+                              [itemTitle]="'Final Decision Date'"
+                              [itemExplain]="'Leave empty for no specific date.'"
+                              [controlName]="'finalAnswers'"
+                              (controlStatus)=controlStatusFunc($event,9)
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <p></p>
+
+      <build-modal-text-field [typeSelected]="'date'"
+                              [fieldType]=1
+                              [itemTitle]="'Start Date'"
+                              [itemExplain]="'Leave empty for no specific date.'"
+                              [controlName]="'startDate'"
+                              (controlStatus)=controlStatusFunc($event,10)
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <!-- <div class="card mb-2">
+        <div class="card-body">
+          <span class="card-title">1. Submission</span>
+          <build-modal-text-field [itemFirst]=true
+                                  [typeSelected]="'date'"
+                                  [fieldType]=1
+                                  [itemTitle]="'Submission deadline'"
+                                  [itemExplain]="'Leave empty for no specific deadline.'"
+                                  [controlName]="'submissionDeadline'"
+                                  (controlStatus)=controlStatusFunc($event,0)
+                                  [parentGroup]="formModel"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+          <build-modal-text-field [typeSelected]="'date'"
+                                  [fieldType]=1
+                                  [itemTitle]="'Submission answers'"
+                                  [itemExplain]="'Leave empty for no specific date.'"
+                                  [controlName]="'firstAnswers'"
+                                  (controlStatus)=controlStatusFunc($event,1)
+                                  [parentGroup]="formModel"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div> -->
+
+      <!-- <div class="card mb-2">
+        <div class="card-body">
+          <span class="card-title">2. Online Interviews</span>
+          <build-modal-text-field [itemFirst]=true
+                                  [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'videoEnable'"
+                                  (controlStatus)=controlStatusFunc($event,2)
+                                  [parentGroup]="formModel"
+                                  [itemArray]=enableSelect
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+          <div class="row no-gutters mt-3">
+            <div class="col mr-1">
+              <build-modal-text-field [itemFirst]=true
+                                      [typeSelected]="'date'"
+                                      [fieldType]=1
+                                      [itemTitle]="'Start date'"
+                                      [controlName]="'videoInterviewsStart'"
+                                      (controlStatus)=controlStatusFunc($event,3)
+                                      [parentGroup]="formModel"
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+            <div class="col ml-1">
+              <build-modal-text-field [itemFirst]=true
+                                      [typeSelected]="'date'"
+                                      [fieldType]=1
+                                      [itemTitle]="'End date'"
+                                      [controlName]="'videoInterviewsEnd'"
+                                      (controlStatus)=controlStatusFunc($event,4)
+                                      [parentGroup]="formModel"
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+          <build-modal-text-field [typeSelected]="'date'"
+                                  [fieldType]=1
+                                  [itemTitle]="'Answers deadline'"
+                                  [itemExplain]="'Leave empty for no specific date.'"
+                                  [controlName]="'videoAnswers'"
+                                  (controlStatus)=controlStatusFunc($event,5)
+                                  [parentGroup]="formModel"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div> -->
+
+      <!-- <div class="card mb-2">
+        <div class="card-body">
+          <span class="card-title">3. In-person Interviews</span>
+          <build-modal-text-field [itemFirst]=true
+                                  [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'visitingEnable'"
+                                  (controlStatus)=controlStatusFunc($event,6)
+                                  [parentGroup]=formModel
+                                  [itemArray]=enableSelect
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+          <div class="row no-gutters mt-3">
+            <div class="col mr-1">
+              <build-modal-text-field [itemFirst]=true
+                                      [typeSelected]="'date'"
+                                      [fieldType]=1
+                                      [itemTitle]="'Start date'"
+                                      [controlName]="'visitingInterviewsStart'"
+                                      (controlStatus)=controlStatusFunc($event,7)
+                                      [parentGroup]=formModel
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+            <div class="col ml-1">
+              <build-modal-text-field [itemFirst]=true
+                                      [typeSelected]="'date'"
+                                      [fieldType]=1
+                                      [itemTitle]="'End date'"
+                                      [controlName]="'visitingInterviewsEnd'"
+                                      (controlStatus)=controlStatusFunc($event,8)
+                                      [parentGroup]=formModel
+                                      [submitStatus]=submitStatus>
+              </build-modal-text-field>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div class="card mb-2">
+        <div class="card-body">
+          <span class="card-title">4. Final Answers</span>
+          <build-modal-text-field [itemFirst]=true
+                                  [typeSelected]="'date'"
+                                  [fieldType]=1
+                                  [itemTitle]="'Final decision deadline'"
+                                  [itemExplain]="'Leave empty for no specific date.'"
+                                  [controlName]="'finalAnswers'"
+                                  (controlStatus)=controlStatusFunc($event,9)
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+          <build-modal-text-field [typeSelected]="'date'"
+                                  [fieldType]=1
+                                  [itemTitle]="'Start date'"
+                                  [itemExplain]="'Leave empty for no specific date.'"
+                                  [controlName]="'startDate'"
+                                  (controlStatus)=controlStatusFunc($event,10)
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div> -->
+
+      <div *ngIf="datesRangeValid==false" class="alert alert-warning border-warning alert-dismissible fade show mt-4" role="alert">
+        Make sure the dates follow each other.
+      </div>
+
+      <div *ngIf="datesBeforeValid==false" class="alert alert-warning border-warning alert-dismissible fade show mt-4" role="alert">
+        Make sure all dates are set after the current date
+      </div>
+
+      <div class="form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue" [disabled]="!datesBeforeValid || !datesRangeValid">Update</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+      <!-- <div class="pull-left"> -->
+        <!-- <p class="mt-2 text-muted">Make sure the dates at the different steps follow each other.</p> -->
+        <!-- <p *ngIf="formModel.controls['submissionDeadline'].value" class="mt-2 text-muted">Submission deadline: {{formModel.controls['submissionDeadline'].value | date:'dd MMM y'}}</p> -->
+        <!-- <p *ngIf="formModel.controls['firstAnswers'].value" class="mt-2 text-muted">Submission answers: {{formModel.controls['firstAnswers'].value | date:'dd MMM y'}}</p>
+        <p *ngIf="formModel.controls['videoEnable'].value[0]" class="mt-2 text-muted">Online interviews: {{formModel.controls['videoInterviewsStart'].value | date:'dd MMM y'}} - {{formModel.controls['videoInterviewsEnd'].value | date:'dd MMM y'}}</p>
+        <p *ngIf="formModel.controls['videoAnswers'].value" class="mt-2 text-muted">Online interviews answers: {{formModel.controls['videoAnswers'].value | date:'dd MMM y'}}</p>
+        <p *ngIf="formModel.controls['visitingEnable'].value[0]" class="mt-2 text-muted">In-person Interviews: {{formModel.controls['visitingInterviewsStart'].value | date:'dd MMM y'}} - {{formModel.controls['visitingInterviewsEnd'].value | date:'dd MMM y'}}</p> -->
+        <!-- <p *ngIf="formModel.controls['finalAnswers'].value" class="mt-2 text-muted">Final answers: {{formModel.controls['finalAnswers'].value | date:'dd MMM y'}}</p> -->
+        <!-- <p *ngIf="formModel.controls['startDate'].value" class="mt-2 text-muted">Start date: {{formModel.controls['startDate'].value | date:'dd MMM y'}}</p> -->
+      <!-- </div> -->
+
+    </form>
+  </div>
+</div>

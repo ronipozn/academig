@@ -1,0 +1,27 @@
+<nav class="navbar navbar-expand-md navbar-light" style="background-color: white">
+  <div class="container-fluid">
+  <div class="d-none d-md-block w-100 order-1 order-md-0">
+    <ul class="navbar-nav ml-3 mr-auto">
+      <div class="navbar-wrapper">
+        <button mat-raised-button [routerLink]="['/']" class="btn btn-white btn-round btn-just-icon">
+          <img src="./assets/img/academig.jpg" [width]="41" [height]="44" alt="academig">
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </ul>
+  </div>
+  </div>
+</nav>
+
+<div style="height: 80vh;">
+  <h2 class="my-4 text-center">Academig</h2>
+  <div class="d-flex justify-content-center">
+    <button type="button" (click)="login()" class="btn btn-info text-center text-dark" style="padding: 50px;">
+      <i class="fa fa-sign-in my-3" style="font-size: 48px;" aria-hidden="true"></i>
+      <h5>Sign Up</h5>
+      <span class="text-muted">Click to sign up to Academig</span>
+    </button>
+  </div>
+</div>
+
+<info-footer></info-footer>

@@ -1,0 +1,44 @@
+<div class="side-form">
+  <h5><u>New Calendar Event</u></h5>
+
+  <div class="form-container">
+    <!-- <form (ngSubmit)="saveProduct()"> -->
+
+    <form>
+      <build-modal-text-field [itemSmall]=true
+                              [itemTitle]="'Title'"
+                              >
+      </build-modal-text-field>
+      <!-- [itemValues]="'Lab Trip'" -->
+
+      <build-modal-text-field [itemSmall]=true
+                              [fieldType]=1
+                              [typeSelected]="'datetime-local'"
+                              [itemTitle]="'Date and Time'"
+                              >
+      </build-modal-text-field>
+      <!-- [itemValues]="'2017-08-19T13:45:00'" -->
+
+      <build-slide-select-members [itemSmall]=true
+                                  [groupId]=groupId
+                                  [type]=0
+                                  [title]="'Participants'">
+      </build-slide-select-members>
+
+      <build-modal-text-field [itemSmall]=true
+                              [fieldType]=2
+                              [textAreaRows]=4
+                              [itemTitle]="'Short Description'">
+      </build-modal-text-field>
+      <!-- [itemValues]="'Our annual trip to the water park. Do not forget your swimming outfit.'"> -->
+
+    </form>
+
+    <div class="pull-left form-group mt-3">
+      <button role="button" class="btn btn-sm btn-primary" (click)="saveButton()"><i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+      <a class="btn btn-sm btn-default">Cancel</a>
+    </div>
+
+    <!-- </form> -->
+  </div>
+</div>

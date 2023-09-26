@@ -1,0 +1,49 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <img src="./assets/img/build/lab.svg" style="max-height: 15rem;" class="mx-auto d-block img-fluid" alt="academig_welcome"> -->
+
+
+  <h5 class="mb-3 text-center"><b>Pro tip: We use topics you pick here to build your research labs feed</b></h5>
+
+  <div class="col-12 col-md-11 col-xl-8 mx-auto">
+    <div class="card mt-0">
+      <div class="card-body">
+
+        <div class="row">
+          <div class="col-12 mt-2">
+
+            <h3 class="mb-3 pb-1 text-center"><b>Tell us what your research interests are</b></h3>
+
+            <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('topic').valid && parentGroup.get('topic').dirty, 'has-danger': (parentGroup.get('topic').invalid) || (parentGroup.get('topic').dirty && parentGroup.get('topic').invalid)}">
+              <mat-label>Research topics</mat-label>
+              <!-- ariaLabel="topics[0]" -->
+              <mat-select multiple formControlName=topic placeholder="Choose your lab main topics" (selectionChange)="topicsChanged()">
+                <mat-option *ngFor="let topic of topics; let i=index" [value]="topic">
+                  {{ topic }}
+                </mat-option>
+              </mat-select>
+              <mat-hint>
+                Select up to 6 topics.
+              </mat-hint>
+              <span class="form-control-feedback">
+                <i *ngIf="parentGroup.get('topic').valid && parentGroup.get('topic').dirty" class="material-icons">done</i>
+                <i *ngIf="parentGroup.get('topic').invalid || (parentGroup.get('topic').dirty && parentGroup.get('topic').invalid)" class="material-icons">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex mt-4">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="px-0 btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

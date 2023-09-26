@@ -1,0 +1,62 @@
+<td>
+  {{ meeting.date | date:'dd MMM y' }} <spinner-put [stream]=stream></spinner-put>
+  <br>{{ meeting.date | date:'EEE' }} {{meeting.date | date:'HH:mm' }}
+</td>
+
+<td class="text-nowrap">
+  <span *ngIf="meeting.activeFlag">
+    <div class="d-flex justify-content-start align-items-center">
+      <single-pic class="mr-2" [pic]=meeting.presenter.pic [width]=32 [height]=32> </single-pic>
+      <a [routerLink]="['../../people',meeting.presenter._id]" class="card-title">{{ meeting.presenter.name }}</a>
+    </div>
+  </span>
+</td>
+
+<td *ngIf="meeting.activeFlag && buttonType==1">{{ meeting.location }}</td>
+<td *ngIf="!meeting.activeFlag && buttonType==1" class="text-muted">No seminar</td>
+
+<td *ngIf="meeting.activeFlag">
+  {{ meeting.topic }}
+  <span *ngIf="buttonType==1 && meeting.topic==null" class="text-muted">-</span>
+  <span *ngIf="buttonType==2 && meeting.topic==null" class="text-muted">No title</span>
+</td>
+
+<td *ngIf="!meeting.activeFlag"></td>
+
+<td>
+  <p *ngIf="meeting.activeFlag==true && meeting.files">
+    <span *ngFor="let file of createRange(meeting.files); let i=index">
+
+      <button *ngIf="createFile(meeting.files,i) && isPDF(createFile(meeting.files,i))" role="button" class="btn btn-link p-0 m-0" (click)="pdfSlide(true,meeting.name,createFile(meeting.files,i))">
+        <i class="fa fa-file-pdf-o mr-1" aria-hidden="true"></i>
+      </button>
+
+      <a *ngIf="createFile(meeting.files,i) && !isPDF(createFile(meeting.files,i))" [href]="createFile(meeting.files,i)" download target="_empty">
+        <i class="fa fa-{{createFile(meeting.files,i) | extension}} mr-1" aria-hidden="true"></i>
+      </a>
+
+    </span>
+  </p>
+</td>
+
+ <!-- && buttonType==2 -->
+<td *ngIf="(userStatus==6 || meFlag)">
+  <private-meeting-buttons [type]=buttonType
+                           [disabledFlag]="stream>0"
+                           [editFlag]="userStatus==6 || meFlag"
+                           [activeFlag]=meeting.activeFlag
+                           (buttonClick)="buttonFunc($event)">
+  </private-meeting-buttons>
+</td>
+
+<!--
+<li>25-minute presentation by main presenter</li>
+<li>20-minute review of laboratory safety and operations</li>
+<li>40-minute Section meeting, featuring two PhD student presentations</li>
+
+<div class="progress">
+  <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">25 min</div>
+  <div class="progress-bar bg-success" role="progressbar" style="width: 20%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">20 min</div>
+  <div class="progress-bar bg-info" role="progressbar" style="width: 55%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">40 min</div>
+</div>
+-->

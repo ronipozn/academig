@@ -1,0 +1,184 @@
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import {Title} from '@angular/platform-browser';
+import {ActivatedRoute} from '@angular/router';
+
+import {MissionService} from '../services/mission-service';
+import {UserService} from '../../user/services/user-service';
+
+import {CreateOutreach, UpdateOutreach, Outreach, OutreachService} from '../../shared/services/outreach-service';
+import {SharedService, Period} from '../../shared/services/shared-service';
+
+import {itemsAnimation} from '../../shared/animations/index';
+
+@Component({
+  selector: 'profile-outreach',
+  templateUrl: 'outreach.html',
+  styleUrls: ['outreach.css'],
+  animations: [itemsAnimation],
+  host: { '[@itemsAnimation]': '' }
+})
+export class OutreachComponent implements OnInit {
+
+  constructor(private route: ActivatedRoute,
+              private titleService: Title,
+              private sharedService: SharedService,
+              private outreachService: OutreachService,
+              private userService: UserService,
+              public missionService: MissionService) { }
+
+  streamOutreachs: number[];
+  outreachs: Outreach[];
+
+  streamRetrieved: boolean;
+
+  projId: string;
+
+  itemFocus: number;
+
+  outreachNewFlag: boolean = false;
+  outreachBuildFlag: boolean = false;
+  outreachIndex: number;
+  outreachBuild: Outreach;
+
+  fragment: string;
+
+  @ViewChild('scrollAdd', { static: false }) private scrollAdd: ElementRef;
+
+  ngOnInit() {
+    this.projId = this.missionService.peopleId;
+    this.titleService.setTitle('Outreach - ' + this.missionService.peopleName + ' | Academig');
+    this.streamRetrieved = false;
+    this.updatePage()
+
+    this.route.fragment.subscribe(fragment => {
+      this.fragment = fragment
+      this.scrollFunc()
+    });
+  }
+
+  scrollFunc() {
+    setTimeout(() => {
+      try {
+        switch (this.fragment) {
+          case "add": this.scrollAdd.nativeElement.scrollIntoView({ behavior: "smooth", block: "center" }); break;
+        }
+      } catch (e) { }
+    }, 1000);
+  }
+
+  async updatePage() {
+    const outreachs = await this.outreachService.getOutreachs(2, this.projId, 0);
+    this.outreachs = outreachs || [];
+    this.streamRetrieved = true;
+    this.streamOutreachs = new Array(this.outreachs.length).fill(0);
+  }
+
+  outreachSlide(flag: boolean, i: number, newFlag: boolean) {
+    if (newFlag) {
+      this.outreachBuild = null;
+    } else {
+      this.outreachBuild = this.outreachs[i];
+    }
+
+    this.outreachIndex = i;
+    this.outreachBuildFlag = flag;
+    this.outreachNewFlag = newFlag;
+  }
+
+  async outreachUpdate(event) {
+    let createOutreach: CreateOutreach;
+    let updateOutreach: UpdateOutreach;
+
+    const period: Period = {
+      start: event.start,
+      end: event.end,
+      mode: event.active[0] ? 2 : 0
+    };
+
+    if (this.outreachNewFlag == true) {
+
+      createOutreach = {'name': event.title,
+                        'link': event.link,
+                        'pic': event.pic,
+                        'caption': event.caption,
+                        'clip': event.clip,
+                        'period': period,
+                        'location': event.location,
+                        'description': event.description,
+                        'parentId': this.projId,
+                        'ai': event.intelligence ? event.intelligence[0] : null
+                       };
+
+    } else {
+
+      updateOutreach = {'_id': this.outreachs[this.outreachIndex]._id,
+                        'name': event.title,
+                        'link': event.link,
+                        'pic': event.pic,
+                        'caption': event.caption,
+                        'clip': event.clip,
+                        'period': period,
+                        'location': event.location,
+                        'description': event.description
+                       };
+    }
+
+    const outreach: Outreach = {'_id': (this.outreachNewFlag) ? null : this.outreachs[this.outreachIndex]._id,
+                                'period': period,
+                                'name': event.title,
+                                'link': event.link,
+                                'pic': event.pic,
+                                'caption': event.caption,
+                                'clip': event.clip,
+                                'location': event.location,
+                                'description': event.description,
+                                'group': null,
+                                'views': [0, 0, 0, 0, 0],
+                                'followStatus': false
+                               };
+
+    if (this.outreachNewFlag == true) {
+
+      this.outreachs.push(outreach);
+      const loc = this.outreachs.length - 1;
+
+      this.streamOutreachs[loc] = 3;
+      this.itemFocus = loc;
+
+      this.outreachs[loc]._id = await this.outreachService.putOutreach(createOutreach, 2);
+      this.streamOutreachs[loc] = 1;
+      this.userService.userProgress[14] = true;
+
+    } else {
+
+      this.outreachs[this.outreachIndex] = outreach;
+      this.streamOutreachs[this.outreachIndex] = 3;
+
+      await this.outreachService.postOutreach(updateOutreach, null, 2);
+      this.streamOutreachs[this.outreachIndex] = 1;
+
+    }
+
+    this.outreachBuildFlag = false;
+  }
+
+  async outreachDelete(i: number) {
+    this.itemFocus = null;
+    let _id: string
+
+    _id = this.outreachs[i]._id;
+    this.streamOutreachs[i] = 3;
+
+    await this.outreachService.deleteOutreach(_id, null, 2);
+
+    this.outreachs.splice(i, 1);
+    this.streamOutreachs[i] = 0;
+    this.userService.userProgress[14] = false;
+  }
+
+  streamFunc() {
+    const loc: number = this.outreachNewFlag ? this.outreachs.length - 1 : this.outreachIndex;
+    this.streamOutreachs[loc] = 0;
+  }
+
+}

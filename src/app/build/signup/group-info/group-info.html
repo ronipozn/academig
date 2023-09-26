@@ -1,0 +1,180 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <img src="./assets/img/build/lab.svg" style="max-height: 15rem;" class="mx-auto d-block img-fluid" alt="academig_welcome"> -->
+
+  <h3 *ngIf="forkNum==8" class="mb-3 pb-1 text-center"><b>Fill your current or latest research lab</b></h3>
+  <h3 *ngIf="forkNum<8" class="mb-3 text-center"><b>{{(labType==0) ? 'Lab' : 'Company'}} information</b></h3>
+
+  <h5 *ngIf="forkNum==8" class="mb-3 text-center"><b>This will help us build a basic profile for you and your lab</b></h5>
+
+  <!-- <div [ngClass]="{'col-12 col-sm-11 col-md-9': forkNum==8}" class="mx-auto"> -->
+  <div  class="col-12 col-sm-11 col-md-9 mx-auto">
+    <div class="card mt-0">
+      <div class="card-body">
+
+        <div *ngIf="marketingFromDepartmentFlag" class="text-center">
+          <p>University:<br>{{ parentGroup.get('university').value.name }}</p>
+          <p>Department:<br>{{ parentGroup.get('department').value.name }}</p>
+        </div>
+
+        <div class="row mb-3">
+
+          <div *ngIf="labType==0 && !fromPositionFlag && !marketingFromDepartmentFlag" class="col-lg-4">
+            <build-modal-name-field [signUpFlag]=true
+                                    [labelRequired]=true
+                                    [iconTitle]="'university'"
+                                    [mode]=13
+                                    [itemTitle]="'University'"
+                                    [placeholder]="'Choose your university'"
+                                    [controlName]="'university'"
+                                    [parentGroup]=parentGroup
+                                    [submitStatus]=errorFlag[0]
+                                    [itemExplain]="'Choose university from the drop down list.'"
+                                    (controlStatus)="keyUp(0)">
+            </build-modal-name-field>
+          </div>
+        <!-- <p *ngIf="labType==0"></p> -->
+
+          <div *ngIf="labType==0 && !fromPositionFlag && !marketingFromDepartmentFlag" class="col-lg-4">
+            <div class="d-lg-none mt-4"></div>
+            <!-- <build-modal-name-field [signUpFlag]=true
+                                    [labelRequired]=true
+                                    [iconTitle]="'building-o'"
+                                    [universityId]=universityId
+                                    [mode]=2
+                                    [itemTitle]="'Department'"
+                                    [placeholder]="'Choose your department'"
+                                    [controlName]="'department'"
+                                    [parentGroup]=parentGroup
+                                    [submitStatus]=errorFlag[1]
+                                    [itemExplain]="'Choose department from the drop down list or write your own. Keep name between 5-50 characters.'"
+                                    (controlStatus)="keyUp(1)">
+            </build-modal-name-field> -->
+            <div class="input-group" autocomplete="nope">
+              <ng-template #rt let-r="result" let-t="term">
+                <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+              </ng-template>
+              <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('department').valid, 'has-danger': (parentGroup.get('department').invalid && parentGroup.get('department').dirty) || errorFlag[1]}">
+                <mat-label>Department</mat-label>
+                <input matInput (keyup)="keyUp(1)"
+                       type="text"
+                       [formControlName]="'department'"
+                       [placeholder]="'Choose your department'"
+                       [ngbTypeahead]="search"
+                       [resultTemplate]="rt"
+                       [inputFormatter]="formatter"
+                       [editable]='true'
+                       [required]=true>
+                <span class="form-control-feedback d-flex flex-row">
+                  <i *ngIf="parentGroup.get('department').valid" class="material-icons">done</i>
+                  <i *ngIf="(parentGroup.get('department').invalid && parentGroup.get('department').dirty) || errorFlag[1]" class="material-icons">clear</i>
+                </span>
+                <mat-hint>Choose department from the drop down list or write your own.</mat-hint>
+              </mat-form-field>
+              <!-- {{parentGroup.get('country').value | json}} -->
+            </div>
+          </div>
+
+          <div *ngIf="labType==1 && !fromPositionFlag && !marketingFromDepartmentFlag" class="col-lg-6">
+            <div class="d-lg-none mt-4"></div>
+            <mat-form-field appearance="outline">
+              <mat-label>Main business field</mat-label>
+              <mat-select placeholder="Main company field" formControlName=department (selectionChange)="companyField()" ariaLabel="companyItems[0]">
+                <mat-option *ngFor="let item of companyItems; let i=index;" [value]="i">
+                  {{ item.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="!fromPositionFlag" [ngClass]="{'col-lg-4': labType==0, 'col-lg-6': labType==1}">
+            <div class="d-lg-none mt-4"></div>
+            <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('group').valid && !existFlag, 'has-danger': (parentGroup.get('group').invalid && parentGroup.get('group').dirty) || existFlag || errorFlag[3]}">
+              <mat-label>{{(labType==1) ? 'Company' : 'Lab'}}</mat-label>
+              <input matInput type="text" [placeholder]="(labType==1) ? 'Choose company name' : 'Choose lab name'" (keyup)="keyUp(3)" formControlName=group required>
+              <span class="form-control-feedback d-flex flex-row">
+                <i *ngIf="parentGroup.get('group').valid && !existFlag" class="material-icons">done</i>
+                <!-- <i *ngIf="errorFlag[3] || existFlag" class="material-icons">clear</i> -->
+                <i *ngIf="(parentGroup.get('group').invalid && parentGroup.get('group').dirty) || existFlag || errorFlag[3]" class="material-icons">clear</i>
+              </span>
+              <mat-hint>
+                Keep name between 5-50 characters.
+                <!-- <ng-container *ngIf="labType==0">Common names: your principal investigator name with Lab or Group.</ng-container> -->
+                <ng-container *ngIf="existFlag">This name already exist<ng-container *ngIf="labType==0"> in {{this.parentGroup.get('university').value.name}}/{{parentGroup.get('department').value.name}}</ng-container>. Please choose a different name.</ng-container>
+              </mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div *ngIf="!parentGroup.get('allowDetails').value && forkNum==8" class="col-12">
+            <button type="button" (click)="detailsFunc()" mat-raised-button class="p-0 btn btn-link mt-0">Add more details about your lab</button>
+          </div>
+          <div *ngIf="forkNum<8 || parentGroup.get('allowDetails').value" class="mt-2" [ngClass]="{'col-12': forkNum==8, 'col-lg-6': forkNum!=8}">
+            <div class="d-none d-xl-block mt-2"></div>
+            <mat-form-field appearance="outline">
+              <mat-label>{{labType==0 ? 'Number of people in the lab' : 'Number of employees'}}</mat-label>
+              <mat-select placeholder="Number of people in the lab" [formControlName]="'group_size'" ariaLabel="groupSize[0]">
+                <mat-option *ngFor="let size of (labType==0 ? groupSize : companySize)" [value]="size.id">
+                  {{ size.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div *ngIf="forkNum<8 || parentGroup.get('allowDetails').value" class="mt-2" [ngClass]="{'col-12': forkNum==8, 'col-lg-6': forkNum!=8}">
+            <div class="d-none d-xl-block mt-2"></div>
+            <build-month-field [itemTitle]="'Establish date'"
+                               [controlName]="'establishDate'"
+                               [parentGroup]="parentGroup">
+            </build-month-field>
+          </div>
+          <div *ngIf="labType==0 || parentGroup.get('allowDetails').value" class="col-12 mt-2">
+            <!-- <h3 class="mb-3 pb-1 text-center"><b>Tell us what your research interests are</b></h3> -->
+            <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('topic').valid && parentGroup.get('topic').dirty, 'has-danger': (parentGroup.get('topic').invalid) || (parentGroup.get('topic').dirty && parentGroup.get('topic').invalid)}">
+              <mat-label>Topics</mat-label>
+              <!-- <mat-label>{{labType==0 ? 'Research Topics' : 'Topics'}}</mat-label> -->
+              <!-- ariaLabel="topics[0]" -->
+              <mat-select multiple formControlName=topic placeholder="Choose your lab main topics" (selectionChange)="topicsChanged()">
+                <mat-option *ngFor="let topic of topics; let i=index" [value]="topic">
+                  {{ topic }}
+                </mat-option>
+              </mat-select>
+              <mat-hint>
+                Select up to 6 topics.
+              </mat-hint>
+              <span class="form-control-feedback">
+                <i *ngIf="parentGroup.get('topic').valid && parentGroup.get('topic').dirty" class="material-icons">done</i>
+                <i *ngIf="parentGroup.get('topic').invalid || (parentGroup.get('topic').dirty && parentGroup.get('topic').invalid)" class="material-icons">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!--
+        <mat-form-field *ngIf="labType==1" appearance="outline" class="mt-2">
+          <mat-label>Select country</mat-label>
+          <mat-select placeholder="Select country" [formControlName]="'country_id'" ariaLabel="countries[0]">
+            <mat-option *ngFor="let country of countries" [value]="country.id">
+              {{ country.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        -->
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex mt-4">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="px-0 btn btn-link">PREVIOUS</button>
+    </div>
+    <!-- <div *ngIf="forkNum==8" class="mr-2">
+      <button type="button" (click)="toLabSkip()" mat-raised-button class="btn btn-outline-light-blue">I'm not part of a lab</button>
+    </div> -->
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

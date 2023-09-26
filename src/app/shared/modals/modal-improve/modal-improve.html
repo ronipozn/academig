@@ -1,0 +1,29 @@
+<h4 class="mat-dialog-title text-center mb-4"><b>Improve page content</b></h4>
+
+<mat-horizontal-stepper linear #stepper>
+  <mat-step>
+    <p class="mt-4">
+      <button mat-button class="btn btn-block btn-outline-light-blue" (click)="type=0" matStepperNext>Content absent or half-finished</button>
+      <button mat-button class="btn btn-block btn-outline-light-blue" (click)="type=1" matStepperNext>Content incorrect or out of date</button>
+      <button mat-button class="btn btn-block btn-outline-light-blue" (click)="type=2" matStepperNext>Other</button>
+    </p>
+  </mat-step>
+  <mat-step>
+    <mat-form-field appearance="outline">
+      <mat-label *ngIf="type==0">What content was absent or half-finished?</mat-label>
+      <mat-label *ngIf="type==1">What content was incorrect or out of date?</mat-label>
+      <mat-label *ngIf="type==2">What was the issue?</mat-label>
+      <textarea matInput #input maxlength="250" [rows]=5 [(ngModel)]="message"></textarea>
+      <mat-hint *ngIf="type==0">for example: ranks are absent</mat-hint>
+      <mat-hint *ngIf="type==1">for example: departments list is incorrect</mat-hint>
+      <mat-hint *ngIf="type==2"></mat-hint>
+      <mat-hint align="end">{{input.value?.length || 0}}/250</mat-hint>
+    </mat-form-field>
+    <div class="text-center mt-3">
+      <button mat-button mat-dialog-close>Close</button>
+      <button role="button" [disabled]="input.value?.length==0 || disableFlag" class="btn btn-light-blue" (click)="onSubmit()">
+        Send Feedback <i *ngIf="disableFlag" class="fa fa-1x fa-spinner fa-spin"></i>
+      </button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

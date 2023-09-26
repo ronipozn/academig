@@ -1,0 +1,38 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">{{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <trumbowyg-ngx-editor *ngIf="fieldType==20"
+                            id="editor"
+                            formControlName="text">
+      </trumbowyg-ngx-editor>
+
+      <build-modal-text-field *ngIf="fieldType<20"
+                              [fieldType]=fieldType
+                              [typeSelected]=typeSelected
+                              [textAreaRows]=textAreaRows
+                              [labelHide]=true
+                              [itemTitle]=title
+                              [controlName]="'text'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <p *ngIf="itemExplain" class="text-muted small">{{itemExplain}}</p>
+
+      <div class="pull-left form-group mt-3">
+        <button type="submit" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-light-blue">
+          <span *ngIf=!text>Add</span>
+          <span *ngIf=text>Update</span>
+        </button>
+        <button type="button" mat-raised-button [disabled]="disableFlag" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- {{formModel.value | json}} -->

@@ -1,0 +1,33 @@
+<div class="side-form">
+
+  <h3 class="title text-center">{{name ? 'Update' : 'Add'}} School</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemTitle]="'School name'"
+                              [controlName]="'name'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <p class="mt-4">Choose icon: <span style="color: red">*</span></p>
+      <div class="d-flex flex-wrap">
+        <div *ngFor="let title of iconsTitles; let f=first; let i=index" class="form-check mb-4 mr-4">
+          <label class="form-check-label">
+            <input id="radioStacked{{i}}" class="form-check-input" type="radio" [value]=i [checked]="i==formModel.get('icon').value" [formControlName]="'icon'">
+              <img width="30" [src]="'./assets/img/units/'+icons[i]+'.svg'">
+              <span class="circle"><span class="check"></span></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">{{name ? 'Update' : 'Add'}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

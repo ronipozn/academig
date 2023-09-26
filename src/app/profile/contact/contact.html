@@ -1,0 +1,170 @@
+<div class="row">
+
+  <div *ngIf="public || social" class="col-lg-4">
+    <div class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+
+        <build-headline [showEditBtn]=missionService.meFlag [addButtonFlag]=false [headline]="'Contact Me'"></build-headline>
+
+        <h5 class="mb-0">{{missionService.peopleName}}</h5>
+
+        <p *ngIf="public && public.address" class="mt-2">
+          <span style='white-space:pre-wrap;' [innerHTML]="public.address | safeHtml"></span>
+        </p>
+
+        <div *ngIf="public" class="d-flex align-items-start flex-column">
+          <span *ngIf="public.email" class="d-flex align-items-center mb-4">
+            <span class="fa-stack mr-2">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-envelope fa-stack-1x" style="color: #8f9599"></i>
+            </span>
+            Email: <a target="_empty" class="card-title" href="mailto:{{public.email}}">{{public.email}}</a>
+          </span>
+          <span *ngIf="public.phone" class="d-flex align-items-center mb-4">
+            <span class="fa-stack mr-2">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-phone fa-stack-1x" style="color: #8f9599"></i>
+            </span>
+            Phone: {{public.phone}}
+          </span>
+          <span *ngIf="public.fax" class="d-flex align-items-center mb-4">
+            <span class="fa-stack mr-2">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-fax fa-stack-1x" style="color: #8f9599"></i>
+            </span>
+            Fax: {{public.fax}}
+          </span>
+          <span *ngIf="public.website" class="d-flex align-items-center mb-4">
+            <span class="fa-stack mr-2">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-globe fa-stack-1x" style="color: #8f9599"></i>
+            </span>
+            Website: <a target="_empty" class="card-title" href="{{public.website}}">{{public.website}}</a>
+          </span>
+        </div>
+
+        <ng-container *ngIf="socialmeFlag">
+          <hr>
+          <div class="d-flex align-items-start flex-column">
+            <a *ngIf="social.linkedin" target="_empty" href="http://www.linkedin.com/in/{{social.linkedin}}" class="card-title" target="_empty">
+              <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-linkedin"></i></button> Linkedin
+            </a>
+            <a *ngIf="social.twitter" target="_empty" href="http://www.twitter.com/{{social.twitter}}" class="card-title" target="_empty">
+              <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-twitter"></i></button> Twitter
+            </a>
+            <a *ngIf="social.scholar" target="_empty" href="https://scholar.google.com/citations?user={{social.scholar}}" class="card-title" target="_empty">
+              <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="ai ai-google-scholar-square"></i></button> Google Scholar
+            </a>
+            <a *ngIf="social.orcid" target="_empty" href="https://orcid.org/{{social.orcid}}" class="card-title" target="_empty">
+              <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="ai ai-orcid"></i></button> ORCID
+            </a>
+            <a *ngIf="social.github" target="_empty" href="https://www.github.com/{{social.github}}" class="card-title" target="_empty">
+              <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-github"></i></button> GitHub
+            </a>
+            <a *ngIf="social.researchgate" target="_empty" href="https://www.researchgate.net/profile/{{social.researchgate}}" class="card-title" target="_empty">
+              <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="ai ai-researchgate"></i></button> ResearchGate
+            </a>
+            <a *ngIf="social.facebook" target="_empty" href="https://www.facebook.com/{{social.facebook}}" class="card-title" target="_empty">
+              <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-facebook"></i></button> Facebook
+            </a>
+            <a *ngIf="social.instagram" target="_empty" href="https://www.instagram.com/{{social.instagram}}" class="card-title" target="_empty">
+              <button mat-raised-button class="mr-2 btn btn-sm btn-just-icon btn-round btn-twitter"><i class="fa fa-instagram"></i></button> Facebook
+            </a>
+          </div>
+        </ng-container>
+
+        <!-- <ng-container *ngIf="missionService.meFlag">
+          <hr>
+          <button role="button" [disabled]="streamPublic>0" (click)="onPublic()" mat-raised-button class="btn btn-sm btn-light-blue">
+            <i class="fa fa-fw fa-id-card mr-1 fa-1x"></i> Update Contact Info <spinner-put [stream]=streamPublic (animationDoneEvent)="animationDone(0)"></spinner-put>
+          </button>
+          <button role="button" [disabled]="streamSocial>0" (click)="onSocial()" mat-raised-button class="btn btn-sm btn-light-blue">
+            <i class="fa fa-fw fa-thumbs-up mr-1 fa-1x"></i> Update Social Info <spinner-put [stream]=streamSocial (animationDoneEvent)="animationDone(1)"></spinner-put>
+          </button>
+        </ng-container> -->
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+
+        <build-headline [showEditBtn]=missionService.meFlag [addButtonFlag]=false [headline]="'Send an email message'"></build-headline>
+
+        <div class="form-group">
+          <label for="InputSubject"><b>Subject</b></label>
+          <input [(ngModel)]="subject" type="text" class="form-control" id="InputSubject" aria-describedby="textSubject">
+        </div>
+
+        <div class="form-group">
+          <label for="messageleTextarea"><b>Message</b></label>
+          <textarea [(ngModel)]="message" class="form-control" id="MessageTextarea" rows="5"></textarea>
+        </div>
+
+        <ng-template #popContent let-emailContent="emailContent">
+          <b>From:</b>
+          <br>{{userService.userName}} via Academig
+          <br><br><b>Subject:</b>
+          <br>{{subject}}
+          <br><br><b>Message:</b>
+          <br>{{message}}
+        </ng-template>
+        <ng-template #popTitle let-emailTitle="emailTitle">
+          Preview Email
+        </ng-template>
+        <button type="button" class="btn btn-sm btn-link pl-0 mt-0" placement="top" [ngbPopover]="popContent" [popoverTitle]="popTitle" container="body" triggers="manual" #p1="ngbPopover" (click)="togglePreviewEmail(p1)">
+          Preview Email
+        </button>
+
+        <div class="d-flex flex-row-reverse">
+          <button [disabled]="submitFlag==1 || message==null || subject==null" role="button" mat-raised-button class="btn btn-light-blue" (click)="contactSend()">
+            <div class="d-flex justify-content-start">
+              Send
+              <div *ngIf="submitFlag>0" class="ml-2">
+                <i *ngIf="submitFlag==1" class="fa fa-1x fa-spinner fa-spin"></i>
+                <i *ngIf="submitFlag==2" class="fa fa-1x fa-check"></i>
+                <i *ngIf="submitFlag==3" class="fa fa-1x fa-times"></i>
+              </div>
+            </div>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]="'message'" [itemText]="'user'"></modal-signup>
+    </div>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<!-- <build-slide-info *ngIf=infoBuildFlag
+                  (update)="publicInfoUpdate($event)"
+                  (cancel)="publicInfoSlide(false)"
+                  [publicInfo]=missionService.publicInfo
+                  [mode]=0>
+</build-slide-info>
+
+<build-slide-social *ngIf=socialBuildFlag
+                    (update)="socialInfoUpdate($event)"
+                    (cancel)="socialInfoSlide(false)"
+                    [socialInfo]=missionService.socialInfo
+                    [mode]=0>
+</build-slide-social> -->

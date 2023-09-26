@@ -1,0 +1,66 @@
+<ng-container *ngIf="missionService.showPage && missionService.showEditBtn">
+
+  <div class="d-flex justify-content-center mb-4">
+    <button mat-raised-button class="btn btn-light-blue btn-round" (click)="topicSlide(true, 0, true)">
+      <i class="material-icons">add_circle_outline</i> Add Research Topic
+    </button>
+  </div>
+
+  <div class="card mt-0" [@itemsAnimation]="('active')">
+    <div class="card-body">
+
+      <build-headline [headline]="'Research Topics'"></build-headline>
+      <div #scrollAdd></div>
+
+      <build-modal-intro *ngIf="missionService.showHeadline && topics[0]==null"
+                         [headline]="'Add your research topics to show others your research in real time. Each research topic can contain the active and past projects.'"
+                         [bodypic]="'list-ul'">
+      </build-modal-intro>
+
+      <div *ngIf="topics[0]" class="mt-4">
+        <div class="px-0 col-12 col-md-10 col-lg-9">
+          <div id="accordion" role="tablist" aria-multiselectable="true">
+            <!-- <div dragula="topics-bag" [(dragulaModel)]='topics'> -->
+              <ul *ngFor="let topic of topics; let i=index" class="list-unstyled mb-4">
+                <topic-item [itemAutofocus]="itemFocus==i"
+                            [topic]=topic
+                            [i]=i
+                            [stream]=streamTopics[i]
+                            (animationDoneEvent)="topicStreamFunc()"
+                            [showEditBtn]=missionService.showEditBtn
+                            (buttonEditClick)="topicSlide($event, i, false)"
+                            (buttonDeleteClick)="topicDelete(i)">
+                </topic-item>
+              </ul>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="missionService.showPage && !missionService.showEditBtn">
+  <div class="card mt-0" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-modal-intro [headline]="'Sorry, you don\'t have access to this page.'"
+                         [bodypic]="'ban'">
+      </build-modal-intro>
+    </div>
+  </div>
+</ng-container>
+
+<img src="./assets/img/items/projects.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_projects">
+
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+<!------------------------------------------>
+
+<research-build *ngIf=topicBuildFlag
+                (update)="topicUpdate($event)"
+                (cancel)="topicSlide($event)"
+                [name]="(topicNewFlag ? '' : topics[topicIndex].name)"
+                [topics]=topics>
+</research-build>

@@ -1,0 +1,26 @@
+.form-control:focus {
+  outline: 0 !important;
+  border-color: initial;
+  box-shadow: none;
+}
+
+.border-info {
+  color: #03A9F4;
+}
+
+.btn-outline-secondary, .btn-outline-secondary:hover, .btn-outline-secondary:active, .btn-outline-secondary:visited {
+  background-color: white !important;
+  color: black;
+}
+
+.btn-outline-secondary.focus, .btn-outline-secondary:focus {
+  outline: 0;
+  box-shadow: none!important;
+}
+
+.fa-stack-size {
+  font-size: 32px;
+}
+
+/* https://stackoverflow.com/questions/28261287/how-to-change-btn-color-in-bootstrap */
+/* https://stackoverflow.com/questions/46873906/removing-blue-border-around-a-button-after-click */

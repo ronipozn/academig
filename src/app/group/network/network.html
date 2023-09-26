@@ -1,0 +1,128 @@
+<ng-container *ngIf="missionService.showPage && missionService.groupId && missionService.groupStage<2" class="mb-4">
+  <div class="card mt-0" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-modal-intro [headline]="'The network page will be available after the lab profile is approved.'"
+                         [bodypic]="'users'">
+      </build-modal-intro>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="missionService.groupId && missionService.groupStage==2">
+
+  <ul class="d-flex justify-content-center nav nav-pills nav-pills-light-blue" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" data-target="#followers" role="tablist" (click)="tabFunc(1)">
+        <i class="material-icons">group</i> Followers
+        <div class="ripple-container"></div>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" data-target="#following" role="tablist" (click)="tabFunc(0)">
+        <i class="material-icons">person_add</i> Following
+        <div class="ripple-container"></div>
+      </a>
+    </li>
+  </ul>
+
+  <div class="card" [@itemsAnimation]="('active')">
+    <div class="card-body">
+
+      <div class="tab-content">
+
+        <div class="tab-pane active" id="followers" role="tabpanel">
+          <spinner *ngIf="!streamRetrieved[1] || !streamRetrieved[3]"></spinner>
+
+          <ng-container *ngIf="streamRetrieved[1] && streamRetrieved[3] && groupsFollowed[0]==null && peoples[0]==null">
+            <build-modal-intro *ngIf="missionService.showHeadline"
+                               [headline]="'Your lab\' followers'"
+                               [bodypic]="'users'"
+                               [bodytext]="'No one follows your lab yet.'">
+            </build-modal-intro>
+            <build-modal-intro *ngIf="!missionService.showHeadline"
+                               [headline]="'No followers yet.'"
+                               [bodypic]="'users'">
+            </build-modal-intro>
+          </ng-container>
+
+          <build-headline *ngIf="streamRetrieved[1] && groupsFollowed?.length>0"
+                          [showEditBtn]=false
+                          [addButtonFlag]=false
+                          [headline]="'Groups'">
+          </build-headline>
+
+          <groups-list *ngIf="streamRetrieved[1] && groupsFollowed?.length>0" class="px-2"
+                       [streamRetrieved]=streamRetrieved[1]
+                       [sourceType]="(missionService.previewStatus>0) ? 5 : 0"
+                       [groupsPerRow]=3
+                       [groups]=groupsFollowed
+                       [compareFlag]=true
+                       [compareStatuses]=compareFollowedStatuses
+                       [streamCompare]=streamFollowedCompare
+                       [streamFollow]=streamFollowed
+                       [streamAdminFollow]=streamAdminFollowed
+                       (buttonFollowClick)="groupFollow($event,1)"
+                       (buttonAdminFollowClick)="groupAdminFollow($event,1)"
+                       (buttonCompareClick)="itemCompare($event,1)">
+          </groups-list>
+
+          <build-headline *ngIf="streamRetrieved[3] && peoples?.length>0"
+                          [showEditBtn]=false
+                          [addButtonFlag]=false
+                          [headline]="'People'">
+          </build-headline>
+
+          <people-list *ngIf="streamRetrieved[3] && peoples?.length>0"
+                       [streamRetrieved]=streamRetrieved[3]
+                       [peoples]=peoples
+                       [sourceType]=6
+                       [stream]=streamPeople
+                       [activeId]=userService.userId
+                       [streamFollow]=streamPeopleFollow
+                       (btnMessageClick)="peopleMessage($event)"
+                       (btnFollowClick)="peopleFollow($event)">
+          </people-list>
+
+        </div>
+
+        <div class="tab-pane" id="following" role="tabpanel">
+
+          <spinner *ngIf="!streamRetrieved[0]"></spinner>
+
+          <ng-container *ngIf="streamRetrieved[0] && groupsFollowing[0]==null">
+            <build-modal-intro *ngIf="missionService.showHeadline"
+                               [headline]="'Your lab\' following list'"
+                               [bodypic]="'users'"
+                               [bodytext]="'Start following other labs.'">
+            </build-modal-intro>
+            <build-modal-intro *ngIf="!missionService.showHeadline"
+                               [headline]="'No followings yet.'"
+                               [bodypic]="'users'">
+            </build-modal-intro>
+          </ng-container>
+
+          <groups-list *ngIf="groupsFollowing.length>0" class="px-2"
+                       [streamRetrieved]=streamRetrieved[0]
+                       [sourceType]="(missionService.previewStatus>0) ? 5 : 0"
+                       [groupsPerRow]=3
+                       [groups]=groupsFollowing
+                       [compareFlag]=true
+                       [compareStatuses]=compareFollowingStatuses
+                       [streamCompare]=streamFollowingCompare
+                       [streamFollow]=streamFollowing
+                       [streamAdminFollow]=streamAdminFollowing
+                       (buttonFollowClick)="groupFollow($event,0)"
+                       (buttonAdminFollowClick)="groupAdminFollow($event,0)"
+                       (buttonCompareClick)="itemCompare($event,0)">
+          </groups-list>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <img *ngIf="streamRetrieved[0] || streamRetrieved[1] || streamRetrieved[3]" src="./assets/img/items/network.svg" class="mx-auto d-block img-fluid my-4 py-4" [width]="250" alt="academig_network">
+
+</ng-container>

@@ -1,0 +1,105 @@
+<ul class="nav nav-pills nav-pills-light-blue nav-pills-icons justify-content-center" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link" [ngClass]="{'active': activeTab===1}" data-toggle="tab" data-target="#followers" role="tablist" (click)="peoplesFollowingFunc(1)">
+      <i class="material-icons">group</i> Followers
+      <div class="ripple-container"></div>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [ngClass]="{'active': activeTab===0}" data-toggle="tab" data-target="#following" role="tablist" (click)="peoplesFollowingFunc(0)">
+      <i class="material-icons">person_add</i> Following
+      <div class="ripple-container"></div>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" [ngClass]="{'active': activeTab===2}" data-toggle="tab" data-target="#coauthors" role="tablist" (click)="peoplesFollowingFunc(2)">
+      <i class="material-icons">assignment_ind</i> Co-authors
+      <div class="ripple-container"></div>
+    </a>
+  </li>
+</ul>
+
+<div class="card" [@itemsAnimation]="('active')">
+  <div class="card-body">
+
+    <div class="tab-content">
+
+      <div class="tab-pane" id="followers" role="tabpanel" [ngClass]="{'active': activeTab===1}">
+        <build-modal-intro *ngIf="peoplesFollowers.length==0 && streamRetrieved[1] && !missionService.meFlag"
+                           [headline]="'No followers. Why not be the first?'"
+                           [bodypic]="'user'">
+        </build-modal-intro>
+        <build-modal-intro *ngIf="peoplesFollowers.length==0 && streamRetrieved[1] && missionService.meFlag" [headline]="'No followers yet.'" [bodypic]="'user'"></build-modal-intro>
+        <people-list [streamRetrieved]=streamRetrieved[1]
+                     [peoples]=peoplesFollowers
+                     [sourceType]=6
+                     [stream]=streamPeopleFollowers
+                     [activeId]=userService.userId
+                     [streamFollow]=streamPeopleFollowersFollow
+                     (btnMessageClick)="peopleMessage($event)"
+                     (btnFollowClick)="peopleFollow($event)">
+        </people-list>
+      </div>
+
+      <div class="tab-pane" id="following" role="tabpanel" [ngClass]="{ 'active':activeTab===0}">
+        <spinner *ngIf="!streamRetrieved[0] || !streamRetrieved[4]"></spinner>
+        <build-modal-intro *ngIf="streamRetrieved[0] && streamRetrieved[4] && peoplesFollowing.length==0 && groupsFollowing.length==0" [headline]="'No following yet.'" [bodypic]="'user'"></build-modal-intro>
+        <ng-container *ngIf="streamRetrieved[4] && groupsFollowing.length>0">
+          <h4 class="card-title"><b>Labs Following</b></h4>
+          <hr class="mt-0">
+          <groups-list [streamRetrieved]=streamRetrieved[4]
+                       [sourceType]=6
+                       [groupsPerRow]=3
+                       [groups]=groupsFollowing
+                       [compareFlag]=true
+                       [compareStatuses]=compareFollowingStatuses
+                       [streamCompare]=streamGroupFollowingCompare
+                       [streamFollow]=streamGroupFollowing
+                       [streamAdminFollow]=streamGroupAdminFollowing>
+                       <!-- (buttonFollowClick)="groupFollow($event,0)"
+                       (buttonAdminFollowClick)="groupAdminFollow($event,0)"
+                       (buttonCompareClick)="itemCompare($event,0)" -->
+          </groups-list>
+        </ng-container>
+        <ng-container *ngIf="streamRetrieved[4] && peoplesFollowing.length>0">
+          <h4 class="card-title"><b>Researchers Following</b></h4>
+          <hr class="mt-0">
+          <people-list [streamRetrieved]=streamRetrieved[0]
+                       [peoples]=peoplesFollowing
+                       [sourceType]=6
+                       [stream]=streamPeopleFollowing
+                       [activeId]=userService.userId
+                       [streamFollow]=streamPeopleFollowingFollow
+                       (btnMessageClick)="peopleMessage($event)"
+                       (btnFollowClick)="peopleFollow($event)">
+          </people-list>
+        </ng-container>
+      </div>
+
+      <div class="tab-pane" id="coauthors" role="tabpanel" [ngClass]="{ 'active':activeTab===2}">
+        <build-modal-intro *ngIf="peoplesCoauthors.length==0 && peoplesDummyCoauthors.length==0 && streamRetrieved[2] && streamRetrieved[3]" [headline]="'No co-authors yet.'" [bodypic]="'user'"></build-modal-intro>
+        <people-list [streamRetrieved]=streamRetrieved[2]
+                     [peoples]=peoplesCoauthors
+                     [sourceType]=6
+                     [stream]=streamPeopleCoauthors
+                     [activeId]=userService.userId
+                     [streamFollow]=streamPeopleCoauthorsFollow
+                     (btnMessageClick)="peopleMessage($event)"
+                     (btnFollowClick)="peopleFollow($event)">
+        </people-list>
+        <people-list *ngIf="streamRetrieved[2]"
+                     [streamRetrieved]=streamRetrieved[3]
+                     [peoples]=peoplesDummyCoauthors
+                     [sourceType]=13
+                     [stream]=streamPeopleDummyCoauthors
+                     [activeId]=userService.userId
+                     [streamFollow]=streamPeopleDummyCoauthors>
+        </people-list>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<img *ngIf="streamRetrieved[0] || streamRetrieved[1] || streamRetrieved[2]" src="./assets/img/items/network.svg" class="mx-auto d-block img-fluid mt-4 mb-2" [width]="250" alt="academig_network">

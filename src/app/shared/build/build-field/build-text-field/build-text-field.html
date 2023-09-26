@@ -1,0 +1,185 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <span *ngIf="fieldType==6">{{fieldType}}</span> -->
+
+  <!-- <label *ngIf="!labelHide && (fieldType==5 || fieldType==7 || fieldType==8)" class="form-control-label mb-0" [ngClass]="{'mt-3 mb-1': !itemFirst, 'pt-3': !itemTitle && !iconTitle, 'mt-2 pl-0 form-control-sm': itemSmall}"> -->
+  <div *ngIf="!labelHide && (fieldType==5 || fieldType==7)" class="form-control-label my-0">
+    <span *ngIf="itemTitle" [ngClass]="{'text-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'text-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">{{itemTitle}}</span>
+    <span *ngIf="labelRequired" class="ml-1">*</span> <!-- style="color: red -->
+    <i *ngIf="questionFlag" class="fa fa-question-circle-o" aria-hidden="true"></i>
+    <!-- <br><mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint> -->
+  </div>
+
+  <mat-form-field *ngIf="fieldType==0" appearance="outline" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <input matInput type="text" [placeholder]=itemTitle [formControlName]=controlName [required]=labelRequired>
+    <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint>
+    <span class="form-control-feedback">
+      <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+      <i *ngIf="(parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)" class="material-icons">clear</i>
+    </span>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="fieldType==1 && typeSelected=='date'" appearance="outline" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <input matInput [matDatepicker]="picker" [placeholder]=itemTitle (click)="picker.open()" [formControlName]=controlName [required]=labelRequired>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint>
+    <span class="form-control-feedback">
+      <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+      <i *ngIf="(parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)" class="material-icons">clear</i>
+    </span>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="fieldType==1 && typeSelected=='email'" appearance="outline" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <input matInput email type="email" [placeholder]=itemTitle [formControlName]=controlName [required]=labelRequired>
+    <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="fieldType==1 && typeSelected!='date' && typeSelected!='email'" appearance="outline" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <input matInput type="{{typeSelected}}" [placeholder]=itemTitle [formControlName]=controlName [required]=labelRequired>
+    <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint>
+    <span class="form-control-feedback">
+      <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+      <i *ngIf="(parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)" class="material-icons">clear</i>
+    </span>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="fieldType==2" appearance="outline" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <textarea matInput [formControlName]=controlName [rows]="textAreaRows" [required]=labelRequired></textarea>
+    <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint>
+    <span class="form-control-feedback">
+      <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+      <i *ngIf="(parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)" class="material-icons">clear</i>
+    </span>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="fieldType==3" appearance="outline" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <mat-select [placeholder]="itemTitle" [formControlName]=controlName ariaLabel="itemArray[0]" [required]=labelRequired>
+      <mat-option *ngFor="let item of itemArray" [value]="item.value">
+        {{ item.display }}
+      </mat-option>
+    </mat-select>
+    <!-- <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint> -->
+  </mat-form-field>
+
+  <mat-form-field *ngIf="fieldType==4" appearance="outline" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <mat-select [placeholder]="itemTitle" [formControlName]=controlName ariaLabel="itemArray[0]" [required]=labelRequired>
+      <mat-option *ngFor="let item of itemArray; let i=index" [value]=i>
+        {{ item }}
+      </mat-option>
+    </mat-select>
+    <!-- <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint> -->
+  </mat-form-field>
+  <!-- <option *ngFor="let item of itemArray; let f=first; let i=index" [value]="i"> HTML Select return string-->
+  <!-- Angular Directive return number -->
+
+  <div *ngIf="fieldType==5">
+    <div *ngFor="let item of itemArray; let f=first; let i=index" class="form-check">
+      <label class="form-check-label" [ngClass]="{'small': itemSmall}">
+        <input id="radioStacked{{i}}" class="form-check-input" type="radio" [value]=i [checked]="(i==parentGroup.get(controlName).value)" [formControlName]=controlName [required]=labelRequired> {{item}}
+        <span class="circle">
+          <span class="check"></span>
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <div *ngIf="fieldType==7" [formArrayName]=controlName>
+    <div *ngFor="let item of itemArray; let f=first; let i=index; let l=last" class="form-check" [ngClass]="{'mb-4': !l, 'mt-2': f}">
+      <label class="form-check-label text-dark" [ngClass]="{'small': itemSmall}">
+        <input class="form-check-input" type="checkbox" [formControlName]="i" [required]=labelRequired> {{item}}
+        <span class="form-check-sign"><span class="check"></span></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- class="example-chip-list" -->
+  <mat-form-field *ngIf="fieldType==8" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <mat-chip-list #chipList aria-label="Selection" [formControlName]=controlName>
+      <mat-chip *ngFor="let value of parentGroup.get(controlName).value" [selectable]="selectable"
+                [removable]="removable" (removed)="removeChip(value)">
+        {{value}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input [placeholder]=itemPlaceholder
+             [matChipInputFor]="chipList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="addOnBlur"
+             (matChipInputTokenEnd)="addChip($event)">
+    </mat-chip-list>
+    <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint>
+    <span class="form-control-feedback">
+      <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+      <i *ngIf="(parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)" class="material-icons">clear</i>
+    </span>
+  </mat-form-field>
+
+  <!-- <tag-input [onlyFromAutocomplete]=onlyFromAutocomplete
+             [modelAsStrings]=true
+             [editable]=true
+             [secondaryPlaceholder]=itemSecondaryPlaceholder
+             [pasteSplitPattern]= "splitPattern"
+             [addOnPaste]=true
+    <tag-input-dropdown [showDropdownIfEmpty]=false
+                        [offset]='0'
+                        [appendToBody]=false
+                        [autocompleteItems]=itemArray>
+    </tag-input-dropdown>
+  </tag-input> -->
+
+  <ng-container *ngIf="fieldType==10">
+    <i *ngIf="iconTitle && !iconType" class="fa fa-{{iconTitle}} mr-2" aria-hidden="true"></i>
+    <i *ngIf="iconTitle && iconType" class="ai ai-{{iconTitle}} mr-2" aria-hidden="true"></i>
+    <mat-form-field class="input-group-prepend mt-0 pt-0" appearance="outline" [ngClass]="{ 'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': parentGroup.get(controlName).invalid && _controlStatus }">
+      <mat-label>{{prepend}}</mat-label>
+      <input matInput type="text" [placeholder]=prepend [formControlName]=controlName [required]=labelRequired>
+      <span class="form-control-feedback">
+        <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+        <i *ngIf="(parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)" class="material-icons">clear</i>
+      </span>
+    </mat-form-field>
+    <!-- <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint> -->
+  </ng-container>
+
+  <mat-form-field *ngIf="fieldType==11" appearance="outline" [ngClass]="{ 'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': parentGroup.get(controlName).invalid && _controlStatus }">
+    <mat-label>{{itemTitle}}</mat-label>
+    <input matInput email type="email" [placeholder]=itemTitle [formControlName]=controlName [required]=labelRequired>
+    <!-- <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint> -->
+    <span class="form-control-feedback">
+      <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+      <i *ngIf="(parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)" class="material-icons">clear</i>
+    </span>
+  </mat-form-field>
+
+  <div *ngIf="fieldType==12" class="form-control-label mb-0" [ngClass]="{'mt-3 mb-1': !itemFirst, 'pt-3': !itemTitle && !iconTitle, 'mt-2 pl-0 form-control-sm': itemSmall}">
+    <mat-label *ngIf="itemTitle" [ngClass]="{'text-success': parentGroup.get(controlName).valid && _controlStatus, 'text-danger': parentGroup.get(controlName).invalid && _controlStatus}"><b>{{itemTitle}}</b></mat-label>
+    <span *ngIf="labelRequired" class="ml-1" [ngClass]="{'text-success': parentGroup.get(controlName).valid && _controlStatus, 'text-danger': parentGroup.get(controlName).invalid && _controlStatus}">*</span>
+    <!-- <textarea trumbowygNgxEditor [formControlName]=controlName></textarea> -->
+    <trumbowyg-ngx-editor [formControlName]=controlName></trumbowyg-ngx-editor>
+    <!-- <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint> -->
+  </div>
+
+  <mat-form-field *ngIf="fieldType==13" appearance="outline" [ngClass]="{'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': parentGroup.get(controlName).invalid && _controlStatus}">
+    <mat-label>{{itemTitle}}</mat-label>
+    <input matInput type="url" [placeholder]=itemTitle [formControlName]=controlName [required]=labelRequired>
+    <!-- <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint> -->
+    <span class="form-control-feedback">
+      <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+      <i *ngIf="(parentGroup.get(controlName).invalid && _controlStatus) || (parentGroup.get(controlName).dirty && parentGroup.get(controlName).invalid)" class="material-icons">clear</i>
+    </span>
+  </mat-form-field>
+
+  <div *ngIf="errorFlag && fieldType!=11 && fieldType!=12 && !((!_controlStatus && !parentGroup.get(controlName).dirty) || !parentGroup.get(controlName).invalid)" class="small invalid-feedback py-0 my-0">
+    <span *ngIf="!itemError">Valid {{itemTitle | lowercase}} is required</span>
+    <span *ngIf="itemError">{{itemError}}</span>
+  </div>
+
+</div>

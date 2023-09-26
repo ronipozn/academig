@@ -1,0 +1,8 @@
+.btn:focus,.btn:active {
+   box-shadow: none;
+}
+
+.img-overlay {
+  top:1.2px;
+  right:1.2rem;
+}

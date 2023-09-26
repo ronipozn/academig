@@ -1,0 +1,17 @@
+<div class="modal-body p-0">
+  <div class="card my-0 text-white bg-light-blue">
+    <div class="card-body">
+      <div class="text-center">
+        <h3 class="my-0">Build a profile for your research lab, <b>{{(mode) ? educationBuild?.group.group.name : positionBuild?.group.group.name}}</b>, in less than 10 minutes.</h3>
+        <h4 class="mt-0">Gain more visibility and opportunities!</h4>
+      </div>
+      <img class="card-img" src="./assets/img/pro/team.svg" class="my-3 mx-auto d-block img-fluid" [width]="200" alt="Build Lab Profile">
+      <div class="text-center">
+        <button mat-raised-button class="btn btn-white btn-lg btn-round" style="color: #0AA0E8;" (click)="onBuild()">Start building</button>
+      </div>
+      <div class="text-center">
+        <a style="cursor:pointer;" data-dismiss="modal" aria-label="Close">Not Now</a>
+      </div>
+    </div>
+  </div>
+</div>

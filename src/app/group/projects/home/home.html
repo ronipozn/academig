@@ -1,0 +1,198 @@
+<ng-container *ngIf="missionService.showPage && streamRetrieved[0]">
+
+  <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2] && missionService.showEditBtn" class="d-flex justify-content-center mb-4">
+    <button mat-raised-button class="btn btn-light-blue btn-round mr-2" (click)="projectSlide(true, 0, true, 0)">
+      <i class="material-icons">add_circle_outline</i> Add Active Project
+    </button>
+    <button mat-raised-button class="btn btn-light-blue btn-round mr-2" (click)="projectSlide(true, 0, true, 1)">
+      <i class="material-icons">add_circle_outline</i> Add Past Project
+    </button>
+  </div>
+
+  <spinner *ngIf="!streamRetrieved[0] || !streamRetrieved[1] || !streamRetrieved[2]"></spinner>
+
+  <div *ngIf="missionService.showEditBtn || items.background.text" class="card" [@itemsAnimation]="('active')">
+    <div class="card-header">
+      <build-headline [showEditBtn]=missionService.showEditBtn
+                      [addButtonFlag]="items.background.text==null"
+                      [headline]="items.name"
+                      (buttonAddClick)="backgroundOp(0, true, null)">
+      </build-headline>
+      <build-modal-intro *ngIf="items.background.text==null && missionService.showHeadline"
+                         [headline]="'Introduce your research topics.'"
+                         [bodypic]="'align-left'">
+      </build-modal-intro>
+      <div *ngIf="items.background.text || items.background.pic" build-text-pic
+           [text]=items.background.text
+           [pic]=items.background.pic
+           [caption]=items.background.caption
+           [showEditBtn]=missionService.showEditBtn
+           [altText]="BackgroundPicture"
+           [imgSize]=250
+           [imgCenter]=true
+           [stream]=streamBackground
+           (animationDoneEvent)="backgroundOp(3)"
+           (buttonEditClick)="backgroundOp(0, true, $event)"
+           (buttonDeleteClick)="backgroundOp(1, false, $event)">
+      </div>
+      <!-- <div *ngIf="items.background.text" class="d-flex justify-content-center mt-3"> -->
+        <!-- <button *ngIf="items.layMan.text" data-toggle="modal" data-target="#LaymanModal"
+                [disabled]=streamLayMan role="button" class="btn btn-sm btn-light-blue">
+          Layman Background <spinner-put [stream]=streamLayMan (animationDoneEvent)="layManOp(3)"> </spinner-put>
+        </button> -->
+        <!-- <button *ngIf="items.layMan.text==null && missionService.showEditBtn"
+                role="button" (click)="layManOp(0, true, $event)" class="btn btn-sm btn-light-blue"
+                matTooltip="Explain in terms that are appropriate for someone who is not an expert in your field" [matTooltipPosition]="'below'">
+          <i class="fa fa-plus" aria-hidden="true"></i> Layman Background
+        </button> -->
+      <!-- </div> -->
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[0] && streamRetrieved[1] && streamRetrieved[2] && !missionService.showHeadline && currentProjects[0]==null && pastProjects[0]==null" class="card mt-0">
+    <div class="card-body">
+      <build-headline [headline]="'Projects'"></build-headline>
+      <build-modal-intro [headline]="'There are no projects yet.'"
+                         [bodypic]="'cubes'">
+      </build-modal-intro>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[1] && currentProjects[0]" class="card mt-0" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <!-- <build-headline *ngIf="streamRetrieved[1]"
+                      [addButtonFlag]=true
+                      [showEditBtn]=missionService.showEditBtn
+                      [undoBtnFlag]=undoProjects[0]
+                      [headline]="'Active Projects'"
+                      (buttonUndoClick)="projectUndo(0)"
+                      (buttonAddClick)="projectSlide(true, 0, true, 0)">
+      </build-headline> -->
+      <build-headline [headline]="'Active Projects'"></build-headline>
+      <build-modal-intro *ngIf="currentProjects[0]==null && missionService.showHeadline"
+                         [headline]="'Add your lab\' projects.'"
+                         [bodypic]="'cubes'"
+                         [bodytext]="'Add your lab\' active research projects. You can later move any of your projects to the past projects list.'">
+      </build-modal-intro>
+      <projects-list [streamRetrieved]=streamRetrieved[1]
+                     [bagName]="'current-bag'"
+                     [projects]=currentProjects
+                     [sourceType]=0
+                     [itemFocus]=itemFocus
+                     [stream]=streamCurrentProjects
+                     [streamFollow]=streamCurrentProjectsFollow
+                     [showEditBtn]=missionService.showEditBtn
+                     [planNumber]=missionService.planNumber
+                     (animationDoneEvent)="streamFunc(0)"
+                     (buttonEditClick)="projectSlide(true, $event, false, 0)"
+                     (buttonDeleteClick)="projectDelete($event, 0)"
+                     (buttonFollowClick)="projectFollow($event, 0)"
+                     (buttonMoveClick)="projectMove($event, 0)">
+      </projects-list>
+    </div>
+  </div>
+
+  <div *ngIf="streamRetrieved[2] && pastProjects[0]" class="card" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Past Projects'"></build-headline>
+      <!-- [undoBtnFlag]=undoProjects[1] -->
+      <!-- (buttonUndoClick)="projectUndo(1)" -->
+      <build-modal-intro *ngIf="pastProjects[0]==null && missionService.showHeadline"
+                         [headline]="'Add your lab\' projects.'"
+                         [bodypic]="'cubes'"
+                         [bodytext]="'Add your lab\' past research projects. You can later move any project to the active projects list.'">
+      </build-modal-intro>
+      <projects-list [streamRetrieved]=streamRetrieved[2]
+                     [bagName]="'past-bag'"
+                     [projects]=pastProjects
+                     [sourceType]=0
+                     [itemFocus]=itemFocus
+                     [stream]=streamPastProjects
+                     [streamFollow]=streamPastProjectsFollow
+                     [showEditBtn]=missionService.showEditBtn
+                     [planNumber]=missionService.planNumber
+                     (animationDoneEvent)="streamFunc(1)"
+                     (buttonEditClick)="projectSlide(true, $event, false, 1)"
+                     (buttonDeleteClick)="projectDelete($event, 1)"
+                     (buttonFollowClick)="projectFollow($event, 1)"
+                     (buttonMoveClick)="projectMove($event, 1)">
+      </projects-list>
+    </div>
+  </div>
+
+</ng-container>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-text-pic *ngIf=backgroundBuildFlag
+                      [title]="'Projects Background'"
+                      [text]=items.background.text
+                      [pic]=items.background.pic
+                      [caption]=items.background.caption
+                      [itemId]=missionService.groupId
+                      [captionFlag]=true
+                      (update)="backgroundOp(2, false, $event)"
+                      (cancel)="backgroundOp(0, false, $event)">
+</build-slide-text-pic>
+
+<build-slide-text-pic *ngIf=layManBuildFlag
+                      [title]="'Layman Background'"
+                      [text]=items.layMan.text
+                      [pic]=items.layMan.pic
+                      [caption]=items.layMan.caption
+                      [itemId]=missionService.groupId
+                      [captionFlag]=true
+                      (update)="layManOp(2, false, $event)"
+                      (cancel)="layManOp(0, false, $event)">
+</build-slide-text-pic>
+
+<build-slide-project *ngIf=projectBuildFlag
+                     (update)="projectUpdate($event)"
+                     (cancel)="projectSlide($event)"
+                     [modeNum]=modeNum
+                     [newFlag]=projectNewFlag
+                     [groupId]=missionService.groupId
+                     [userId]=missionService.userId
+                     [project]=projectBuild>
+</build-slide-project>
+
+<!-- Layman Modal -->
+<div class="modal fade" id="LaymanModal" tabindex="-1" role="dialog" aria-labelledby="LaymanModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Layman Background</h5>
+        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">clear</i>
+        </button>
+      </div>
+
+      <div *ngIf="streamRetrieved[0] && items.layMan.text" class="modal-body">
+        <div build-text-pic
+             [text]=items.layMan.text
+             [pic]=items.layMan.pic
+             [caption]=items.layMan.caption
+             [showEditBtn]=missionService.showEditBtn
+             [imgSize]=250
+             [imgCenter]=true
+             [stream]=streamLayMan
+             (animationDoneEvent)="layManOp(3)"
+             (buttonEditClick)="layManOp(0, true, $event)"
+             (buttonDeleteClick)="layManOp(1, false, $event)">
+        </div>
+      </div>
+      <!-- [titleText]="'Layman Picture'"
+      [bodyText]="'This is the place for a layman picture.'"
+      [altText]="LayManPicture" -->
+
+      <div class="modal-footer">
+        <button role="button" mat-raised-button class="btn btn-sm btn-light-blue" data-dismiss="modal" #closeBtn>Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>

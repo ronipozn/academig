@@ -1,0 +1,18 @@
+<div class="media">
+
+  <span *ngIf="members.length==0" class="text-muted ml-1 py-2">
+    No one is online.
+  </span>
+
+  <span *ngFor="let member of members; let i=index" class="mr-0" [matTooltipPosition]="'below'" [matTooltip]="member.name">
+    <single-pic class="profile"
+                [pic]=member.pic
+                [width]=40
+                [height]=40
+                [type]=0>
+    </single-pic>
+    <i class="fa fa-circle circle" style="color:#44b449"></i>
+  </span>
+
+</div>
+<hr class="mt-2">

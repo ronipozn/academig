@@ -1,0 +1,61 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">Apply - {{titleType}} - {{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]=formModel (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Show Academig progres bar -->
+
+      <h5 class="mb-2"><b>Required Letters</b></h5>
+      <div *ngFor="let i of lettersRequired; let j=index">
+        {{lettersSelect[i]}} <span class="ml-1">*</span>
+        <div class="mt-1" id="direct_upload">
+          <!-- <single-pic *ngIf="letters[_i]" [centerFlag]=true [pic]="letter[_i]" [type]=2 [width]=112 [height]=112></single-pic> -->
+          <!-- [ngClass]="{'mt-3': letters[_i]}" -->
+          <div class="d-flex justify-content-center">
+            <input type="hidden" id="letter{{j}}" name="letter{{j}}" data-input-accept-types=".pdf" data-tabs="file url gdrive dropbox skydrive">
+            <!-- <input type="hidden" id="letter{{i}}" name="letter{{i}}" data-images-only data-preview-step> -->
+          </div>
+        </div>
+      </div>
+      <p *ngIf="lettersRequired==null" class="text-muted"><i>Empty</i></p>
+
+      <h5 class="mb-3"><b>Required Grades</b></h5>
+      <div *ngFor="let i of gradesRequired" class="mb-4">
+        <build-modal-text-field [fieldType]=1
+                                [itemExplain]="'Enter a grade between ' + gradesMin[i] + ' and ' + gradesMax[i]"
+                                [typeSelected]="'number'"
+                                [itemTitle]="gradesSelect[i]"
+                                [controlName]="gradesSelect[i]"
+                                [parentGroup]=formModel
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+      <p *ngIf="gradesRequired==null" class="text-muted"><i>Empty</i></p>
+
+      <h5 class="mb-2"><b>Referees</b></h5>
+      <build-referees *ngIf="numReferees>0"
+                      [parentGroup]=formModel
+                      [submitStatus]=submitStatus
+                      [controlName]="'referees'"
+                      [numReferees]=numReferees
+                      [status]="(apply[0]?.status>9) ? apply[0].status : null"
+                      [referees]="(apply[0]?.status>9) ? apply[0].referees : null">
+      </build-referees>
+      <!-- [groupStage]=groupStage -->
+      <p *ngIf="numReferees==null || numReferees==0" class="text-muted"><i>Empty</i></p>
+
+      <p>
+        <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+        Once you apply for a job opening, the associated data with that job opening cannot be changed.
+      </p>
+
+      <div class="pull-left form-group">
+        <button type="submit" [disabled]="letters?.length<lettersRequired?.length" class="btn btn-sm btn-light-blue">{{(apply[0]?.status>9) ? 'Update Application' : 'Submit Application'}}</button>
+        <button type="button" class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

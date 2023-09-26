@@ -1,0 +1,40 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<build-modal-intro *ngIf="streamRetrieved && (analytics.groups[0]==null && analytics.fields[0]==null && analytics.positions[0]==null)"
+                   [headline]="'Overall Analytics'"
+                   [bodypic]="'pie-chart'"
+                   [bodytext]="'This are no analaytics to show yet.'">
+</build-modal-intro>
+
+<div *ngIf="streamRetrieved && analytics && (analytics.groups[0] || analytics.fields[0] || analytics.positions[0])">
+
+  <p class="text-muted small">
+    <i class="fa fa-info-circle" aria-hidden="true"></i> Analytics include onyl visitors which are not part of your lab.
+  </p>
+
+  <private-analytics-table [streamRetrieved]=streamRetrieved
+                           [modalFlag]=false
+                           [groupFlag]=true
+                           [notListedFlag]=true
+                           [title]="'Groups Visits'"
+                           [items]=analytics.groups
+                           [sourceType]=sourceType>
+  </private-analytics-table>
+
+  <private-analytics-table [streamRetrieved]=streamRetrieved
+                           [modalFlag]=false
+                           [notListedFlag]=true
+                           [title]="'Research Fields'"
+                           [items]=analytics.fields
+                           [sourceType]=sourceType>
+  </private-analytics-table>
+
+  <private-analytics-table [streamRetrieved]=streamRetrieved
+                           [modalFlag]=false
+                           [notListedFlag]=true
+                           [title]="'Positions'"
+                           [items]=analytics.positions
+                           [sourceType]=sourceType>
+  </private-analytics-table>
+
+</div>

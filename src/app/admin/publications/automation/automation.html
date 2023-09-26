@@ -1,0 +1,50 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <h5>Schedule</h5>
+    <ul *ngFor="let schedule of schedules">
+      <li>{{schedule | json}}</li>
+    </ul>
+    <button class="btn btn-sm btn-light-blue ml-2" (click)="updateSchedule()">Update</button>
+    <i *ngIf="!streamRetrieved" class="fa fa-1x fa-spinner fa-spin fa-fw" style="color:green"></i>
+  </div>
+</div>
+
+<div class="card mt-0">
+  <div class="card-body">
+    <h5>Publications Invite Automation</h5>
+    <button *ngIf="adminFlag" class="btn btn-light-blue mr-2" (click)="csvOp(0, true, null)">Upload CSVs</button>
+  </div>
+</div>
+
+<div *ngIf="files.length>0" class="card mt-0">
+  <div class="card-body">
+    <h5>Number of files: {{files.length-1}}</h5>
+    <ul *ngFor="let file of files; let i=index; let l=last">
+      <li *ngIf="!l">
+        {{file}}
+        <i *ngIf="current==i" class="fa fa-1x fa-spinner fa-spin fa-fw" style="color:green"></i>
+        <i *ngIf="current>i" class="fa fa-1x fa-check" style="color:green"></i>
+        <!-- <span *ngIf="current>i" class="ml-2">S_{{statuses[i]}}</span> -->
+        <span *ngIf="current>i" class="ml-2">{{statuses | json}}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<p>0 - Exist</p>
+<p>1 - OK</p>
+<p>2 - No Title Match</p>
+<p>3 - CrossRef Error</p>
+<p>4 - Missing propertyName2_link</p>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-pic *ngIf=csvBuildFlag
+                 (update)="csvOp(2, false, $event)"
+                 (cancel)="csvOp(0, false, $event)"
+                 [title]="'Publications CSV'"
+                 [type]=7>
+</build-slide-pic>

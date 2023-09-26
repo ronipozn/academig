@@ -1,0 +1,147 @@
+<div class="col-xl-10 offset-xl-1 py-4">
+<div class="row">
+
+  <div class="col-md-4 mr-0 pr-0">
+  <div class="card mr-0 pr-0">
+  <div class="card-header">
+
+    <div class="small d-flex justify-content-end align-items-stretch">
+      <div class="mr-auto py-2"><b>Your Messages {{unread}}</b></div>
+      <!-- <div class="py-2"> -->
+        <!-- <div class="dropdown">
+          <a class="dropdown-toggle" style="cursor: pointer;" role="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Colleagues
+          </a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div *ngFor="let userPosition of userService.userPositions; let i=index">
+              <h6 class="dropdown-header">{{userPosition.group.group.name}}</h6>
+              <span *ngIf="members[i]?.length<=1" class="dropdown-item small text-muted">You're the only member</span>
+              <button *ngFor="let member of members[i]; let j=index"
+                      class="dropdown-item small" (click)=memberFunc(i,j)>
+                <div *ngIf="member._id!=userService.userId" class="d-flex flex-row align-items-center">
+                  <single-pic *ngIf="member.pic" [pic]=member.pic
+                              [width]=24 [height]=24 [type]=0>
+                  </single-pic>
+                  <div class="ml-2">{{member.name}}</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div> -->
+        <!-- class="dropdown-item small" (click)=newConversation(i,j)> -->
+      <!-- </div> -->
+    </div>
+    <hr class="mt-0">
+
+    <div class="d-none d-md-block chatlist mb-auto" style="height: 64vh;">
+      <div class="list-group mb-2">
+        <button *ngFor="let channel of channels; let i=index" class="ml-0 mb-2 list-group-item list-group-item-action d-flex align-items-center justify-content-start" [ngClass]="{'active' : i==channelSelected}" (click)="updateChannel(i)">
+          <single-pic *ngIf="channel.users[0]" class="mr-3" [pic]=channel.users[0].pic [width]=48 [height]=48 [type]=0></single-pic>
+          <div>
+            {{channel.users[0]?.name}}
+            <span *ngIf="!channel.users[0]">User Deleted</span>
+            <p *ngIf="channel.message" class="my-1 small">
+              <span *ngIf="channel.message.userId==userService.userId && channel.message.text">You:</span>
+              <span *ngIf="channel.message.text">{{channel.message.text | truncate:[10]}}</span>
+            </p>
+          </div>
+          <div *ngIf="channel.message" class="ml-auto small">
+            <span *ngIf="channel.message.date" class="mr-2">{{channel.message.date | momentPipe:'':1}}</span>
+            <span *ngIf="channel.unread" class="h6"><span class="badge badge-pill badge-warning">{{channel.unread}}</span></span>
+          </div>
+        </button>
+      </div>
+    </div>
+    <div class="d-md-none chatlist mb-auto" style="height: 20vh;">
+      <div class="list-group mb-2">
+        <button *ngFor="let channel of channels; let i=index" class="btn btn-link mb-2 px-1 list-group-item list-group-item-action d-flex align-items-center justify-content-start" [ngClass]="{'active' : i==channelSelected}" (click)="updateChannel(i)">
+          <single-pic *ngIf="channel.users[0]" class="mr-3" [pic]=channel.users[0].pic [width]=48 [height]=48 [type]=0></single-pic>
+          <div>
+            {{channel.users[0]?.name}}
+            <span *ngIf="!channel.users[0]">User Deleted</span>
+            <p *ngIf="channel.message" class="my-1 small">
+              <span *ngIf="channel.message.userId==userService.userId && channel.message.text">You:</span>
+              <span *ngIf="channel.message.text">{{channel.message.text | truncate:[10]}}</span>
+            </p>
+          </div>
+          <div *ngIf="channel.message" class="ml-auto small">
+            <span *ngIf="channel.message.date" class="mr-2">{{channel.message.date | momentPipe:'':1}}</span>
+            <span *ngIf="channel.unread" class="h6"><span class="badge badge-pill badge-warning">{{channel.unread}}</span></span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  </div>
+  </div>
+
+  <div class="col-md-8">
+  <div class="card">
+  <div class="card-header">
+
+    <div *ngIf="!streamRetrieved" style="overflow-y: scroll; height: 72vh;">
+      <spinner></spinner>
+    </div>
+
+    <build-modal-intro *ngIf="streamRetrieved && channels.length==0"
+                       [headline]="'Messages'"
+                       [bodypic]="'comment-o'"
+                       [bodytext]="'You don\'t have any open conversations yet.'">
+    </build-modal-intro>
+
+    <messages-head *ngIf="streamRetrieved && channels.length>0"
+                   [channel]=channels[channelSelected]
+                   [presence]=presence
+                   (deleteChannel)="deleteChannel()">
+    </messages-head>
+
+    <div *ngIf="streamRetrieved" class="chatlist mb-auto" style="height: 64vh;" #scrollMe>
+      <div *ngFor="let message of messages; let i=index; let l=last">
+        <messages-box [message]=message
+                      [messageSpinner]=streamMessage
+                      [messageLastFlag]=l
+                      [userId]=userService.userId
+                      [userPic]=userService.userPic
+                      [withPic]=withPic
+                      (btnPicClick)="picMoal($event)"
+                      (deleteMessage)="deleteMessage(i)"
+                      (animationDoneEvent)=streamFunc()>
+        </messages-box>
+        <!-- [showEditBtn], [sourceType]=sourceType, [stream]=stream[i] -->
+      </div>
+    </div>
+
+    <app-new-message *ngIf="streamRetrieved && channels.length>0"
+                     [channelExist]=channels[channelSelected].users[0]
+                     [channelId]=channels[channelSelected]._id
+                     [channelBlock]=channels[channelSelected].block
+                     (createMessage)="createMessage($event)">
+    </app-new-message>
+
+  </div>
+  </div>
+  </div>
+
+</div>
+</div>
+
+<!-- #PicModal{{galleries[galleryIndex]?._id}} -->
+
+<button id="togglePicModal" #togglePicModal [hidden]="true" data-toggle="modal" data-target="#PicModal"></button>
+
+<div class="modal fade" id="PicModal" tabindex="-1" role="dialog" aria-labelledby="PicModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <h5 class="modal-title" id="picModalTitle">{{galleries[galleryIndex]?.title}}</h5> -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img class="d-block mx-auto" style="max-height: calc(100vh - 225px);" src="{{modalPic}}">
+      </div>
+    </div>
+  </div>
+</div>

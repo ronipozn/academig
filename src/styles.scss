@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~trumbowyg/dist/ui/trumbowyg.min.css";
+@import '~@ngx-share/button/themes/default/default-theme';
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+// html, body { height: 100%; }
+body {
+  // background: #FFFFFF !important;
+  // margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// .loading {
+//   position: fixed;
+//   top: 50%;
+//   left: 50%;
+//   transform: translate(-50%, -50%);
+// }

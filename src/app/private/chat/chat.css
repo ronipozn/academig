@@ -1,0 +1,14 @@
+.parent {
+  /*min-height:100%;*/
+  /*height:83vh;*/
+}
+
+.chatlist{
+  /* height: 600px; */
+  overflow-y: scroll;
+  /* overflow-y: auto; */
+}
+
+.alert {
+  display:inline-block;
+}

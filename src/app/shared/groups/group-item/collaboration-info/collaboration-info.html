@@ -1,0 +1,40 @@
+<div class="mb-3 small">
+  <span *ngIf="collaboration.period.mode==2">
+    Collaborators since <br> {{ collaboration.period.start | date: 'MMM y' }}
+  </span>
+  <span *ngIf="collaboration.period.mode==0">
+    Collaborated between <br> {{ collaboration.period.start | date: 'MMM y' }} - {{ collaboration.period.end | date: 'MMM y' }}
+  </span>
+</div>
+
+<p *ngIf="collaboration.status==0" class="badge badge-pill badge-warning" [matTooltipPosition]="'below'" matTooltip="Member has not accepted the funding invitation yet.">
+  <i class="fa fa-clock-o" aria-hidden="true"></i> Pending
+</p>
+
+<p class="small">
+  {{ collaboration.text }}
+  <spinner-put [stream]=stream
+               (animationDoneEvent)="animationDone($event)">
+  </spinner-put>
+</p>
+
+<div *ngIf="collaboration.projects[0]" class="mb-3">
+  <small><u>Projects</u></small>
+  <div class="d-flex flex-row justify-content-center">
+    <div *ngFor="let project of collaboration.projects">
+      <div class="p-1">
+        <!-- <a [routerLink]="['../../projects',project._id]"> -->
+        <a [routerLink]="['/projects',project._id]">
+          <single-pic [pic]=project.pic
+                      [width]=29
+                      [height]=29
+                      [widthE]=1
+                      [type]=true
+                      [stack]=true
+                      [stackPic]="'cubes'">
+          </single-pic>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

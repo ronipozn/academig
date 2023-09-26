@@ -1,0 +1,117 @@
+<div class="row justify-content-between">
+
+  <div class="col-12" [ngClass]="{'col-lg-8': sourceType!=5 && sourceType!=7 && sourceType!=8 && sourceType!=13}">
+    <div [ngClass]="{'d-flex justify-content-start': !isMobile}">
+
+     <div class="d-flex align-items-center flex-column">
+
+        <single-pic *ngIf="people.pic"
+                    class="pr-2 ml-1 mt-0 py-2"
+                    [pic]=people.pic
+                    [stackPic]="'user-circle-o'"
+                    [maxSizeFlag]=false
+                    [width]="(sourceType==8) ? 48 : 64"
+                    [height]="(sourceType==8) ? 48 : 64"
+                    [widthE]="(sourceType==8) ? 3 : 4"
+                    [heightE]="(sourceType==8) ? 3 : 4">
+        </single-pic>
+
+        <a *ngIf="!people.pic && people._id" [routerLink]="['/people',people._id]" [style.font-size]="((sourceType==8) ? 1.7 : 2.3) + 'rem'" class="p-0 ml-0 mt-1 mb-0 mr-1 fa-stack fa-1x">
+          <i class="fa fa-circle fa-stack-2x p-0 m-0" style="color: #cdcdc1"></i>
+          <span class="fa fa-stack-1x fa-name fa-inverse">{{people.name | acronym}}</span>
+        </a>
+
+        <span *ngIf="!people.pic && !people._id" [style.font-size]="((sourceType==8) ? 1.7 : 2.3)  + 'rem'" class="p-0 ml-0 mt-1 mb-0 mr-1 fa-stack fa-1x">
+          <i class="fa fa-circle fa-stack-2x p-0 m-0" style="color: #cdcdc1"></i>
+          <span class="fa fa-stack-1x fa-name fa-inverse">{{people.name | acronym}}</span>
+        </span>
+
+      </div>
+
+      <div class="mt-1" [ngClass]="{'p-2': sourceType!=8}">
+
+        <a *ngIf="people._id" class="card-title" [ngClass]="{'lead': sourceType!=8}" [routerLink]="['/people',people._id]"><b>{{ people.name }}</b></a>
+        <span *ngIf="!people._id" class="card-title" [ngClass]="{'lead': sourceType!=8}"><b>{{ people.name }}</b></span>
+
+        <ng-container *ngIf="sourceType!=8 && (people.views || people.followedSize || people.publicationsSize || people.currentSize)"><br></ng-container>
+        <span *ngIf="sourceType!=8 && people.views" class="small"><a [routerLink]="['/people',people._id]" class="card-title mr-3"><span class="text-muted">Views: </span> {{people.views}}</a></span>
+        <span *ngIf="sourceType!=8 && people.followedSize" class="small"><a [routerLink]="['/people',people._id,'network']" class="card-title mr-3"><span class="text-muted">Followers: </span> {{people.followedSize}}</a></span>
+        <span *ngIf="sourceType!=8 && people.publicationsSize" class="small"><a [routerLink]="['/people',people._id,'publications']" class="card-title mr-3"><span class="text-muted">Publications: </span> {{people.publicationsSize}}</a></span>
+        <span *ngIf="sourceType!=8 && people.currentSize" class="small"><a [routerLink]="['/people',people._id,'library']" class="card-title"><span class="text-muted">Currently reading: </span> {{people.currentSize}}</a></span>
+
+        <spinner-put class="ml-1" [stream]=stream (animationDoneEvent)="animationDone()"></spinner-put>
+
+        <!-- Visits, Project Collaborator -->
+        <!-- <ng-container *ngIf="sourceType==1 || sourceType==2">
+          <p *ngFor="let position of people.positions; let l=last" class="mb-0">
+            <span *ngIf="position.period"><br>Visiting dates: {{ position.period.start | date:'MMM y' }} - {{(position.period.mode==0) ? (position.period.end | date:'MMM y') : "Present" }}</span>
+            <br>{{titlesSelect[position.titles[0]]}}
+            <span *ngIf="position.text && l"><br><i>{{ position.text }}</i></span>
+          </p>
+        </ng-container> -->
+
+        <!-- Wall || Search  || Profiles || Department || University -->
+        <ng-container *ngIf="sourceType==4 || sourceType==5 || sourceType==6 || sourceType==7 || sourceType==8 || sourceType==9 || sourceType==10">
+          <p *ngFor="let position of people.positions" class="mb-0">
+            <!-- FIX -->
+            <span *ngIf="position.period.mode>0 && position.group.group._id!='5be55ef95bc1a7001483846c'" class="text-muted">
+              <small class="ml-r">{{titlesSelect[position.titles[0]]}} &middot;</small>
+              <group-link [groupIndex]=position.group
+                          [flag]="(sourceType==9 || sourceType==10) ? (sourceType-8) : 0">
+              </group-link>
+            </span>
+          </p>
+        </ng-container>
+
+        <!-- <p class="mb-0 small"><span class="text-muted">Recent paper: </span> Modeling Cell-Cell Interactions in Parkinson’s Disease Using Human Stem Cell-Based Models</p> -->
+
+        <div *ngIf="sourceType!=7 && sourceType!=8 && sourceType!=13" class="d-block d-sm-none">
+          <div *ngIf="people.currentReading" class="small">
+            <span class="text-muted">Currently reading: </span>
+            <a [routerLink]="['/people',people._id,'publications',people.currentReading._id]" class="card-title">{{people.currentReading.name}}</a>
+          </div>
+        </div>
+
+        <p *ngIf="sourceType!=7 && sourceType!=8 && people.quote?.text" class="mb-0 small">
+          <span class="text-muted">Favorite quote: </span> <i>{{people.quote.text}}</i>
+        </p>
+
+        <p *ngIf="sourceType!=7 && sourceType!=8 && sourceType!=13" class="mt-2 mb-0">
+          <!-- class="ml-auto px-2 pt-2" -->
+          <!-- [status]="people.positions[0]?.status" -->
+          <people-buttons [mode]="sourceType<4 ? people.positions[0].mode : 2"
+                          [positionsFlag]="people.positions.length ? 1 : 0"
+                          [sourceType]=sourceType
+                          [stream]=stream
+                          [followStatus]="people.followStatus || followStatus"
+                          [streamFollow]=streamFollow
+                          [activeId]=activeId
+                          [peopleId]=people._id
+                          [peopleStage]="sourceType==5 ? 2 : people.stage"
+                          [showEditBtn]=showEditBtn
+                          [peopleProgress]=people.progress
+                          (btnAcceptClick)="btnAcceptFunc($event)"
+                          (btnDeclineClick)="btnDeclineFunc($event)"
+                          (btnResendClick)="btnResendFunc($event)"
+                          (btnCancelClick)="btnCancelFunc($event)"
+                          (btnFollowClick)="btnFollowFunc($event)"
+                          (btnMessageClick)="btnMessageFunc($event)">
+          </people-buttons>
+        </p>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="sourceType!=7 && sourceType!=8 && sourceType!=13" class="d-none d-sm-block col-lg-4">
+    <div *ngIf="people.currentReading" class="media mt-4 ml-2">
+      <img *ngIf="people.currentReading.abstractPic" [src]="people.currentReading.abstractPic" width="80" class="mr-3" alt="...">
+      <div class="media-body small">
+        <span class="my-0 text-muted"><b>Currently reading:</b></span><br>
+        <a [routerLink]="['/people',people._id,'publications',people.currentReading._id]" class="card-title">{{people.currentReading.name}}</a>
+      </div>
+    </div>
+  </div>
+
+</div>

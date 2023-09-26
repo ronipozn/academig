@@ -1,0 +1,31 @@
+<ng-container *ngIf="1">
+
+  <nav mat-tab-nav-bar animationDuration="0ms" mat-align-tabs="center" [backgroundColor]="background">
+    <a mat-tab-link *ngFor="let navLink of navLinks" class="text-dark nav-link"
+      [routerLinkActive]="['active']" [routerLink]="[navLink.link]" (click)="activeLink=navLink.link"
+      [active]="activeLink==navLink.link">
+      <mat-icon class="mr-1">{{navLink.icon}}</mat-icon>
+      {{navLink.label}}
+      <div [ngSwitch]="navLink.label" class="ml-1">
+        <div *ngSwitchCase="'Labs'">({{userService.userFollowings.groupsIds.length || 0}})</div>
+        <div *ngSwitchCase="'Companies'">({{userService.userFollowings.companiesIds?.length || 0}})</div>
+        <div *ngSwitchCase="'Researchers'">({{userService.userFollowings.peoplesIds.length || 0}})</div>
+        <div *ngSwitchCase="'Services'">({{userService.userFollowings.resourcesIds?.length || 0}})</div>
+        <div *ngSwitchCase="'Podcasts'">({{userService.userFollowings.podcastsIds?.length || 0}})</div>
+        <div *ngSwitchCase="'Events'">({{userService.userFollowings.eventsIds?.length || 0}})</div>
+        <div *ngSwitchCase="'Apps'">({{userService.userFollowings.appsIds?.length || 0}})</div>
+      </div>
+    </a>
+  </nav>
+
+  <div class="container-fluid">
+    <router-outlet></router-outlet>
+  </div>
+
+</ng-container>
+
+<!-- <div *ngIf="0" class="card">
+  <div class="card-body" [@itemsAnimation]="('active')">
+    <build-modal-intro [headline]="'You don\'t have access to this page.'" [bodypic]="'ban'"></build-modal-intro>
+  </div>
+</div> -->

@@ -1,0 +1,160 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && missionService.showEditBtn" class="dropdown mb-4">
+  <button mat-raised-button mat-min-fab role="button" class="btn btn-sm btn-info btn-round btn-fab mb-2" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <i class="material-icons">add</i>
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" style="cursor:pointer" (click)="unitSlide(true, 0, true)">Add Unit / School</a>
+    <a class="dropdown-item" style="cursor:pointer" (click)="departmentSlide(true, 0, 0, true)">Add Department / Program / Center</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" style="cursor:pointer" (click)="csvOp(0, true, null)">Upload CSV</a>
+  </div>
+</div>
+
+<spinner-put [stream]=streamCsv (animationDoneEvent)="streamCsvFunc()"></spinner-put>
+
+<div class="container-fluid" style="margin-bottom: 40px;">
+  <div class="row mt-0">
+    <div class="col-12">
+
+      <ng-container *ngIf="streamRetrieved">
+        <ng-container *ngFor="let dataSource of dataSources; let i=index">
+          <!-- <span *ngIf="missionService.showEditBtn && departmentsItems.categories[i].empty" class="text-muted">{{departmentsItems.categories[i].name}} Empty</span> -->
+          <div *ngIf="!departmentsItems.categories[i].empty" class="table-container mat-elevation-z8 mb-5"><!-- matSort -->
+            <table mat-table [dataSource]="dataSource" (matSortChange)="sortData($event)">
+
+              <ng-container matColumnDef="name"> <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Name</b></th> -->
+                <th mat-header-cell *matHeaderCellDef>
+                  <h4 class="mb-0">
+                    <!-- <img width="23" class="mr-2" [src]="'./assets/img/units/'+icons[(departmentsItems.categories[i].icon==null) ? 8 : departmentsItems.categories[i].icon]+'.svg'"> -->
+                    <b>{{departmentsItems.categories[i].name}}</b>
+                    <build-buttons *ngIf="missionService.showEditBtn"
+                                   [showButton]="streamUnits[i]==0"
+                                   [editFlag]="!departmentsItems.categories[i].empty"
+                                   (buttonEditClick)="unitSlide(true, i, false)"
+                                   (buttonDeleteClick)="unitDelete(i)">
+                    </build-buttons>
+                  </h4>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <a [routerLink]="['..',row.link]" class="card-title">{{row.name}}</a>
+                  <build-buttons *ngIf="missionService.showEditBtn"
+                                 [showButton]=true
+                                 [editFlag]=true
+                                 (buttonEditClick)="departmentSlide(true, i, 1, false)">
+                  </build-buttons>
+                  <!-- [showButton]="streamDepartments[j]==0" -->
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="total">
+                <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header> <b>Number Of Labs</b> </th> -->
+                <th mat-header-cell *matHeaderCellDef> <b></b> </th>
+                <td mat-cell *matCellDef="let row">
+                  <!-- {{row.total}} -->
+                </td>
+              </ng-container>
+
+              <!-- <ng-container matColumnDef="year">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b>Founded Year</b> </th>
+                <td mat-cell *matCellDef="let row">
+                  {{row.year}}
+                </td>
+              </ng-container> -->
+
+              <!-- <ng-container matColumnDef="rank">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> <b>Rank</b> </th>
+                <td mat-cell *matCellDef="let row">
+                  {{row.rank}}
+                </td>
+              </ng-container> -->
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+              <!-- <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="8">No data matching the filter "{{input.value}}"</td>
+              </tr> -->
+
+            </table>
+          </div>
+        </ng-container>
+      </ng-container>
+
+    </div>
+  </div>
+</div>
+
+<!-- <span *ngIf="i==0" class="mr-1">Other</span>
+<span *ngIf="i>0" class="mr-1">{{ category.name }}</span> -->
+<!-- <div *ngIf="streamRetrieved && departmentsItems" class="card-columns mt-0">
+  <div *ngFor="let category of departmentsItems.categories; let i=index">
+
+    <div class="card mt-0" *ngIf="!category.empty || missionService.showEditBtn">
+
+      <div class="card-header">
+        <h5 class="mb-0">
+          <img *ngIf="category.icon!=null" width="23" class="mr-2" [src]="'./assets/img/units/'+icons[category.icon]+'.svg'">
+          <img *ngIf="category.icon==null" width="23" class="mr-2" [src]="'./assets/img/units/'+icons[8]+'.svg'">
+          <span class="mr-1">{{ category.name }}</span>
+          <spinner-put *ngIf="i>0" [stream]=streamUnits[i] (animationDoneEvent)="streamUnitsFunc()"></spinner-put>
+          <build-buttons *ngIf="i>0 && missionService.showEditBtn"
+                         [showButton]="streamUnits[i]==0"
+                         [editFlag]="!category.empty"
+                         (buttonEditClick)="unitSlide(true, i, false)"
+                         (buttonDeleteClick)="unitDelete(i)">
+          </build-buttons>
+        </h5>
+        <hr class="my-0">
+      </div>
+
+      <div class="card-body mt-0 pt-0">
+        <span *ngIf="category.empty" class="text-muted">Empty</span>
+        <div *ngFor="let department of departmentsItems.departments; let j=index">
+          <div *ngIf="category.id==department.categoryId" class="mb-2">
+            <a class="card-title" [routerLink]="['/',missionService.universityLink,department.link]">{{department.name}}</a>
+            <build-buttons *ngIf="missionService.showEditBtn"
+                           [showButton]="streamDepartments[j]==0"
+                           [editFlag]=true
+                           (buttonEditClick)="departmentSlide(true, i, j, false)">
+            </build-buttons>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div> -->
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<unit-build *ngIf=unitBuildFlag
+            [name]="unitNewFlag ? '' : departmentsItems.categories[unitIndex].name"
+            [icon]="unitNewFlag ? '' : departmentsItems.categories[unitIndex].icon"
+            (cancel)="unitSlide(false)"
+            (update)="unitUpdate($event)">
+</unit-build>
+
+<department-build *ngIf=departmentBuildFlag
+                  [units]="departmentsItems.categories"
+                  [universityId]="missionService.universityId"
+                  [unitIndex]=unitIndex
+                  [departmentIndex]=departmentIndex
+                  [newFlag]=departmentNewFlag
+                  (cancel)="departmentSlide(false)"
+                  (update)="departmentUpdate($event)">
+</department-build>
+
+<build-slide-pic *ngIf=csvBuildFlag
+                 (update)="csvOp(2, false, $event)"
+                 (cancel)="csvOp(0, false, $event)"
+                 [title]="'Departments CSV'"
+                 [type]=6>
+</build-slide-pic>
+<!-- [pic]=publication.pdf -->
+<!-- [itemId]=projId -->

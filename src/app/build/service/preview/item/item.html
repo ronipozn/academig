@@ -1,0 +1,106 @@
+<!-- <img style="position: absolute; margin-top: 13px; margin-left: -10px;" [width]="25" [height]="25" src="https://s3.amazonaws.com/cdn.designcrowd.com/blog/2017/April/35-Famous-Circle-Logos/19_400.png" alt="academig"> -->
+<div class="table-responsive">
+  <table class="table table-striped pb-0">
+
+    <thead>
+      <tr>
+        <th class="text-center">
+          <div class="dropdown">
+            <a data-toggle="dropdown" style="cursor: pointer;">
+              <div class="form-check" style="margin-top: 10px;">
+                <label class="form-check-label">
+                  <span class="form-check-sign"><span class="check"><i class="fa fa-caret-down"></i></span></span>
+                </label>
+              </div>
+            </a>
+            <span class="small dropdown-menu" aria-labelledby="dropdownTitle">
+              <a role="button" style="cursor: pointer;" class="dropdown-item small pl-2">Select all services</a>
+              <div class="dropdown-divider"></div>
+              <a role="button" style="cursor: pointer;" class="dropdown-item small pl-2">Deselect all services</a>
+            </span>
+          </div>
+        </th>
+        <ng-container *ngFor="let row of tableData.headerRow; let i=index; let f=first; let l=last">
+          <th *ngIf="!f && !l && tableData.headerVisible[i]">
+            <div class="d-flex flex-row">
+              <span [matTooltip]="tableData.headerTooltip[i]" [matTooltipPosition]="'above'" class="text-nowrap">{{ row }}</span>
+            </div>
+          </th>
+        </ng-container>
+        <th>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr>
+
+        <td>
+          <div class="form-check" style="margin-top: 10px;">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox">
+              <span class="form-check-sign"><span class="check"></span></span>
+            </label>
+          </div>
+        </td>
+
+        <td [ngClass]="{'text-white bg-success': firstFormGroup.controls['standout'].value>0}">
+          <div class="text-nowrap d-flex align-items-center" style="margin-top: 2px;">
+            <span class="mr-2">1.</span>
+            <single-pic *ngIf="firstFormGroup.controls['pic'].value" class="mr-2" [centerFlag]=true [pic]="firstFormGroup.controls['pic'].value" [stackPic]="'cubes'" [type]=0 [width]=32 [height]=32></single-pic>
+            <b>{{ firstFormGroup.controls['title'].value }}</b>
+          </div>
+        </td>
+
+        <td [ngClass]="{'text-white bg-success': firstFormGroup.controls['standout'].value>0}">
+          <span class="text-nowrap">{{ categoryType[firstFormGroup.controls['category'].value] }}</span>
+        </td>
+
+        <td [ngClass]="{'text-white bg-success': firstFormGroup.controls['standout'].value>0}">
+          <span class="text-nowrap">{{ secondFormGroup.controls['group'].value | name }}</span>
+        </td>
+
+        <td [ngClass]="{'text-white bg-success': firstFormGroup.controls['standout'].value>0}" class="text-nowrap">
+          <span *ngIf="country" class="flag mr-1">
+            <!-- <img [src]="'./assets/img/flags/' + (country | flag) + '.png'" alt=""> -->
+          </span>
+          {{city ? city + ',' : ''}}
+          {{state ? state + ', ' : ''}}
+          <span *ngIf="country=='United States of America'">USA</span>
+          <span *ngIf="country!='United States of America'">{{country}}</span>
+        </td>
+
+        <td [ngClass]="{'text-white bg-success': firstFormGroup.controls['standout'].value>0}" class="text-nowrap">
+          {{ firstFormGroup.controls['description'].value }}
+        </td>
+
+        <td [ngClass]="{'text-white bg-success': firstFormGroup.controls['standout'].value>0}" class="text-nowrap">
+          <span [matTooltip]="tagsSelectedMerge" [matTooltipPosition]="'below'">
+            <span>{{ tagsSelected[0] }}</span>
+            <span *ngIf="tagsSelected.length>1"> ...</span>
+          </span>
+        </td>
+
+        <td [ngClass]="{'text-white bg-success': firstFormGroup.controls['standout'].value>0}" class="text-nowrap">
+          <span *ngIf="firstFormGroup.controls['standout'].value<2"><b></b> {{ date | momentPipe:'':1 | uppercase }}</span>
+          <span *ngIf="firstFormGroup.controls['standout'].value==2"><b>FEATURED</b></span>
+        </td>
+
+        <td [ngClass]="{'text-white bg-success': firstFormGroup.controls['standout'].value>0}" class="text-right text-nowrap">
+          <!-- <button mat-raised-button type="button" class="btn btn-link btn-sm">
+            <i class="material-icons rotate-90">arrow_forward_ios</i>
+          </button> -->
+          <button mat-raised-button [matTooltip]="'Follow'" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm px-0 mr-3">
+            <i class="fa fa-size-20 fa-bookmark-o" [ngClass]="{'text-white': firstFormGroup.controls['standout'].value>0}" aria-hidden="true"></i>
+          </button>
+          <button mat-raised-button matTooltip="Compare" [matTooltipPosition]="'below'" type="button" class="btn btn-link btn-sm px-0">
+            <i class="fa fa-size-20 fa-clone" [ngClass]="{'text-white': firstFormGroup.controls['standout'].value>0}" aria-hidden="true"></i>
+          </button>
+        </td>
+
+      </tr>
+
+    </tbody>
+  </table>
+</div>

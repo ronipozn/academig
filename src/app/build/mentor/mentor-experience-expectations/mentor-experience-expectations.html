@@ -1,0 +1,96 @@
+
+<div class="card">
+  <div class="card-body">
+
+    <div [formGroup]="parentGroup">
+
+      <h3 class="mt-0 text-success"><b>Mentoring experience and expectations</b></h3>
+
+      <b>13. In an ideal scenario, how many hours per month would you like to mentor?</b> (1-20):
+      <!-- <mat-slider matInput
+          class="example-margin"
+          [disabled]="disabled"
+          [invert]="invert"
+          [max]="max"
+          [min]="min"
+          [step]="step"
+          [thumbLabel]="thumbLabel"
+          [tickInterval]="getSliderTickInterval()"
+          [vertical]="vertical"
+          [formControlName]="'academic_writing'">
+      </mat-slider> -->
+
+      <div class="mb-4">
+        <build-modal-text-field [fieldType]=5
+                                [itemTitle]="'14. Have you ever mentored someone before?'"
+                                [controlName]="'past_mentoring'"
+                                [parentGroup]=parentGroup
+                                [itemArray]="['Yes', 'No']"
+                                [labelRequired]=true
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+
+      <div class="mb-4">
+        <build-modal-text-field [fieldType]=5
+                                [itemTitle]="'15. Which communication tool would you prefer to use for mentoring sessions.'"
+                                [controlName]="'communication_tool'"
+                                [parentGroup]=parentGroup
+                                [itemArray]="['Skype', 'Zoom', 'Google Hangouts', 'Other']"
+                                [labelRequired]=true
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+
+      <build-modal-text-field [fieldType]=2
+                              [labelRequired]=true
+                              [itemTitle]="'16. Please describe yourself in a couple of sentences (not in 3rd person)'"
+                              [controlName]="'description'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=2
+                              [labelRequired]=true
+                              [itemTitle]="'17. In your own words please, describe what an academic mindset means to you.'"
+                              [controlName]="'mindset'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=2
+                              [labelRequired]=true
+                              [itemTitle]="'18. If you could mentor someone on just one topic, what would it be, and why?'"
+                              [controlName]="'desired_topic'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=2
+                              [labelRequired]=true
+                              [itemTitle]="'19. Describe an out of the box solution to a complex problem you thought of that made you think.'"
+                              [controlName]="'out_of_the_box'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+       <!-- \'damn, I\'m pretty good!\' -->
+
+      <p>If you join as a mentor, the answer to this question could go live on the new mentor announcement blog post as per here - https://www.growthmentor.com/blog/september-2019-batch</p>
+
+      <div class="mb-4">
+        <build-modal-text-field [fieldType]=5
+                                [itemTitle]="'20. We work with academic mentors to create awesome content. Choose which forms of content you\'d be open to collaborating on.'"
+                                [controlName]="'content'"
+                                [parentGroup]=parentGroup
+                                [itemArray]="['Guest post', 'AMAC Video', 'Content for the Academig Summit', 'Podcast']"
+                                [labelRequired]=true
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+      <!-- At least one content collaboration is required within the first 3 months of joining as an academic mentor<br> -->
+      <!-- Choose as many as you like<br> -->
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<div class="card mt-0">
+  <div class="card-body">
+
+    <div *ngIf="!streamRetrieved" class="chatlist mb-auto pt-4" style="height: 40vh;">
+      <spinner></spinner>
+    </div>
+
+    <!-- <build-modal-intro [headline]="'Chat'"
+                            [bodypic]="'comment-o'"
+                            [bodytext]="'The lab chat is empty. Enter the first message!'">
+    </build-modal-intro> -->
+
+    <build-headline *ngIf="streamRetrieved && !messages[0]" [addButtonFlag]=false [headline]="'Chat'"></build-headline>
+    <p *ngIf="streamRetrieved && !messages[0]" class="mt-2 mb-0">The lab chat is empty. Enter the first message!</p>
+
+    <chat-head *ngIf="streamRetrieved && messages[0]"
+               [members]=membersPresent
+               [userId]=userService.userId>
+    </chat-head>
+
+    <div *ngIf="streamRetrieved" class="chatlist mb-auto" style="height: 45vh;" #scrollMe>
+      <div *ngFor="let message of messages; let i=index">
+        <chat-message [message]=message
+                      [users]=channel.users
+                      [userId]=userService.userId
+                      [userPic]=userService.userPic
+                      [withPic]=withPic
+                      (deleteMessage)="deleteMessage(i)">
+        </chat-message>
+        <!-- [showEditBtn], [sourceType]=sourceType, [stream]=stream[i] -->
+      </div>
+    </div>
+
+    <chat-new-message *ngIf="streamRetrieved"
+                     [channelId]=channel._id
+                     (createMessage)="createMessage($event)">
+    </chat-new-message>
+
+  </div>
+</div>

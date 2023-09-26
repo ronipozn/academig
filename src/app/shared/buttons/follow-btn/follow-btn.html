@@ -1,0 +1,39 @@
+<!-- <ng-container *ngIf="!linkFlag"> -->
+  <button *ngIf="followStatus" mat-raised-button class="btn btn-round btn-light-blue" (click)="buttonFollowFunc($event)"
+          [disabled]="stream>0 || streamFollow==3 || disabledFlag"
+          [ngClass]="{'btn-sm': smallFlag, 'btnFollowing': streamFollow==0 && type==0, 'btnClap': streamFollow==0 && type==1, 'btnWatched': streamFollow==0 && type==2, 'btnCompare': streamFollow==0 && type==3, 'btnUnFollow': streamFollow>=2}">
+    <span class="btn-label"><i class="material-icons" style="font-size: 12px;">{{unTypeIcon[type]}}</i></span>
+    <span *ngIf="streamFollow==3">{{unTypeName[type]}}</span>
+    <spinner-put *ngIf="streamFollow==3" [stream]=streamFollow></spinner-put>
+  </button>
+  <!-- <button *ngIf="!followStatus" mat-raised-button style="background-color: #DDE1F3" class="btn-sm btn btn-round" (click)="buttonFollowFunc($event)" -->
+  <button *ngIf="!followStatus" mat-raised-button style="background-color: #DDE1F3" class="btn btn-round" (click)="buttonFollowFunc($event)"
+          [disabled]="stream>0 || streamFollow==3 || disabledFlag"
+          [ngClass]="{'btn-sm': smallFlag, 'btn-outline-light-blue': streamFollow==0, 'btn-light-blue': streamFollow>=2}">
+    <i class="material-icons" style="font-size: 12px;">{{typeIcon[type]}}</i>
+    {{onTypeName[type]}}
+    <spinner-put *ngIf="streamFollow==3" [stream]=streamFollow></spinner-put>
+  </button>
+<!-- </ng-container> -->
+
+<!-- <ng-container *ngIf="linkFlag">
+  <button *ngIf="followStatus" mat-raised-button style="background-color: #DDE1F3" class="btn btn-sm btn-round btn-outline-light-blue py-1 px-2" (click)="buttonFollowFunc($event)"
+          [disabled]="stream>0 || streamFollow==3 || disabledFlag"
+          [ngClass]="{'btnFollowingPublication': streamFollow==0 && type==4}">
+    <span class="btn-label small">
+      <i class="material-icons" style="font-size: 12px;">{{unTypeIcon[type]}}</i>
+      <span *ngIf="streamFollow==3">{{unTypeName[type]}}</span>
+      <spinner-put *ngIf="streamFollow==3" [stream]=streamFollow></spinner-put>
+    </span>
+  </button>
+  <button *ngIf="!followStatus" mat-raised-button style="background-color: #DDE1F3" class="btn btn-sm btn-round btn-outline-light-blue py-1 px-2" (click)="buttonFollowFunc($event)"
+          [disabled]="stream>0 || streamFollow==3 || disabledFlag">
+    <span class="small">
+      <i class="material-icons" style="font-size: 12px;">{{typeIcon[type]}}</i>
+      {{onTypeName[type]}}
+      <spinner-put *ngIf="streamFollow==3" [stream]=streamFollow></spinner-put>
+    </span>
+  </button>
+</ng-container> -->
+
+<!-- [disabled]="disabledFlag || !userService.userEmailVerified" -->

@@ -1,0 +1,19 @@
+<span class="text-nowrap">
+
+  <button *ngIf="!deleteFlag" [ngClass]="{'invisible':!showButton}" mat-raised-button type="button" (click)="buttonEditFunc()" matTooltip="Edit" [matTooltipPosition]="'above'" class="btn btn-primary btn-link btn-sm btn-just-icon">
+    <i class="material-icons">edit</i> <small *ngIf="editText" class="ml-1">{{editText}}</small>
+  </button>
+
+  <button *ngIf="!editFlag" [ngClass]="{'invisible':!showButton}" mat-raised-button type="button" (click)="buttonDeleteFunc()" matTooltip="Delete" [matTooltipPosition]="'above'" class="btn btn-danger btn-link btn-sm btn-just-icon">
+    <i class="material-icons">close</i> <small *ngIf="deleteText" class="ml-1">{{deleteText}}</small>
+  </button>
+
+  <!-- <button *ngIf="!deleteFlag" [ngClass]="{'invisible':!showButton}" role="button" class="btn btn-link pr-0 pl-1 py-0" (click)="buttonEditFunc($event)">
+    <i class="fa fa-pencil" aria-hidden="true"></i><small *ngIf="editText" class="ml-1">{{editText}}</small>
+  </button> -->
+
+  <!-- <button *ngIf="!editFlag" [ngClass]="{'invisible': !showButton}" role="button" class="btn btn-link pl-1 py-0" (click)="buttonDeleteFunc($event)">
+    <i class="fa fa-trash-o" aria-hidden="true"></i><small *ngIf="deleteText" class="ml-1">{{deleteText}}</small>
+  </button> -->
+
+</span>

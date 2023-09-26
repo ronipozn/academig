@@ -1,0 +1,100 @@
+<!--
+Choose papers (find publications after full name stage):
+Publication Field
+-->
+
+<div [formGroup]="parentGroup">
+
+  <!-- <img src="./assets/img/items/challenge.svg" style="max-height: 5rem;" class="mx-auto d-block img-fluid" alt="academig_lab_introduction"> -->
+
+  <h3 class="mb-3 text-center"><b>Last step! 2020 PapersMaster</b></h3>
+
+  <p mat-dialog-content class="text-center">
+    <b>Challenge yourself to read more research papers this year!</b>
+  </p>
+
+  <div class="ribbon-wrapper">
+    <h3 class="ribbon">
+      <strong class="ribbon-inner">Papers Master</strong>
+    </h3>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-12 col-md-11 col-xl-8 mx-auto">
+
+      <div class="card mt-0">
+        <div class="card-body">
+
+          <div class="d-none d-md-block">
+            <span class="d-flex justify-content-center">
+              <span class="mr-2">My goal is to read</span>
+              <input type="number" [formControlName]="'challengeGoal'" aria-describedby="challengeGoal">
+              <span class="ml-2">research papers in 2020.</span>
+            </span>
+          </div>
+
+          <div class="d-sm-none">
+            <div class="text-center">
+              My goal is to read
+              <br>
+              <input type="number" [formControlName]="'challengeGoal'" aria-describedby="challengeGoal">
+              <br>
+              research papers in 2020.
+            </div>
+          </div>
+
+           <!-- <build-modal-text-field [fieldType]=1
+                                   [itemTitle]="'Type your number'"
+                                   [controlName]="'challengeGoal'"
+                                   [parentGroup]=parentGroup>
+           </build-modal-text-field> -->
+           <!-- [submitStatus]=errorFlag[1] -->
+           <!-- [itemExplain]="'Goal should be less than 10000.'" -->
+
+        </div>
+      </div>
+
+      <div *ngIf="1" class="card mt-0">
+        <div class="card-body">
+          <h3 class="card-title text-success"><b>Papers Kit</b><i class="fa fa-tags ml-2" aria-hidden="true"></i></h3>
+          <hr>
+          <div class="checkbox-radios">
+            <div class="form-check">
+              <label class="form-check-label text-dark">
+                <!-- (change)="flagInterviewFunc()" -->
+                <input formControlName=papersKitStatus class="form-check-input" type="checkbox">
+                Yes, I want to help build a papers kit for {{parentGroup.get('department').value.name}}.
+                <span class="form-check-sign"><span class="check"></span></span>
+              </label>
+            </div>
+            <!-- <p> -->
+              <b>
+                <ng-container *ngIf="parentGroup.get('topic').value">
+                Build a papers kit in your field, {{parentGroup.get('department').value.name}}, with a focus on
+                  <span *ngFor="let topic of parentGroup.get('topic').value; let l=last">
+                    {{topic}}{{l ? '.' : '.'}}
+                  </span>
+                  <br>
+                </ng-container>
+                The kit will will appear in your lab profile and should include the most important and fundamental papers that every academic
+                entering your field should ideally be familiarized with, organized according to competence level (beginners, intermediate, advanced).
+                Adding a paper kit to your lab profile can result in significantly more views for your lab profile and your research.
+              </b>
+            <!-- </p> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-11 col-md-9 mx-auto d-flex">
+    <div class="mr-auto">
+      <button type="button" (click)="toPrevious()" mat-raised-button class="btn btn-link">PREVIOUS</button>
+    </div>
+    <div class="">
+      <button type="button" (click)="toStep()" mat-raised-button class="btn btn-light-blue">CONTINUE</button>
+    </div>
+  </div>
+
+</div>

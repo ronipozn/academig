@@ -1,0 +1,53 @@
+<div class="card mt-0">
+  <div class="card-body">
+    <button [disabled]="!streamRetrieved" role="button" class="btn btn-sm btn-info" (click)="updateList()">
+      Reload
+    </button>
+  </div>
+</div>
+
+<div *ngIf="!streamRetrieved" class="py-4">
+  <spinner [text]="'Page'"></spinner>
+</div>
+
+<div *ngIf="streamRetrieved" class="card mt-0">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th class="text-nowrap">User</th>
+            <th class="text-nowrap">Date</th>
+            <!-- <th class="text-nowrap">Action</th> -->
+            <!-- <th></th> -->
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let request of requests; let i=index">
+
+            <th scope="row">{{i}}</th>
+
+            <td>
+              <a [routerLink]="['/people',request._id]">{{request.name}}</a>
+            </td>
+
+            <td>
+              {{request.data.date | date:'dd MMM y'}}
+            </td>
+
+            <!-- <td class="text-nowrap">
+              <p>Open Modal: {{ request.dates[0] | date:'dd MMM y' }}</p>
+              <p>No: {{ request.dates[1] | date:'dd MMM y' }}</p>
+              <p>Yes: {{ request.dates[2] | date:'dd MMM y' }}</p>
+            </td> -->
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>

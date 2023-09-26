@@ -1,0 +1,491 @@
+<!-- navbar-transparent -->
+<nav class="navbar navbar-expand-lg navbar-absolute fixed-top" [ngClass]="{'navbar-dark bg-light-blue': userService.searchFocus}">
+  <div class="container-fluid">
+
+    <div class="navbar-wrapper">
+      <!-- <a class="navbar-brand" [routerLink]="['/']"></a> -->
+      <!-- {{getTitle()}} -->
+      <button *ngIf="!userService.searchFocus" mat-raised-button [routerLink]="['/']" class="btn btn-white btn-round btn-just-icon">
+        <img src="./assets/img/academig.jpg" [width]="41" [height]="44" alt="academig">
+        <div class="ripple-container"></div>
+      </button>
+      <button *ngIf="userService.searchFocus" mat-raised-button (click)="userService.searchFocus=false" class="btn btn-light-blue">
+        <i class="fa fa-angle-left mr-2" aria-hidden="true"></i> Back
+        <div class="ripple-container"></div>
+      </button>
+    </div>
+    <span *ngIf="planNumber==1" class="ml-2 lead text-success"><b>Academig PRO</b></span>
+    <span *ngIf="planNumber==2" class="ml-2 lead text-success"><b>Academig PRO & Mentors</b></span>
+
+    <button mat-raised-button class="navbar-toggler" type="button" (click)="sidebarToggle()">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="navbar-toggler-icon icon-bar"></span>
+      <span class="navbar-toggler-icon icon-bar"></span>
+      <span class="navbar-toggler-icon icon-bar"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+
+       <!-- && router.url!='/' -->
+      <form *ngIf="router.url!='/search'" class="navbar-form">
+
+        <div class="input-group">
+          <div class="input-append">
+            <!-- <input #input type="text" (keyup)="searchKeyUpOp(input.value)" value="" class="pl-1 form-control" [placeholder]="'Search ' + searchTypes[searchSelected] + '...'"> -->
+            <input #input type="text" (keyup)="searchKeyUpOp(input.value)" (focus)="searchFocusOp()" value="" class="pl-1 form-control"
+                   [ngClass]="{'text-white': userService.searchFocus}"
+                   [placeholder]="userService.searchFocus ? '' : 'Search Academig'">
+            <!-- <a data-toggle="dropdown">
+              <i class="material-icons">arrow_drop_down</i>
+              <div class="ripple-container"></div>
+            </a>
+            <div class="dropdown-menu btn-sm">
+              <a  *ngFor="let type of searchTypes; let i=index" class="dropdown-item" style="cursor:pointer;" (click)="searchSelected=i">{{type}}</a>
+            </div> -->
+          </div>
+          <button mat-raised-button type="submit" (click)="input.blur(); onSearch()"
+                  [ngClass]="{'btn-light-blue': userService.searchFocus, 'btn-white': !userService.searchFocus}"
+                  class="btn btn-round btn-just-icon">
+            <i class="material-icons">search</i>
+            <div class="ripple-container"></div>
+          </button>
+        </div>
+      </form>
+
+      <ul class="navbar-nav mt-2">
+
+        <!-- <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-link" [routerLink]="['/top-universities']" matTooltip="Universities" [matTooltipPosition]="'below'">
+            <i class="material-icons">account_balance</i>
+          </a>
+        </li> -->
+
+        <!-- <li class="nav-item dropdown">
+          <a [routerLink]="['/questions/']" class="nav-link" routerLinkActive="active-link">
+            <i class="fa fa-question-circle-o fa-1x" aria-hidden="true"></i>
+            <span class="badge badge-notify" style="font-size:8px;">1</span>
+          </a>
+        </li> -->
+
+        <li class="nav-item">
+          <a class="nav-link" routerLinkActive="active-link" [routerLink]="['/messages/']" matTooltip="Messages" [matTooltipPosition]="'below'">
+            <i class="material-icons">forum_outline</i>
+            <span *ngIf="!userService.searchFocus && unread && unread>0" class="notification">{{unread}}</span>
+            <!-- <span class="nav-style">Discuss</span> -->
+          </a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link" routerLinkActive="active-link" href="javascript:void(0)" (click)="getNotifications()" matTooltip="Notifications" [matTooltipPosition]="'below'" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="material-icons">notifications</i>
+            <span *ngIf="!userService.searchFocus && unseen>0" class="notification">{{unseen}}</span>
+            <!-- <span class="nav-style">Alerts</span> -->
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" style="width: 30rem;" aria-labelledby="navbarDropdownMenuLink">
+
+            <div *ngIf="!streamNotificationsRetrieved" class="d-flex justify-content-center my-2">
+              <div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div>
+            </div>
+
+            <div *ngIf="streamNotificationsRetrieved && notifications.length==0" class="d-flex align-self-center justify-content-center">You don't have notifications.</div>
+
+            <ng-container *ngIf="notifications.length>0 && streamNotificationsRetrieved">
+              <ng-container *ngFor="let notification of notifications; let i=index; let l=last;">
+                <notification-item *ngIf="i<5"
+                                   [actor]=notification.actor
+                                   [verb]=notification.verb
+                                   [object]=notification.object
+                                   [target]=notification.target
+                                   [members]=notification.members
+                                   [time]=notification.updated_at
+                                   [text]=notification.text
+                                   [link]=notification.link
+                                   [pic]=notification.pic
+                                   [is_read]=notification.is_read
+                                   [is_seen]=notification.is_seen>
+                </notification-item>
+              </ng-container>
+              <!-- [text]=notification.activities[0].text [link]=notification.activities[0].link [pic]=notification.activities[0].pic -->
+              <!-- *ngIf="notifications.length>9"  -->
+              <div class="px-2">
+                <button [routerLink]="['/notifications/']" class="btn btn-sm btn-light-blue btn-block" [disabled]="!streamNotificationsRetrieved">
+                  <div class="d-flex justify-content-center">View All</div>
+                </button>
+              </div>
+            </ng-container>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" routerLinkActive="active-link" href="javascript:void(0)"  matTooltip="Following" [matTooltipPosition]="'below'" id="navbarDropdownFollowLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="material-icons">bookmarks</i>
+            <!-- <span class="notification">{{unseen}}</span> -->
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownFollowLink">
+            <div class="dropdown-item" style="pointer-events: none;"><b>FOLLOWING</b></div>
+            <!-- <a class="dropdown-item" [routerLink]="['/','following','researchers']"><i class="material-icons mr-2" aria-hidden="true">face</i> Researchers</a> -->
+            <!-- <a class="dropdown-item" [routerLink]="['/','following','labs']"><i class="material-icons mr-2" aria-hidden="true">list_alt</i> Lab</a> -->
+            <a class="dropdown-item" [routerLink]="['/','following']"><i class="material-icons mr-2" aria-hidden="true">list_alt</i> My Following</a>
+            <a class="dropdown-item" [routerLink]="['/','search','saved']"><i class="material-icons mr-2" aria-hidden="true">check_box</i> Saved Searches</a>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" routerLinkActive="active-link" href="javascript:void(0)" id="navbarDropdownResourcesLink" data-toggle="dropdown" matTooltip="Resources" [matTooltipPosition]="'below'" aria-haspopup="true" aria-expanded="false">
+            <i class="material-icons">build</i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownResourcesLink">
+            <div class="dropdown-item" style="pointer-events: none;"><b>RESOURCES</b></div>
+            <a class="dropdown-item" [routerLink]="['/search','institutes']"><i class="material-icons mr-2" style="font-size: 16px;">account_balance</i> Academic Institutes</a>
+            <a class="dropdown-item" [routerLink]="['/search','labs']"><i class="material-icons mr-2" style="font-size: 16px;">supervised_user_circle</i> Academic Labs</a>
+            <a class="dropdown-item" [routerLink]="['/search','companies']"><i class="material-icons mr-2" style="font-size: 16px;">business</i> Academic Companies</a>
+            <a class="dropdown-item" [routerLink]="['/search','researchers']"><i class="material-icons mr-2" style="font-size: 16px;">face</i> Academic Researchers</a>
+            <a class="dropdown-item" [routerLink]="['/search','services']"><i class="material-icons mr-2" style="font-size: 16px;">construction</i> Academic Services</a>
+            <a class="dropdown-item" [routerLink]="['/search','trends']"><i class="material-icons mr-2" style="font-size: 16px;">hearing</i> Academic Mentors</a>
+            <a class="dropdown-item" [routerLink]="['/search','trends']"><i class="material-icons mr-2" style="font-size: 16px;">trending_up</i> Academic Trends</a>
+            <a class="dropdown-item" [routerLink]="['/search','podcasts']"><i class="material-icons mr-2" style="font-size: 16px;">graphic_eq</i> Academic Podcasts</a>
+            <a class="dropdown-item" [routerLink]="['/search','events']"><i class="material-icons mr-2" style="font-size: 16px;">event</i> Academic Events</a>
+            <a class="dropdown-item" [routerLink]="['/search','apps']"><i class="material-icons mr-2" style="font-size: 16px;">computer</i> Academic Apps</a>
+            <a class="dropdown-item" [routerLink]="['/search','quotes']"><i class="material-icons mr-2" style="font-size: 16px;">format_quote</i> Academic Quotes</a>
+            <a class="dropdown-item" [routerLink]="['/search','papers-kits']"><i class="material-icons mr-2" style="font-size: 16px;">bookmark</i> Academic PapersKits</a>
+            <a class="dropdown-item" [routerLink]="['/featured/']"><i class="material-icons mr-2" style="font-size: 16px;">star</i>Featured Searches</a>
+            <!-- <a class="dropdown-item" [routerLink]="['/top-universities/']"><i class="fa fa-university mr-2" aria-hidden="true"></i>Top Universities</a> -->
+          </div>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" routerLinkActive="active-link" href="javascript:void(0)" id="navbarDropdownNewslettersLink" data-toggle="dropdown" matTooltip="Newsletters" [matTooltipPosition]="'below'" aria-haspopup="true" aria-expanded="false">
+            <i class="material-icons">mail</i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownNewslettersLink">
+            <div class="dropdown-item" style="pointer-events: none;"><b>Academig Daily</b></div>
+            <a class="dropdown-item py-1" [routerLink]="['/daily']">Subscribe</a>
+            <a class="dropdown-item py-1" [routerLink]="['/daily','latest']">Latest Issue</a>
+            <a class="dropdown-item py-1" [routerLink]="['/daily','news']">News</a>
+            <a class="dropdown-item py-1" [routerLink]="['/daily','archive']">Archive</a>
+            <!-- <div class="dropdown-divider"></div>
+            <div class="dropdown-item" style="pointer-events: none;"><b>Academig Morning</b></div>
+            <a class="dropdown-item py-1" [routerLink]="['/morning']">Subscribe</a>
+            <a class="dropdown-item py-1" [routerLink]="['/morning','latest']">Latest Issue</a>
+            <a class="dropdown-item py-1" [routerLink]="['/morning','stories']">Stories</a>
+            <a class="dropdown-item py-1" [routerLink]="['/morning','archive']">Archive</a> -->
+          </div>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" routerLinkActive="active-link" href="javascript:void(0)" id="navbarDropdownInfoLink" data-toggle="dropdown" matTooltip="Information" [matTooltipPosition]="'below'" aria-haspopup="true" aria-expanded="false">
+            <i class="material-icons">amp_stories</i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownInfoLink">
+
+            <div class="dropdown-item" style="pointer-events: none;"><b>PRODUCTS</b></div>
+            <a class="dropdown-item py-1" [routerLink]="['/academig-pro']" target="_blank"><i class="fa fa-fw fa-star mr-2" aria-hidden="true"></i>Academig Pro</a>
+            <a class="dropdown-item py-1" [routerLink]="['/academig-lab-tools']" target="_blank"><i class="fa fa-fw fa-wrench mr-2"></i>Academig Labs Tools</a>
+            <!-- <a class="dropdown-item" [routerLink]="['/academig-department-pro']" target="_blank"><i class="fa fa-institution mr-2"></i>Academig Departments Tools</a> -->
+            <a class="dropdown-item py-1" [routerLink]="['/academig-jobs']" target="_blank"><i class="fa fa-fw fa-tags mr-2"></i>Academig Jobs</a>
+            <a class="dropdown-item py-1" [routerLink]="['/academig-services-marketplace']" target="_blank"><i class="fa fa-fw fa-shopping-bag mr-2"></i>Academig Marketplace</a>
+            <a class="dropdown-item py-1" [routerLink]="['/academig-campaigns']"><i class="fa fa-fw fa-volume-up mr-2" aria-hidden="true"></i>Academig Campaigns</a>
+            <a class="dropdown-item py-1" [routerLink]="['/academig-mentors']"><i class="fa fa-fw fa-assistive-listening-systems mr-2" aria-hidden="true"></i>Academig Mentors</a>
+            <!-- <a class="dropdown-item py-1" [routerLink]="['/academig-data-licensing']" target="_blank"><i class="fa fa-fw fa-database mr-2"></i>Data Licensing</a> -->
+            <a class="dropdown-item py-1" [routerLink]="['/academig-reading-library']" target="_blank"><i class="fa fa-fw fa-book mr-2"></i>Academig Reading Library</a>
+
+            <!-- <a class="dropdown-item" [routerLink]="['/academic-job-description-template']" target="_blank"><i class="fa fa-fw fa-file mr-2"></i>Job Template</a> -->
+            <!-- <a class="dropdown-item" [routerLink]="['/academig-success']" target="_blank"><i class="fa fa-fw fa-smile-o mr-2"></i>Success stories</a> -->
+
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" style="pointer-events: none;"><b>ACADEMIG</b></div>
+            <a class="dropdown-item py-1" href="javascript:void(0)" data-toggle="modal" data-target="#supportModal" aria-hidden="true"><i class="fa fa-fw fa-headphones mr-2" aria-hidden="true"></i>Support</a>
+            <a class="dropdown-item py-1" [routerLink]="['/about']" target="_blank"><i class="fa fa-fw fa-info-circle mr-2" aria-hidden="true"></i>About</a>
+            <a class="dropdown-item py-1" [routerLink]="['/blog']" target="_blank"><i class="fa fa-fw fa-book mr-2" aria-hidden="true"></i>Blog</a>
+            <!-- <a class="dropdown-item" [routerLink]="['/podcast']" target="_blank"><i class="fa fa-fw fa-podcast mr-2" aria-hidden="true"></i>Podcast</a> -->
+            <!-- <a class="dropdown-item" [routerLink]="['/tour']" target="_blank"><i class="fa fa-fw fa-cogs mr-2" aria-hidden="true"></i>How It Works</a> -->
+            <!-- <a class="dropdown-item" [routerLink]="['/features']" target="_blank"><i class="fa fa-fw fa-support mr-2" aria-hidden="true"></i>Features</a> -->
+            <!-- <a class="dropdown-item" [routerLink]="['/help']" target="_blank"><i class="fa fa-fw fa-support mr-2" aria-hidden="true"></i>Help Center</a> -->
+            <a class="dropdown-item py-1" [routerLink]="['/frequently-asked-questions']" target="_blank"><i class="fa fa-fw fa-question-circle mr-2" aria-hidden="true"></i>FAQ</a>
+
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" style="pointer-events: none;"><b>LEGAL</b></div>
+            <a class="dropdown-item py-1" [routerLink]="['/legal//terms']" target="_blank"><i class="fa fa-fw fa-legal mr-2" aria-hidden="true"></i>Terms And Conditions</a>
+            <a class="dropdown-item py-1" [routerLink]="['/legal//policy']" target="_blank"><i class="fa fa-fw fa-lock mr-2" aria-hidden="true"></i>Privacy Policy</a>
+            <!-- <a class="dropdown-item py-1" [routerLink]="['/legal//advertising']" target="_blank"><i class="fa fa-fw fa-lock mr-2"></i>Advertising</a> -->
+            <!-- <a class="dropdown-item" [routerLink]="['/changes-log']" target="_blank"><i class="fa fa-fw fa-history mr-1"></i>Changes Log</a> -->
+
+          </div>
+        </li>
+
+        <!-- <li class="nav-item mx-2">
+          <button mat-raised-button class="btn btn-sm btn-light-blue" [routerLink]="['/search/mentors']">
+            <i class="material-icons mr-1">hearing</i> Browse Mentors
+          </button>
+        </li> -->
+
+        <li *ngIf="planNumber==0" class="nav-item mx-2">
+          <button mat-raised-button class="btn btn-sm btn-success" (click)="planUpdate(1)">
+            <i class="material-icons mr-1">trending_up</i> Try PRO Free
+          </button>
+        </li>
+
+        <!-- <ng-container *ngIf="!userService.searchFocus">
+          <ng-container *ngFor="let userPosition of userService.userPositions; let i=index">
+            <li *ngIf="userPosition.status<8" class="nav-item ml-2">
+              <button mat-raised-button class="btn btn-sm btn-outline-light-blue" [routerLink]="[userPosition.group.university.link, userPosition.group.department.link, userPosition.group.group.link]">
+                {{userPosition.group.group.name}}
+              </button>
+            </li>
+          </ng-container>
+        </ng-container> -->
+        <!-- <i class="material-icons">trending_up</i> -->
+
+        <li class="nav-item dropdown">
+          <a class="nav-link py-0" href="javascript:void(0)" id="navbarDropdownAccountLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <!-- <i class="material-icons">person</i> -->
+            <img *ngIf="userPic" class="btn btn-white btn-round btn-just-icon my-0" [src]=userPic>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownAccountLink">
+
+            <a class="dropdown-item" [routerLink]="['./people/',userService.userId]">
+              <b>{{ userService.userName }}</b>
+              <!-- <p class="text-black-50">View Profile</p> -->
+            </a>
+
+            <!-- <div class="dropdown-divider"></div> -->
+
+            <ng-container *ngIf="userService.userEmailVerified && planNumber==0">
+              <div class="mx-2">
+                <button *ngIf="!userService.userDomain" href="#domainModalGroup" data-toggle="modal" type="button" mat-raised-button class="btn btn-sm btn-warning btn-block">
+                  <i class="fa fa-globe mr-1" aria-hidden="true"></i> Add Your Domain
+                </button>
+              </div>
+            </ng-container>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- <li *ngIf="1 || userService.userEmailVerified && userService.userPositions.length==0" class="nav-item mx-2"> -->
+            <!-- <div class="mx-2">
+              <button mat-raised-button class="btn btn-sm btn-block" [ngClass]="{'btn-light-blue': userService.searchFocus, 'btn-light-blue': !userService.searchFocus}" [routerLink]="['/post-job']">
+                <i class="material-icons mr-1">style</i>
+                Post Job
+              </button>
+            </div>
+            <div class="mx-2">
+              <button mat-raised-button class="btn btn-sm btn-block" [ngClass]="{'btn-light-blue': userService.searchFocus, 'btn-light-blue': !userService.searchFocus}" [routerLink]="['/post-service']">
+                <i class="material-icons mr-1">build</i>
+                Post Service
+              </button>
+            </div> -->
+
+            <!-- <ng-container *ngFor="let userPosition of filteredUserPositions; let l=last"> -->
+            <!-- 8 - dummy member -->
+            <!-- 9 - dummy alumni -->
+            <ng-container *ngFor="let userPosition of userService.userPositions; let l=last">
+              <a *ngIf="userPosition.status<8" class="dropdown-item py-1" [routerLink]="[userPosition.group.university.link, userPosition.group.department.link, userPosition.group.group.link]">
+                {{userPosition.group.group.name}}
+                <!-- *ngIf="userPosition.mode<=1" --> <!-- Tooltip="Lab admins have not accepted the request yet." -->
+              </a>
+              <div *ngIf="userPosition.status<8" class="dropdown-divider"></div>
+            </ng-container>
+            <!-- <div *ngIf="userService.userPositions.length>0" class="dropdown-divider"></div> -->
+            <!-- <div *ngIf="filteredUserPositions.length>0" class="dropdown-divider"></div> -->
+
+            <a class="dropdown-item small py-1" href="javascript:void(0)" (click)="buildWebsiteFunc()">New Lab Profile</a>
+            <a class="dropdown-item small py-1" [routerLink]="['/post-job']">New Lab Job Posting</a>
+            <a class="dropdown-item small py-1" [routerLink]="['/post-service']">New Lab Service</a>
+            <div class="dropdown-divider"></div>
+
+            <div class="dropdown-item pb-0" style="pointer-events: none;"><b>ACCOUNT</b></div>
+            <div class="dropdown-item py-0" style="pointer-events: none;"><span class="text-black-50">{{userService.userEmail}}</span></div>
+            <a class="dropdown-item py-1" [routerLink]="['/settings']">My Settings</a>
+            <a class="dropdown-item py-1" [routerLink]="['/relations']">My Relations</a>
+            <a class="dropdown-item py-1" [routerLink]="['./people/',userService.userId,'library']">My Reading Library</a>
+            <a class="dropdown-item py-1" [routerLink]="['/manage-services']">My Service Requests</a>
+            <a class="dropdown-item py-1" [routerLink]="['/manage-applications']">My Applications</a>
+            <a class="dropdown-item py-1" [routerLink]="['/manage-deals']">My Deals</a>
+            <!-- <a class="dropdown-item py-1" [routerLink]="['/mentors']">My Mentors</a> -->
+            <a class="dropdown-item py-1" [routerLink]="['/calendar/']">My Calendar & Sessions</a>
+            <!-- <a class="dropdown-item small" [routerLink]="['/activity']">Activity Log</a> -->
+            <!-- <a class="dropdown-item small" [routerLink]="['/find-colleagues']">Find Colleagues</a> -->
+
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#colleaguesModal">Invite Colleagues</a>
+
+            <div class="dropdown-divider"></div>
+
+            <a *ngIf="adminFlag" [routerLink]="['/admin']" class="dropdown-item">Admin</a>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">Log Out</a>
+
+
+          </div>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Support Modal - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<div class="modal fade" id="supportModal" tabindex="-1" role="dialog" aria-labelledby="supportModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">Academig Support</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <u><a target="_blank" [routerLink]="['/help']">Explore our Help Center</a></u>
+        <p>See if we've alreay discussed a solution for your question.</p>
+
+        <u>Academig Social</u>
+        <p>Search and ask your questions in our communities.</p>
+        <p class="text-center">
+          <i class="fa fa-facebook-official  fa-1x mr-1" aria-hidden="true"></i>
+          <a href="https://www.facebook.com/Academig-358527254603398/" target="empty">Academig Facebook</a>
+        </p>
+        <p class="text-center">
+          <i class="fa fa-twitter-square fa-1x mr-1" aria-hidden="true"></i>
+          <a href="https://twitter.com/academic_labs" target="empty">Academig Twitter</a>
+        </p>
+
+        <u><a target="_blank" [routerLink]="['/contact']">Send us a message</a></u>
+        <p>Get in touch, we want to hear from you.</p>
+
+        <!-- <hr> -->
+
+        <!-- <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              <b>By Phone:</b>
+              <p>
+                1-(866) 679-1723
+                <br>7 days, 24 hours
+              </p>
+            </div>
+            <div class="col-md-6">
+              <b>By Mail:</b>
+              <p>
+                Roni Pozner
+                <br>Drausnickstr. 1a, Apr. 29
+                <br>Erlangen, Bayern, 91054
+                <br>Germany
+              </p>
+            </div>
+          </div>
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - Colleagues Modal  - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleColleaguesModal" #toggleColleaguesModal [hidden]="true" data-toggle="modal" data-target="#colleaguesModal"></button>
+
+<div class="modal fade" id="colleaguesModal" tabindex="-1" role="dialog" aria-labelledby="colleaguesModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">Invite Your Colleagues</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="form-container">
+        <form class="form-group" [formGroup]="formModel" (ngSubmit)="sendInvite()" novalidate>
+
+          <div class="modal-body">
+
+            <p>Invitation of your colleagues let you recommend your peers to join Academig and build their own academic profiles.</p>
+
+            <div class="form-group">
+              <label for="InputSubject"><b>Email address</b></label>
+              <input email type="email" (keydown)="onInviteClick(0)" class="form-control"
+                     [ngClass]="{'is-valid': formModel.get('email').valid,
+                                 'is-invalid': formModel.get('email').invalid  && errorFlag[0]}"
+                     formControlName=email>
+            </div>
+
+            <div class="form-group">
+              <label for="messageleTextarea"><b>Personal message</b></label>
+              <textarea rows="5" (keydown)="onInviteClick(1)" class="form-control"
+                        [ngClass]="{'is-valid': formModel.get('message').valid,
+                                    'is-invalid': formModel.get('message').invalid && errorFlag[1]}"
+                        formControlName=message>
+              </textarea>
+            </div>
+
+            <ng-template #popContent let-emailContent="emailContent">
+              <b>From:</b>
+              <br>{{userName}} via Academig
+
+              <br><br><b>Subject:</b>
+              <br>{{userName}} invited you for an exclusive Academig account.
+
+              <br><br><b>Message:</b>
+              <br>Hello, I've invited you to join my network on Academig.
+              <br><br>This message includes a personal link for you to sign up.
+
+              <span *ngIf="this.formModel.value.message"><br><br>{{this.formModel.value.message}}</span>
+            </ng-template>
+            <ng-template #popTitle let-emailTitle="emailTitle">
+              Preview Email
+            </ng-template>
+            <button type="button" class="btn btn-sm btn-link m-0 px-0" placement="top" [ngbPopover]="popContent" [popoverTitle]="popTitle" container="body" triggers="manual" #p1="ngbPopover" (click)="togglePreviewEmail(p1)">
+              Preview Email
+            </button>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-link" [disabled]="inviteFlag==1" data-dismiss="modal">Cancel</button>
+            <button [disabled]="inviteFlag==1 || !this.formModel.valid" type="submit" mat-raised-button class="d-flex btn btn-sm btn-light-blue">
+              Send Invite
+              <div *ngIf="inviteFlag>0" class="ml-2">
+                <i *ngIf="inviteFlag==1" class="fa fa-1x fa-spinner fa-spin"></i>
+                <i *ngIf="inviteFlag==2" class="fa fa-1x fa-check"></i>
+                <i *ngIf="inviteFlag==3" class="fa fa-1x fa-times"></i>
+              </div>
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Domain Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleDomainProfileModal" #toggleDomainProfileModal [hidden]="true" data-toggle="modal" data-target="#domainModalGroup"></button>
+
+<div class="modal fade" id="domainModalGroup" data-target="#domainModalGroup" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Coonect a domain name to your academic profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        We are still building this feature. Would you be interested to hear from us when it's ready?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+        <button [disabled]="!streamDomainRetrieved" role="button" (click)="btnDomainFunc()" mat-raised-button class="d-flex btn btn-success">
+          Yes <div *ngIf="!streamDomainRetrieved" class="ml-2"><i class="fa fa-1x fa-spinner fa-spin"></i></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

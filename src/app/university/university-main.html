@@ -1,0 +1,72 @@
+<loading *ngIf="!streamRetrieved"></loading>
+
+<error-404 *ngIf="streamRetrieved && (missionService.universityId==null || (missionService.universityId==companyId && !missionService.showEditBtn))" [source]=2></error-404>
+
+<div *ngIf="streamRetrieved && missionService.universityId && (missionService.universityId!=companyId || missionService.showEditBtn)" class="d-flex flex-column-reverse" style="padding-top: 0px;">
+
+ <div class="mt-4">
+   <site-footer [name]=missionService.universityName
+                [pic]=missionService.universityPic
+                [link]=missionService.universityLink
+                [public]=missionService.publicInfo
+                [social]=missionService.socialInfo
+                [streamPublic]=streamPublicInfo
+                [streamSocial]=streamSocialInfo
+                [groupIndex]=null
+                [type]=2
+                [btnEditFlag]=missionService.showEditBtn
+                (buttonPublicClick)="publicInfoSlide(true)"
+                (buttonSocialClick)="socialInfoSlide(true)"
+                (animationEndPublic)="publicInfoDone()"
+                (animationEndSocial)="socialInfoDone()">
+    </site-footer>
+ </div>
+
+ <div style="min-height: 86vh">
+   <div class="container-fluid">
+
+     <p *ngIf="missionService.universityName=='company'"></p>
+
+     <breadcrumbs *ngIf="missionService.universityName!='company'"
+                  [mode]=0
+                  [country]="missionService.universityCountry | country"
+                  [state]=missionService.universityState
+                  [city]=missionService.universityCity
+                  [university]=universityComplex
+                  [page]=currentUrlSegments[1]?.path>
+     </breadcrumbs>
+
+     <router-outlet></router-outlet>
+
+   </div>
+ </div>
+
+ <!-- && missionService.universityName!='company' -->
+ <university-navbar *ngIf="streamRetrieved && missionService.universityId"
+                    [activePath]=currentUrlSegments[1]?.path
+                    [name]=missionService.universityName
+                    [link]=missionService.universityLink
+                    [pic]=missionService.universityPic
+                    [authFlag]=missionService.showEditBtn>
+ </university-navbar>
+
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<build-slide-info *ngIf=infoBuildFlag
+                  (update)="publicInfoUpdate($event)"
+                  (cancel)="publicInfoSlide(false)"
+                  [publicInfo]=missionService.publicInfo
+                  [mode]=3>
+</build-slide-info>
+
+<build-slide-social *ngIf=socialBuildFlag
+                    (update)="socialInfoUpdate($event)"
+                    (cancel)="socialInfoSlide(false)"
+                    [socialInfo]=missionService.socialInfo
+                    [mode]=3>
+</build-slide-social>

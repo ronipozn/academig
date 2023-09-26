@@ -1,0 +1,18 @@
+<div [formGroup]="parentGroup">
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title text-success"><b>Filter your applications</b><i class="fa fa-filter ml-2" aria-hidden="true"></i></h3>
+      <div class="strong checkbox-radios">
+        <div class="form-check">
+          <label class="form-check-label text-dark">
+            <input formControlName=filterStatus class="form-check-input" type="checkbox">Yes, filter my applicants for only ${{prices[0]}}.
+            <span class="form-check-sign"><span class="check"></span></span>
+          </label>
+        </div>
+        <b>Stop wasting your time sorting hundreds of applicants; let us do that for you! Choose this option and receive manually prioritized batches of applicants 7, 14, 30 and 60 days after posting your job, ensuring you see the right people first!</b>
+      </div>
+    </div>
+  </div>
+
+</div>

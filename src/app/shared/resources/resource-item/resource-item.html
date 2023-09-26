@@ -1,0 +1,174 @@
+<!-- <span class="small text-muted"><i class="fa fa-eye" aria-hidden="true"></i> {{ resource.views[4] }}</span> -->
+<div class="media mb-0 pb-0">
+
+  <img *ngIf="resource.pic" class="d-none d-sm-block mt-1 mx-2 pr-2" [width]="80" [src]="resource.pic">
+  <span *ngIf="!resource.pic" class="d-none d-sm-block mr-2"></span>
+
+  <div class="media-body">
+
+    <img *ngIf="resource.pic" class="d-block d-sm-none" [width]="80" [src]="resource.pic">
+
+    <div class="mt-2 mb-0" [ngClass]="{'ml-2 text-dark': sourceType!=2, 'text-dark': sourceType==2 && resource.standout==0, 'text-white': sourceType==2 && resource.standout>0}">
+      <div *ngIf="resource.standout<3 || resource.standout==null" class="d-flex align-items-center">
+        <b>POSTED {{ resource.created_on | momentPipe:'':1 | uppercase }}</b>
+      </div>
+      <div *ngIf="resource.standout==3" class="mr-auto">
+        <b>FEATURED JOB</b>
+      </div>
+    </div>
+
+    <div *ngIf="resource.name" class="card-title mt-0" [ngClass]="{'text-dark mt-2 ml-2 mb-2': sourceType!=2, 'text-dark': sourceType==2 && resource.standout==0, 'text-white': sourceType==2 && resource.standout>0}">
+      <div class="d-flex align-items-center">
+
+        <div class="mr-auto">
+          <a *ngIf="resource._id && (sourceType==0 || sourceType==5 || sourceType==9 || sourceType==10)" class="h3" [routerLink]="[resource._id]">{{ resource.name }}</a>
+          <a *ngIf="resource._id && (sourceType==6 || sourceType==7 || sourceType==8)" class="h3" [routerLink]="['/',resource.group.university.link,resource.group.department.link,resource.group.group.link,'services',resource._id]">{{ resource.name }}</a>
+          <a *ngIf="resource._id && (sourceType==1 || sourceType==2 || sourceType==3)" class="h3" [routerLink]="['/services',resource._id]">{{ resource.name }}</a>
+          <a *ngIf="resource._id && sourceType==4" class="h3" [routerLink]="['../services',resource._id]">{{ resource.name }}</a>
+          <span *ngIf="!resource._id" class="h3">{{ resource.name }}</span>
+        </div>
+        <build-buttons *ngIf="sourceType==5" class="ml-2" [showButton]="showEditBtn && stream==0" [deleteFlag]="sourceType==2" (buttonEditClick)="buttonEditFunc()" (buttonDeleteClick)="buttonDeleteFunc()"></build-buttons>
+        <spinner-put *ngIf="sourceType==5" class="ml-2" [stream]=stream (animationDoneEvent)="animationDone()"></spinner-put>
+        <!-- <build-buttons *ngIf="sourceType!=3" class="ml-2" [showButton]="showEditBtn && stream==0" [deleteFlag]="sourceType==2" (buttonEditClick)="buttonEditFunc()" (buttonDeleteClick)="buttonDeleteFunc()"></build-buttons>
+        <spinner-put *ngIf="sourceType!=3" class="ml-2" [stream]=stream (animationDoneEvent)="animationDone()"></spinner-put> -->
+
+        <div>
+          <div class="d-flex align-items-center">
+            <ng-container *ngIf="showEditBtn"> <!-- sourceType==0 -->
+              <span *ngIf="!resource.payment" [matTooltip]="'Job posting is hidden for visitors.'" [matTooltipPosition]="'below'" class="badge badge-danger">Payment missing</span>
+              <ng-container *ngIf="resource.payment">
+                <span *ngIf="resource.mode==0" class="badge badge-pill badge-warning" style="color: white">On Hold</span>
+                <span *ngIf="resource.mode==1" class="badge badge-pill badge-warning" style="color: white">Active</span>
+                <span *ngIf="resource.mode==2" class="badge badge-pill badge-danger" style="color: white">Expired</span>
+                <!-- Subsciption ended -->
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!showEditBtn">
+              <span *ngIf="createdDays<15" class="badge badge-pill badge-warning" style="color: white">NEW!</span>
+              <span *ngIf="deadlineDays!=null && deadlineDays<0" class="badge badge-danger">Deadline passed</span>
+              <span *ngIf="deadlineDays>0 && deadlineDays<14" class="badge badge-warning">Deadline approaching</span>
+            </ng-container>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div *ngIf="resource.group" class="mb-1">
+      <group-link *ngIf="((sourceType>0 && sourceType<5) || sourceType==8) && sourceType!=2" [groupIndex]=resource.group></group-link>
+      <group-link *ngIf="sourceType==6" [groupIndex]=resource.group [flag]=1></group-link>
+      <span *ngIf="resource.country" class="small">
+        <br><span class="flag mr-2"><img [src]="'./assets/img/flags/' + (resource.country | flag) + '.png'" alt=""></span> <span *ngIf="resource.state">{{resource.state}},</span> <span *ngIf="resource.city">{{resource.city}},</span> {{resource.country}}
+      </span>
+    </div>
+
+    <div class="d-none d-sm-block">
+      <div class="d-flex flex-row card-title mb-0" [ngClass]="{'text-dark': resource.standout==0, 'text-white': resource.standout>0}">
+        <span *ngIf="resource.categoryId>0" class="mr-4">{{ serviceSelect[resource.categoryId] }}</span>
+        <ng-container *ngIf="sourceType!=2 && resource.price && resource.price.request">
+          <!-- <span class="text-muted">Price:</span> -->
+          <ng-container *ngIf="resource.price.mode==0">
+            <span *ngIf="!resource.price.range" class="mr-1">{{resource.price.price[0] | currency: currencySymbols[resource.price.currency]:'symbol'}}</span>
+            <span *ngIf="resource.price.range" class="mr-1">{{resource.price.price[0] | currency: currencySymbols[resource.price.currency]:'symbol'}} - {{resource.price.price[1] | currency: currencySymbols[resource.price.currency]:'symbol'}}</span>
+            {{servicePriceType[resource.price.type]}}
+          </ng-container>
+          <span *ngIf="resource.price.mode==1">Shown by request</span>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- <div *ngIf="sourceType!=2" class="d-sm-none text-dark mb-0"> -->
+    <div class="d-sm-none text-dark mb-0">
+      <p *ngIf="resource.categoryId>0" class="mb-0">{{ serviceSelect[resource.categoryId] }}</p>
+    </div>
+
+    <ng-container *ngIf="showEditBtn">
+      <p *ngIf="resource.payment" class="mt-3 mb-1">
+        <a *ngIf="resource.mode==0" class="lead" [routerLink]="[resource._id]" style="color: #FD9827"><b><u>Resume Job Listing</u></b></a>
+        <a *ngIf="resource.mode==1" class="lead" [routerLink]="[resource._id]" style="color: #FD9827"><b><u>Edit Job Listing</u></b></a>
+        <!-- Expired => Renew Job Listing => Read to Algolia -->
+        <!-- <ng-container *ngIf="resource && resource.price && resource.price.request"> -->
+        <!-- <div *ngIf="resource.requests==null" class="ml-auto">
+          <a *ngIf="resource._id && (sourceType<2 || sourceType==5)" [routerLink]="[resource._id]" role="button" mat-raised-button class="btn btn-sm btn-success">View and Request</a>
+          <a *ngIf="resource._id && (sourceType==6 || sourceType==7)" [routerLink]="['/',resource.group.university.link,resource.group.department.link,resource.group.group.link,'services',resource._id]" role="button" mat-raised-button class="btn btn-sm btn-success">View and Request</a>
+          <a *ngIf="resource._id && sourceType==2" role="button" mat-raised-button class="btn btn-sm btn-success" [routerLink]="['/services',resource._id]">View and Request</a>
+          <a *ngIf="resource._id && sourceType==3" role="button" mat-raised-button class="btn btn-sm btn-success" [routerLink]="['/services',resource._id]">View and Request</a>
+          <a *ngIf="resource._id && sourceType==4" role="button" mat-raised-button class="btn btn-sm btn-success" [routerLink]="['../services',resource._id]">View and Request</a>
+          <button *ngIf="!resource._id" mat-raised-button class="btn btn-sm btn-success" [disabled]="stream>0">View and Request</button>
+        </div>
+        <div *ngIf="resource.requests" class="ml-auto">
+          <a role="button" mat-raised-button class="btn btn-sm btn-warning" [routerLink]="['/manage-services']">Manage Request</a>
+        </div> -->
+        <!-- </ng-container> -->
+      </p>
+    </ng-container>
+
+    <!-- <follow-btn [followStatus]="resource.followStatus || followStatus"
+                [streamFollow]=streamFollow
+                [stream]=stream
+                (buttonFollowClick)="buttonFollowFunc($event)">
+    </follow-btn> -->
+
+    <!-- <button [disabled]="stream>0" (click)="openShareModalFunc()" role="button" mat-raised-button class="ml-2 btn btn-sm btn-light-blue">
+      <i class="fa fa-share-alt" aria-hidden="true"></i>  Share
+    </button> -->
+
+    <p *ngIf="sourceType>=1 && sourceType<5" class="card-title d-flex justify-content-start align-items-center">
+      <ng-container *ngIf="resource.group">
+        <span *ngFor="let profile of resource.profile; let i=index; let l=last">
+          <img [src]="profile.pic" [width]=20 [height]=20 class="rounded-circle ml-0 pl-0">
+          <a class="ml-2" [routerLink]="['/people',profile._id]">{{ profile.name }}</a>
+        </span>
+      </ng-container>
+      <ng-container *ngIf="resource.group==null && resource.profile">
+        <img [src]="resource.profile.pic" [width]=20 [height]=20 class="rounded-circle ml-0 pl-0">
+        <a class="ml-2" [routerLink]="['/people',resource.profile._id]">{{ resource.profile.name }}</a>
+      </ng-container>
+    </p>
+
+  </div>
+
+</div>
+
+<!-- AI -->
+<div *ngIf="sourceType==9">
+  <hr>
+  <button [disabled]="streamSuggestion>0" role="button" mat-raised-button class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+  <button [disabled]="streamSuggestion>0" role="button" mat-raised-button class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+  <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+</div>
+<div *ngIf="sourceType==11">
+  <hr>
+  <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+  <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Share Modal - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleShareModal" #toggleShareModal [hidden]="true" data-toggle="modal" attr.data-target="#ShareModal{{resource._id}}"></button>
+
+<div class="modal fade" id="ShareModal{{resource._id}}" tabindex="-1" role="dialog" aria-labelledby="ShareModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-share [mode]=3
+                   [itemId]=resource._id
+                   [flag]=shareFlag
+                   (closeModal)="closeShareModalFunc()">
+      </modal-share>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Signup Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleSignUpModal" #toggleSignUpModal [hidden]="true" data-toggle="modal" data-target="#signUpModal"></button>
+
+<div class="modal fade" id="signUpModal" data-target="#signUpModal" tabindex="-1" role="dialog" aria-labelledby="SignUpModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <modal-signup [action]=action [itemText]="'user'"></modal-signup>
+    </div>
+  </div>
+</div>

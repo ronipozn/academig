@@ -1,0 +1,34 @@
+<div *ngIf="userFolders" class="btn-group">
+  <button *ngIf="sourceType!=5" type="button" [disabled]="streamFolder==3 || status>0" style="background-color: #DDE1F3" [ngClass]="{'btn-sm py-1 px-2': smFlag}" (click)="buttonFolderFunc('want')" class="btn rounded-left btn-outline-light-blue">
+    <span class="d-flex align-items-center" [ngClass]="{'small': smFlag}">
+      <i *ngIf="status>0 && streamFolder<3" class="fa fa-check mr-1" style="font-size: 15px;" aria-hidden="true" [ngStyle]="{'color': stickColors[status]}"></i>
+      <spinner-put *ngIf="streamFolder==3" [stream]=streamFolder class="mr-1"></spinner-put>
+      {{stickFolders[status]}}
+    </span>
+  </button>
+  <button *ngIf="sourceType!=5" type="button" style="background-color: #DDE1F3" [ngClass]="{'btn-sm py-1 px-2': smFlag}" class="btn btn-round btn-outline-light-blue dropdown-toggle dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+  <a *ngIf="sourceType==5" mat-stroked-button style="cursor: pointer;" class="pl-0 dropdown-toggle dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <spinner-put *ngIf="streamFolder==3" [stream]=streamFolder class="mr-1"></spinner-put>
+    edit
+  </a>
+  <div class="dropdown-menu small" style="width: 200px; white-space: nowrap;">
+    <a *ngIf="status!=1" class="dropdown-item py-1" style="cursor: pointer;" (click)="readAddFunc()">Read</a>
+    <a *ngIf="status!=2" class="dropdown-item py-1" style="cursor: pointer;" (click)="buttonFolderFunc('current')">Currently Reading</a>
+    <a *ngIf="status!=3" class="dropdown-item py-1" style="cursor: pointer;" (click)="buttonFolderFunc('want')">Want to Read</a>
+    <div *ngIf="userFolders.length>0" class="dropdown-divider"></div>
+    <div *ngFor="let userFolder of userFolders; let i=index;" class="checkbox pl-4">
+      <label *ngIf="userFolder.folder!='read' && userFolder.folder!='current' && userFolder.folder!='want'">
+        <input type="checkbox" (change)="userFolderFunc($event.target.checked, i)" [checked]="foldersNames?.indexOf(userFolder.folder)>-1">
+        <span class="text-dark ml-2 mb-2">{{userFolder.folder}}</span>
+      </label>
+    </div>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item py-1" style="cursor: pointer;" (click)="$event.stopPropagation(); addFlag=!addFlag">{{addFlag ? 'Close' : 'Add folder'}}</a>
+    <div *ngIf="addFlag" class="px-4">
+      <input [(ngModel)]="addFolderName" class="form-control" placeholder="Type folder name">
+      <button type="submit" [disabled]="!addFolderName" class="btn btn-sm btn-primary" (click)="buttonFolderFunc(addFolderName)">Add</button>
+    </div>
+  </div>
+</div>

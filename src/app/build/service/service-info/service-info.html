@@ -1,0 +1,146 @@
+<div class="card">
+  <div class="card-body">
+    <h3 class="mt-0 text-success"><b>Tell us about the service</b></h3>
+
+    <div *ngIf="invalid.length>0" class="alert alert-warning border-warning alert-dismissible fade show mb-4" role="alert">
+      <p *ngFor="let item of invalid; let l=last" [ngClass]="{'mb-0': l}"><b>{{ item }}.</b></p>
+    </div>
+
+    <div [formGroup]="parentGroup">
+
+      <build-modal-text-field [typeSelected]="'number'"
+                              [itemTitle]="'Service Title'"
+                              [itemExplain]="'Example: Protein Mass Measurement. Titles must describe one service.'"
+                              [controlName]="'title'"
+                              [parentGroup]=parentGroup
+                              [labelRequired]=true
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="mt-3">
+        <build-modal-text-field [labelRequired]=true
+                                [fieldType]=3
+                                [itemTitle]="'Service Category'"
+                                [itemArray]=categorySelect
+                                [controlName]="'category'"
+                                [parentGroup]=parentGroup
+                                [submitStatus]=submitStatus>
+        </build-modal-text-field>
+      </div>
+
+      <!-- <pic-select [parentGroup]=parentGroup [acronym]=acronym [control]="'pic'"></pic-select> -->
+
+      <div formGroupName="request">
+        <div class="row">
+          <div class="col-lg-6">
+          <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('request.how').valid && parentGroup.get('request.how').dirty, 'has-danger': (parentGroup.get('request.how').invalid) || (parentGroup.get('request.how').dirty && parentGroup.get('request.how').invalid)}">
+            <mat-label>How to Request</mat-label>
+            <mat-select [placeholder]="'How to Request'" formControlName=how ariaLabel="howSelect[0]" [required]=true (selectionChange)="howFunc()">
+              <mat-option *ngFor="let item of howSelect; let i=index" [value]=i>
+                {{ item }}
+              </mat-option>
+            </mat-select>
+            <span class="form-control-feedback">
+              <i *ngIf="parentGroup.get('request.how').valid && parentGroup.get('request.how').dirty" class="material-icons">done</i>
+              <i *ngIf="parentGroup.get('request.how').invalid || (parentGroup.get('request.how').dirty && parentGroup.get('request.how').invalid)" class="material-icons">clear</i>
+            </span>
+          </mat-form-field>
+          <!-- [itemExplain]="'How would you like to receive your applicants?'" -->
+          <!-- Let candidates request with their LinkedIn profile and notify me by email
+               Enter email address for getting notifications from applicants who request with their LinkedIn profile: roni.pozner@gmail.com -->
+        </div>
+          <div class="col-lg-6 mt-1">
+            <mat-form-field appearance="outline" [ngClass]="{'has-success': parentGroup.get('request.direct').valid && parentGroup.get('request.direct').dirty, 'has-danger': parentGroup.get('request.direct').dirty && parentGroup.get('request.direct').invalid}">
+              <mat-label>{{directSelect[parentGroup.get('request.how').value]}}</mat-label>
+              <input *ngIf="parentGroup.get('request.how').value==1" matInput email type="email" [placeholder]="directSelect[parentGroup.get('request.how').value]" formControlName="direct" [required]=true>
+              <input *ngIf="parentGroup.get('request.how').value!=1" matInput type="text" [placeholder]="directSelect[parentGroup.get('request.how').value]" formControlName="direct" [required]=true>
+              <span class="form-control-feedback">
+                <i *ngIf="parentGroup.get('request.direct').valid && parentGroup.get('request.direct').dirty" class="material-icons">done</i>
+                <i *ngIf="parentGroup.get('request.direct').dirty && parentGroup.get('request.direct').invalid" class="material-icons">clear</i>
+              </span>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <build-modal-text-field [labelRequired]=true
+                              [fieldType]=4
+                              [itemTitle]="'Contract Type'"
+                              [itemArray]=priceTypeRadio
+                              [controlName]="'priceType'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <!-- <build-modal-text-field [labelRequired]=requestFlag -->
+      <build-modal-text-field [labelRequired]=false
+                              [fieldType]=4
+                              [itemTitle]="'Show price'"
+                              [itemArray]=priceModeRadio
+                              [controlName]="'priceMode'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelHide]=true
+                              [fieldType]=7
+                              [controlName]="'priceRange'"
+                              [itemArray]="['Price range']"
+                              [parentGroup]="parentGroup"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="row no-gutters">
+        <div [ngClass]="{'col-6 pr-1': parentGroup.get('priceRange').value[0], 'col-12': !parentGroup.get('priceRange').value[0]}">
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'number'"
+                                  [itemTitle]="(parentGroup.get('priceRange').value[0]) ? 'Price Start' : 'Price'"
+                                  [controlName]="'priceStart'"
+                                  [parentGroup]="parentGroup">
+          </build-modal-text-field>
+        </div>
+        <div class="col-6 pl-1" [hidden]="!parentGroup.get('priceRange').value[0]">
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'number'"
+                                  [itemTitle]="'Price End'"
+                                  [controlName]="'priceEnd'"
+                                  [parentGroup]="parentGroup">
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-slide-select-members *ngIf="labFlag"
+                                  [groupId]=groupId
+                                  [userId]=userId
+                                  [title]="'Choose contact People'"
+                                  [labelRequired]=true
+                                  [minSelected]=1
+                                  [parentGroup]=parentGroup
+                                  [controlName]="'members'"
+                                  [submitStatus]=submitStatus
+                                  [preMembersInput]=[null]
+                                  (membersOutput)=membersFunc($event)>
+      </build-slide-select-members>
+
+      <build-modal-text-field [fieldType]=8
+                              [itemTitle]="'Add keywords to make your service more visible to the right audience (Select up to 10) separated by commas (,) or press enter.'"
+                              [controlName]="'tags'"
+                              [itemPlaceholder]="'+ Keyword'"
+                              [itemSecondaryPlaceholder]="'Add keyword'"
+                              [maxItems]=10
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=12
+                              [labelRequired]=true
+                              [itemTitle]="'Service Description'"
+                              [controlName]="'description'"
+                              [parentGroup]=parentGroup
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+    </div>
+
+  </div>
+</div>

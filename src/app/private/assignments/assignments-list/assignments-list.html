@@ -1,0 +1,126 @@
+<div class="row">
+  <div class="col-xl-8">
+
+    <private-assignment-next [streamRetrieved]=streamRetrieved[0]
+                             [validFlag]=validFlag
+                             [report]=reportsItems?.currentReport
+                             [sourceType]=sourceType
+                             [userStatus]=userStatus
+                             [userId]=userId
+                             [remindAllFlag]=remindAllFlag
+                             [expiredFlag]=expiredFlag
+                             [streamReports]=streamReports
+                             [streamRemindAll]=streamRemindAll
+                             [stream]=streamReport
+                             (buttonClick)="reportsSlide($event, 0)"
+                             (actionClick)="userAction($event, 0)">
+    </private-assignment-next>
+    <div #scrollAdd></div>
+    <!-- [report]=reportsItems?.currentReport -->
+
+  </div>
+  <div class="col-xl-4">
+
+    <div class="card mt-0" [@itemsAnimation]="('active')">
+      <div class="card-body">
+
+        <build-headline [addButtonFlag]=false [headline]="'Past Submissions'"></build-headline>
+
+        <spinner *ngIf="!(streamRetrieved[1] && streamRetrieved[2])"></spinner>
+
+        <ng-container *ngIf="streamRetrieved[1] && streamRetrieved[2]">
+
+          <div *ngIf="alumnis[0]" class="custom-control custom-checkbox mb-3">
+            <input [(ngModel)]="alumniFlag" type="checkbox" name="alumniSwitch" class="form-check-input" id="alumniSwitch">
+            <label class="form-check-label" for="invalidCheck2">Show Alumni</label>
+          </div>
+
+          <ng-container *ngIf="actives.length>0">
+            <ul class="ml-0 pl-0 nav nav-tabs mb-2" role="tablist">
+              <li class="nav-item" *ngFor="let people of actives; let f=first">
+                <a style="cursor: pointer;" class="nav-link px-1" data-toggle="tab" (click)="changeId(people._id,people.name)" role="tab" [ngClass]="{'active': f}">
+                  <single-pic [pic]=people.pic [width]=48 [height]=48></single-pic>
+                </a>
+              </li>
+              <li class="nav-item" *ngFor="let people of alumnis">
+                <a *ngIf=alumniFlag class="nav-link px-1" data-toggle="tab" (click)="changeId(people._id,people.name)" role="tab">
+                  <single-pic [pic]=people.pic [width]=48 [height]=48></single-pic>
+                </a>
+              </li>
+            </ul>
+            <div class="d-flex justify-content-end mb-0 pb-0">
+              <h4 class="mr-auto"><b>{{ profileName }}</b></h4>
+              <span *ngIf="pastYears" class="mb-1">
+                <select class="small custom-select" (change)="onYearChange($event.target.value)">
+                  <option *ngFor="let year of pastYears; let i=index" [selected]="(i==0)" value="{{ year }}">{{ year }}</option>
+                </select>
+              </span>
+            </div>
+            <hr class="mt-0 mb-2">
+          </ng-container>
+
+          <spinner *ngIf="!streamRetrieved[3]"></spinner>
+
+          <span *ngIf="streamRetrieved[3] && yearPersonReports.length==0">No past reports</span>
+
+          <div class="table-responsive">
+            <table *ngIf="streamRetrieved[3] && yearPersonReports.length!=0" class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Submission</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let report of yearPersonReports; let i=index" private-assignment-item
+                    [report]=report
+                    [sourceType]=sourceType
+                    [profileId]=profileId
+                    [userId]=userId
+                    (buttonClick)="pastReports(i, profileId)">
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </ng-container>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+<!------------------------------------------------->
+
+<assignment-build *ngIf=reportsBuildFlag
+                  (update)="reportsUpdate($event)"
+                  (cancel)="reportsSlide(5)"
+                  [groupId]=groupId
+                  [userId]=userId
+                  [newFlag]="(reportsItems.currentReport ? false : true)"
+                  [settings]=reportsItems.settings>
+</assignment-build>
+
+<single-assignment-build *ngIf=singleReportBuildFlag
+                         (update)="singleReportUpdate($event)"
+                         (cancel)="reportsSlide(6)"
+                         [groupId]=groupId
+                         [userId]=userId
+                         [extendFlag]=singleReportExtendFlag
+                         [report]=reportsItems.currentReport>
+</single-assignment-build>
+
+<assignment-submit *ngIf=reportSubmitFlag
+                   (update)="reportSubmit($event)"
+                   (cancel)="userAction([0,7])"
+                   [groupId]=groupId
+                   [userId]=userId
+                   [newFlag]=reportSubmitNewFlag
+                   [submission]=reportsItems.currentReport.whoSubmit[reportSubmitIndex]>
+</assignment-submit>
+<!-- [report]=reportsItems.currentReport -->

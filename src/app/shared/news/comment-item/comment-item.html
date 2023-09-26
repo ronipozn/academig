@@ -1,0 +1,16 @@
+<div class="media pb-0">
+
+  <a class="mr-2" [routerLink]="['./people/',news.user_id]">
+   <single-pic [type]=0 [pic]=commentor.pic [width]=35 [height]=35></single-pic>
+  </a>
+
+  <div class="media-body pl-2 py-1" style="border: 2px solid white; border-radius: 10px; background: #f6f7f9;">
+    <a [routerLink]="['./people',news.user_id]" class="mt-0 mb-1 mr-1 card-title"><b>{{commentor.name}}</b></a>
+    <small class="text-muted mr-1">{{news.created_at | momentPipe:''}}</small>
+    <!-- <spinner-put [stream]=stream (animationDoneEvent)="animationDone()"></spinner-put> -->
+    <!-- <build-buttons [showButton]="stream==0 && editFlag" (buttonEditClick)="buttonEditFunc()" (buttonDeleteClick)="buttonDeleteFunc()"></build-buttons> -->
+    <p *ngIf="news.data && news.data.text" class="mb-0">{{news.data.text}}</p>
+    <img *ngIf="news.data && news.data.pic" class="img-fluid mt-2" [src]=news.data.pic>
+  </div>
+
+</div>

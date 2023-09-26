@@ -1,0 +1,9 @@
+/* https://stackoverflow.com/questions/56353960/how-to-add-header-to-the-ngbtypeahead-window */
+::ng-deep ngb-typeahead-window.dropdown-menu {
+    max-height: 300px !important;
+    overflow-y: auto;
+}
+
+/* ::ng-deep ngb-typeahead-window:before {
+  content: "The results are:";
+} */

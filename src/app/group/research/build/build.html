@@ -1,0 +1,42 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center" *ngIf="name">Update Research Topic</h3>
+  <h3 class="title text-center" *ngIf="!name">Add Research Topic</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div class="form-group mb-1">
+
+        <div *ngIf="adminFlag" class="card">
+          <div class="card-body">
+            <build-modal-text-field [labelHide]=true
+                                    [fieldType]=7
+                                    [controlName]="'intelligence'"
+                                    [parentGroup]=formModel
+                                    [itemArray]="['Intelligence']"
+                                    [submitStatus]=submitStatus>
+            </build-modal-text-field>
+          </div>
+        </div>
+
+        <mat-form-field [ngClass]="{ 'has-success': formModel.get('name').valid && !existFlag, 'has-danger': existFlag }">
+          <input matInput (keyup)="keyUp()" type="text" [placeholder]="'Research topic name'" formControlName=name>
+          <span class="form-control-feedback">
+            <i *ngIf="formModel.get('name').valid && !existFlag" class="material-icons">done</i>
+            <i *ngIf="existFlag" class="material-icons">clear</i>
+          </span>
+          <mat-hint *ngIf="existFlag" id="topicExist">This name already exist. Please choose a different name.</mat-hint>
+          <mat-hint *ngIf="!existFlag" id="unitHelpBlock">Keep name between 5-40 characters.</mat-hint>
+        </mat-form-field>
+
+      </div>
+
+      <div class="pull-left form-group">
+        <button [disabled]="existFlag || !formModel.valid" type="submit" mat-raised-button class="btn btn-sm btn-light-blue">{{name ? 'Update' : 'Add'}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

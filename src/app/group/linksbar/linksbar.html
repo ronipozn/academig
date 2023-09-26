@@ -1,0 +1,14 @@
+<div class="d-flex mb-4">
+  <div class="mr-auto">
+    <ng-container *ngIf="activeIndex>0">
+      <small>PREVIOUS</small><br>
+      <a *ngIf="list[activeIndex-1]=='research-topics'" [routerLink]="[list[activeIndex-1]]">< Research Topics</a>
+      <a *ngIf="list[activeIndex-1]!='research-topics'" [routerLink]="[list[activeIndex-1]]">< {{list[activeIndex-1] | titlecase}}</a>
+    </ng-container>
+  </div>
+  <div *ngIf="list[activeIndex]!='contact'">
+    <small class="pull-right">NEXT</small><br>
+    <a *ngIf="list[activeIndex+1]=='research-topics'" [routerLink]="[list[activeIndex+1]]">Research Topics ></a>
+    <a *ngIf="list[activeIndex+1]!='research-topics'" [routerLink]="[list[activeIndex+1]]">{{list[activeIndex+1] | titlecase}} ></a>
+  </div>
+</div>

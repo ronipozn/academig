@@ -1,0 +1,64 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && peoples?.length!=0 && sourceType==11" class="d-flex flex-row flex-wrap">
+  <div *ngFor="let people of peoples; let i=index">
+    <people-item-cloud [people]=people></people-item-cloud>
+  </div>
+</div>
+
+<ul *ngIf="streamRetrieved && peoples?.length!=0 && !(sourceType==0 || sourceType==2 || sourceType==3 || sourceType==11 || sourceType==12)" class="list-unstyled">
+  <div *ngFor="let people of peoples; let i=index" [ngClass]="{'card ': sourceType!=8 && sourceType!=7}" class="mt-0 mb-3">
+    <div [ngClass]="{'card-body': sourceType!=8 && sourceType!=7}">
+      <people-item [itemAutofocus]="itemFocus==i"
+                   [isMobile]=isMobile
+                   [sourceType]=sourceType
+                   [showEditBtn]=showEditBtn
+                   [groupStage]=groupStage
+                   [followStatus]="follows ? follows[i] : null"
+                   [stream]=stream[i]
+                   [streamFollow]=streamFollow[i]
+                   [people]=people
+                   [activeId]=activeId
+                   (animationDoneEvent)="animationDone()"
+                   (btnAcceptClick)="btnAcceptFunc($event,i)"
+                   (btnDeclineClick)="btnDeclineFunc($event,i)"
+                   (btnResendClick)="btnResendFunc($event,i)"
+                   (btnCancelClick)="btnCancelFunc($event,i)"
+                   (btnAddClick)="btnAddFunc($event,i)"
+                   (btnMainEditClick)="btnMainEditFunc($event,i)"
+                   (btnEditClick)="btnEditFunc($event,i)"
+                   (btnDeleteClick)="btnDeleteFunc($event,i)"
+                   (btnEndClick)="btnEndFunc($event,i)"
+                   (btnFollowClick)="btnFollowFunc($event, i)"
+                   (btnMessageClick)="btnMessageFunc($event, i)">
+      </people-item>
+    </div>
+  </div>
+</ul>
+
+<div *ngIf="streamRetrieved && peoples?.length!=0 && (sourceType==0 || sourceType==2 || sourceType==3 || sourceType==12)" class="card-columns">
+  <div *ngFor="let people of peoples; let i=index" class="card card-plain mt-0 text-center">
+    <people-item-group [itemAutofocus]="itemFocus==i"
+                       [sourceType]=sourceType
+                       [showEditBtn]=showEditBtn
+                       [groupStage]=groupStage
+                       [stream]=stream[i]
+                       [streamFollow]=streamFollow[i]
+                       [people]=people
+                       [activeId]=activeId
+                       (animationDoneEvent)="animationDone()"
+                       (btnAcceptClick)="btnAcceptFunc($event,i)"
+                       (btnDeclineClick)="btnDeclineFunc($event,i)"
+                       (btnResendClick)="btnResendFunc($event,i)"
+                       (btnCancelClick)="btnCancelFunc($event,i)"
+                       (btnAddClick)="btnAddFunc($event,i)"
+                       (btnMainEditClick)="btnMainEditFunc($event,i)"
+                       (btnEditClick)="btnEditFunc($event,i)"
+                       (btnDeleteClick)="btnDeleteFunc($event,i)"
+                       (btnEndClick)="btnEndFunc($event,i)"
+                       (btnFollowClick)="btnFollowFunc($event, i)"
+                       (btnMessageClick)="btnMessageFunc($event, i)"
+                       (btnEmailClick)="btnEmailFunc($event, i)">
+    </people-item-group>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+<!-- <spinner *ngIf="!streamRetrieved"></spinner> -->
+
+<div [@itemsAnimation]="('active')">
+  <div class="card card-product py-0 my-0">
+     <!-- pr-0 -->
+    <div class="card-body py-0">
+      <div class="tab-content tab-space tab-subcategories mt-2 pt-0">
+        <div class="tab-pane active mt-2" id="overview">
+          <div class="row">
+            <!-- <div class="col-lg-6"> -->
+            <div class="col-12">
+              <!-- <button type="button" style="position: absolute; right: 0px;" (click)="buttonCloseFunc()" class="close" data-dismiss="modal" aria-label="Close"> -->
+              <button type="button" style="position: absolute; right: 15px;" (click)="buttonCloseFunc()" class="close" data-dismiss="modal" aria-label="Close">
+                <span style="font-size: 40px; color: black;" aria-hidden="true">&times;</span>
+              </button>
+              <!-- *ngIf="group.groupIndex.group.link"  -->
+              <span class="d-flex flex-row card-title">
+                <a [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]">
+                  <h3 class="my-0">{{group.groupIndex.group.name}}</h3>
+                </a>
+              </span>
+              <h5 class="mb-1">
+                <a *ngIf="group.groupIndex.group.link" class="card-title" [routerLink]="['/',group.groupIndex.university.link]">{{group.groupIndex.university.name}}</a> /
+                <a *ngIf="group.groupIndex.group.link" class="card-title" [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link]">{{group.groupIndex.department.name}}</a>
+              </h5>
+              <p *ngIf="group.topic" class="mt-0 mb-1">
+                Research field:
+                <span *ngFor="let topic of group.topic; let l=last">
+                  <span *ngIf="topic" class="text-nowrap">{{ topic }}<span *ngIf="!l">, </span></span>
+                </span>
+              </p>
+              <p *ngIf="group.establish" class="mt-0 mb-1">Year of establishment: {{group.establish}}</p>
+              <p *ngIf="sizeRange" class="mb-2">Lab size: {{sizeRange}}</p>
+              <!-- <img *ngIf="group.groupIndex?.university.pic" class="mb-2" [width]=50 [height]=50 [src]=group.groupIndex?.university.pic> -->
+              <div class="d-flex flex-row mb-3">
+                <div *ngFor="let people of group.peoples; let i=index">
+                  <div [matTooltip]="people.name" [matTooltipPosition]="'below'" class="mr-2">
+                    <!-- *ngIf="people.stage>0"  -->
+                    <a style="color: black" name=people._id [routerLink]="['/people',people._id]">
+                      <single-pic [pic]=people.pic [stackPic]="'user-circle-o'" [maxSizeFlag]=false [width]=32 [height]=32 [widthE]=2 [heightE]=2></single-pic>
+                    </a>
+                    <!-- <span *ngIf="people.stage==0" style="color: black">
+                      <single-pic [pic]=people.pic [stackPic]="'user-circle-o'" [maxSizeFlag]=false [width]=32 [height]=32 [widthE]=2 [heightE]=2></single-pic>
+                    </span> -->
+                  </div>
+                </div>
+              </div>
+              <!-- <p *ngIf="group.background" build-text [text]="group.background" [textMax]=250></p> -->
+              <span *ngIf="group.background" [innerHTML]="group.background | safeHtml"></span>
+              <p *ngIf="group.interests && group.interests[0]" build-badge (buttonTagClick)="buttonInterestsFunc($event)" [badges]=group.interests></p>
+            </div>
+
+            <!-- <div class="d-none d-lg-block col-md-6">
+              <ng-container *ngIf="galleryImages.length>0">
+                <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+              </ng-container>
+            </div> -->
+          </div>
+        </div>
+        <div *ngIf="group.projects?.length>0" class="tab-pane" id="projects" [@itemsAnimation]="('active')">
+          <button type="button" style="position: absolute; right: 15px;" (click)="buttonCloseFunc()" class="close" data-dismiss="modal" aria-label="Close">
+            <span style="font-size: 40px; color: black;" aria-hidden="true">&times;</span>
+          </button>
+          <a class="d-flex flex-row card-title" [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]">
+            <h3 class="my-0 pt-0">{{group.groupIndex.group.name}}</h3>
+          </a>
+          <h5>{{group.groupIndex.university.name}} / {{group.groupIndex.department.name}}</h5>
+          <projects-list [streamRetrieved]=true
+                         [sourceType]=2
+                         [projects]=group.projects
+                         [follows]=streamProjects
+                         [stream]=streamProjects
+                         [streamFollow]=streamProjects>
+          </projects-list>
+        </div>
+        <div *ngIf="group.resources?.length>0" class="tab-pane" id="services" [@itemsAnimation]="('active')">
+          <button type="button" style="position: absolute; right: 15px;" (click)="buttonCloseFunc()" class="close" data-dismiss="modal" aria-label="Close">
+            <span style="font-size: 40px; color: black;" aria-hidden="true">&times;</span>
+          </button>
+          <a class="d-flex flex-row card-title" [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]">
+            <h3 class="my-0 pt-0">{{group.groupIndex.group.name}}</h3>
+          </a>
+          <h5>{{group.groupIndex.university.name}} / {{group.groupIndex.department.name}}</h5>
+          <resource-list [streamRetrieved]=true
+                         [resources]=group.resources
+                         [sourceType]=3
+                         [stream]=streamResources
+                         [streamFollow]=streamResources>
+          </resource-list>
+        </div>
+        <div *ngIf="group.positions?.length>0" class="tab-pane" id="positions" [@itemsAnimation]="('active')">
+          <button type="button" style="position: absolute; right: 15px;" (click)="buttonCloseFunc()" class="close" data-dismiss="modal" aria-label="Close">
+            <span style="font-size: 40px; color: black;" aria-hidden="true">&times;</span>
+          </button>
+          <a class="d-flex flex-row card-title" [routerLink]="['/',group.groupIndex.university.link, group.groupIndex.department.link, group.groupIndex.group.link]">
+            <h3 class="my-0 pt-0">{{group.groupIndex.group.name}}</h3>
+          </a>
+          <h5>{{group.groupIndex.university.name}} / {{group.groupIndex.department.name}}</h5>
+          <positions-list [streamRetrieved]=true
+                          [positions]=group.positions
+                          [groupIndex]=group.groupIndex
+                          [sourceType]=2
+                          [stream]=streamPositions
+                          [streamFollow]=streamPositions>
+          </positions-list>
+        </div>
+      </div>
+      <ul class="my-2 nav nav-pills d-flex justify-content-center">
+        <li class="mx-2 pill">
+          <a class="active" data-toggle="tab" href="#overview"><b>OVERVIEW</b></a>
+        </li>
+        <li *ngIf="group.projects?.length>0" class="mx-2 pill">
+          <a data-toggle="tab" href="#projects"><b>PROJECTS</b></a>
+        </li>
+        <li *ngIf="group.resources?.length>0" class="mx-2 pill">
+          <a data-toggle="tab" href="#services"><b>SERVICES</b></a>
+        </li>
+        <li *ngIf="group.positions?.length>0" class="mx-2 pill">
+          <a data-toggle="tab" href="#positions"><b>OPEN POSITIONS</b></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

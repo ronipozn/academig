@@ -1,0 +1,109 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 *ngIf="newFlag==2" class="title text-center">End Collaboration with {{collaborationName}}</h3>
+  <h3 *ngIf="newFlag==1" class="title text-center">Update Collaboration with {{collaborationName}}</h3>
+  <h3 *ngIf="modeNum==0 && newFlag==0" class="title text-center">New Collaboration</h3>
+  <h3 *ngIf="modeNum==1 && newFlag==0" class="title text-center">Past Collaboration</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- <div *ngIf="adminFlag" class="card">
+        <div class="card-body">
+          <build-modal-text-field [labelHide]=true
+                                  [fieldType]=7
+                                  [controlName]="'intelligence'"
+                                  [parentGroup]=formModel
+                                  [itemArray]="['Intelligence']"
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div> -->
+
+      <p *ngIf="newFlag==2">
+        Once you end your collaboration with {{collaborationName}}, it will move to your past collaborations list.
+      </p>
+
+      <build-modal-name-field *ngIf="newFlag==0"
+                              [signUpFlag]=true
+                              [itemFirst]=true
+                              [labelRequired]=true
+                              [iconTitle]="'group'"
+                              [userId]=userId
+                              [groupId]=groupId
+                              [existIds]=existIds
+                              [mode]=6
+                              [itemTitle]="'Choose collaborator'"
+                              [controlName]="'group'"
+                              [itemExplain]="'Choose a lab from the drop down list.'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-name-field>
+
+      <p></p>
+
+      <build-month-field *ngIf="modeNum==0 && newFlag<=1"
+                         [itemTitle]="'Collaboration start date'"
+                         [controlName]="'start'"
+                         [parentGroup]=formModel
+                         [labelRequired]=true
+                         [submitStatus]=submitStatus>
+      </build-month-field>
+
+      <div *ngIf="modeNum==1 && newFlag<=1" class="row no-gutters">
+        <div class="col mr-1">
+          <build-month-field [itemTitle]="'Start Date'"
+                             [controlName]="'start'"
+                             [parentGroup]=formModel
+                             [labelRequired]=true
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('start').errors && formModel.get('start').errors.range)">
+          </build-month-field>
+        </div>
+        <div class="col ml-1">
+          <build-month-field [itemTitle]="'End Date'"
+                             [controlName]="'end'"
+                             [parentGroup]=formModel
+                             [labelRequired]=true
+                             [submitStatus]=submitStatus
+                             [errorFlag]="!(formModel.get('end').errors && formModel.get('end').errors.range)">
+          </build-month-field>
+        </div>
+        <span *ngIf="formModel.get('start').errors">
+          <span *ngIf="formModel.get('start').errors.range" class="mt-1 mb-0 small">
+            <span class="text-danger mb-0">End date should be greater than start date</span>
+          </span>
+        </span>
+      </div>
+
+      <build-modal-text-field *ngIf="newFlag<=1"
+                              [fieldType]=2
+                              [textAreaRows]=3
+                              [itemTitle]="'Short Description'"
+                              [controlName]="'text'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <!-- <build-slide-select-projects *ngIf="newFlag<=1"
+                                   [groupId]=groupId
+                                   [userId]=userId
+                                   [title]="'Choose projects'"
+                                   [parentGroup]=formModel
+                                   [controlName]="'projects'"
+                                   [preProjectsInput]=preProjects
+                                   (projectsOutput)=projectsFunc($event)>
+      </build-slide-select-projects> -->
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">
+          <span *ngIf="newFlag==0">Add</span>
+          <span *ngIf="newFlag==1">Update</span>
+          <span *ngIf="newFlag==2">End</span>
+        </button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

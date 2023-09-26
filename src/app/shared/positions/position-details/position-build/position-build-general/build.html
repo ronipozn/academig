@@ -1,0 +1,95 @@
+<div class="side-form">
+
+  <h3 class="title text-center">Update Job Details</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]=formModel (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemFirst]=true
+                              [fieldType]=4
+                              [itemTitle]="'Type'"
+                              [itemArray]=typeSelect
+                              [controlName]="'type'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [typeSelected]="'url'"
+                              [fieldType]=1
+                              [itemTitle]="'External website to apply'"
+                              [controlName]="'site'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Spots Available'"
+                              [itemExplain]="'Leave empty for no specific number.'"
+                              [controlName]="'spotsAvailable'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="row no-gutters">
+        <div class="col-9 pr-1">
+          <!-- [itemExplain]="'Leave empty for no length info.'" -->
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'number'"
+                                  [itemTitle]="'Contract Length'"
+                                  [controlName]="'contractLength'"
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col-3 pl-1">
+          <build-modal-text-field [fieldType]=4
+                                  [itemTitle]="'Period'"
+                                  [itemArray]=lengthSelect
+                                  [controlName]="'contractLengthType'"
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <div class="row no-gutters">
+        <div class="col-9 pr-1">
+          <!-- [itemExplain]="'Leave empty for no salary info.'" -->
+          <build-modal-text-field [fieldType]=1
+                                  [typeSelected]="'number'"
+                                  [itemTitle]="'Salary'"
+                                  [controlName]="'salary'"
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+        <div class="col-3 pl-1">
+          <build-modal-text-field [fieldType]=4
+                                  [itemTitle]="'Currency'"
+                                  [itemArray]=currencySelect
+                                  [controlName]="'salaryCurrency'"
+                                  [parentGroup]=formModel
+                                  [submitStatus]=submitStatus>
+          </build-modal-text-field>
+        </div>
+      </div>
+
+      <build-modal-text-field [fieldType]=1
+                              [itemTitle]="'Internal ID'"
+                              [itemTitle]="'Internal Institute ID'"
+                              [controlName]="'id'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <!-- <build-modal-text-field [itemSmall]=true [itemTitle]="'Location'" [fieldType]=2 [textAreaRows]=3 [controlName]="'location'" [parentGroup]="formModel" [itemValue]="'Science Gallery Dublin'"></build-modal-text-field> -->
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">Update</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div class="side-form">
+
+  <h3 class="title text-center">{{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()">
+
+      <build-multi [parentGroup]=formModel
+                   [controlName]="'multi'"
+                   [itemFirst]=true
+                   [itemTitle]=itemTitle
+                   [stackPic]=stackPic
+                   [type]=type
+                   [pre]=pre
+                   [publicationTitle]=publicationTitle
+                   [inviteFlag]=inviteFlag
+                   [academicFlag]=academicFlag>
+      </build-multi>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">
+          <span *ngIf="type==2 && inviteFlag">Invite</span>
+          <span *ngIf="type==2 && !inviteFlag">Update</span>
+          <span *ngIf="type==1">Add</span>
+        </button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

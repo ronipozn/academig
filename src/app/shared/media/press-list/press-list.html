@@ -1,0 +1,19 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<div *ngIf="streamRetrieved && presses.length!=0">
+  <!-- <div [dragula]=bagName [(dragulaModel)]='presses'> -->
+    <ul *ngFor="let press of presses; let i=index" class="list-unstyled">
+      <media-press-item [itemAutofocus]="itemFocus==i"
+                        [press]=press
+                        [sourceType]=sourceType
+                        [showEditBtn]=showEditBtn
+                        [stream]=stream[i]
+                        [streamSuggestion]="streamSuggestion ? streamSuggestion[i] : null"
+                        (animationDoneEvent)="animationDone()"
+                        (buttonEditClick)="buttonEditFunc(i)"
+                        (buttonDeleteClick)="buttonDeleteFunc(i)"
+                        (buttonSuggestionClick)="buttonSuggestionFunc($event,i)">
+      </media-press-item>
+    </ul>
+  <!-- </div> -->
+</div>

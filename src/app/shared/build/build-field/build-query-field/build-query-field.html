@@ -1,0 +1,49 @@
+<div [formGroup]="parentGroup">
+
+  <!-- <label *ngIf="!labelHide" class="form-control-label mb-1" [ngClass]="{'mt-3 mb-1': !itemFirst, 'pt-3': !itemTitle, 'mt-2 pl-0 form-control-sm': itemSmall}">
+    {{itemTitle}}: <span *ngIf="labelRequired" style="color: red">*</span>
+    <i *ngIf="questionFlag" class="fa fa-question-circle-o" aria-hidden="true"></i>
+  </label> -->
+
+  <!-- <ng-template #rt let-r="result" let-t="itemsList"> -->
+  <ng-template #rt let-r="result">
+    <single-pic *ngIf="r.pic && this.mode!=4 && this.mode!=5" class="pl-0 ml-0 mr-2" [pic]=r.pic [type]=0 [width]=21 [height]=21 [widthE]=1.5></single-pic>
+    {{r.name}} <span *ngIf="mode==5 && r.group">({{r.group.group.name}})</span>
+  </ng-template>
+
+  <div class="input-group" autocomplete="nope">
+
+    <span *ngIf="!signUpFlag && !((!_controlStatus && !parentGroup.get(controlName).dirty) || !parentGroup.get(controlName).invalid)" class="small invalid-feedback py-0 my-0">{{itemTitle}} is required</span>
+
+    <mat-form-field appearance="outline" [ngClass]="{ 'has-success': parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty, 'has-danger': (parentGroup.get(controlName).invalid && (_controlStatus || parentGroup.get(controlName).dirty)) }">
+
+      <mat-label>{{itemTitle}}</mat-label>
+
+      <input matInput
+             type="text"
+             [placeholder]="itemTitle"
+             [ngbTypeahead]="search"
+             [resultTemplate]="rt"
+             [inputFormatter]="formatter"
+             [required]=labelRequired
+             [formControlName]=controlName>
+
+      <span class="form-control-feedback d-flex flex-row">
+        <ng-container *ngIf="(mode!=0 && mode!=11) || !parentGroup.get(controlName).value?.pic">
+          <i *ngIf="searching" class="fa fa-1x fa-fw fa-spinner fa-spin"></i>
+          <!-- <i *ngIf="!searching" class="fa fa-1x fa-fw fa-{{iconTitle}}"></i> -->
+        </ng-container>
+        <!-- <span *ngIf="(mode==0 || mode==11) && parentGroup.get(controlName).value?.pic">
+          <single-pic class="pl-0 ml-0" [pic]=parentGroup.get(controlName).value.pic [type]=0 [width]=21 [height]=21></single-pic>
+        </span> -->
+        <i *ngIf="parentGroup.get(controlName).valid && parentGroup.get(controlName).dirty" class="material-icons">done</i>
+        <i *ngIf="parentGroup.get(controlName).invalid && (_controlStatus || parentGroup.get(controlName).dirty)" class="material-icons">clear</i>
+      </span>
+
+      <mat-hint *ngIf="itemExplain">{{itemExplain}}</mat-hint>
+
+    </mat-form-field>
+
+  </div>
+
+</div>

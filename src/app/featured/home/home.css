@@ -1,0 +1,16 @@
+.table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-row:nth-child(even){
+  background-color:#E5EEF1;
+}
+
+.mat-row:nth-child(odd){
+  background-color:#FFFFFF;
+}

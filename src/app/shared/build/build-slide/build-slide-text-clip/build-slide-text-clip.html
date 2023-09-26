@@ -1,0 +1,33 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">{{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <trumbowyg-ngx-editor id="editor"
+                            formControlName="text">
+      </trumbowyg-ngx-editor>
+
+      <build-modal-text-field [itemTitle]="'Clip'"
+                              [itemExplain]="'Use a Youtube or Vimeo link.'"
+                              [controlName]="'clip'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus
+                              (controlStatus)=controlStatusFunc($event,1)>
+      </build-modal-text-field>
+
+      <div *ngIf="urlValid">
+        <div class="embed-responsive embed-responsive-16by9 my-3">
+          <iframe [src]="url" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">{{(text==null) ? 'Add' : 'Update'}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

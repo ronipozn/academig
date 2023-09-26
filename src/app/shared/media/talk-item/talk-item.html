@@ -1,0 +1,68 @@
+<div class="d-md-none embed-responsive embed-responsive-16by9 mb-3">
+  <iframe [src]="url" frameborder="1" allowfullscreen></iframe>
+</div>
+
+<div class="media">
+
+  <!-- <div [ngClass]="{'invisible': (!showEditBtn || sourceType>0 || !(showEditBtn && stream==0))}" class="handle"></div> -->
+
+  <div class="d-none d-md-block col-md-6 col-lg-4 ml-2 mr-3 embed-responsive embed-responsive-16by9">
+    <iframe [src]="url" frameborder="1" allowfullscreen></iframe>
+  </div>
+
+  <div class="media-body">
+
+    <p class="mt-0 card-title" [ngClass]="{'mb-0': sourceType==0, 'mb-1': sourceType>=1}">
+      <span class="lead mr-2">{{ talk.title }}</span>
+      <spinner-put [stream]=stream (animationDoneEvent)="animationDone($event)"></spinner-put>
+      <build-buttons [showButton]="showEditBtn && stream==0"
+                     (buttonEditClick)="buttonEditFunc()"
+                     (buttonDeleteClick)="buttonDeleteFunc()">
+      </build-buttons>
+    </p>
+
+    <div *ngIf="sourceType>=3 && talk.group">
+      <group-link [groupIndex]=talk.group></group-link>
+    </div>
+
+    <p *ngIf="talk.location || talk.date" [ngClass]="{'mb-0': talk.presentors}">
+      <i>{{ talk.location }}</i> {{ talk.date | date:'dd MMM y' }}
+    </p>
+
+    <p *ngIf="talk.presentors!=null" class="small mt-3">
+      <span class="card-title d-flex justify-content-start align-items-center">
+        <span *ngFor="let presentor of talk.presentors; let l=last">
+          <single-pic class="mr-2" [pic]=presentor.pic [width]=29 [height]=29 [widthE]=2 [type]=0 [stackPic]="'user-circle-o'"></single-pic>
+          <a [routerLink]="['../people',presentor._id]">{{ presentor.name }}</a>
+          <span *ngIf="!l"> &middot; </span>
+        </span>
+      </span>
+    </p>
+
+    <p *ngIf="talk.text" class="small mt-4">
+      <b>Abstract: </b> <span [innerHTML]="talk.text | safeHtml"></span>
+    </p>
+
+    <p *ngIf="sourceType==0 && talk.projects[0]" class="mt-2">
+      <span><b>Related Projects:</b></span>
+      <span class="card-title">
+        <span *ngFor="let project of talk.projects; let f=first; let l=last" class="small d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+          <single-pic class="mr-2" [pic]=project.pic [width]=29 [height]=29 [type]=true [stack]=true [stackPic]="'cubes'"></single-pic>
+          <a [routerLink]="['../projects',project._id]">{{ project.name }}</a>
+        </span>
+      </span>
+    </p>
+
+    <div *ngIf="sourceType==5" class="mt-2">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+      <button [disabled]="streamSuggestion>0" role="button" class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </div>
+    <div *ngIf="sourceType==7" class="mt-2">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </div>
+
+  </div>
+
+</div>

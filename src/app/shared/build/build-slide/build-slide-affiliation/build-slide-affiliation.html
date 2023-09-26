@@ -1,0 +1,77 @@
+<div class="side-form">
+
+  <h3 class="title text-dark text-center">
+    <span *ngIf="newFlag">New Affilation</span>
+    <span *ngIf="!newFlag">Update Affilation</span>
+  </h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemFirst]=true
+                              [labelRequired]=true
+                              [itemTitle]="'Affiliation Name'"
+                              [controlName]="'title'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field *ngIf="abbrFlag"
+                              [labelRequired]=true
+                              [itemTitle]="'Abbreviation'"
+                              [controlName]="'abbr'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=false
+                              [itemTitle]="'Official Site'"
+                              [controlName]="'externalLink'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=true
+                              [fieldType]=2
+                              [textAreaRows]=9
+                              [itemTitle]="'Description'"
+                              [controlName]="'description'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [labelRequired]=true
+                              [itemTitle]="'Description source'"
+                              [controlName]="'source'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <p class="mt-2 mb-0"><b>Logo:</b></p>
+      <div id="direct_upload">
+        <single-pic *ngIf="file || affilation?.pic"
+                    [centerFlag]=true
+                    [pic]="file ? file : affilation.pic"
+                    [thumbnailFlag]=true
+                    [stackPic]="'university'"
+                    [type]=1
+                    [height]=100
+                    [widthE]=4>
+        </single-pic>
+        <div class="d-flex justify-content-center" [ngClass]="{'mt-3': file || affilation?.pic}">
+          <input type="hidden" id="file"
+                 name="file"
+                 data-images-only
+                 data-preview-step
+                 data-crop="free, 16:9, 4:3, 5:4, 1:1">
+        </div>
+      </div>
+
+      <div class="pull-left form-group">
+        <button type="submit" [disabled]="uploadFlag || disableFlag" mat-raised-button class="btn btn-sm btn-light-blue">{{newFlag ? 'Add' : 'Update'}}</button>
+        <button type="button" [disabled]=disableFlag mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

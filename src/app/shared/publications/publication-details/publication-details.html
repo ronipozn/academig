@@ -1,0 +1,668 @@
+<spinner *ngIf="!streamRetrieved"></spinner>
+
+<error-404 *ngIf="streamRetrieved && publication==null && ((sourceType==0 && parentId!=null) || sourceType!=0)" [source]=sourceType></error-404>
+
+<div *ngIf="streamRetrieved && publication && (parentId || sourceType!=0)" class="mb-4">
+
+  <!-- <div *ngIf="sourceType==1 && !auth.isAuthenticated()" class="card mt-0">
+    <div class="text-center my-4">
+      <h3>Sign up to claim your academic profile and join a community of researchers.</h3>
+    </div>
+    <div class="row justify-content-center my-4 pb-4">
+      <button
+        id="qsSignUpBtn"
+        role="button" class="btn btn-lg btn-info"
+        (click)="auth.signup()">
+          Join For Free
+      </button>
+    </div>
+  </div> -->
+
+  <div class="card mt-0 mb-3" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <div class="row justify-content-between pb-0 px-3">
+
+        <div class="mr-auto pr-4">
+
+          <p class="mb-0">
+            <span class="h5">{{ publication.title }}</span>
+            <build-buttons [editFlag]=true [showButton]="authorFlag" (buttonDeleteClick)="fieldOp(1, false, 0, $event)" (buttonEditClick)="fieldOp(0, true, 0, $event)"></build-buttons>
+          </p>
+
+          <p *ngIf="publication.authors && publication.authors[0]">
+            <span [ngClass]="{'d-flex justify-content-start align-items-center flex-wrap': !authorFlag}" class="small">
+
+              <publication-authors [authorsInitMode]=true [authors]=publication.authors [userId]=userId></publication-authors>
+              <spinner-put class="ml-1 mt-1" [stream]=streamMini[0] (animationDoneEvent)="animationDoneMini(1,0)"></spinner-put>
+              <build-buttons *ngIf="authorFlag" [showButton]="authorFlag && streamMini[0]==0" [editFlag]=true (buttonEditClick)="miniOp(0,0,true,$event)"></build-buttons>
+
+              <span class="mx-1">
+                <span *ngIf="!authorFlag"><b>&middot;</b></span>
+                <span *ngIf="authorFlag"><br></span>
+                <ng-template #popDateContent>
+                  <b>Publiction date: </b> {{publication.date | date:'dd MMM yyyy'}} <br>
+                </ng-template>
+                <ng-template #popDateTitle>Date</ng-template>
+                <span [ngbPopover]="popDateContent" [popoverTitle]="popDateTitle" class="ml-1">Published {{ publication.date | date:'MMM y' }}</span>
+                <spinner-put [stream]=streamField[1] (animationDoneEvent)="animationDone(2,1)"></spinner-put>
+                <build-buttons *ngIf="authorFlag" [showButton]="authorFlag && streamField[1]==0" [editFlag]=true (buttonEditClick)="fieldOp(0, true, 1, null)"></build-buttons>
+                <!-- (buttonDeleteClick)="fieldOp(1, false, 1, null)" -->
+                <span *ngIf="!authorFlag" class="mx-1">in</span>
+                <span *ngIf="authorFlag"><br></span>
+                <ng-template #popContent>
+                  <b>Journal: </b> {{publication.journal.name}} <br>
+                  <b>Volume: </b> {{publication.volume}} <br>
+                  <b>Issue: </b> {{publication.issue}} <br>
+                  <b>Pages: </b> {{publication.pages}} <br>
+                  <b>Publisher: </b> {{publication.publisher}}
+                </ng-template>
+                <ng-template #popTitle>Details</ng-template>
+                <span [ngbPopover]="popContent" [popoverTitle]="popTitle">{{ publication.journal.name }}</span>
+                <spinner-put [stream]=streamField[10] (animationDoneEvent)="animationDone(3,10)"></spinner-put>
+                <build-buttons *ngIf="authorFlag" [showButton]="authorFlag && streamField[10]==0" [editFlag]=true (buttonEditClick)="journalOp(0, true, null)"></build-buttons>
+                <!-- (buttonDeleteClick)="journalOp(1, false, null)" -->
+                <!-- [editFlag]="!publication.journal" -->
+              </span>
+
+              <span>
+                <span *ngIf="!authorFlag"><b>&middot;</b></span>
+                <span *ngIf="authorFlag"><br></span>
+                DOI: <a [href]="publication.url" target="_empty" class="card-title">{{ publication.doi }}</a>
+                <spinner-put [stream]=streamField[8] (animationDoneEvent)="animationDone(13,8)"></spinner-put>
+                <!-- <build-buttons [showButton]="authorFlag && streamField[8]==0" [editFlag]="!publication.doi" (buttonDeleteClick)="fieldOp(1, false, 8, null)" (buttonEditClick)="fieldOp(0, true, 8, null)"></build-buttons> -->
+              </span>
+
+            </span>
+          </p>
+
+          <!-- <tr *ngIf="publication.volume || authorFlag">
+            <td class="text-nowrap text-right text-muted pr-2">Volume</td>
+            <td>
+              {{ publication.volume }}
+              <spinner-put [stream]=streamField[2] (animationDoneEvent)="animationDone(4,2)"></spinner-put>
+              <build-buttons [showButton]="authorFlag && streamField[2]==0" [editFlag]="!publication.volume" (buttonDeleteClick)="fieldOp(1, false, 2, null)" (buttonEditClick)="fieldOp(0, true, 2, null)"></build-buttons>
+            </td>
+          </tr> -->
+
+          <!-- <tr *ngIf="publication.issue || authorFlag">
+            <td class="text-nowrap text-right text-muted pr-2">Issue</td>
+            <td>
+              {{ publication.issue }}
+              <spinner-put [stream]=streamField[3] (animationDoneEvent)="animationDone(5,3)"></spinner-put>
+              <build-buttons [showButton]="authorFlag && streamField[3]==0" [editFlag]="!publication.issue" (buttonDeleteClick)="fieldOp(1, false, 3, null)" (buttonEditClick)="fieldOp(0, true, 3, null)"></build-buttons>
+            </td>
+          </tr> -->
+
+          <!-- <tr *ngIf="publication.pages || authorFlag">
+            <td class="text-nowrap text-right text-muted pr-2">{{ pages }}</td>
+            <td>
+              {{ publication.pages }}
+              <spinner-put [stream]=streamField[5] (animationDoneEvent)="animationDone(6,5)"></spinner-put>
+              <build-buttons [showButton]="authorFlag && streamField[5]==0" [editFlag]="!publication.pages" (buttonDeleteClick)="fieldOp(1, false, 5, null)" (buttonEditClick)="fieldOp(0, true, 5, null)"></build-buttons>
+            </td>
+          </tr> -->
+
+          <!-- <tr *ngIf="publication.publisher || authorFlag">
+            <td class="text-nowrap text-right text-muted pr-2">Publisher</td>
+            <td>
+              {{ publication.publisher }}
+              <spinner-put [stream]=streamField[6] (animationDoneEvent)="animationDone(7,6)"></spinner-put>
+              <build-buttons [showButton]="authorFlag && streamField[6]==0" [editFlag]="!publication.publisher" (buttonDeleteClick)="fieldOp(1, false, 6, null)" (buttonEditClick)="fieldOp(0, true, 6, null)"></build-buttons>
+            </td>
+          </tr> -->
+
+          <p *ngIf="authorFlag && missingCoAuthors.length>0">
+            {{missingCoAuthors.length}}
+            <span *ngIf="missingCoAuthors.length==1">co-author is</span>
+            <span *ngIf="missingCoAuthors.length>1">of your co-authors are</span>
+            missing. <a style="cursor:pointer" (click)="scrollNav(5)"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
+          </p>
+
+          <p *ngIf="authorFlag">
+            <button mat-raised-button role="button" class="btn btn-light-blue" (click)="fieldOp(0, true, 9, null)">
+              <span class="fa fa-upload mr-1"></span>
+              <span *ngIf="!publication.pdf">Upload Paper</span>
+              <span *ngIf="publication.pdf">Update Paper</span>
+            </button>
+          </p>
+
+          <!-- && !auth.isAuthenticated() -->
+         <p *ngIf="sourceType==1 && !authorFlag" class="mb-2">
+           <button  mat-raised-button role="button" class="btn btn-sm btn-success" (click)="openClaimModalFunc()">Claim Authorship</button>
+         </p>
+
+          <p *ngIf="sourceType==1 && publication.group" class="mt-3">
+            <group-link [groupIndex]=publication.group></group-link>
+          </p>
+
+        </div>
+
+        <div class="text-nowrap" class="mb-2">
+
+          <!-- <button role="button" data-toggle="modal" data-target="#CiteModal" class="btn btn-sm btn-outline-info">
+            <i class="fa fa-quote-left" aria-hidden="true"></i>
+            Cite
+          </button> -->
+
+          <a *ngIf="publication.pdf" [href]=publication.pdf target="_empty" role="button" mat-raised-button class="btn btn-sm btn-light-blue mr-2">
+            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+            <!-- Download -->
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <ul class="nav nav-pills nav-fill pt-0 mb-3 small">
+    <li *ngIf="publication.abstract || authorFlag" class="nav-item border">
+      <!-- active -->
+      <a href="javascript:void(0)" class="nav-link" (click)="scrollNav(0)" style="cursor:pointer">Abstract</a>
+    </li>
+    <li *ngIf="publication.tags[0]" class="nav-item border">
+      <a href="javascript:void(0)" class="nav-link" (click)="scrollNav(1)" style="cursor:pointer">Data & Keywords</a>
+    </li>
+    <li *ngIf="publication.citationsCount" class="nav-item border">
+      <!-- <a href="javascript:void(0)" class="nav-link" style="cursor:pointer">{{publication.citationsCount}} Citations</a> -->
+      <span class="nav-link">{{publication.citationsCount}} Citations</span>
+    </li>
+    <li *ngIf="publication.referencesCount" class="nav-item border">
+      <!-- <a href="javascript:void(0)" class="nav-link" (click)="scrollNav(3)" style="cursor:pointer">{{publication.referencesCount}} References</a> -->
+      <span class="nav-link">{{publication.referencesCount}} References</span>
+    </li>
+    <!-- <li class="nav-item border">
+      <a href="javascript:void(0)" class="nav-link" (click)="scrollNav(4)" style="cursor:pointer">10 Comments</a>
+    </li> -->
+  </ul>
+
+  <!-- IMPACT -->
+  <!-- <td class="border-right"><h4 class="text-info">{{publication.views?.total | zeronize}}</h4> <p class="lead text-muted"><b>Views</b></p></td> -->
+  <!-- <td><h5 class="text-info">5</h5> <p class="text-muted">Shares</p></td> -->
+  <!-- <td><h5 class="text-info">8</h5> <p class="text-muted">Downloads</p></td> -->
+  <!-- <p class="small text-muted"><i class="fa fa-eye" aria-hidden="true"></i> <a href="">Views: {{ publication.views[4] }}</a></p> -->
+
+  <div *ngIf="publication.abstract || authorFlag" #scrollAbstract class="card mt-0" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline *ngIf="authorFlag" [headline]="'Abstract'"></build-headline>
+
+      <p *ngIf="publication.abstractPic" [ngClass]="{'pt-2': !authorFlag}">
+        <single-pic [pic]=publication.abstractPic
+                    [type]=1
+                    [height]=200
+                    [centerFlag]=true
+                    [fluidFlag]=true
+                    style="cursor:pointer"
+                    data-toggle="modal" data-target="#abstractModal">
+        </single-pic>
+      </p>
+
+      <span *ngIf="publication.abstract && publication.abstract.length<=abstractMax"
+            [innerHTML]="publication.abstract | safeHtml">
+      </span>
+      <!-- style='white-space:pre-wrap;' -->
+      <span *ngIf="!toggleAbstractFlag && publication.abstract && publication.abstract.length>abstractMax"
+            [innerHTML]="publication.abstract | slice:0:abstractMax+50 | safeHtml">
+      </span>
+      <span *ngIf="!toggleAbstractFlag && publication.abstract && publication.abstract.length>abstractMax">
+        ... <i (click)="toggleAbstract()" class="ml-2 fa fa-plus-square-o" aria-hidden="true"></i>
+      </span>
+
+      <span *ngIf="toggleAbstractFlag && publication.abstract && publication.abstract.length>abstractMax"
+            [innerHTML]="publication.abstract | safeHtml">
+      </span>
+      <span *ngIf="toggleAbstractFlag && publication.abstract && publication.abstract.length>abstractMax">
+        <i (click)="toggleAbstract()" class="ml-2 fa fa-minus-square-o" aria-hidden="true"></i>
+      </span>
+
+      <spinner-put [stream]=streamField[7] class="ml-2" (animationDoneEvent)="animationDone(8,7)"></spinner-put>
+
+      <build-buttons *ngIf="authorFlag" [showButton]="authorFlag && streamField[7]==0" [editFlag]="!publication.abstract" (buttonDeleteClick)="abstractOp(1, false, null)" (buttonEditClick)="abstractOp(0, true, null)"></build-buttons>
+
+    </div>
+  </div>
+
+  <!-- <div *ngIf="publication.pdf" class="card mt-0" [@itemsAnimation]="('active')">
+    <div>
+      <div style="position: relative; border-style: solid; border-width: 1px;">
+
+        <a role="button" (click)="pdfSlide(true,publication.title,publication.pdf)" style="cursor:pointer;">
+          <pdf-viewer [src]="publication.pdf"
+                      [original-size]="false"
+                      [page]="1"
+                      [show-all]="false"
+                      [render-text]="false"
+                      style="display: block;">
+          </pdf-viewer>
+        </a>
+
+        <div *ngIf="authorFlag" class="btn-toolbar img-overlay-right" role="toolbar">
+          <button role="button" class="btn btn-sm btn-light btnBuild" (click)="fieldOp(0, true, 9, null)">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+          <button role="button" class="btn btn-sm btn-light ml-2" (click)="fieldOp(1, false, 9, null)">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div> -->
+
+  <div *ngIf="publication.tags[0] || publication.fundings[0] || authorFlag" #scrollData class="card mt-0" [@itemsAnimation]="('active')">
+    <div class="card-body p-0">
+
+      <div class="row no-gutters">
+
+        <div class="col-12 col-lg-4">
+          <div class="p-3">
+
+            <!-- <build-headline [headline]="'Figures, Tables, Supplements'"></build-headline> -->
+            <build-headline [headline]="'Figures, Tables'"></build-headline>
+
+            <div *ngIf="figuresCount>0 || authorFlag" class="card-columns mt-0">
+              <div *ngFor="let figure of publication.figures; let i=index">
+                <gallery-item [_id]=figure._id
+                              [pic]=figure.pic
+                              [title]="(figure.type==0) ? 'Figure ' + (i+1) : 'Table ' + (i+1-figuresCount)"
+                              [date]=figure.date
+                              [description]=figure.name
+                              [mode]=2
+                              [showEditBtn]=authorFlag
+                              [stream]=streamFigures[i]
+                              (buttonEditClick)="figuresSlide($event, i, false)"
+                              (buttonDeleteClick)="figureDelete(i)">
+                </gallery-item>
+                <!-- (animationDoneEvent)="streamFunc()" -->
+              </div>
+            </div>
+
+            <p *ngIf="figuresCount==0" class="text-muted">Empty</p>
+
+            <button *ngIf="authorFlag" role="button" mat-raised-button class="btn btn-light-blue" (click)="figuresSlide(true, i, true)">
+              <span class="fa fa-upload"></span> Add
+            </button>
+
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 border-left border-top" style="background: #f9f9f9">
+          <div class="pl-3 py-3">
+
+            <build-headline [headline]="'Keywords'"></build-headline>
+
+            <span *ngIf="publication.tags.length==0" class="text-muted">Empty</span>
+
+            <button *ngFor="let tag of publication.tags; let i=index;" mat-raised-button style="background-color: #DDE1F3" class="btn btn-sm btn-outline-light-blue mr-1 mb-2" (click)="tagClickOp(i)">{{ tag }}</button>
+            <spinner-put [stream]=streamField[11] (animationDoneEvent)="animationDone(12,11)"></spinner-put>
+            <build-buttons [showButton]="authorFlag && streamField[11]==0" [editFlag]="!publication.tags[0]" (buttonDeleteClick)="tagsOp(1, false, null)" (buttonEditClick)="tagsOp(0, true, null)"></build-buttons>
+
+            <p></p>
+
+            <build-headline [headline]="'Funding'"></build-headline>
+
+            <span *ngIf="publication.fundings.length==0" class="text-muted">Empty</span>
+            <ul *ngFor="let funding of publication.fundings" class="list-unstyled mb-1"><li>{{ funding.name }}</li></ul>
+            <spinner-put [stream]=streamMini[1] (animationDoneEvent)="animationDoneMini(14,1)"></spinner-put>
+            <build-buttons [showButton]="authorFlag && streamMini[1]==0" [editFlag]=true (buttonEditClick)="miniOp(0,1,true,null)"></build-buttons>
+
+            <!-- <build-headline [headline]="'Projects'"></build-headline>
+            <div *ngFor="let project of publication.projects; let l=last" class="d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+              <single-pic class="mr-2"
+                          [ngClass]="{'ml-1 mt-1': project.pic}"
+                          [pic]=project.pic
+                          [type]=1
+                          [width]=2
+                          [widthE]=1
+                          [stack]=true
+                          [stackPic]="'cubes'">
+              </single-pic>
+              <a [routerLink]="['../../project',project.id]">{{ project.name }}</a>
+            </div>
+            <build-buttons [showButton]="authorFlag && streamMini[2]==0" [editFlag]=true (buttonEditClick)="miniOp(0,2,true,null)"></build-buttons>
+            <spinner-put [stream]=streamMini[2] (animationDoneEvent)="animationDoneMini(15,2)"></spinner-put> -->
+
+          </div>
+        </div>
+
+        <div *ngIf="((userService.userId && userService.planNumber==0) || userService.userId==null)" class="col-12 col-md-6 col-lg-4 border-left border-top pt-2">
+          <google-adsense></google-adsense>
+          <div *ngIf="userService.userId && userService.planNumber==0" style="position: absolute; bottom: 0;">
+            <button mat-raised-button type="button" class="btn btn-link" (click)="planUpdate()">Upgrade to PRO to remove Ads</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- <div *ngIf="publication.citationsCount" #scrollCitations class="card mt-0" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'Citations'"></build-headline>
+      Cited by {{ publication.citationsCount }}
+    </div>
+  </div> -->
+  <!-- <br>Metric Graph <div class="small">(minus self cited, minus introduction citation, minus "co-reference")</div> -->
+  <!-- <td><build-buttons [showButton]="authorFlag"></build-buttons></td> -->
+
+  <!-- <div *ngIf="publication.referencesCount" #scrollRefs class="card mt-0" [@itemsAnimation]="('active')">
+    <div class="card-body">
+      <build-headline [headline]="'References'"></build-headline>
+      {{ publication.referencesCount }} references
+    </div>
+  </div> -->
+  <!-- <a href="">{{ publication.referencesCount }} references</a> -->
+  <!-- <div class="small">(minus self referenced, minus introduction)</div> -->
+  <!-- <td><build-buttons [showButton]="authorFlag"></build-buttons></td> -->
+
+  <div *ngIf="publication.profiles?.length>0" class="card border-dark mt-0" [@itemsAnimation]="('active')">
+    <div class="card-header">
+      <build-headline [headline]="'Community Reads'"></build-headline>
+      <ul class="list-unstyled">
+        <li *ngFor="let profile of publication.profiles; let i=index" class="media mb-4">
+          <img [src]="profile.pic" width="60px" class="mr-3" [alt]="profile">
+          <div class="media-body">
+            <h5 class="mt-0 mb-1"><a [routerLink]="['/','people',profile._id]" class="card-title">{{profile.name}}</a></h5>
+            <ul class="list-inline mb-1">
+              <li class="list-inline-item"><b>Folders:</b></li>
+              <li *ngFor="let folder of profile.folders; let i=index; let l=last" class="list-inline-item">
+                <a role="button" class="card-title" [routerLink]="['/','people',profile._id,'library']">{{folder.folder}}</a> <span *ngIf="!l" class="ml-2">&middot;</span>
+              </li>
+            </ul>
+            <ng-container *ngFor="let folder of profile.folders; let i=index">
+              <div *ngIf="folder.folder=='read'">
+                {{folder.date | date}} <ng-container *ngIf="folder.end">- {{folder.end | date}}</ng-container> <ngb-rating *ngIf="folder.rating" class="ml-3" [rate]="folder.rating" [starTemplate]="t" [readonly]="true" [max]="10"></ngb-rating><br>
+                {{folder.summary}}
+              </div>
+            </ng-container>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="authorFlag && missingCoAuthors.length>0" class="card border-dark mt-0" [@itemsAnimation]="('active')" #scrollMissing>
+    <div class="card-header">
+      {{missingCoAuthors.length}}
+      <span *ngIf="missingCoAuthors.length==1">co-author is</span>
+      <span *ngIf="missingCoAuthors.length>1">of your co-authors are</span>
+      not on Academig.
+    </div>
+    <div class="card-body text-dark">
+
+      <!-- class="pr-2 card-deck" -->
+      <div *ngIf="publication.authors[0]" class="row">
+        <div *ngFor="let author of missingCoAuthors; let i=index, let l=last" class="col-12 col-sm-6 col-md-4">
+          <div class="card mt-0 mb-2 border-dark">
+            <div class="card-body text-dark">
+              <div class="d-flex justify-content-start align-items-center">
+                <single-pic class="mr-2" [pic]=author.pic [width]=32 [height]=32 [widthE]=2 [stackPic]="'user-circle-o'" [type]=0></single-pic>
+                <a *ngIf="author._id" [routerLink]="['/people',author._id]">{{ author.name }}</a>
+                <span *ngIf="!author._id">{{ author.name }}</span>
+                <span *ngIf="author.email" class="ml-2 badge badge-info">Invited</span>
+                <!-- [disabled]="!streamRetrieved[1]" -->
+              </div>
+              <button *ngIf="!author.email" role="button" class="btn btn-sm btn-link p-0 m-0" (click)="inviteOp(0, i, true, $event)">Invite</button>
+              <ng-container *ngIf="author.email">
+                <button *ngIf="!author.dates || (author.dates && author.dates.length<3)" role="button" class="btn btn-sm btn-link p-0 m-0" (click)="inviteOp(0, i, true, $event)">Reinvite</button>
+                <div class="small text-muted mt-0 pt-0">
+                  {{author.email}}
+                  <span *ngIf="author.dates && author.dates[0]">
+                    <br>Last invite: {{author.dates[author.dates.length-1] | date}}<br>
+                    <span *ngIf="author.dates.length<3">You can invite {{3-author.dates.length}} more times</span>
+                    <span *ngIf="author.dates.length==3">You've reached the maximum number of invitations.</span>
+                  </span>
+                </div>
+              </ng-container>
+              <button *ngIf="adminFlag" role="button" class="btn btn-sm btn-link py-0 m-0" (click)="suggestOp(0, i, true, $event)">Suggest</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <h5 class="card-title"></h5> -->
+      <!-- <p class="card-text"><a role="button" [routerLink]="['.']"style="cursor: pointer;" (click)="miniOp(0,0,true,$event)">Click here</a> to invite by email the missing co-authors.</p> -->
+    </div>
+  </div>
+
+  <details-buttons [mode]=2
+                   [item]="{_id: publication._id, name: publication.title, pic: publication.pic}"
+                   [userId]=userId
+                   [meFlag]=adminFlag
+                   [streamFollow]=streamFolder
+                   [followStatus]=publication.folders
+                   (buttonFollowClick)="publicationFollow()">
+  </details-buttons>
+
+  <!-- COMMENTS -->
+  <!-- <div class="card mt-0" #scrollComments [@itemsAnimation]="('active')">
+    <build-headline [headline]="'Comments'"></build-headline>
+      <publication-comments></publication-comments>
+  </div> -->
+
+</div>
+
+<!------------------------------------------------->
+<!-- - - - - - - - - Cite Modal - - - - - - - - --->
+<!------------------------------------------------->
+
+<div class="modal fade" id="CiteModal" tabindex="-1" role="dialog" aria-labelledby="CiteModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <modal-cite></modal-cite>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!-- - - - - Graphical Abstract Modal - - - - - --->
+<!------------------------------------------------->
+
+<div class="modal fade" id="abstractModal" tabindex="-1" role="dialog" aria-labelledby="abstractModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="lead modal-title" id="ModalLabel">Graphical Abstract</p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body d-flex mx-auto">
+        <img *ngIf="streamRetrieved && publication && publication.abstractPic" [src]=publication.abstractPic class="img-fluid" [alt]=publication.title>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - Claim Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<button id="toggleClaimModal" #toggleClaimModal [hidden]="true" data-toggle="modal" data-target="#claimModal"></button>
+
+<div *ngIf="streamRetrieved && publication" class="modal fade" id="claimModal" data-target="#claimModal" tabindex="-1" role="dialog" aria-labelledby="ClaimModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <modal-claim [mode]=2
+                   [item]="{_id: publication._id, name: publication.title, pic: publication.pic}"
+                   [userId]=userId
+                   (closeModal)="closeClaimModalFunc()">
+      </modal-claim>
+    </div>
+  </div>
+</div>
+
+<!------------------------------------------------->
+<!-- - - - - - - - Build Slides - - - - - - - - --->
+<!------------------------------------------------->
+
+<build-slide-text *ngIf=fieldBuildFlag[0]
+                  (update)="fieldOp(2, false, 0, $event)"
+                  (cancel)="fieldOp(0, false, 0, $event)"
+                  [title]="'Update Title'"
+                  [fieldType]=1
+                  [text]=publication.title>
+</build-slide-text>
+
+<build-slide-tags *ngIf=tagsBuildFlag
+                  [tags]=publication.tags
+                  [headline]="'Publication Tags'"
+                  (update)="tagsOp(2, false, $event)"
+                  (cancel)="tagsOp(0, false, $event)">
+</build-slide-tags>
+
+<build-slide-multi *ngIf=miniBuildFlag[0]
+                   [title]="'Publication Authors'"
+                   [publicationTitle]=publication.title
+                   [pre]=publication.authors
+                   [stackPic]="'user'"
+                   [inviteFlag]=false
+                   [type]=2
+                   (update)="miniOp(2, 0, false, $event)"
+                   (cancel)="miniOp(0, 0, false, $event)">
+</build-slide-multi>
+
+<build-slide-multi *ngIf=inviteFlag
+                   [title]="'Invite Co-author'"
+                   [publicationTitle]=publication.title
+                   [pre]="[missingCoAuthors[inviteIndex]]"
+                   [stackPic]="'user'"
+                   [inviteFlag]=true
+                   [type]=2
+                   (update)="inviteOp(2, inviteIndex, false, $event)"
+                   (cancel)="inviteOp(0, inviteIndex, false, null)">
+</build-slide-multi>
+
+<build-slide-multi *ngIf=suggestFlag
+                   [title]="'Suggest Co-author'"
+                   [publicationTitle]=publication.title
+                   [pre]="[missingCoAuthors[suggestIndex]]"
+                   [stackPic]="'user'"
+                   [inviteFlag]=true
+                   [type]=2
+                   (update)="suggestOp(2, suggestIndex, false, $event)"
+                   (cancel)="suggestOp(0, suggestIndex, false, null)">
+</build-slide-multi>
+
+<build-slide-multi *ngIf=miniBuildFlag[1]
+                   [title]="'Publication Funding'"
+                   [itemTitle]="'Manage funding'"
+                   [pre]=publication.fundings
+                   [stackPic]="'money'"
+                   [type]=1
+                   [inviteFlag]=false
+                   (update)="miniOp(2, 1, false, $event)"
+                   (cancel)="miniOp(0, 1, false, $event)">
+</build-slide-multi>
+
+<build-slide-text *ngIf=fieldBuildFlag[1]
+                  (update)="fieldOp(2, false, 1, $event)"
+                  (cancel)="fieldOp(0, false, 1, $event)"
+                  [title]="'Publication Date'"
+                  [fieldType]=1
+                  [typeSelected]="'date'"
+                  [text]=publication.date>
+</build-slide-text>
+
+<build-slide-journal *ngIf=journalBuildFlag
+                     (update)="journalOp(2, false, $event)"
+                     (cancel)="journalOp(0, false, $event)"
+                     [journal]=publication.journal
+                     [volume]=publication.volume
+                     [issue]=publication.issue
+                     [pages]=publication.pages
+                     [publisher]=publication.publisher>
+</build-slide-journal>
+
+<!-- <build-slide-text *ngIf=fieldBuildFlag[2]
+                  (update)="fieldOp(2, false, 2, $event)"
+                  (cancel)="fieldOp(0, false, 2, $event)"
+                  [title]="'Volume'"
+                  [fieldType]=1
+                  [typeSelected]="'number'"
+                  [text]=publication.volume>
+</build-slide-text> -->
+
+<!-- <build-slide-text *ngIf=fieldBuildFlag[3]
+                  (update)="fieldOp(2, false, 3, $event)"
+                  (cancel)="fieldOp(0, false, 3, $event)"
+                  [title]="'Issue'"
+                  [fieldType]=1
+                  [typeSelected]="'number'"
+                  [text]=publication.issue>
+</build-slide-text> -->
+
+<!-- <build-slide-text *ngIf=fieldBuildFlag[4]
+                  (update)="fieldOp(2, false, 4, $event)"
+                  (cancel)="fieldOp(0, false, 4, $event)"
+                  [title]="'Edition'"
+                  [fieldType]=1
+                  [typeSelected]="'number'"
+                  [text]=publication.edition>
+</build-slide-text> -->
+
+<!-- <build-slide-text *ngIf=fieldBuildFlag[5]
+                  (update)="fieldOp(2, false, 5, $event)"
+                  (cancel)="fieldOp(0, false, 5, $event)"
+                  [title]="'Pages'"
+                  [fieldType]=1
+                  [text]=publication.pages>
+</build-slide-text> -->
+
+<!-- <build-slide-text *ngIf=fieldBuildFlag[6]
+                  (update)="fieldOp(2, false, 6, $event)"
+                  (cancel)="fieldOp(0, false, 6, $event)"
+                  [title]="'Publisher'"
+                  [fieldType]=1
+                  [text]=publication.publisher>
+</build-slide-text> -->
+
+<build-slide-text-pic *ngIf=fieldBuildFlag[7]
+                      (update)="abstractOp(2, false, $event)"
+                      (cancel)="abstractOp(0, false, $event)"
+                      [title]="'Abstract and Graphical Abstract'"
+                      [text]=publication.abstract
+                      [pic]=publication.abstractPic
+                      [picValue]="'Graphical abstract'"
+                      [type]=2
+                      [itemId]=projId>
+</build-slide-text-pic>
+
+<build-slide-link *ngIf=fieldBuildFlag[8]
+                  (update)="fieldOp(2, false, 8, $event)"
+                  (cancel)="fieldOp(0, false, 8, $event)"
+                  [title]="'DOI'"
+                  [newFlag]=false
+                  [type]=1
+                  [link]="{name: publication.doi, link: publication.url, description: null}">
+</build-slide-link>
+
+<build-slide-pic *ngIf=fieldBuildFlag[9]
+                 (update)="fieldOp(2, false, 9, $event)"
+                 (cancel)="fieldOp(0, false, 9, $event)"
+                 [title]="'Paper'"
+                 [itemId]=projId
+                 [pic]=publication.pdf
+                 [type]=4>
+</build-slide-pic>
+
+<!-- <build-slide-text *ngIf=fieldBuildFlag[10]
+                  (update)="fieldOp(2, false, 1, $event)"
+                  (cancel)="fieldOp(0, false, 1, $event)"
+                  [title]="'Publication Figures'"
+                  [fieldType]=1
+                  [typeSelected]="'date'"
+                  [text]=publication.date>
+</build-slide-text> -->
+
+<build-slide-figures *ngIf="figuresAddFlag && figuresNewFlag"
+                     (update)="figuresPicsUpdate($event)"
+                     (cancel)="figuresSlide(false, null, null)">
+</build-slide-figures>
+
+<build-slide-text-pic *ngIf="figuresAddFlag && !figuresNewFlag"
+                      [title]="'Update ' + (publication.figures[this.figuresIndex].type==0) ? 'Figure' : 'Table'"
+                      [type]=2
+                      [text]="publication.figures[this.figuresIndex].name"
+                      [pic]="publication.figures[this.figuresIndex].pic"
+                      (update)="figuresPicsUpdate($event)"
+                      (cancel)="figuresSlide(false, null, null)">
+</build-slide-text-pic>

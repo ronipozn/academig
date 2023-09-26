@@ -1,0 +1,358 @@
+<div class="row no-gutters">
+  <div [ngClass]="{'col-12 col-lg-10 planStyle': source==1, 'col-12': source!=1}">
+
+    <section class="pricing">
+
+      <button *ngIf="source==1" type="button" class="close mt-0 mr-4 pt-0" style="outline:none;" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="text-center mb-4" [ngClass]="{'mt-4 pt-4': source==1}">
+        <h3 *ngIf="source==0">Find The Right Academig Plan For You</h3>
+        <h2 *ngIf="source==1 || source==2">Academig PRO Pricing</h2>
+      </div>
+
+      <div *ngIf="source==0 || source==1" class="text-center mb-4">
+        <p class="lead">Uncover pioneering labs using extensive academic market research</p>
+      </div>
+
+      <div *ngIf="source==0 || source==1" class="text-center text-muted mb-4">
+        Risk free – Change or cancel at any time
+      </div>
+
+      <ul class="nav justify-content-center mb-4">
+        <li class="nav-item">
+          <button type="button" class="nav-link btn-light border mr-2" [ngClass]="{'background-white': period==1, 'background-green': period==0}" (click)="period=0">Billed quarterly</button>
+        </li>
+        <li class="nav-item text-center">
+          <button type="button" class="nav-link btn-light border" [ngClass]="{'background-white': period==0, 'background-green': period==1}" (click)="period=1">Billed yearly</button>
+          <span class="small text-info">Save 2 months</span>
+        </li>
+      </ul>
+
+      <div class="container">
+        <div class="row justify-content-center">
+
+          <div class="col-lg-3">
+            <div class="card mb-5 mb-lg-0">
+              <div class="card-body">
+                <h5 class="card-title text-muted">Basic</h5>
+                <span>Get to know Academig.</span>
+                <hr>
+                <h6 class="card-price">Free</h6>
+                <span class="period">Always free</span>
+                <button *ngIf="plan==null" (click)="(source<3) ? login() : planUpdate(0)" type="button" class="mt-4 btn btn-block btn-outline-secondary">Start Free</button>
+                <button *ngIf="plan!=0 && plan!=null" type="button" class="mt-4 btn btn-block btn-outline-secondary" (click)="planUpdate(0)">Start Free</button>
+                <button *ngIf="plan==0" [disabled]=true type="button" class="mt-4 btn btn-block btn-outline-secondary">Current Plan</button>
+                <hr>
+                <ul class="fa-ul">
+                  <li *ngFor="let feature of featuresBasicShort">
+                    <span class="fa-li d-flex flex-row"><i class="fa text-success fa-check"></i></span>{{feature}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3">
+            <div class="card mb-5 mb-lg-0">
+              <div class="card-body">
+                <h5 class="card-title text-uppercase" style="color: #7FBA92">Pro</h5>
+                <span>Advanced academic capabilities.</span>
+                <hr>
+                <h6 *ngIf="period==0" class="card-price">25 USD</h6>
+                <h6 *ngIf="period==1" class="card-price">70 USD</h6>
+                <span class="period">
+                  <!-- <span *ngIf="period==1"><b>18.70 USD<span class="text-muted">/quarterly</span></b></span> -->
+                  Billed {{periodStrLong[period]}} <span *ngIf="plan==null || (plan!=1 || periodPlan[period]!=nickname)">(7 day trial)</span>
+                </span>
+                <button *ngIf="plan==null" (click)="planUpdate(1)" type="button" class="mt-4 btn btn-block btn-success" style="background-color: #7FBA92; color: white;">Try Pro Free</button>
+                <button *ngIf="(plan!=1 || periodPlan[period]!=nickname) && plan!=null" (click)="planUpdate(1)" type="button" class="mt-4 btn btn-block btn-outline-secondary" style="background-color: #7FBA92; color: white;">Try Pro Free</button>
+                <button *ngIf="plan==1 && periodPlan[period]==nickname" [disabled]=true type="button" class="mt-4 btn btn-block btn-success" style="background-color: #7FBA92; color: white;">Current Plan</button>
+                <hr>
+                <ul class="fa-ul">
+                  <li *ngFor="let feature of featuresProShort">
+                    <span class="fa-li d-flex flex-row"><i class="fa text-success fa-check"></i></span>{{feature}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <div class="container" style="margin-top: 5rem;">
+      <div class="row justify-content-center">
+        <div class="col-lg-3">
+          <h4><b>Includes:</b></h4>
+          <p *ngFor="let feature of featuresBasicIncludes"><i class="fa fa-check-circle-o text-success" aria-hidden="true"></i> {{feature}}</p>
+        </div>
+        <div class="col-lg-3">
+          <h4><b>Everything in Basic, plus:</b></h4>
+          <p *ngFor="let feature of featuresProIncludes"><i class="fa fa-check-circle-o text-success" aria-hidden="true"></i> {{feature}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white" style="margin-top: 5rem;">
+      <div class="container py-4">
+
+        <h2 class="text-center my-4"><b>Plan Comparison</b></h2>
+
+        <table class="table">
+          <thead>
+            <tr class="text-center">
+              <th class="text-left" style="background-color: white" scope="col"></th>
+              <th *ngFor="let plan of planStr; let i=index" style="background-color: white" class="text-center" scope="col">
+                <h3><b>{{plan}}</b></h3>
+
+                <ng-container *ngIf="i==0">
+                  <h5 class="card-price">Free</h5>
+                  <span class="period">Always free</span>
+                </ng-container>
+
+                <ng-container *ngIf="i>0">
+                  <h5 *ngIf="period==0" class="card-price">25 USD</h5>
+                  <h5 *ngIf="period==1" class="card-price">70 USD</h5>
+                  <!-- <span *ngIf="period==1"><b>18.70 USD<span class="text-muted">/quarterly</span></b></span> -->
+                  Billed {{periodStrLong[period]}} <span *ngIf="plan==null || (plan!=1 || periodPlan[period]!=nickname)" class="small">(7 day trial)</span>
+                </ng-container>
+
+                <ng-container *ngIf="i==0">
+                  <button *ngIf="plan==null" (click)="(source<3) ? login() : planUpdate(0)" type="button" class="mt-4 btn btn-block btn-outline-secondary">Start Free</button>
+                  <button *ngIf="plan!=0 && plan!=null" type="button" class="mt-4 btn btn-block btn-outline-secondary" (click)="planUpdate(0)">Start Free</button>
+                  <button *ngIf="plan==0" [disabled]=true type="button" class="mt-4 btn btn-block btn-outline-secondary">Current Plan</button>
+                  <br>
+                </ng-container>
+
+                <ng-container *ngIf="i==1">
+                  <button *ngIf="plan==null" (click)="(source<3) ? login() : planUpdate(1)" type="button" class="mt-4 btn btn-block btn-success" style="background-color: #7FBA92; color: white;">Try Pro Free</button>
+                  <button *ngIf="(plan!=1 || periodPlan[period]!=nickname) && plan!=null" (click)="planUpdate(1)"  type="button" class="mt-4 btn btn-block btn-outline-secondary" style="background-color: #7FBA92; color: white;">Try Pro Free</button>
+                  <button *ngIf="plan==1 && periodPlan[period]==nickname" [disabled]=true type="button" class="mt-4 btn btn-block btn-success" style="background-color: #7FBA92; color: white;">Current Plan</button>
+                  <span *ngIf="plan==1 && periodPlan[period]==nickname" class="small"><br></span>
+                </ng-container>
+
+              </th>
+            </tr>
+          </thead>
+          <tbody class="thead-light">
+            <tr>
+              <th class="text-left" scope="col">Main Features</th>
+              <th class="text-left" scope="col"></th>
+              <th class="text-left" scope="col"></th>
+            </tr>
+          </tbody>
+          <tbody class="text-center">
+            <tr>
+              <th class="text-left" scope="row">Labs overview</th>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Manage and edit researcher profile</th>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Manage and edit a lab profile</th>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Ads</th>
+              <td>Ads</td>
+              <td>No Ads</td>
+            </tr>
+          </tbody>
+          <tbody class="thead-light">
+            <tr>
+              <th class="text-left" scope="col">Academic Research Tools</th>
+              <th class="text-left" scope="col"></th>
+              <th class="text-left" scope="col"></th>
+            </tr>
+          </tbody>
+          <tbody class="text-center">
+            <tr>
+              <th class="text-left" scope="row">Unlimited number of searches</th>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Search filters</th>
+              <td>3</td>
+              <td>20</td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Search results</th>
+              <td>6</td>
+              <td>500</td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Export search results (each export)</th>
+              <td>3</td>
+              <td>500</td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Statistics summary</th>
+              <td>Basic</td>
+              <td>Pro</td>
+              <!-- <td >Researcher Scope</td> -->
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Profile views</th>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+              <td>Unlimited</td>
+            </tr>
+            <!-- <tr>
+              <th class="text-left" scope="row">Lab views</th>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+              <td>Unlimited</td>
+            </tr> -->
+            <tr>
+              <th class="text-left" scope="row">Jobs insights</th>
+              <td></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+          </tbody>
+          <tbody class="thead-light">
+            <tr>
+              <th class="text-left" scope="col">Compare Tools</th>
+              <th class="text-left" scope="col"></th>
+              <th class="text-left" scope="col"></th>
+            </tr>
+          </tbody>
+          <tbody class="text-center">
+            <tr>
+              <th class="text-left" scope="row">Comparison tool</th>
+              <td>Limited</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Labs overview</th>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Labs Funding</th>
+              <td>Basic</td>
+              <td>Advanced</td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Labs Collaborations</th>
+              <td>Basic</td>
+              <td>Advanced</td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Labs Competitors</th>
+              <td>Basic</td>
+              <td>Advanced</td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Institute ranknig</th>
+              <td></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Cost of living</th>
+              <td></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Housing</th>
+              <td></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Weather</th>
+              <td></td>
+              <td><i class="fa fa-2x fa-check text-success" aria-hidden="true"></i></td>
+            </tr>
+          </tbody>
+          <tbody class="thead-light">
+            <tr>
+              <th class="text-left" scope="col">Monitoring Tools</th>
+              <th class="text-left" scope="col"></th>
+              <th class="text-left" scope="col"></th>
+            </tr>
+          </tbody>
+          <tbody class="text-center">
+            <tr>
+              <th class="text-left" scope="row">Follow labs with email alerts</th>
+              <td>10</td>
+              <td>1,000</td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Follow open positions with email alerts</th>
+              <td>5</td>
+              <td>1,000</td>
+            </tr>
+            <tr>
+              <th class="text-left" scope="row">Saved searches</th>
+              <td>1</td>
+              <td>100</td>
+            </tr>
+          </tbody>
+
+          <tbody class="thead-light">
+            <tr>
+              <th class="text-left" scope="col">Support</th>
+              <th class="text-left" scope="col"></th>
+              <th class="text-left" scope="col"></th>
+            </tr>
+          </tbody>
+          <tbody class="text-center">
+            <tr>
+              <th class="text-left" scope="row">Email & chat support</th>
+              <td>Basic</td>
+              <td>Priority</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <div class="mx-3 pt-4 mt-4">
+      <faq-researchers></faq-researchers>
+      <!-- <faq-labs ></faq-labs> -->
+    </div>
+
+  </div>
+
+  <div *ngIf="source==1" class="col-2 d-none d-lg-block">
+    <div id="carouselPricingFade" class="carousel slide carousel-fade" data-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#carouselPricingFade" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselPricingFade" data-slide-to="1"></li>
+        <!-- <li data-target="#carouselPricingFade" data-slide-to="2"></li> -->
+      </ol>
+      <div class="carousel-inner">
+        <div class="carousel-item active text-dark" data-interval="5000">
+          <img style="height: 100vh;" src="./assets/img/pricing/rony-academig-wide.jpg" alt="Rony Pozner">
+          <div class="carousel-caption px-0 mx-0 strong text-dark">
+            <p>Finding the perfect research lab is like searching for a needle in a haystack, Academig make it simpler.</p>
+            <p class="small">Rony Pozner, Academig</p>
+          </div>
+        </div>
+        <div class="carousel-item" data-interval="5000">
+          <img style="height: 100vh;" src="./assets/img/pricing/tatyana-academig-wide.jpg" alt="Rony Pozner">
+          <div class="carousel-caption px-0 mx-0 strong text-dark">
+            <p>Academig helps you compare research labs in a snap, and make comprehensive lab assessments in no time.</p>
+            <p class="small">Tatyana Pozner, Academig</p>
+          </div>
+        </div>
+        <!-- <div class="carousel-item" data-interval="5000">
+          <img style="height: 100vh;" src="./assets/img/pricing/academig-team-wide.jpg" alt="Rony Pozner">
+          <div class="carousel-caption px-0 mx-0 strong text-dark">
+            <p>Academig offers a complete solution to manage all you lab online needs in one place.</p>
+            <p class="small">Tatyana Pozner, Academig</p>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,87 @@
+<!-- <div class="d-sm-none col-8 offset-2">
+  <a class="py-2" role="button" style="cursor:pointer" (click)="pdfSlide(poster.title,poster.embed)">
+    <pdf-viewer [src]="poster.embed"
+                [original-size]="false"
+                [page]="1"
+                [show-all]="false"
+                [render-text]="false"
+                style="display: block;">
+    </pdf-viewer>
+  </a>
+</div> -->
+
+<div class="media">
+
+  <!-- <div [ngClass]="{'invisible': (!showEditBtn || sourceType>0 || !(showEditBt && stream==0))}" class="handle"></div> -->
+
+  <!-- <div class="d-none d-sm-block col-3">
+    <a class="py-2" role="button" style="cursor:pointer" (click)="pdfSlide(poster.title,poster.embed)">
+      <pdf-viewer [src]="poster.embed"
+                  [original-size]="false"
+                  [page]="1"
+                  [show-all]="false"
+                  [render-text]="false"
+                  style="display: block;">
+      </pdf-viewer>
+    </a>
+  </div> -->
+
+   <!-- col-lg-6 -->
+  <div class="media-body">
+
+    <p class="my-0 card-title">
+      <span *ngIf="sourceType==0" class="lead mr-2">{{ poster.title }}</span>
+      <a *ngIf="sourceType" [href]="poster.embed" target="_empty" class="lead mr-2"><b>{{poster.title}}</b></a>
+      <!-- <a *ngIf="sourceType" class="card-title" [routerLink]="['.']" role="button" (click)="pdfSlide(poster.title,poster.embed)"><b>{{poster.title}}</b></a> -->
+      <spinner-put [stream]=stream (animationDoneEvent)="animationDone($event)"></spinner-put>
+      <build-buttons [showButton]="showEditBtn && stream==0"
+                     (buttonEditClick)="buttonEditFunc($event)"
+                     (buttonDeleteClick)="buttonDeleteFunc($event)">
+      </build-buttons>
+    </p>
+
+    <group-link *ngIf="sourceType>=3 && sourceType<=4 && poster.group" [groupIndex]=poster.group></group-link>
+
+    <i>{{ poster.location }}</i> {{ poster.date | date:'dd MMM y' }}
+
+    <p *ngIf="poster.authors!=null" class="mt-2">
+      <span class="card-title d-flex justify-content-start align-items-center">
+        <span *ngFor="let author of poster.authors; let l=last">
+          <single-pic class="mr-2" [pic]=author.pic [width]=29 [height]=29 [type]=0></single-pic>
+          <a [routerLink]="['../people',author._id]">{{ author.name }}</a>
+          <span *ngIf="!l"> &middot; </span>
+        </span>
+      </span>
+    </p>
+
+    <p *ngIf="poster.abstract" class="my-2">
+      <b>Abstract:</b> {{ poster.abstract }}
+    </p>
+
+    <p *ngIf="sourceType==0 && poster.projects[0]" class="my-2">
+      <span><b>Related Projects:</b></span>
+      <span class="card-title">
+        <span *ngFor="let project of poster.projects; let f=first; let l=last" class="small d-flex justify-content-start align-items-center" [ngClass]="{'mb-3': !l}">
+          <single-pic class="mr-2" [pic]=project.pic [width]=29 [height]=29 [type]=true [stack]=true [stackPic]="'cubes'"></single-pic>
+          <a [routerLink]="['../projects',project._id]">{{ project.name }}</a>
+        </span>
+      </span>
+    </p>
+
+    <a *ngIf="poster.embed" role="button" [href]="poster.embed" target="_empty" class="pl-0 btn btn-sm btn-link text-dark" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-download mr-1" aria-hidden="true"></i>Download Poster
+    </a>
+
+    <div *ngIf="sourceType==5" class="mt-2">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-success" (click)="buttonSuggestionFunc(0)">Accept</button>
+      <button [disabled]="streamSuggestion>0" role="button" class="ml-2 btn btn-sm btn-danger" (click)="buttonSuggestionFunc(1)">Reject</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </div>
+    <div *ngIf="sourceType==7" class="mt-2">
+      <button [disabled]="streamSuggestion>0" role="button" class="btn btn-sm btn-light-blue" (click)="buttonSuggestionFunc(2)">Send Notification</button>
+      <i *ngIf="streamSuggestion==3" class="ml-2 fa fa-1x fa-spinner fa-spin"></i>
+    </div>
+
+  </div>
+
+</div>

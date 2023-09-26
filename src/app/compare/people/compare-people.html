@@ -1,0 +1,64 @@
+<ng-container *ngIf="countsMembers[0]+countsMembers[1]+countsMembers[2]+countsMembers[3]+countsMembers[4]+countsAlumni[0]+countsAlumni[1]+countsAlumni[2]+countsAlumni[3]+countsAlumni[4]>1">
+  <ul class="nav nav-pills nav-pills-info d-flex justify-content-center mb-2 px-2" id="MembersTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active small" id="members-tab" data-toggle="tab" href="#members{{index}}" role="tab" aria-controls="members" aria-selected="true">
+        {{countsMembers[0]+countsMembers[1]+countsMembers[2]+countsMembers[3]+countsMembers[4]}} Members
+      </a>
+    </li>
+    <li *ngIf="countsAlumni[0]+countsAlumni[1]+countsAlumni[2]+countsAlumni[3]+countsAlumni[4]>0" class="nav-item">
+      <a class="nav-link small" id="alumni-tab" data-toggle="tab" href="#alumni{{index}}" role="tab" aria-controls="alumni" aria-selected="false">
+        {{countsAlumni[0]+countsAlumni[1]+countsAlumni[2]+countsAlumni[3]+countsAlumni[4]}} Alumni
+      </a>
+    </li>
+  </ul>
+  <div class="tab-content mt-4" id="MembersTab">
+    <div class="tab-pane fade show active mt-2" id="members{{index}}" role="tabpanel" aria-labelledby="members-tab">
+      <div class="d-flex justify-content-center mt-2">
+        <ng-container *ngFor="let category of titlesCategories; let i=index">
+          <a *ngIf="countsMembers[i]" class="text-center small px-3 pb-2" role="button" style="cursor:pointer" (click)="openPeoplesModalFunc(i,0)">
+            {{countsMembers[i]}}<br><span class="text-muted">{{category}}</span>
+          </a>
+        </ng-container>
+      </div>
+    </div>
+    <div class="tab-pane fade mt-2" id="alumni{{index}}" role="tabpanel" aria-labelledby="alumni-tab">
+      <div class="d-flex justify-content-center mt-2">
+        <ng-container *ngFor="let category of titlesCategories; let i=index">
+          <a  *ngIf="countsAlumni[i]" class="text-center small px-3 pb-2" role="button" style="cursor:pointer" (click)="openPeoplesModalFunc(i,1)">
+            {{countsAlumni[i]}}<br><span class="text-muted">{{category}}</span>
+          </a>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - -  Peoples Modal  - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<button id="togglePeoplesModal" #togglePeoplesModal [hidden]="true" data-toggle="modal" attr.data-target="#PeoplesModal{{index}}"></button>
+
+<div class="modal fade" id="PeoplesModal{{index}}" tabindex="-1" role="dialog" aria-labelledby="MembersModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h5>
+          <b>{{titlesCategories[memberIndex]}}</b>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h5>
+        <div class="card-body mb-0 pb-0">
+          <people-list [streamRetrieved]=true
+                       [sourceType]=0
+                       [peoples]=peoples
+                       [stream]=streamFollow
+                       [streamFollow]=streamFollow
+                       [activeId]=userService.userId>
+          </people-list>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

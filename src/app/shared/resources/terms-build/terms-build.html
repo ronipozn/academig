@@ -1,0 +1,37 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center"><span *ngIf=!newFlag>Update</span> Terms of Use</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-text-field [itemFirst]=true
+                              [fieldType]=4
+                              [itemTitle]="'Choose Terms of Use'"
+                              [labelRequired]=true
+                              [itemArray]=termsSelect
+                              [controlName]="'mode'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <p class="small mt-0 mb-2">
+        <a href="https://choosealicense.com/licenses/" target="empty" class="text-dark">Learn more about the different licenses...</a>
+      </p>
+
+      <build-modal-text-field [fieldType]=12
+                              [itemTitle]="'Further Clarifications'"
+                              [controlName]="'more'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">{{newFlag ? 'Add' : 'Update'}}</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

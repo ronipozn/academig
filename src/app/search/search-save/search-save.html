@@ -1,0 +1,55 @@
+4<div class="side-form">
+
+  <h3 class="title text-center">Save your search</h3>
+
+  <div *ngIf="hitsLength==0">
+    The search results is empty, consider changing your search query and attributes.
+    <hr class="py-0">
+    <div class="form-group">
+      <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+
+  <div *ngIf="hitsLength>0" class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <div *ngIf="attributesSum<=1">To enable the save search option, select at least one search filter.</div>
+
+      <build-modal-text-field *ngIf="enableFlag"
+                              [itemTitle]="'Title'"
+                              [itemFirst]=true
+                              [fieldType]=0
+                              [controlName]="'title'"
+                              [parentGroup]="formModel"
+                              [labelRequired]=true
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <ng-container *ngIf="enableFlag">
+        <div *ngIf="query"><b>Query:</b> {{query}}</div>
+        <ng-container *ngIf="enableFlag">
+          <div *ngFor="let key of keys; let i=index">
+            <div *ngIf="i<9 && attributes[i].length>0">
+              <b>{{titleCase(key)}}: </b>
+              <span *ngFor="let attribute of attributes[i]; let l=last;">
+                <span *ngIf="i!=8">{{attribute}}<span *ngIf="!l">, </span></span>
+                <span *ngIf="i==8">{{groupSize[attribute].name}}<span *ngIf="!l">, </span></span>
+              </span>
+            </div>
+            <div *ngIf="i>=9 && attributes[i].length>0">
+              <b>{{titleCase(key)}}: </b>
+              Between {{attributes[i][0]}} and {{attributes[i][1]}}
+              <!-- <div *ngIf="refinements.establish"><b>Year of establishment:</b> Between {{refinements.establish[0]}} and {{refinements.establish[1]}}</div> -->
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <div class="form-group">
+        <button type="submit" [disabled]="disableFlag || !enableFlag" mat-raised-button class="btn btn-sm btn-light-blue">Save Search</button>
+        <button type="button" [disabled]=disableFlag mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

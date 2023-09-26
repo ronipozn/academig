@@ -1,0 +1,50 @@
+<div class="side-form">
+
+  <h3 class="title text-center">Update Submission Requirements</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]=formModel (ngSubmit)="onSubmit()" novalidate>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Grades required for submission</mat-label>
+        <mat-select multiple formControlName=gradesRequired placeholder="Grades required for submission" ariaLabel="lettersSelect[0]">
+          <mat-option *ngFor="let grade of gradesSelect; let i=index" [value]="grade.value">
+            {{ grade.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Documents required for submission</mat-label>
+        <mat-select multiple formControlName=lettersRequired placeholder="Documents required for submission" ariaLabel="lettersSelect[0]">
+          <mat-option *ngFor="let letter of lettersSelect; let i=index" [value]="letter.value">
+            {{ letter.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <build-modal-text-field [fieldType]=2
+                              [textAreaRows]=6
+                              [itemTitle]="'Guidelines for letters'"
+                              [controlName]="'lettersGuidelines'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <build-modal-text-field [fieldType]=1
+                              [typeSelected]="'number'"
+                              [itemTitle]="'Number of referees'"
+                              [itemExplain]="'Leave empty for no referees.'"
+                              [controlName]="'numReferees'"
+                              [parentGroup]="formModel"
+                              [submitStatus]=submitStatus>
+      </build-modal-text-field>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">Update</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>

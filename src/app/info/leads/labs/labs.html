@@ -1,0 +1,317 @@
+<div style="background-color: #293E49; padding-bottom: 150px;">
+  <div class="container text-white">
+    <div class="col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
+
+      <div class="d-flex justify-content-center">
+        <div class="d-none d-md-block div-height font-weight-light text-center"
+           style="font-size: 50px; margin-top: 50px;">
+           <b>The easiest way to build and update your online lab profile.</b>
+        </div>
+        <div class="d-md-none mx-4 div-height font-weight-light text-center"
+           style="font-size: 30px; margin-top: 30px;">
+           <b>The easiest way to build and update your online lab profile.</b>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center mx-4 mt-4">
+        <p class="lead text-center" style="line-height:30px;">
+          <b>It's easy to build a professional academic profile for your lab with Academig, using
+             a step-by-step process geared specifically to your lab' needs.</b>
+        </p>
+      </div>
+
+      <!-- <p class="card-text font-weight-light mb-2" style="color: #F5F5F5;">
+        Bring your lab profile to life today, make everyone proud of you, and update it easily over time.
+        The lab profile will look great on any device.
+        You don't need to know any coding, programming or design skills!
+      </p> -->
+
+      <div class="d-flex justify-content-center mt-4">
+        <a href="https://calendly.com/academig" role="button" mat-raised-button class="btn btn-round btn-light-blue mr-2" target="_empty">REQUEST A DEMO</a>
+        <!-- <button (click)="pricingClick()" role="button" mat-raised-button class="btn btn-round btn-light-blue">PRICING</button> -->
+      </div>
+
+      <div class="d-flex justify-content-center mt-4">
+        <button role="button" mat-raised-button class="btn btn-round btn-light-blue" (click)="login()">CREATE A LAB PROFILE</button>
+      </div>
+
+      <div class="d-flex justify-content-center mt-4">
+        Already have an old lab website?
+      </div>
+
+      <div class="d-flex justify-content-center pb-4">
+        <a style="cursor: pointer" (click)="scrollBuild()"><u>Don't start from scratch</u></a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="text-center" style="margin-top: -120px;">
+  <img src="./assets/img/landing/landing-monitor.png" class="img-fluid" alt="Academic Cover">
+</div>
+
+<div class="bg-light py-4">
+  <p class="font-weight-light topH4 text-center py-4">Research Labs Examples</p>
+  <div class="container row col-10 offset-1 col-xl-8 offset-xl-2">
+    <div class="row justify-content-center">
+      <div class="col-sm-4 mb-2">
+        <a [routerLink]="['../university_of_utah','huntsman_cancer_institute','jones_lab']">
+          <img class="img-thumbnail" src="./assets/img/examples/Academig-JonesLab.jpg" alt="Jones Lab Lab Profile">
+        </a>
+        <p class="mt-2 mb-0"><b>Jones Lab</b><p>
+        <span class="text-muted">
+          University of Utah, Huntsman Cancer Institute (Utah, USA)
+        </span>
+        <p><a [routerLink]="['../university_of_utah','huntsman_cancer_institute','jones_lab']">Visit &#9658;</a></p>
+      </div>
+      <div class="col-sm-4 mb-2">
+        <a [routerLink]="['../technion','chemistry','peskin_group']">
+          <img class="img-thumbnail" src="./assets/img/examples/Academig-PeskinGroup.jpg" alt="Peskin Group Lab Profile">
+        </a>
+        <p class="mt-2 mb-0"><b>Peskin Group</b><p>
+        <span class="text-muted">
+          Technion Israel Institute of Technology, Chemistry Department (Haifa, Israel)
+        </span>
+        <p><a [routerLink]="['../technion','chemistry','peskin_group']">Visit &#9658;</a></p>
+      </div>
+      <div class="col-sm-4 mb-2">
+        <a [routerLink]="['../university_of_arizona','medicine','lvasbio_lab']">
+          <img class="img-thumbnail" src="./assets/img/examples/Academig-LVasBioLab.jpg" alt="LVasBio Lab Lab Profile">
+        </a>
+        <p class="mt-2 mb-0"><b>LVasBio Lab</b><p>
+        <span class="text-muted">
+          University of Arizona, Department of Medicine-Phoenix (Arizona, USA)
+        </span>
+        <p><a [routerLink]="['../university_of_arizona','department_of_medicine_phoenix','lvasbio_lab']">Visit &#9658;</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bg-white">
+  <p class="font-weight-light topH4 text-center py-4 mx-2">Features For Research Labs</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-xl-10 offset-xl-1">
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-build.png">
+                <p class="card-text mt-2">
+                  BUILD
+                </p>
+                <p class="card-text font-weight-light">
+                  Build a high-quality profile for your lab. The step-by-step building process is designed specifically for the needs of an academic research lab.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-speed.png">
+                <p class="card-text mt-2">
+                  SPEED
+                </p>
+                <p class="card-text font-weight-light">
+                  Set up a complete lab profile fast, complete with all the lab' members, publications, projects, services, open positions and more.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-update.png">
+                <p class="card-text mt-2">
+                  UPDATE
+                </p>
+                <p class="card-text font-weight-light">
+                  It is easy to actively update your lab profile and keep it up-to-date so it stays relevant and useful over time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-services.png">
+                <p class="card-text mt-2">
+                  SERVICES
+                </p>
+                <p class="card-text font-weight-light">
+                  List your services, equipment, facilities, expertise, and find new partners and clients.
+                  Visitors of your lab profile can browse your list and initiate requests.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-positions.png">
+                <p class="card-text mt-2">
+                  OPEN POSITIONS
+                </p>
+                <p class="card-text font-weight-light">
+                  Advertise your lab's open positions and manage the application process from start to finish. All in one place.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-manage.png">
+                <p class="card-text mt-2">
+                  LAB MANAGEMENT
+                </p>
+                <p class="card-text font-weight-light">
+                  Manage your lab activities such as lab meetings with tools that are designed from the group up specifically for academics.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-access.png">
+                <p class="card-text mt-2">
+                  ACCESS CONTROL
+                </p>
+                <p class="card-text font-weight-light">
+                  Invite your lab members to manage the lab profile together.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-news.png">
+                <p class="card-text mt-2">
+                  FOLLOW
+                </p>
+                <p class="card-text font-weight-light">
+                  Researchers can follow your lab profile and receive updates on the lab's most recent activity.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-dashboard.png">
+                <p class="card-text mt-2">
+                  FANCY DASHBOARD
+                </p>
+                <p class="card-text font-weight-light">
+                  Beautiful dashboard for getting information about your lab and access your data.
+                  <br><span class="text-muted">Under Development</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-managed.png">
+                <p class="card-text mt-2">
+                  COMPLETELY MANAGED
+                </p>
+                <p class="card-text font-weight-light">
+                  Forget any configuration or maintenance. All handled!
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-backup.png">
+                <p class="card-text mt-2">
+                  BACKUPS
+                </p>
+                <p class="card-text font-weight-light">
+                  All paid plans include backups of all your data.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="mb-3">
+              <div class="card-body text-center">
+                <img width="80rem" src="./assets/img/landing/landing-support.png">
+                <p class="card-text mt-2">
+                  SUPPORT
+                </p>
+                <p class="card-text font-weight-light">
+                  24/7 support. Get a response to every question in less than a day.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2 mb-4 pb-4">
+          <div class="d-flex justify-content-center">
+            <button role="button" class="btn btn-lg btn-success" [routerLink]="['/academig-lab-pro']">
+              <i class="fa fa-star fa-1x" aria-hidden="true"></i> Lab Pro
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bg-light py-4">
+  <p class="font-weight-light topH4 text-center pt-4 mx-2" #scrollAI>Already have a lab website?</p>
+
+  <div class="container">
+    <div class="text-center">
+      <!-- <div class="col-md-8 offset-md-2"> -->
+
+      <img src="./assets/img/landing/build-for-me.png" class="mx-auto d-block img-fluid my-2" [width]="250" alt="getting_started">
+
+        <p class="lead mt-4 mb-3">
+          Do you already have an old lab website, academic personal site or profiles?
+        </p>
+
+        <p class="mb-3">
+          You shouldn't start from scratch. Let our smart algorithms
+          <br>merge everything together and build your own new lab profile.
+        </p>
+
+        <p>
+          <a class="typeform-share btn mt-2 mb-4 button" href="https://academig.typeform.com/to/qD4Ken" data-mode="drawer_right"
+             style="display:inline-block;text-decoration:none;background-color:#D9534F;color:white;cursor:pointer;font-family:Helvetica,Arial,sans-serif;font-size:20px;line-height:50px;text-align:center;margin:0;height:50px;padding:0px 33px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;"
+             data-submit-close-delay="5" target="_blank">
+              Build For Me
+           </a>
+           <script>
+            (function() { var qs,js,q,s,d=document, gi=d.getElementById, ce=d.createElement, gt=d.getElementsByTagName, id="typef_orm_share", b="https://embed.typeform.com/";
+            if(!gi.call(d,id)){ js=ce.call(d,"script"); js.id=id; js.src=b+"embed.js"; q=gt.call(d,"script")[0]; q.parentNode.insertBefore(js,q) } })()
+           </script>
+         </p>
+
+      <!-- </div> -->
+    </div>
+  </div>
+
+</div>
+
+<info-footer></info-footer>

@@ -1,0 +1,11 @@
+.bg-color {
+  background-color: #F2F3F9;
+  box-shadow: -2px -2px -2px -2px #aaaaaa;
+}
+
+.selected {
+  position: absolute;
+  background-color: #F2F3F9;
+  top: -15px;
+  left: 5px;
+}

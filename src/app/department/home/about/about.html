@@ -1,0 +1,167 @@
+<dl class="row mb-0">
+
+  <ng-container *ngIf="departmentCountry">
+    <dt class="col-sm-4">Location</dt>
+    <dd class="col-sm-8">
+      <span *ngIf="departmentCountry" class="flag mr-1"><img [width]="15" [src]="'./assets/img/flags/' + (departmentCountry | country | flag) + '.png'" [alt]="departmentCountry | country"></span>
+      <a *ngIf="departmentState && departmentCity" [routerLink]="['/country', departmentCountry | country | urlize, departmentState | urlize, departmentCity | urlize]" class="card-title">{{departmentCity}}</a>
+      <a *ngIf="!departmentState && departmentCity" [routerLink]="['/country', departmentCountry | country | urlize, departmentCity | urlize]" class="card-title">{{departmentCity}}</a>
+      <ng-container *ngIf="departmentState && departmentState!='-'">
+        /
+        <a [routerLink]="['/country', departmentCountry | country | urlize, departmentState | urlize]" class="card-title">{{departmentState}}</a>
+      </ng-container>
+      <ng-container *ngIf="departmentCountry && departmentCountry!='-'">
+        /
+        <a [routerLink]="['/country', departmentCountry | country | urlize]" class="card-title">{{departmentCountry | country}}</a>
+      </ng-container>
+    </dd>
+  </ng-container>
+
+  <ng-container *ngIf="groupsLength>0">
+    <dt class="col-sm-4">Number of labs</dt>
+    <dd class="col-sm-8 card-title"><a [routerLink]="['labs']">{{groupsLength}}</a></dd>
+  </ng-container>
+
+  <ng-container *ngIf="details?.establish">
+    <dt class="col-sm-4">Establish date</dt>
+    <dd class="col-sm-8">{{details?.establish}}</dd>
+  </ng-container>
+
+  <ng-container *ngIf="details?.name_original">
+    <dt class="col-sm-4">Original name</dt>
+    <dd class="col-sm-8">{{details?.name_original}}</dd>
+  </ng-container>
+
+  <ng-container *ngIf="details?.motto">
+    <dt class="col-sm-4">Motto</dt>
+    <dd class="col-sm-8">{{details?.motto}}</dd>
+  </ng-container>
+
+  <ng-container *ngIf="details?.motto_english">
+    <dt class="col-sm-4">Motto (english)</dt>
+    <dd class="col-sm-8">{{details?.motto_english}}</dd>
+  </ng-container>
+
+  <ng-container *ngIf="details?.students_number">
+    <dt class="col-sm-4">Number of students</dt>
+    <dd class="col-sm-8">{{details?.students_number}}</dd>
+  </ng-container>
+
+  <ng-container *ngIf="details?.doctoral_numbers">
+    <dt class="col-sm-4">Number of graduate students</dt>
+    <dd class="col-sm-8">{{details?.doctoral_numbers}}</dd>
+  </ng-container>
+
+  <ng-container *ngIf="details?.staff_number">
+    <dt class="col-sm-4">Number of staff</dt>
+    <dd class="col-sm-8">{{details?.staff_number}}</dd>
+  </ng-container>
+
+  <ng-container *ngIf="details?.distance_learning">
+    <dt class="col-sm-4">Distance learning</dt>
+    <dd class="col-sm-8">{{details?.distance_learning}}</dd>
+  </ng-container>
+
+  <!-- alumni_numbers, positions ratio  -->
+
+</dl>
+
+<ng-container *ngIf="!isEmpty(socialInfo)">
+  <hr class="mt-2">
+  <p>Social</p>
+  <dl class="row mb-0">
+    <ng-container *ngIf="socialInfo?.scholar">
+      <dt class="col-sm-4">Google Scholar</dt>
+      <dd class="col-sm-8 card-title"><a href="https://scholar.google.com/citations?user={{socialInfo.scholar}}" target="_empty">View on Google Scholar <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.orcid">
+      <dt class="col-sm-4">Orcid</dt>
+      <dd class="col-sm-8 card-title"><a href="https://orcid.org/{{socialInfo.orcid}}" target="_empty">View on ORCID <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.github">
+      <dt class="col-sm-4">Github</dt>
+      <dd class="col-sm-8 card-title"><a href="https://github.com/{{socialInfo.github}}" target="_empty">View on Github <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.linkedin">
+      <dt class="col-sm-4">LinkedIn</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.linkedin.com/school/{{socialInfo.linkedin}}" target="_empty">View on LinkedIn <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.twitter">
+      <dt class="col-sm-4">Twitter</dt>
+      <!-- <dd class="col-sm-8 card-title"><span class="text-muted">(5431) </span> <a href="https://www.twitter.com/{{socialInfo.twitter}}" target="_empty">View on Twitter <i class="fa fa-external-link" aria-hidden="true"></i></a></dd> -->
+      <dd class="col-sm-8 card-title"><a href="https://www.twitter.com/{{socialInfo.twitter}}" target="_empty">View on Twitter <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.researchgate">
+      <dt class="col-sm-4">ResearchGate</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.researchgate.net/profile/{{socialInfo.researchgate}}" target="_empty">View on ResearchGate <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.facebook">
+      <dt class="col-sm-4">Facebook</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.facebook.com/{{socialInfo.facebook}}" target="_empty">View on Facebook <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.youtube">
+      <dt class="col-sm-4">Youtube</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.youtube.com/{{socialInfo.youtube}}" target="_empty">View on YouTube <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.pinterest">
+      <dt class="col-sm-4">Pinterest</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.pinterest.com/{{socialInfo.pinterest}}" target="_empty">View on Pinterest <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="socialInfo?.instagram">
+      <dt class="col-sm-4">Instagram</dt>
+      <dd class="col-sm-8 card-title"><a href="https://www.instagram.com/{{socialInfo.instagram}}" target="_empty">View on Instagram <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+  </dl>
+</ng-container>
+
+<ng-container *ngIf="!isEmpty(publicInfo)">
+  <hr class="mt-2">
+  <p>Contact</p>
+  <dl class="row mb-0">
+    <ng-container *ngIf="publicInfo?.website || departmentExternalLink">
+      <dt class="col-sm-4">Website</dt>
+      <dd class="col-sm-8 card-title"><a [href]="publicInfo?.website || departmentExternalLink" target="_empty">{{publicInfo?.website || departmentExternalLink}} <i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </ng-container>
+    <ng-container *ngIf="publicInfo?.address">
+      <dt class="col-sm-4">Address</dt>
+      <dd class="col-sm-8">{{publicInfo.address}}</dd>
+    </ng-container>
+    <ng-container *ngIf="publicInfo?.email">
+      <dt class="col-sm-4">Email</dt>
+      <dd class="col-sm-8">{{publicInfo.email}}</dd>
+    </ng-container>
+    <ng-container *ngIf="publicInfo?.phone">
+      <dt class="col-sm-4">Phone</dt>
+      <dd class="col-sm-8">{{publicInfo.phone}}</dd>
+    </ng-container>
+    <ng-container *ngIf="publicInfo?.fax">
+      <dt class="col-sm-4">Fax</dt>
+      <dd class="col-sm-8">{{publicInfo.fax}}</dd>
+    </ng-container>
+  </dl>
+</ng-container>
+
+<div *ngIf="((departmentLocation && departmentLocation[0]) || showEditBtn)" [@itemsAnimation]="('active')" class="mt-2">
+  <!-- MAP >=MD -->
+  <div class="d-none d-md-block">
+    <agm-map class="agm-map-lg" [zoom]=8 [latitude]="departmentLocation[0]" [longitude]="departmentLocation[1]">
+      <agm-marker [latitude]="departmentLocation[0]" [longitude]="departmentLocation[1]"></agm-marker>
+    </agm-map>
+    <p *ngIf="departmentCountry" class="small text-muted my-1">{{departmentCity}}, <span *ngIf="departmentState">{{departmentState}},</span> {{departmentCountry | country}}</p>
+    <a *ngIf="showEditBtn" role="button" (click)="buttonLocationClick.emit(true)" style="cursor:pointer;" class="card-title mt-2">
+      <small>Manage Location</small>
+    </a>
+  </div>
+  <!-- MAP <MD -->
+  <div class="d-md-none card mt-0">
+    <div class="card-body">
+      <agm-map class="agm-map-lg" [zoom]=8 [latitude]="departmentLocation[0]" [longitude]="departmentLocation[1]">
+        <agm-marker [latitude]="departmentLocation[0]" [longitude]="departmentLocation[1]"></agm-marker>
+      </agm-map>
+      <p *ngIf="departmentCountry" class="small text-muted my-1">{{departmentCity}}, <span *ngIf="departmentState">{{departmentState}},</span> {{departmentCountry | country}}</p>
+      <a *ngIf="showEditBtn" role="button" (click)="buttonLocationClick.emit(true)" style="cursor:pointer;" class="card-title mt-2">
+        <small>Manage Location</small>
+      </a>
+    </div>
+  </div>
+</div>

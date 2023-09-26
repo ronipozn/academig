@@ -1,0 +1,28 @@
+<div class="side-form" (keydown.escape)="onCancel()">
+
+  <h3 class="title text-center">{{title}}</h3>
+
+  <div class="form-container">
+    <form class="form-group" [formGroup]="formModel" (ngSubmit)="onSubmit()" novalidate>
+
+      <build-modal-name-field [labelHide]=true
+                              [itemFirst]=true
+                              [iconTitle]="'wrench'"
+                              [userId]=userId
+                              [groupId]=projId
+                              [mode]=5
+                              [controlName]="'resource'"
+                              [parentGroup]=formModel
+                              [submitStatus]=submitStatus>
+      </build-modal-name-field>
+      <p *ngIf="itemExplain" class="text-muted small">{{itemExplain}}</p>
+
+      <div class="pull-left form-group">
+        <button type="submit" mat-raised-button class="btn btn-sm btn-light-blue">Add</button>
+        <button type="button" mat-raised-button class="btn btn-sm btn-link" (click)="onCancel()">Cancel</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
