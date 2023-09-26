@@ -20,11 +20,7 @@ var pics = require("./pics.ts");
 var contacts = require("./contacts.ts");
 var privates = require("./private.ts");
 
-if (process.env.PORT) {
-  var stripe = require("stripe")("sk_live_cX9wuWcR9lIBXPhAh206GjKb");
-} else {
-  var stripe = require("stripe")("sk_test_7EVILWvlgJHlUNOh58DBJVe4");
-}
+var stripe = require("stripe")("ENV_STRIPE");
 
 // import * as algoliasearch from 'algoliasearch'; // When using TypeScript
 const algoliasearch = require('algoliasearch');
